@@ -1,0 +1,2449 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Horus Gestão</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: identidade Horus em tema claro. Menu lateral preto com logo HORUS em degradê violeta; área de trabalho clara lavanda; roxo só em ação principal, item ativo e destaques */
+:root {
+  --bg: #F6F4FB; --surface: #FFFFFF; --surface-2: #F4F1FA; --line: #E5E0F0; --track: #ECE7F6;
+  --ink: #1D1630; --muted: #615A77; --faint: #8F88A6;
+  --accent: #6E3FF0; --accent-ink: #FFFFFF; --accent-soft: #EFE9FE;
+  --grad: linear-gradient(90deg, #8F6BFF 0%, #C98CFF 100%);
+  --grad-btn: linear-gradient(90deg, #6E3FF0 0%, #A24DE8 100%);
+  --glow: 0 8px 22px rgba(110, 63, 240, .28);
+  --late: #C8402E; --late-soft: #FCEBE7; --warn: #B0650F; --warn-soft: #FDF2E2; --ok: #23864F; --ok-soft: #E4F5EA;
+  --p-urgente: #C8402E; --p-alta: #C2611A; --p-media: #6E3FF0; --p-baixa: #7A7390;
+  --side: #0B0A10; --side-line: #221E2E; --side-ink: #FFFFFF; --side-muted: #9890B2; --side-hover: #1A1626; --side-active: #241C40;
+  --shadow: 0 1px 2px rgba(40, 20, 90, .04), 0 8px 24px rgba(40, 20, 90, .06);
+  --display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r: 14px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+a { color: var(--accent); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.muted { color: var(--muted); } .small { font-size: 13px; } .ink { color: var(--ink); } .late { color: var(--late); }
+.cap::first-letter { text-transform: uppercase; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.grow { flex: 1; }
+kbd { font-family: inherit; font-size: 11.5px; color: inherit; border: 1px solid var(--faint); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--surface); }
+b, td, .kpi b, .count { font-variant-numeric: tabular-nums; }
+
+/* ---------- Estrutura ---------- */
+.app { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
+.sidebar { position: sticky; top: 0; height: 100vh; background: var(--side); border-right: 1px solid var(--side-line); color: var(--side-ink); display: flex; flex-direction: column; gap: 18px; padding: calc(20px + env(safe-area-inset-top, 0px)) 14px 18px max(14px, env(safe-area-inset-left, 0px)); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 6px; }
+.logo { font-family: var(--display); font-weight: 800; font-size: 19px; letter-spacing: .02em; text-transform: uppercase; line-height: 1; color: var(--side-ink); white-space: nowrap; display: block; }
+.logo span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brand small { display: block; color: var(--side-muted); font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-top: 6px; }
+.mark-unused { display: inline-flex; align-items: flex-end; gap: 2px; width: 26px; height: 26px; padding: 5px; border-radius: 7px; background: var(--accent); flex: none; }
+.mark i { flex: 1; background: var(--accent-ink); border-radius: 1px; opacity: .95; }
+.mark i:nth-child(1) { height: 40%; } .mark i:nth-child(2) { height: 70%; } .mark i:nth-child(3) { height: 100%; }
+.sidebar .new { width: 100%; justify-content: center; }
+.nav { display: grid; gap: 2px; }
+.nav a { display: flex; align-items: center; gap: 11px; padding: 7px 10px 7px 7px; border-radius: 11px; color: var(--side-muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: background .15s, color .15s; }
+.nav a .ic { width: 34px; height: 34px; padding: 8px; border-radius: 10px; transition: background .2s, box-shadow .2s; }
+.nav a:hover { background: var(--side-hover); color: var(--side-ink); }
+.nav a.active { background: var(--side-active); color: var(--side-ink); }
+.nav a.active .ic { background: var(--grad-btn); color: #fff; box-shadow: var(--glow); }
+.side-foot kbd { background: transparent; }
+.side-foot { margin-top: auto; color: var(--side-muted); font-size: 12px; padding: 0 8px; display: grid; gap: 10px; }
+.side-foot p { margin: 0; }
+.topbar { display: none; }
+.view { padding-block: 28px 60px; padding-left: max(28px, env(safe-area-inset-left, 0px)); padding-right: max(28px, env(safe-area-inset-right, 0px)); max-width: 1240px; width: 100%; outline: none; display: grid; gap: 20px; align-content: start; }
+
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  .topbar { display: flex; position: sticky; top: 0; z-index: 20; align-items: center; justify-content: space-between; gap: 10px; background: var(--side); border-bottom: 1px solid var(--side-line); padding-block: calc(10px + env(safe-area-inset-top, 0px)) 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .sidebar { position: fixed; top: auto; bottom: 0; left: 0; right: 0; height: auto; z-index: 20; flex-direction: row; padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); border-right: 0; border-top: 1px solid var(--side-line); }
+  .sidebar .brand, .sidebar .new, .side-foot { display: none; }
+  .nav { grid-template-columns: repeat(6, 1fr); width: 100%; }
+  .nav .l-long { display: none; } .nav .l-short { display: inline; }
+  .nav a { flex-direction: column; gap: 2px; font-size: 10.5px; padding: 4px 2px; text-align: center; }
+  .nav a .ic { width: 30px; height: 30px; padding: 6px; }
+  .nav a.active { background: none; }
+  .nav a span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .view { padding-block: 18px 96px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 16px; }
+}
+
+/* ---------- Botões ---------- */
+.btn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid transparent; border-radius: 999px; padding: 9px 16px; font-weight: 600; font-size: 14px; background: var(--surface); transition: background .15s, border-color .15s, transform .1s; white-space: nowrap; text-decoration: none; color: var(--ink); }
+.btn:active { transform: scale(.98); }
+.btn.primary { background: var(--grad-btn); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.06); box-shadow: var(--glow); transform: translateY(-1px); }
+.btn.ghost { border-color: var(--line); background: var(--surface); }
+.btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn.danger { background: var(--late); color: #fff; }
+.btn.sm { padding: 6px 11px; font-size: 13px; }
+.danger-text { color: var(--late) !important; }
+.icon-btn { display: inline-grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--faint); transition: background .15s, color .15s; }
+.icon-btn:hover { background: var(--surface-2); color: var(--ink); }
+.link { background: none; border: 0; padding: 0; color: var(--accent); font-weight: 600; font-size: 13.5px; text-decoration: none; }
+.link:hover { text-decoration: underline; }
+.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
+.seg button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; border-radius: 7px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--grad-btn); color: #fff; box-shadow: var(--glow); }
+.seg .ic { width: 16px; height: 16px; }
+
+/* ---------- Cabeçalho de página e filtros ---------- */
+.page-h { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.page-h h1 { font-size: 26px; font-weight: 700; }
+.page-h p { margin: 4px 0 0; max-width: 70ch; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+select, .search { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; font-size: 13.5px; max-width: 100%; }
+select:hover, .search:hover { border-color: var(--faint); }
+.search { display: inline-flex; align-items: center; gap: 6px; padding: 0 10px; min-width: 200px; flex: 1 1 200px; max-width: 320px; }
+.search input { border: 0; outline: 0; background: none; padding: 8px 0; width: 100%; }
+.search .ic { color: var(--faint); width: 16px; height: 16px; }
+.filter select { min-width: 220px; }
+.fchip { background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 5px 11px; font-size: 13px; font-weight: 600; }
+.banner { background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; }
+
+/* ---------- Cartões e indicadores ---------- */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.card-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+.card-h h2 { font-size: 15px; font-weight: 700; }
+.count { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--muted); padding: 1px 9px; font-family: var(--body); }
+.kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.45fr); gap: 12px; }
+.kpi.k-neg span, .kpi.k-neg em { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 1180px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; text-decoration: none; color: var(--ink); box-shadow: var(--shadow); transition: border-color .15s, transform .15s; min-width: 0; }
+.kpi:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: var(--glow); }
+.kpi span { display: block; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.kpi b { display: block; font-family: var(--display); font-size: 28px; font-weight: 700; margin-top: 2px; }
+.kpi.k-late { border-color: color-mix(in srgb, var(--late) 45%, var(--line)); background: var(--late-soft); }
+.kpi.k-late b, .kpi.k-late span { color: var(--late); }
+.grid-main { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 1080px) { .grid-main { grid-template-columns: 1fr; } }
+.side-col { display: grid; gap: 20px; min-width: 0; }
+.empty { text-align: center; padding: 28px 16px; display: grid; justify-items: center; gap: 6px; }
+.empty b { font-family: var(--display); font-size: 16px; }
+.empty p { margin: 0 0 6px; color: var(--muted); max-width: 46ch; }
+.empty.sm { padding: 12px; }
+
+/* Prioridades de hoje */
+.prio-card .card-h h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; background: var(--grad-btn); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.prio-card { position: relative; overflow: hidden; }
+.prio-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--grad); }
+.plist, .alist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pitem, .arow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 10px 10px 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); transition: border-color .15s, background .15s; }
+.pitem:hover, .arow:hover { border-color: var(--faint); }
+.pitem.is-late, .arow.is-late { border-left: 3px solid var(--late); }
+.pmain, .amain { min-width: 0; cursor: pointer; }
+.pmain b, .amain b { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pmeta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 3px; font-size: 12.5px; color: var(--muted); }
+.pside, .aside { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.aact { display: flex; gap: 2px; }
+.check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--faint); background: var(--surface); display: grid; place-items: center; color: transparent; padding: 0; transition: border-color .15s, background .15s, color .15s; }
+.check .ic { width: 14px; height: 14px; stroke-width: 3; }
+.check:hover { border-color: var(--ok); color: var(--ok); }
+.check.on { background: var(--ok); border-color: var(--ok); color: #fff; }
+.check:focus-visible { outline-color: var(--accent); }
+.arow.is-done .amain b { text-decoration: line-through; color: var(--muted); }
+.next { margin-top: 14px; }
+.next summary { cursor: pointer; font-weight: 600; color: var(--muted); font-size: 13.5px; margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .pitem, .arow { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .pitem .pside, .arow .aside { grid-column: 2 / 4; grid-row: 2; justify-content: flex-start; }
+  .pmain b, .amain b { white-space: normal; }
+  .arow .aact { grid-column: 3; grid-row: 1; }
+  .pitem > .icon-btn { grid-column: 3; grid-row: 1; }
+}
+
+/* Etiquetas */
+.rchip { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.rchip i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.cat { font-size: 12px; color: var(--muted); }
+.cat::before { content: "·"; margin-right: 6px; }
+.res { font-size: 12px; font-weight: 700; color: var(--ok); background: var(--ok-soft); padding: 1px 7px; border-radius: 999px; }
+
+.res.pend { color: var(--muted); background: var(--surface-2); font-weight: 600; }
+.prio { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; border: 1px solid currentColor; }
+.p-urgente { color: var(--p-urgente); } .p-alta { color: var(--p-alta); } .p-media { color: var(--p-media); } .p-baixa { color: var(--p-baixa); }
+.prio.p-urgente { background: var(--late-soft); }
+.st { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; background: var(--surface-2); color: var(--muted); }
+.s-andamento { background: var(--accent-soft); color: var(--accent); } .s-adiada { background: var(--warn-soft); color: var(--warn); } .s-concluida { background: var(--ok-soft); color: var(--ok); }
+.due { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; color: var(--muted); white-space: nowrap; font-weight: 500; }
+.due .ic { width: 14px; height: 14px; }
+.due.late { color: var(--late); font-weight: 700; } .due.today { color: var(--warn); font-weight: 700; } .due.soon { color: var(--ink); } .due.done { color: var(--faint); }
+.tag { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.t-ok { background: var(--ok-soft); color: var(--ok); } .t-aviso { background: var(--warn-soft); color: var(--warn); } .t-erro { background: var(--late-soft); color: var(--late); } .t-neutro { background: var(--surface-2); color: var(--muted); }
+.pbar { height: 8px; background: var(--track); border-radius: 999px; overflow: hidden; }
+.pbar i { display: block; height: 100%; background: var(--grad-btn); border-radius: 999px; transition: width .3s; }
+
+/* Execução e metas no painel */
+.exec-b { display: flex; align-items: center; gap: 16px; }
+.big-l { font-family: var(--display); font-size: 18px; font-weight: 700; margin: 0 0 4px; }
+.big-l .muted { font-size: 13px; font-family: var(--body); font-weight: 500; }
+.exec-b p.small { margin: 0; }
+.mlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.mrow { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-bottom: 5px; }
+.mrow:last-child { margin: 5px 0 0; }
+.mname { font-weight: 600; font-size: 13.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.rcard { border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; text-decoration: none; color: var(--ink); transition: border-color .15s; }
+.rcard:hover { border-color: var(--c); }
+.rh { display: flex; align-items: center; gap: 8px; }
+.rh i { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+.rnums { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+.rnums b { color: var(--ink); }
+.rnums .late b, .rnums .late { color: var(--late); }
+
+/* ---------- Atividades ---------- */
+.agroup { display: grid; gap: 8px; }
+.agroup h2 { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.g-atrasadas h2 { color: var(--late); } .g-hoje h2 { color: var(--warn); }
+.kanban { display: grid; grid-template-columns: repeat(4, minmax(240px, 1fr)); gap: 14px; overflow-x: auto; padding-bottom: 6px; align-items: start; }
+.kcol { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); padding: 10px; display: grid; gap: 10px; transition: border-color .15s, background .15s; min-width: 0; }
+.kcol.over { border-color: var(--accent); background: var(--accent-soft); }
+.kcol h2 { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+.kdrop { display: grid; gap: 8px; min-height: 60px; }
+.kcard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; display: grid; gap: 7px; cursor: grab; box-shadow: var(--shadow); }
+.kcard:hover { border-color: var(--faint); }
+.kcard.dragging { opacity: .45; }
+.kcard.is-late { border-left: 3px solid var(--late); }
+.kcard b { font-weight: 600; font-size: 13.5px; }
+.kc-top { display: flex; justify-content: space-between; gap: 6px; align-items: center; }
+.kempty { color: var(--faint); font-size: 12.5px; text-align: center; margin: 8px 0; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+/* ---------- Metas ---------- */
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.meta { display: grid; gap: 12px; align-content: start; }
+.meta-h { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.meta-h h3 { font-size: 16px; margin-top: 4px; }
+.meta-num { display: flex; align-items: baseline; gap: 8px; }
+.meta-num b { font-family: var(--display); font-size: 30px; font-weight: 700; }
+.meta-num span { color: var(--muted); }
+.meta-num em { margin-left: auto; font-style: normal; font-weight: 700; color: var(--c); font-size: 15px; }
+.meta-bar { position: relative; }
+.meta-bar .pbar { height: 10px; }
+.tmark { position: absolute; top: -3px; width: 2px; height: 16px; background: var(--ink); opacity: .5; border-radius: 1px; }
+.meta-info { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.meta-acts-info { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); background: var(--surface-2); border-radius: 8px; padding: 8px 10px; }
+.meta-acts-info b { color: var(--ink); }
+.meta-f { display: flex; align-items: center; gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; flex-wrap: wrap; }
+.spark { width: 100%; height: 56px; display: block; }
+
+/* ---------- Responsabilidades ---------- */
+.respgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.resp { display: grid; gap: 12px; align-content: start; border-top: 3px solid var(--c); }
+.resp-h { display: flex; align-items: center; gap: 9px; }
+.resp-h h3 { font-size: 16px; flex: 1; }
+.resp-h .dot { width: 11px; height: 11px; border-radius: 3px; background: var(--c); }
+.resp p { margin: 0; }
+.resp-nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.resp-nums div { background: var(--surface-2); border-radius: 8px; padding: 8px; text-align: center; }
+.resp-nums b { display: block; font-family: var(--display); font-size: 18px; }
+.resp-nums span { font-size: 11.5px; color: var(--muted); }
+.resp-nums .late b, .resp-nums .late span { color: var(--late); }
+
+/* ---------- Backup ---------- */
+.dgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.dgrid .wide { grid-column: 1 / -1; }
+@media (max-width: 760px) { .dgrid { grid-template-columns: 1fr; } }
+.dgrid p { margin: 0 0 10px; }
+.dnums { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.dnums b { color: var(--ink); }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.file-btn { position: relative; overflow: hidden; cursor: pointer; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* ---------- Janelas e formulários ---------- */
+.modal-wrap { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.modal-bd { position: absolute; inset: 0; background: rgba(15, 8, 35, .5); backdrop-filter: blur(2px); }
+.modal { position: relative; width: min(560px, 100%); max-height: 100%; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px rgba(10, 20, 40, .28); animation: pop .16s ease-out; }
+.modal.sm { width: min(420px, 100%); } .modal.md { width: min(640px, 100%); }
+@keyframes pop { from { transform: translateY(8px) scale(.99); } to { transform: none; } }
+.modal-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px 6px; }
+.modal-h h2 { font-size: 18px; }
+.modal-b { padding: 8px 18px 16px; overflow: auto; }
+.modal-f { display: flex; gap: 8px; justify-content: flex-end; align-items: center; padding: 12px 18px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.kbd-hint { margin-right: auto; color: var(--faint); font-size: 12px; }
+@media (max-width: 520px) { .kbd-hint { display: none; } .modal-wrap { place-items: end center; padding-bottom: 0; } .modal { border-radius: 14px 14px 0 0; max-height: 92%; } }
+.confirm-text { margin: 0; line-height: 1.55; }
+.form { display: grid; gap: 12px; }
+.f { display: grid; gap: 5px; min-width: 0; }
+.f > span { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.f input, .f select, .f textarea, .stepper input { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; font-size: 14px; }
+.f input:focus, .f select:focus, .f textarea:focus, .stepper input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.f textarea { resize: vertical; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 520px) { .row2, .row3 { grid-template-columns: 1fr; } }
+.quick-dates { display: flex; gap: 6px; flex-wrap: wrap; margin-top: -4px; }
+.qd { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 4px 11px; font-size: 12.5px; font-weight: 600; color: var(--muted); display: inline-flex; gap: 6px; align-items: baseline; }
+.qd small { font-weight: 500; color: var(--faint); }
+.qd.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.qd:hover { border-color: var(--accent); }
+.segpick { display: flex; gap: 6px; flex-wrap: wrap; }
+.sp input { position: absolute; opacity: 0; pointer-events: none; }
+.sp span { display: inline-block; border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .12s; }
+.sp input:checked + span { background: var(--grad-btn); border-color: transparent; color: var(--accent-ink); }
+.sp input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sp-urgente input:checked + span { background: var(--p-urgente); border-color: var(--p-urgente); color: #fff; }
+.sp-alta input:checked + span { background: var(--p-alta); border-color: var(--p-alta); color: #fff; }
+.more { border: 1px solid var(--line); border-radius: 10px; }
+.more summary { cursor: pointer; padding: 10px 12px; font-weight: 600; font-size: 13.5px; color: var(--muted); }
+.more-b { padding: 4px 12px 12px; display: grid; gap: 12px; }
+.ferr { color: var(--late); font-size: 13px; margin: 0; font-weight: 600; }
+.colors { display: flex; gap: 8px; flex-wrap: wrap; }
+.cpick input { position: absolute; opacity: 0; }
+.cpick i { display: block; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; border: 3px solid transparent; box-shadow: 0 0 0 1px var(--line); }
+.cpick input:checked + i { border-color: var(--surface); box-shadow: 0 0 0 2px var(--ink); }
+.stepper { display: flex; gap: 6px; }
+.stepper input { text-align: center; font-family: var(--display); font-size: 20px; font-weight: 700; }
+.det-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.kvs { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.kv { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.kv > span { color: var(--muted); font-size: 13px; }
+@media (max-width: 520px) { .kv { grid-template-columns: 1fr; gap: 2px; } }
+.sub-h { font-size: 14px; display: flex; gap: 6px; align-items: center; margin: 18px 0 10px; }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); display: grid; gap: 10px; }
+.timeline li { position: relative; font-size: 13.5px; }
+.timeline li::before { content: ""; position: absolute; left: -20px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--faint); }
+.timeline li.t-concluida::before { border-color: var(--ok); background: var(--ok); } .timeline li.t-adiada::before { border-color: var(--warn); } .timeline li.t-criada::before { border-color: var(--accent); }
+.timeline b { font-weight: 500; display: block; }
+.timeline small { color: var(--faint); font-size: 12px; }
+.timeline.compact { gap: 6px; }
+
+/* Aviso */
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; display: flex; gap: 14px; align-items: center; background: var(--side); color: #fff; border-left: 4px solid #A98BFF; border-radius: 10px; padding: 11px 16px; font-weight: 600; font-size: 14px; box-shadow: 0 14px 40px rgba(0, 0, 0, .25); max-width: calc(100vw - 32px); }
+.toast.erro { background: var(--late); color: #fff; } .toast.aviso { background: var(--warn); color: #fff; }
+.toast-act { background: none; border: 0; color: inherit; font-weight: 800; text-decoration: underline; padding: 0; }
+@media (max-width: 860px) { .toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ---------- Nuvem: status, conta, login ---------- */
+.sync { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; font-size: 12.5px; color: var(--side-muted); }
+.sync i, .syncdot { width: 8px; height: 8px; border-radius: 50%; background: var(--side-muted); flex: none; }
+.s-ok i, .syncdot.s-ok { background: #5CD08F; } .s-salvando i, .syncdot.s-salvando, .s-carregando i, .syncdot.s-carregando { background: #A98BFF; animation: pulse 1s infinite; }
+.s-offline i, .syncdot.s-offline { background: #E9A23B; } .s-erro i, .syncdot.s-erro { background: #F07F6B; }
+.sync .link { color: #C9B6FF; font-size: 12px; }
+@keyframes pulse { 50% { opacity: .35; } }
+.account { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid var(--side-line); padding-top: 10px; font-size: 12.5px; }
+.acc-mail { color: var(--side-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.account .link { color: #C9B6FF; font-size: 12.5px; }
+.syncdot { display: none; }
+@media (max-width: 860px) { .syncdot { display: block; } }
+.auth { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; background: radial-gradient(1200px 600px at 20% 0%, #241C40 0%, #0B0A10 60%); padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); overflow: auto; }
+.auth-card { width: min(400px, 100%); background: var(--surface); border-radius: 18px; padding: 28px; display: grid; gap: 12px; box-shadow: 0 30px 80px rgba(0, 0, 0, .45); }
+.auth-card h1 { font-size: 22px; margin-top: 10px; }
+.auth-card p { margin: 0; }
+.logo.dark { color: var(--ink); }
+.btn.full { width: 100%; justify-content: center; padding: 11px 16px; }
+.auth-links { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.fok { color: var(--ok); font-size: 13px; margin: 0; font-weight: 600; }
+.welcome { display: grid; gap: 10px; margin: 14px 0 4px; }
+.wopt { position: relative; display: grid; gap: 3px; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.wopt:hover { border-color: var(--accent); box-shadow: var(--glow); }
+.wopt b { font-family: var(--display); font-size: 14.5px; }
+.wopt span { color: var(--muted); font-size: 13px; }
+.wopt input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* ---------- Negócios e faturamento ---------- */
+.nav .l-short { display: none; }
+.back { display: inline-flex; align-items: center; gap: 4px; justify-self: start; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 14px 6px 8px; font-weight: 600; font-size: 13.5px; color: var(--accent); transition: border-color .15s, box-shadow .15s, transform .15s; }
+.back:hover { border-color: var(--accent); box-shadow: var(--glow); transform: translateX(-2px); }
+.back .ic { width: 18px; height: 18px; stroke-width: 2.4; }
+.kpi em { display: block; font-style: normal; font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi.k-neg { background: linear-gradient(140deg, #F1EBFF, var(--surface) 70%); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.kpi.k-neg span { color: var(--accent); }
+.kpi.k-brand b { background: var(--grad-btn); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.kpi.k-warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 40%, var(--line)); } .kpi.k-warn b, .kpi.k-warn span { color: var(--warn); }
+.kpis.k4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 900px) { .kpis.k4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.neg { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 1px 8px 1px 6px; border-radius: 999px; white-space: nowrap; }
+.neg .ic { width: 13px; height: 13px; stroke-width: 2.2; }
+.cli { font-size: 12.5px; color: var(--ink); font-weight: 600; }
+.negbox { border: 1px dashed var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 12px; transition: border-color .15s, background .15s; }
+.negbox.on { border-style: solid; border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); background: #FBF9FF; }
+.neg-toggle { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.neg-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.neg-toggle b { display: block; font-size: 14px; }
+.neg-toggle small { display: block; color: var(--muted); font-size: 12.5px; }
+.tg { width: 38px; height: 22px; border-radius: 999px; background: var(--track); position: relative; flex: none; transition: background .2s; }
+.tg i { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: transform .2s; }
+.neg-toggle input:checked + .tg { background: var(--grad-btn); }
+.neg-toggle input:checked + .tg i { transform: translateX(16px); }
+.neg-toggle input:focus-visible + .tg { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tchips { display: flex; gap: 8px; flex-wrap: wrap; }
+.tchip { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: 13.5px; color: var(--muted); transition: border-color .15s; }
+.tchip b { color: var(--ink); } .tchip small { color: var(--faint); font-size: 12px; }
+.tchip:hover { border-color: var(--accent); }
+.tchip.on { background: var(--grad-btn); color: #fff; border-color: transparent; box-shadow: var(--glow); }
+.tchip.on b, .tchip.on small { color: #fff; }
+.nrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; align-items: center; gap: 12px; padding: 10px 10px 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.nrow.is-late { border-left: 3px solid var(--late); }
+.nrow.is-done { grid-template-columns: auto minmax(0, 1fr) auto; }
+.nval { font-family: var(--display); font-weight: 700; font-size: 15px; white-space: nowrap; }
+@media (max-width: 640px) { .nrow { grid-template-columns: auto minmax(0, 1fr) auto; } .nrow .aside { grid-column: 2 / 4; } .nrow .nval { grid-column: 3; grid-row: 1; } .nrow .aact { display: none; } }
+.mbars { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; height: 210px; align-items: end; padding-top: 18px; }
+.mb { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; min-width: 0; }
+.mb i { width: 100%; max-width: 34px; border-radius: 6px 6px 2px 2px; background: var(--track); transition: height .3s; }
+.mb.in i { background: var(--grad-btn); }
+.mb small { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.mb .mv { font-size: 10.5px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.mb.in .mv { color: var(--accent); }
+@media (max-width: 520px) { .mb .mv { display: none; } .mb small { font-size: 9.5px; } }
+.tbars { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.tw { overflow-x: auto; }
+.ftable { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 640px; }
+.ftable th { text-align: left; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.ftable td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ftable tbody tr { cursor: pointer; } .ftable tbody tr:hover td { background: var(--surface-2); }
+.ftable .r { text-align: right; white-space: nowrap; } .ftable .nowrap { white-space: nowrap; }
+.ftable .desc { color: var(--muted); max-width: 260px; }
+.ftable tfoot td { font-weight: 700; border-bottom: 0; padding-top: 12px; }
+
+</style>
+
+<div class="app">
+  <aside class="sidebar" aria-label="Navegação">
+    <div class="brand"><div><b class="logo">Horus <span>Gestão</span></b><small>Painel pessoal e profissional</small></div></div>
+    <button class="btn primary new" data-nova-atividade><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova atividade</button>
+    <nav class="nav">
+      <a href="#painel" data-go="painel"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Painel</span></a>
+      <a href="#atividades" data-go="atividades"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L7 5M3.5 12l1.2 1.2L7 11M3.5 18l1.2 1.2L7 17"/></svg><span>Atividades</span></a>
+      <a href="#metas" data-go="metas"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg><span>Metas</span></a>
+      <a href="#faturamento" data-go="faturamento"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/></svg><span>Faturamento</span></a>
+      <a href="#responsabilidades" data-go="responsabilidades"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span class="l-long">Responsabilidades</span><span class="l-short">Frentes</span></a>
+      <a href="#dados" data-go="dados"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span class="l-long">Backup e dados</span><span class="l-short">Dados</span></a>
+    </nav>
+    <div class="side-foot">
+      <div class="sync" id="syncSt"></div>
+      <div class="account" id="account" hidden></div>
+      <p>Tecla <kbd>N</kbd> cria uma atividade</p>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <div class="brand"><b class="logo">Horus <span>Gestão</span></b></div>
+    <span class="grow"></span><span class="syncdot" id="syncDot"></span>
+    <button class="btn primary sm" data-nova-atividade aria-label="Nova atividade"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova</button>
+  </header>
+
+  <main id="view" class="view" tabindex="-1"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<script>
+/* js/config.js */
+/*
+ * Configuração da nuvem (Supabase).
+ * Copie os dois valores em: Supabase > Project Settings > API (ou "API Keys").
+ *   supabaseUrl     = Project URL (ex.: https://abcdefgh.supabase.co)
+ *   supabaseAnonKey = chave "anon public" ou "publishable".
+ * NUNCA use a chave "service_role" ou "secret" aqui: esta página é pública.
+ * Com os dois campos vazios, o painel funciona só neste navegador (como na versão 1).
+ */
+window.HORUS_CONFIG = {
+  supabaseUrl: 'https://bnadbidywytvoxpjpoyi.supabase.co',
+  supabaseAnonKey: 'sb_publishable_VbEMmwVG1yJf5GsxiD9xUQ_oQlDqW16'
+};
+
+</script>
+<script>
+/* js/core/utils.js */
+/* Utilidades gerais: datas, ids, formatação e escape de HTML. */
+(function (App) {
+  const U = {};
+  const pad = n => String(n).padStart(2, '0');
+
+  U.uid = (p = 'id') => p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  U.nowISO = () => new Date().toISOString();
+  U.iso = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  U.today = () => U.iso(new Date());
+  U.parse = s => { if (!s) return null; const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
+  U.addDays = (s, n) => { const d = U.parse(s) || new Date(); d.setDate(d.getDate() + n); return U.iso(d); };
+  /* dias de b até a (a - b) */
+  U.diff = (a, b) => Math.round((U.parse(a) - U.parse(b)) / 864e5);
+  U.nextWeekday = (wd) => { const d = new Date(); const k = (wd - d.getDay() + 7) % 7 || 7; d.setDate(d.getDate() + k); return U.iso(d); };
+
+  const MES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const DIA = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  U.fmtDate = s => { const d = U.parse(s); return d ? d.getDate() + ' ' + MES[d.getMonth()] + (d.getFullYear() !== new Date().getFullYear() ? ' ' + d.getFullYear() : '') : ''; };
+  U.fmtDateLong = s => { const d = U.parse(s); return d ? DIA[d.getDay()] + ', ' + d.getDate() + ' ' + MES[d.getMonth()] + ' ' + d.getFullYear() : ''; };
+  U.fmtDateTime = iso => { try { return new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } };
+  U.todayLong = () => new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  /* Texto relativo do prazo: "Hoje", "Amanhã", "Atrasada há 3 dias", "Em 5 dias" */
+  U.relDue = s => {
+    if (!s) return 'Sem prazo';
+    const d = U.diff(s, U.today());
+    if (d === 0) return 'Hoje';
+    if (d === 1) return 'Amanhã';
+    if (d === -1) return 'Venceu ontem';
+    if (d < 0) return 'Venceu há ' + (-d) + ' dias';
+    if (d <= 6) return 'Em ' + d + ' dias';
+    return U.fmtDate(s);
+  };
+
+  const nf = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
+  U.num = v => nf.format(+v || 0);
+  U.brl = v => 'R$ ' + new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(Math.round(+v || 0));
+  U.brlShort = v => { v = +v || 0; const a = Math.abs(v); if (a >= 1e6) return 'R$ ' + (v / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: a >= 1e7 ? 1 : 2 }) + ' mi'; if (a >= 1e4) return 'R$ ' + Math.round(v / 1e3).toLocaleString('pt-BR') + ' mil'; return U.brl(v); };
+  U.mesNome = (y, m) => ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'][m] + (y !== new Date().getFullYear() ? '/' + String(y).slice(2) : '');
+  U.pct = v => Math.round((v || 0) * 100) + '%';
+  U.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  U.parseNum = s => { s = String(s ?? '').trim().replace(/\s/g, ''); if (!s) return null; s = s.replace(/^R\$/i, ''); if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.'); else if (/^-?\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, ''); const n = parseFloat(s); return isNaN(n) ? null : n; };
+  U.byKey = (arr, k) => Object.fromEntries(arr.map(x => [x[k], x]));
+  U.plural = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
+
+  App.U = U;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/store.js */
+/*
+ * Camada de dados.
+ * Toda leitura e escrita passa por App.Store. As telas nunca falam com o banco.
+ *
+ * Como funciona:
+ * - Os dados ficam em memória e numa cópia no navegador (resposta instantânea e uso sem internet).
+ * - Com um adaptador remoto (Supabase), cada alteração entra numa fila e é enviada para a nuvem
+ *   em segundo plano. Se a internet cair, a fila fica guardada e é reenviada depois.
+ * - Sem adaptador remoto, funciona só no navegador (LocalStorage), como na versão 1.
+ */
+(function (App) {
+  const BASE = 'gestao-pessoal:dados:v1', QBASE = 'gestao-pessoal:fila:v1';
+  const COLS = ['responsabilidades', 'atividades', 'metas', 'metaRegistros', 'historico', 'faturamento'];
+  const SCHEMA = 1;
+
+  const ls = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { localStorage.setItem(k, v); },
+    del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+
+  const LocalStorageAdapter = { name: 'Este navegador', remote: false, cacheKey: '' };
+
+  const empty = () => ({ schemaVersion: SCHEMA, ...Object.fromEntries(COLS.map(c => [c, []])), config: {} });
+  const emptyQ = () => ({ full: false, config: false, cols: {} });
+  let adapter = LocalStorageAdapter, db = empty(), q = emptyQ(), listeners = [], statusFns = [], available = true;
+  let status = { id: 'local', msg: '' }, flushing = false, timer = null, retryTimer = null, voo = null;
+  const KEY = () => BASE + (adapter.cacheKey ? ':' + adapter.cacheKey : '');
+  const QKEY = () => QBASE + (adapter.cacheKey ? ':' + adapter.cacheKey : '');
+
+  /* ---------- Fila de alterações para a nuvem ---------- */
+  function mark(col, id, tipo) {
+    if (!adapter.remote) return;
+    const c = q.cols[col] || (q.cols[col] = { up: [], del: [] });
+    if (tipo === 'up') { if (!c.up.includes(id)) c.up.push(id); c.del = c.del.filter(x => x !== id); }
+    else { c.up = c.up.filter(x => x !== id); if (!c.del.includes(id)) c.del.push(id); }
+  }
+  const qVazia = x => !x.full && !x.config && !Object.values(x.cols).some(c => c.up.length || c.del.length);
+  /* Junta uma fila antiga (que falhou) com a atual, sem perder a ordem das operações */
+  function juntar(velha, nova) {
+    const r = { full: velha.full || nova.full, config: velha.config || nova.config, cols: JSON.parse(JSON.stringify(velha.cols)) };
+    const prev = q; q = r;
+    Object.entries(nova.cols).forEach(([col, c]) => { c.up.forEach(id => mark(col, id, 'up')); c.del.forEach(id => mark(col, id, 'del')); });
+    q = prev; return r;
+  }
+
+  function salvarLocal() {
+    /* A fila salva inclui o que está sendo enviado agora: se a página fechar no meio, nada se perde */
+    try { ls.set(KEY(), JSON.stringify(db)); if (adapter.remote) ls.set(QKEY(), JSON.stringify(voo ? juntar(voo, q) : q)); }
+    catch (e) { App.UI && App.UI.toast('O navegador não deixou guardar a cópia local. Faça um backup.', 'erro'); }
+  }
+  function setStatus(id, msg = '') { status = { id, msg }; statusFns.forEach(fn => { try { fn(status); } catch (e) {} }); }
+
+  async function flush() {
+    if (!adapter.remote || flushing) return;
+    if (qVazia(q)) { setStatus('ok'); return; }
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) { setStatus('offline', 'Sem internet. As alterações estão guardadas neste aparelho.'); return; }
+    flushing = true; setStatus('salvando');
+    const envio = q; voo = envio; q = emptyQ();
+    try {
+      const pacote = { full: envio.full, config: envio.config ? db.config : null, cols: {} };
+      if (envio.full) pacote.db = db;
+      else Object.entries(envio.cols).forEach(([col, c]) => {
+        pacote.cols[col] = { up: c.up.map(id => db[col].find(x => x.id === id)).filter(Boolean), del: c.del };
+      });
+      await adapter.push(pacote);
+      voo = null; salvarLocal();
+      setStatus('ok');
+    } catch (e) {
+      console.error(e);
+      voo = null; q = juntar(envio, q); salvarLocal();
+      const off = navigator.onLine === false;
+      setStatus(off ? 'offline' : 'erro', off ? 'Sem internet. As alterações estão guardadas neste aparelho.' : 'Não foi possível salvar na nuvem. Tentando de novo.');
+      clearTimeout(retryTimer); retryTimer = setTimeout(flush, 15000);
+    } finally {
+      flushing = false;
+      if (!qVazia(q)) setTimeout(flush, 50);
+    }
+  }
+  const agendar = () => { clearTimeout(timer); timer = setTimeout(flush, 400); };
+
+  const Store = {
+    COLS,
+    adapter: () => adapter,
+    available: () => available,
+    status: () => status,
+    onStatus(fn) { statusFns.push(fn); fn(status); },
+    pendente: () => !qVazia(q) || !!voo,
+
+    /* Troca o lugar onde os dados ficam (ex.: Supabase depois do login) */
+    useAdapter(a) { adapter = a; db = empty(); q = emptyQ(); voo = null; setStatus(a.remote ? 'carregando' : 'local'); },
+
+    /* Carrega a cópia local. Retorna true quando não há nada salvo (primeiro uso). */
+    init() {
+      try { localStorage.setItem(BASE + ':teste', '1'); localStorage.removeItem(BASE + ':teste'); } catch (e) { available = false; }
+      const raw = ls.get(KEY());
+      if (adapter.remote) { try { q = JSON.parse(ls.get(QKEY())) || emptyQ(); } catch (e) { q = emptyQ(); } }
+      if (!raw) { db = empty(); return true; }
+      try { db = Store.normalize(JSON.parse(raw)); } catch (e) { db = empty(); return true; }
+      return false;
+    },
+    /* Envia o que estiver pendente e baixa a versão da nuvem. Retorna { vazio } */
+    async sincronizar() {
+      if (!adapter.remote) return { vazio: false };
+      await flush();
+      if (!qVazia(q)) return { vazio: false, pendente: true };
+      setStatus('salvando', 'Atualizando');
+      const remoto = await adapter.load();
+      const vazio = COLS.every(c => !remoto[c].length) && !Object.keys(remoto.config || {}).length;
+      if (!qVazia(q) || flushing) { setStatus('ok'); return { vazio: false }; }
+      const novo = Store.normalize(remoto);
+      const mudou = JSON.stringify(novo) !== JSON.stringify(db);
+      db = novo; salvarLocal(); setStatus('ok');
+      if (mudou) listeners.forEach(fn => { try { fn(); } catch (e) {} });
+      return { vazio };
+    },
+    tentarDeNovo() { flush(); },
+
+    normalize(data) {
+      const out = empty();
+      COLS.forEach(c => { out[c] = Array.isArray(data[c]) ? data[c] : []; });
+      out.config = data.config && typeof data.config === 'object' ? data.config : {};
+      return out;
+    },
+    commit() {
+      salvarLocal();
+      if (adapter.remote) agendar();
+      listeners.forEach(fn => { try { fn(); } catch (e) { console.error(e); } });
+    },
+    onChange(fn) { listeners.push(fn); },
+
+    all(col) { return db[col]; },
+    get(col, id) { return db[col].find(x => x.id === id) || null; },
+    where(col, fn) { return db[col].filter(fn); },
+    insert(col, obj, { silent } = {}) {
+      const now = App.U.nowISO();
+      const rec = { id: obj.id || App.U.uid(col.slice(0, 3)), criadoEm: now, atualizadoEm: now, ...obj };
+      db[col].push(rec); mark(col, rec.id, 'up');
+      if (!silent) Store.commit();
+      return rec;
+    },
+    update(col, id, patch, { silent } = {}) {
+      const rec = Store.get(col, id);
+      if (!rec) return null;
+      Object.assign(rec, patch, { atualizadoEm: App.U.nowISO() }); mark(col, id, 'up');
+      if (!silent) Store.commit();
+      return rec;
+    },
+    remove(col, id, { silent } = {}) {
+      db[col] = db[col].filter(x => x.id !== id); mark(col, id, 'del');
+      if (!silent) Store.commit();
+    },
+    removeWhere(col, fn, { silent } = {}) {
+      const sai = db[col].filter(fn);
+      db[col] = db[col].filter(x => !fn(x));
+      sai.forEach(x => mark(col, x.id, 'del'));
+      if (!silent) Store.commit();
+      return sai.length;
+    },
+    config(k, v) { if (v === undefined) return db.config[k]; db.config[k] = v; if (adapter.remote) q.config = true; Store.commit(); },
+    snapshot() { return JSON.parse(JSON.stringify(db)); },
+    replaceAll(data) { db = Store.normalize(data); if (adapter.remote) q = { ...emptyQ(), full: true, config: true }; Store.commit(); },
+    clear() { db = empty(); db.config.inicializado = true; if (adapter.remote) q = { ...emptyQ(), full: true, config: true }; Store.commit(); },
+    /* Ao sair da conta: apaga a cópia local deste aparelho */
+    limparCopiaLocal() { ls.del(KEY()); ls.del(QKEY()); db = empty(); q = emptyQ(); voo = null; },
+    sizeKB() { return Math.round((ls.get(KEY()) || '').length / 1024); }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('online', () => flush());
+  }
+
+  App.Store = Store;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/model.js */
+/*
+ * Regras do negócio: listas fixas, cálculos (atraso, progresso de metas)
+ * e ações que alteram dados e registram histórico.
+ */
+(function (App) {
+  const { U, Store } = App;
+  const M = {};
+
+  M.PRIORIDADES = [
+    { id: 'urgente', label: 'Urgente', peso: 4 },
+    { id: 'alta', label: 'Alta', peso: 3 },
+    { id: 'media', label: 'Média', peso: 2 },
+    { id: 'baixa', label: 'Baixa', peso: 1 }
+  ];
+  M.STATUS = [
+    { id: 'pendente', label: 'Pendente' },
+    { id: 'andamento', label: 'Em andamento' },
+    { id: 'adiada', label: 'Adiada' },
+    { id: 'concluida', label: 'Concluída' }
+  ];
+  M.PERIODICIDADES = [
+    { id: 'semanal', label: 'Semanal' }, { id: 'mensal', label: 'Mensal' },
+    { id: 'trimestral', label: 'Trimestral' }, { id: 'anual', label: 'Anual' }
+  ];
+  M.CORES = ['#6E3FF0', '#2F855A', '#1E7A86', '#B7791F', '#C2412D', '#A0466B', '#2B5A8C', '#5A6474'];
+  M.TIPOS_NEGOCIO = [
+    { id: 'investimentos', label: 'Investimentos' }, { id: 'consorcio', label: 'Consórcio' }, { id: 'seguro', label: 'Seguro' },
+    { id: 'previdencia', label: 'Previdência' }, { id: 'cambio', label: 'Câmbio' }, { id: 'credito', label: 'Crédito' }, { id: 'outro', label: 'Outro' }
+  ];
+  M.tipoNeg = id => M.TIPOS_NEGOCIO.find(t => t.id === id) || { id, label: id || 'Negócio' };
+  M.ehNegocio = a => !!a.tipoNegocio;
+  M.negociosAbertos = () => Store.all('atividades').filter(a => M.ehNegocio(a) && M.aberta(a));
+  M.prio = id => M.PRIORIDADES.find(p => p.id === id) || M.PRIORIDADES[2];
+  M.status = id => M.STATUS.find(s => s.id === id) || M.STATUS[0];
+  M.period = id => M.PERIODICIDADES.find(p => p.id === id) || M.PERIODICIDADES[1];
+
+  /* ---------- Responsabilidades ---------- */
+  M.resp = id => Store.get('responsabilidades', id);
+  M.respAtivas = () => Store.all('responsabilidades').filter(r => r.status !== 'arquivada');
+  M.respNome = id => (M.resp(id) || {}).nome || 'Sem responsabilidade';
+  M.respCor = id => (M.resp(id) || {}).cor || '#8A93A3';
+
+  /* ---------- Atividades ---------- */
+  M.aberta = a => a.status !== 'concluida';
+  M.atrasada = a => M.aberta(a) && a.prazo && a.prazo < U.today();
+  M.hoje = a => M.aberta(a) && a.prazo === U.today();
+  M.proximos = (a, dias = 7) => M.aberta(a) && a.prazo && a.prazo > U.today() && U.diff(a.prazo, U.today()) <= dias;
+  /* Ordem de atenção: atrasadas e de hoje primeiro, depois prioridade, depois prazo */
+  M.ordemAtencao = (a, b) => {
+    const ka = M.atrasada(a) ? 0 : M.hoje(a) ? 1 : 2, kb = M.atrasada(b) ? 0 : M.hoje(b) ? 1 : 2;
+    if (ka !== kb) return ka - kb;
+    const p = M.prio(b.prioridade).peso - M.prio(a.prioridade).peso;
+    if (p) return p;
+    return (a.prazo || '9999').localeCompare(b.prazo || '9999');
+  };
+  /* "Minhas prioridades de hoje": atrasadas, de hoje e urgentes/altas que vencem em até 2 dias */
+  M.prioridadesHoje = () => Store.all('atividades')
+    .filter(a => M.atrasada(a) || M.hoje(a) || (M.aberta(a) && ['urgente', 'alta'].includes(a.prioridade) && a.prazo && U.diff(a.prazo, U.today()) <= 2) || (M.aberta(a) && a.prioridade === 'urgente' && !a.prazo))
+    .sort(M.ordemAtencao);
+
+  M.log = (atividadeId, tipo, descricao, silent = true) =>
+    Store.insert('historico', { atividadeId, tipo, descricao, em: U.nowISO() }, { silent });
+  M.historico = id => Store.where('historico', h => h.atividadeId === id).sort((a, b) => b.em.localeCompare(a.em));
+
+  M.criarAtividade = dados => {
+    const a = Store.insert('atividades', { status: 'pendente', prioridade: 'media', ...dados }, { silent: true });
+    M.log(a.id, 'criada', 'Atividade criada' + (a.prazo ? ' com prazo para ' + U.fmtDate(a.prazo) : ''));
+    Store.commit();
+    return a;
+  };
+  M.editarAtividade = (id, dados) => {
+    const a = Store.get('atividades', id); if (!a) return;
+    const mud = [];
+    if (dados.prazo !== undefined && dados.prazo !== a.prazo) mud.push('prazo de ' + (a.prazo ? U.fmtDate(a.prazo) : 'sem prazo') + ' para ' + (dados.prazo ? U.fmtDate(dados.prazo) : 'sem prazo'));
+    if (dados.status && dados.status !== a.status) mud.push('status de ' + M.status(a.status).label + ' para ' + M.status(dados.status).label);
+    if (dados.prioridade && dados.prioridade !== a.prioridade) mud.push('prioridade de ' + M.prio(a.prioridade).label + ' para ' + M.prio(dados.prioridade).label);
+    if (dados.status === 'concluida' && a.status !== 'concluida') dados.concluidaEm = U.nowISO();
+    if (dados.status && dados.status !== 'concluida') dados.concluidaEm = null;
+    Store.update('atividades', id, dados, { silent: true });
+    M.log(id, 'editada', mud.length ? 'Alterado: ' + mud.join('; ') : 'Informações editadas');
+    Store.commit();
+  };
+  M.concluir = (id, { resultado, nota } = {}) => {
+    const patch = { status: 'concluida', concluidaEm: U.nowISO() };
+    if (resultado !== undefined && resultado !== null) patch.resultado = resultado;
+    if (nota) patch.resultadoTexto = nota;
+    Store.update('atividades', id, patch, { silent: true });
+    M.log(id, 'concluida', 'Concluída' + (resultado != null ? ' · resultado: ' + U.num(resultado) : '') + (nota ? ' · ' + nota : ''));
+    Store.commit();
+  };
+  M.reabrir = id => {
+    Store.update('atividades', id, { status: 'pendente', concluidaEm: null }, { silent: true });
+    M.log(id, 'reaberta', 'Atividade reaberta');
+    Store.commit();
+  };
+  M.adiar = (id, novoPrazo, motivo) => {
+    const a = Store.get('atividades', id); if (!a) return;
+    const antes = a.prazo;
+    Store.update('atividades', id, { prazo: novoPrazo, status: 'adiada', adiamentos: (a.adiamentos || 0) + 1 }, { silent: true });
+    M.log(id, 'adiada', 'Adiada de ' + (antes ? U.fmtDate(antes) : 'sem prazo') + ' para ' + U.fmtDate(novoPrazo) + (motivo ? ' · ' + motivo : ''));
+    Store.commit();
+  };
+  M.mudarStatus = (id, status) => {
+    if (status === 'concluida') return M.concluir(id);
+    M.editarAtividade(id, { status });
+  };
+  M.excluirAtividade = id => {
+    Store.remove('atividades', id, { silent: true });
+    Store.removeWhere('historico', h => h.atividadeId === id, { silent: true });
+    Store.commit();
+  };
+
+  /* ---------- Metas ---------- */
+  M.metaAtividades = metaId => Store.where('atividades', a => a.metaId === metaId);
+  M.metaAtual = m => m.modo === 'atividades'
+    ? M.metaAtividades(m.id).reduce((s, a) => s + (+a.resultado || 0), 0)
+    : (+m.atual || 0);
+  M.metaPct = m => m.alvo > 0 ? M.metaAtual(m) / m.alvo : 0;
+  /* Quanto do período já passou (0 a 1) */
+  M.metaTempo = m => {
+    if (!m.inicio || !m.fim) return null;
+    const tot = U.diff(m.fim, m.inicio) || 1, pas = U.diff(U.today(), m.inicio);
+    return Math.min(1, Math.max(0, pas / tot));
+  };
+  M.metaSituacao = m => {
+    const p = M.metaPct(m), t = M.metaTempo(m);
+    if (p >= 1) return { id: 'ok', label: 'Atingida' };
+    if (m.fim && m.fim < U.today()) return { id: 'erro', label: 'Encerrada sem atingir' };
+    if (t == null || t < 0.05) return { id: 'neutro', label: 'Em andamento' };
+    if (p >= t - 0.1) return { id: 'ok', label: 'No ritmo' };
+    return { id: 'aviso', label: 'Abaixo do ritmo' };
+  };
+  M.registrarMeta = (metaId, valor, nota) => {
+    const m = Store.get('metas', metaId); if (!m) return;
+    Store.update('metas', metaId, { atual: valor }, { silent: true });
+    Store.insert('metaRegistros', { metaId, valor, nota: nota || '', em: U.nowISO() }, { silent: true });
+    Store.commit();
+  };
+  M.metaRegistros = id => Store.where('metaRegistros', r => r.metaId === id).sort((a, b) => a.em.localeCompare(b.em));
+  M.excluirMeta = id => {
+    Store.remove('metas', id, { silent: true });
+    Store.removeWhere('metaRegistros', r => r.metaId === id, { silent: true });
+    Store.all('atividades').filter(a => a.metaId === id).forEach(a => Store.update('atividades', a.id, { metaId: null }, { silent: true }));
+    Store.commit();
+  };
+
+  /* Exclui a responsabilidade e o que está ligado a ela */
+  M.excluirResp = id => {
+    const ats = Store.where('atividades', a => a.responsabilidadeId === id).map(a => a.id);
+    const mts = Store.where('metas', m => m.responsabilidadeId === id).map(m => m.id);
+    Store.removeWhere('atividades', a => ats.includes(a.id), { silent: true });
+    Store.removeWhere('historico', h => ats.includes(h.atividadeId), { silent: true });
+    Store.removeWhere('metas', m => mts.includes(m.id), { silent: true });
+    Store.removeWhere('metaRegistros', r => mts.includes(r.metaId), { silent: true });
+    Store.all('atividades').filter(a => mts.includes(a.metaId)).forEach(a => Store.update('atividades', a.id, { metaId: null }, { silent: true }));
+    Store.remove('responsabilidades', id, { silent: true });
+    Store.commit();
+  };
+
+  /* ---------- Números do painel ---------- */
+  M.resumo = (filtroResp) => {
+    const at = Store.all('atividades').filter(a => !filtroResp || a.responsabilidadeId === filtroResp);
+    const concl = at.filter(a => a.status === 'concluida');
+    /* Execução: das atividades com prazo nos últimos 7 dias (até hoje), quantas foram concluídas */
+    const ini = U.addDays(U.today(), -6);
+    const planejadas = at.filter(a => a.prazo && a.prazo >= ini && a.prazo <= U.today());
+    const feitas = planejadas.filter(a => a.status === 'concluida');
+    return {
+      total: at.length, pendentes: at.length - concl.length, concluidas: concl.length,
+      atrasadas: at.filter(M.atrasada).length, hoje: at.filter(M.hoje).length,
+      proximos7: at.filter(a => M.proximos(a, 7)).length,
+      pctConclusao: at.length ? concl.length / at.length : 0,
+      planejadas7: planejadas.length, feitas7: feitas.length
+    };
+  };
+
+  M.excluirFaturamento = id => { Store.remove('faturamento', id); };
+  /* Faturamento dentro de um período [ini, fim] (datas AAAA-MM-DD) */
+  M.faturamentoEntre = (ini, fim) => Store.all('faturamento').filter(f => (!ini || f.data >= ini) && (!fim || f.data <= fim));
+
+  App.M = M;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/demo.js */
+/*
+ * Dados de demonstração.
+ * As 4 responsabilidades são as suas reais e NÃO são marcadas como demonstração.
+ * Atividades e metas de exemplo levam demo:true e podem ser apagadas em "Backup e dados".
+ * As datas são relativas ao dia em que os dados foram criados.
+ */
+(function (App) {
+  const { U, Store, M } = App;
+  const Demo = {};
+
+  Demo.RESP = [
+    { id: 'r_assessoria', nome: 'Assessoria de Investimentos', descricao: 'Carteira de clientes, captação e relacionamento.', cor: '#6E3FF0' },
+    { id: 'r_vida', nome: 'Capitão de Vida', descricao: 'Liderança do time de seguros de vida.', cor: '#2F855A' },
+    { id: 'r_xceed', nome: 'Capitão de Xceed', descricao: 'Liderança e prospecção do Xceed.', cor: '#1E7A86' },
+    { id: 'r_pessoal', nome: 'Projetos pessoais', descricao: 'Família, casa, estudos e saúde.', cor: '#B7791F' }
+  ];
+
+  Demo.seed = ({ comResponsabilidades = true } = {}) => {
+    const t = U.today(), d = n => U.addDays(t, n);
+    if (comResponsabilidades) Demo.RESP.forEach(r => { if (!Store.get('responsabilidades', r.id)) Store.insert('responsabilidades', { ...r, status: 'ativa' }, { silent: true }); });
+    const has = id => !!Store.get('responsabilidades', id);
+    const R = id => has(id) ? id : (M.respAtivas()[0] || {}).id || null;
+
+    const metas = [
+      { id: 'm_indic', nome: 'Indicações da campanha 2027', responsabilidadeId: R('r_assessoria'), descricao: 'Meta de 3 indicações por reunião com os melhores clientes da carteira. Soma os resultados das reuniões vinculadas.', alvo: 12, unidade: 'indicações', modo: 'atividades', periodicidade: 'trimestral', inicio: d(-20), fim: d(70) },
+      { id: 'm_contatos', nome: 'Contatos feitos a partir das indicações', responsabilidadeId: R('r_assessoria'), descricao: 'Quantas indicações recebidas já foram contatadas.', alvo: 12, atual: 2, unidade: 'contatos', modo: 'manual', periodicidade: 'trimestral', inicio: d(-20), fim: d(70) },
+      { id: 'm_novas', nome: 'Novas reuniões comerciais geradas', responsabilidadeId: R('r_assessoria'), descricao: 'Reuniões marcadas com pessoas indicadas.', alvo: 6, atual: 1, unidade: 'reuniões', modo: 'manual', periodicidade: 'trimestral', inicio: d(-20), fim: d(70) },
+      { id: 'm_contcom', nome: 'Fazer 20 contatos comerciais', responsabilidadeId: R('r_assessoria'), descricao: '', alvo: 20, atual: 8, unidade: 'contatos', modo: 'manual', periodicidade: 'semanal', inicio: d(-3), fim: d(3) },
+      { id: 'm_reun_vida', nome: 'Realizar 15 reuniões', responsabilidadeId: R('r_vida'), descricao: 'Reuniões de proteção com clientes.', alvo: 15, atual: 6, unidade: 'reuniões', modo: 'manual', periodicidade: 'mensal', inicio: d(-15), fim: d(15) },
+      { id: 'm_prosp', nome: 'Prospectar 50 pessoas', responsabilidadeId: R('r_xceed'), descricao: '', alvo: 50, atual: 18, unidade: 'pessoas', modo: 'manual', periodicidade: 'mensal', inicio: d(-15), fim: d(15) },
+      { id: 'm_proj', nome: 'Concluir 10 projetos', responsabilidadeId: R('r_pessoal'), descricao: '', alvo: 10, atual: 3, unidade: 'projetos', modo: 'manual', periodicidade: 'anual', inicio: d(-300), fim: d(65) }
+    ];
+    metas.forEach(m => {
+      if (Store.get('metas', m.id)) return;
+      Store.insert('metas', { ...m, demo: true }, { silent: true });
+      if (m.modo === 'manual' && m.atual) {
+        const passos = [Math.round(m.atual * 0.4), m.atual];
+        passos.forEach((v, i) => Store.insert('metaRegistros', { metaId: m.id, valor: v, nota: i ? 'Atualização' : 'Início', em: new Date(Date.now() - (passos.length - i) * 5 * 864e5).toISOString(), demo: true }, { silent: true }));
+      }
+    });
+
+    const C = 'Campanha de indicações 2027';
+    const ats = [
+      { titulo: 'Reunião de indicações com Vitor', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(-6), prioridade: 'alta', status: 'concluida', metaId: 'm_indic', resultadoEsperado: 3, resultado: 3, resultadoTexto: '3 indicações: dois sócios e o irmão.' },
+      { titulo: 'Reunião de indicações com Lidy', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(-2), prioridade: 'alta', status: 'concluida', metaId: 'm_indic', resultadoEsperado: 3, resultado: 2 },
+      { titulo: 'Reunião de indicações com Gabriel', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: t, prioridade: 'alta', status: 'pendente', metaId: 'm_indic', resultadoEsperado: 3, descricao: 'Levar a lista dos clientes que ele já comentou.' },
+      { titulo: 'Reunião de indicações com Maísa', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(3), prioridade: 'alta', status: 'pendente', metaId: 'm_indic', resultadoEsperado: 3 },
+      { titulo: 'Ligar para as indicações do Vitor', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(1), prioridade: 'media', status: 'andamento', metaId: 'm_contatos' },
+      { titulo: 'Revisar carteira do cliente Carlos', responsabilidadeId: R('r_assessoria'), categoria: 'Carteira', prazo: d(-1), prioridade: 'urgente', status: 'pendente' },
+      { titulo: 'Enviar relatório mensal aos clientes', responsabilidadeId: R('r_assessoria'), categoria: 'Relacionamento', prazo: d(5), prioridade: 'media', status: 'pendente' },
+      { titulo: 'Reunião semanal com o time de Vida', responsabilidadeId: R('r_vida'), categoria: 'Gestão do time', prazo: t, prioridade: 'media', status: 'andamento' },
+      { titulo: 'Treinamento de Whole Life para novos assessores', responsabilidadeId: R('r_vida'), categoria: 'Treinamento', prazo: d(4), prioridade: 'alta', status: 'pendente' },
+      { titulo: 'Acompanhar propostas pendentes na seguradora', responsabilidadeId: R('r_vida'), categoria: 'Operacional', prazo: d(2), prioridade: 'alta', status: 'adiada', adiamentos: 1 },
+      { titulo: 'Planejar ação de prospecção do próximo mês', responsabilidadeId: R('r_xceed'), categoria: 'Prospecção', prazo: d(2), prioridade: 'media', status: 'pendente', metaId: 'm_prosp' },
+      { titulo: 'Feedback individual com a equipe', responsabilidadeId: R('r_xceed'), categoria: 'Gestão do time', prazo: d(-4), prioridade: 'media', status: 'concluida' },
+      { titulo: 'Organizar finanças da casa', responsabilidadeId: R('r_pessoal'), categoria: 'Casa', prazo: d(-1), prioridade: 'media', status: 'pendente' },
+      { titulo: 'Renovar CNH', responsabilidadeId: R('r_pessoal'), categoria: 'Documentos', prazo: d(12), prioridade: 'baixa', status: 'pendente' },
+      { titulo: 'Proposta de consórcio imobiliário', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(2), prioridade: 'alta', status: 'andamento', tipoNegocio: 'consorcio', cliente: 'Ricardo Alves', valorNegocio: 500000, descricao: 'Carta de crédito para o apartamento novo.' },
+      { titulo: 'Whole Life para a família Souza', responsabilidadeId: R('r_vida'), categoria: 'Negócios', prazo: d(5), prioridade: 'alta', status: 'pendente', tipoNegocio: 'seguro', cliente: 'Fernanda Souza', valorNegocio: 18000, observacoes: 'Valor = prêmio anual. Capital de R$ 1,5 mi.' },
+      { titulo: 'Câmbio para viagem de estudos', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(1), prioridade: 'media', status: 'pendente', tipoNegocio: 'cambio', cliente: 'Paulo Lima', valorNegocio: 80000 },
+      { titulo: 'Trazer carteira de investimentos de outro banco', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(8), prioridade: 'media', status: 'pendente', tipoNegocio: 'investimentos', cliente: 'Antônio Martins', valorNegocio: 2000000 }
+    ];
+    ats.forEach((a, i) => {
+      const criado = new Date(Date.now() - (10 - (i % 5)) * 864e5).toISOString();
+      const rec = Store.insert('atividades', { ...a, demo: true, criadoEm: criado, concluidaEm: a.status === 'concluida' ? new Date(U.parse(a.prazo).getTime() + 15 * 36e5).toISOString() : null }, { silent: true });
+      Store.insert('historico', { atividadeId: rec.id, tipo: 'criada', descricao: 'Atividade criada com prazo para ' + U.fmtDate(a.prazo), em: criado, demo: true }, { silent: true });
+      if (a.status === 'adiada') Store.insert('historico', { atividadeId: rec.id, tipo: 'adiada', descricao: 'Adiada de ' + U.fmtDate(U.addDays(a.prazo, -3)) + ' para ' + U.fmtDate(a.prazo) + ' · seguradora pediu mais documentos', em: U.nowISO(), demo: true }, { silent: true });
+      if (a.status === 'concluida') Store.insert('historico', { atividadeId: rec.id, tipo: 'concluida', descricao: 'Concluída' + (a.resultado != null ? ' · resultado: ' + a.resultado : ''), em: rec.concluidaEm, demo: true }, { silent: true });
+    });
+    const mes = (n, dia) => { const x = new Date(); x.setMonth(x.getMonth() - n, Math.min(dia, 28)); return U.iso(x); };
+    [
+      { data: mes(0, 5), cliente: 'Carla Menezes', tipo: 'seguro', descricao: 'Whole Life 20 anos', valor: 14400, receita: 7200, responsabilidadeId: R('r_vida') },
+      { data: mes(0, 2), cliente: 'Grupo Vieira', tipo: 'investimentos', descricao: 'Captação de carteira', valor: 1200000, receita: 3600, responsabilidadeId: R('r_assessoria') },
+      { data: mes(1, 18), cliente: 'Marcos Prado', tipo: 'consorcio', descricao: 'Consórcio de veículo', valor: 150000, receita: 4500, responsabilidadeId: R('r_assessoria') },
+      { data: mes(1, 9), cliente: 'Juliana Costa', tipo: 'previdencia', descricao: 'Portabilidade de PGBL', valor: 380000, receita: 1900, responsabilidadeId: R('r_assessoria') },
+      { data: mes(2, 22), cliente: 'Renato Dias', tipo: 'cambio', descricao: 'Remessa para o exterior', valor: 60000, receita: 600, responsabilidadeId: R('r_assessoria') },
+      { data: mes(3, 12), cliente: 'Beatriz Rocha', tipo: 'seguro', descricao: 'Seguro de vida resgatável', valor: 9600, receita: 4800, responsabilidadeId: R('r_vida') }
+    ].forEach(f => Store.insert('faturamento', { ...f, demo: true }, { silent: true }));
+    Store.commit();
+    Store.config('inicializado', true);
+  };
+
+  Demo.count = () => ({
+    atividades: Store.where('atividades', a => a.demo).length,
+    metas: Store.where('metas', m => m.demo).length,
+    faturamento: Store.where('faturamento', f => f.demo).length
+  });
+
+  /* Apaga só o que é demonstração. Metas de exemplo usadas por atividades suas são mantidas. */
+  Demo.remove = () => {
+    const ats = Store.where('atividades', a => a.demo).map(a => a.id);
+    const usadas = new Set(Store.where('atividades', a => !a.demo && a.metaId).map(a => a.metaId));
+    Store.all('metas').filter(m => m.demo && usadas.has(m.id)).forEach(m => Store.update('metas', m.id, { demo: false }, { silent: true }));
+    const mts = Store.where('metas', m => m.demo).map(m => m.id);
+    Store.removeWhere('atividades', a => ats.includes(a.id), { silent: true });
+    Store.removeWhere('historico', h => ats.includes(h.atividadeId), { silent: true });
+    Store.removeWhere('metas', m => mts.includes(m.id), { silent: true });
+    Store.removeWhere('metaRegistros', r => mts.includes(r.metaId), { silent: true });
+    const nf = Store.removeWhere('faturamento', f => f.demo, { silent: true });
+    Store.commit();
+    return { atividades: ats.length, metas: mts.length, faturamento: nf };
+  };
+
+  App.Demo = Demo;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/backup.js */
+/* Backup e restauração em JSON. */
+(function (App) {
+  const { U, Store } = App;
+  const B = {};
+  const APP_ID = 'painel-gestao-pessoal';
+
+  B.exportar = async () => {
+    const pacote = { app: APP_ID, versao: 1, exportadoEm: U.nowISO(), dados: Store.snapshot() };
+    const texto = JSON.stringify(pacote, null, 2);
+    const nome = 'backup-painel-gestao-' + U.today() + '.json';
+    const ok = await B.salvarArquivo(nome, texto, 'application/json');
+    if (ok) Store.config('ultimoBackup', U.nowISO());
+    return ok;
+  };
+
+  /* No navegador comum usa um link de download. Publicado no Claude, usa a permissão de download. */
+  B.salvarArquivo = async (nome, texto, tipo) => {
+    if (window.claude && typeof window.claude.use === 'function') {
+      try {
+        const dl = await window.claude.use('downloads');
+        if (dl) { await dl.save({ filename: nome, data: new Blob([texto], { type: tipo }) }); return true; }
+      } catch (e) { if (e && e.code === 'declined') return false; }
+    }
+    try {
+      const url = URL.createObjectURL(new Blob([texto], { type: tipo }));
+      const a = document.createElement('a');
+      a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      return true;
+    } catch (e) { return false; }
+  };
+
+  /* Lê e valida o arquivo. Retorna { dados, resumo } ou lança um erro com mensagem clara. */
+  B.ler = file => new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onerror = () => reject(new Error('Não foi possível ler o arquivo.'));
+    fr.onload = () => {
+      let obj;
+      try { obj = JSON.parse(fr.result); } catch (e) { return reject(new Error('O arquivo não é um JSON válido.')); }
+      const dados = obj && obj.app === APP_ID ? obj.dados : obj;
+      if (!dados || !Array.isArray(dados.atividades) || !Array.isArray(dados.responsabilidades)) return reject(new Error('Este arquivo não é um backup do Painel de Gestão.'));
+      resolve({
+        dados, exportadoEm: obj.exportadoEm || null,
+        resumo: { responsabilidades: dados.responsabilidades.length, atividades: dados.atividades.length, metas: (dados.metas || []).length }
+      });
+    };
+    fr.readAsText(file);
+  });
+
+  B.restaurar = dados => { Store.replaceAll(dados); Store.config('inicializado', true); };
+
+  App.Backup = B;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/cloud.js */
+/*
+ * Nuvem: login (Supabase Auth) e adaptador que grava as tabelas no Supabase.
+ * As telas não conhecem nada daqui; só o App.Store usa o adaptador.
+ */
+(function (App) {
+  const { U, Store } = App;
+  const C = {};
+  let sb = null, usuario = null;
+
+  /* Coleção do app -> tabela do banco, e os campos de cada uma */
+  const TABELAS = { responsabilidades: 'responsabilidades', atividades: 'atividades', metas: 'metas', metaRegistros: 'meta_registros', historico: 'historico', faturamento: 'faturamento' };
+  const CAMPOS = {
+    responsabilidades: ['id', 'nome', 'descricao', 'cor', 'status', 'demo', 'criadoEm', 'atualizadoEm'],
+    atividades: ['id', 'titulo', 'descricao', 'responsabilidadeId', 'categoria', 'inicio', 'prazo', 'prioridade', 'status', 'metaId', 'resultadoEsperado', 'resultado', 'resultadoTexto', 'observacoes', 'concluidaEm', 'adiamentos', 'tipoNegocio', 'cliente', 'valorNegocio', 'resultadoNegocio', 'demo', 'criadoEm', 'atualizadoEm'],
+    metas: ['id', 'nome', 'responsabilidadeId', 'descricao', 'alvo', 'atual', 'unidade', 'inicio', 'fim', 'periodicidade', 'modo', 'demo', 'criadoEm', 'atualizadoEm'],
+    metaRegistros: ['id', 'metaId', 'valor', 'nota', 'em', 'demo', 'criadoEm', 'atualizadoEm'],
+    historico: ['id', 'atividadeId', 'tipo', 'descricao', 'em', 'demo', 'criadoEm', 'atualizadoEm'],
+    faturamento: ['id', 'data', 'cliente', 'tipo', 'descricao', 'valor', 'receita', 'responsabilidadeId', 'atividadeId', 'observacoes', 'demo', 'criadoEm', 'atualizadoEm']
+  };
+  const DATAS = ['inicio', 'prazo', 'fim', 'data', 'concluidaEm', 'em', 'criadoEm', 'atualizadoEm'];
+  const NUMEROS = ['resultadoEsperado', 'resultado', 'alvo', 'atual', 'valor', 'adiamentos', 'valorNegocio', 'receita'];
+  const OBRIG = { responsabilidades: ['nome', 'Sem nome'], atividades: ['titulo', 'Sem título'], metas: ['nome', 'Sem nome'] };
+  const snake = k => k.replace(/[A-Z]/g, m => '_' + m.toLowerCase());
+  const camel = k => k.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+
+  C.paraLinha = (col, rec, uid) => {
+    const r = { user_id: uid };
+    CAMPOS[col].forEach(k => {
+      let v = rec[k];
+      if (v === undefined || v === '') v = null;
+      if (v !== null && NUMEROS.includes(k)) { v = Number(v); if (!isFinite(v)) v = null; }
+      if (v !== null && k === 'adiamentos') v = Math.round(v);
+      if (k === 'demo') v = !!v;
+      r[snake(k)] = v;
+    });
+    const ob = OBRIG[col]; if (ob && !r[ob[0]]) r[ob[0]] = ob[1];
+    return r;
+  };
+  C.deLinha = row => {
+    const o = {};
+    Object.entries(row).forEach(([k, v]) => { if (k === 'user_id' || v === null) return; o[camel(k)] = v; });
+    return o;
+  };
+
+  async function lerTudo(tabela) {
+    const out = []; let de = 0;
+    for (;;) {
+      const { data, error } = await sb.from(tabela).select('*').range(de, de + 999);
+      if (error) throw error;
+      out.push(...data);
+      if (data.length < 1000) break;
+      de += 1000;
+    }
+    return out;
+  }
+  const lotes = (arr, n = 400) => { const r = []; for (let i = 0; i < arr.length; i += n) r.push(arr.slice(i, i + n)); return r; };
+  async function gravar(tabela, linhas) { for (const l of lotes(linhas)) { const { error } = await sb.from(tabela).upsert(l, { onConflict: 'user_id,id' }); if (error) throw error; } }
+  async function apagar(tabela, ids, uid) { for (const l of lotes(ids)) { const { error } = await sb.from(tabela).delete().eq('user_id', uid).in('id', l); if (error) throw error; } }
+
+  C.adapter = user => ({
+    name: 'Nuvem (Supabase)', remote: true, cacheKey: user.id, email: user.email,
+    async load() {
+      const out = { config: {} };
+      for (const [col, t] of Object.entries(TABELAS)) out[col] = (await lerTudo(t)).map(C.deLinha);
+      const { data, error } = await sb.from('configuracoes').select('dados').maybeSingle();
+      if (error) throw error;
+      out.config = data && data.dados ? data.dados : {};
+      return out;
+    },
+    async push(p) {
+      const uid = user.id;
+      if (p.full) {
+        for (const [col, t] of Object.entries(TABELAS)) {
+          const { error } = await sb.from(t).delete().eq('user_id', uid); if (error) throw error;
+          await gravar(t, p.db[col].map(r => C.paraLinha(col, r, uid)));
+        }
+      } else {
+        for (const [col, c] of Object.entries(p.cols)) {
+          const t = TABELAS[col]; if (!t) continue;
+          if (c.up.length) await gravar(t, c.up.map(r => C.paraLinha(col, r, uid)));
+          if (c.del.length) await apagar(t, c.del, uid);
+        }
+      }
+      if (p.config) {
+        const { error } = await sb.from('configuracoes').upsert({ user_id: uid, dados: p.config, atualizado_em: U.nowISO() }, { onConflict: 'user_id' });
+        if (error) throw error;
+      }
+    }
+  });
+
+  /* ---------- Conexão e sessão ---------- */
+  C.configurado = () => { const c = window.HORUS_CONFIG || {}; return !!(c.supabaseUrl && c.supabaseAnonKey); };
+  C.init = () => {
+    const c = window.HORUS_CONFIG;
+    sb = window.supabase.createClient(c.supabaseUrl.trim(), c.supabaseAnonKey.trim(), { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+    sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') setTimeout(C.novaSenha, 300); });
+    return sb;
+  };
+  C.sessao = async () => { const { data } = await sb.auth.getSession(); usuario = data.session ? data.session.user : null; return data.session; };
+  C.usuario = () => usuario;
+
+  const traduz = e => {
+    const m = (e && (e.message || e.error_description || String(e))) || '';
+    if (/invalid login credentials/i.test(m)) return 'E-mail ou senha incorretos.';
+    if (/email not confirmed/i.test(m)) return 'Confirme o seu e-mail pelo link que enviamos e entre de novo.';
+    if (/already registered|already exists/i.test(m)) return 'Esse e-mail já tem conta. Use "Entrar".';
+    if (/password should be at least|weak/i.test(m)) return 'A senha precisa ter pelo menos 8 caracteres, com letras e números.';
+    if (/signups not allowed|signup is disabled/i.test(m)) return 'Novos cadastros estão desativados neste painel.';
+    if (/rate limit|too many/i.test(m)) return 'Muitas tentativas. Espere um minuto e tente de novo.';
+    if (/fetch|network/i.test(m)) return 'Sem conexão com o servidor. Verifique a internet.';
+    return 'Não foi possível concluir: ' + m;
+  };
+
+  /* ---------- Tela de login ---------- */
+  C.telaLogin = aoEntrar => {
+    let modo = 'entrar';
+    const el = document.createElement('div');
+    el.className = 'auth';
+    document.body.appendChild(el);
+    const desenhar = (msg = '', tipo = 'erro') => {
+      el.innerHTML = `<div class="auth-card">
+        <b class="logo dark">Horus <span>Gestão</span></b>
+        <h1>${modo === 'entrar' ? 'Entrar no painel' : modo === 'criar' ? 'Criar sua conta' : 'Recuperar senha'}</h1>
+        <p class="muted small">${modo === 'esqueci' ? 'Enviamos um link para você criar uma nova senha.' : 'Seus dados ficam salvos na nuvem e aparecem em qualquer aparelho.'}</p>
+        <form class="form" id="fAuth">
+          <label class="f full"><span>E-mail</span><input type="email" name="email" autocomplete="email" required autofocus></label>
+          ${modo !== 'esqueci' ? `<label class="f full"><span>Senha</span><input type="password" name="senha" autocomplete="${modo === 'criar' ? 'new-password' : 'current-password'}" required minlength="8"></label>` : ''}
+          ${msg ? `<p class="${tipo === 'ok' ? 'fok' : 'ferr'}">${U.esc(msg)}</p>` : ''}
+          <button class="btn primary full" type="submit">${modo === 'entrar' ? 'Entrar' : modo === 'criar' ? 'Criar conta' : 'Enviar link'}</button>
+        </form>
+        <div class="auth-links">
+          ${modo === 'entrar' ? '<button class="link" data-m="criar">Criar conta</button><button class="link" data-m="esqueci">Esqueci minha senha</button>' : '<button class="link" data-m="entrar">Voltar para entrar</button>'}
+        </div></div>`;
+      el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { modo = b.dataset.m; desenhar(); });
+      const f = el.querySelector('#fAuth');
+      setTimeout(() => f.email.focus(), 30);
+      f.onsubmit = async e => {
+        e.preventDefault();
+        const email = f.email.value.trim(), senha = f.senha ? f.senha.value : '';
+        const bt = f.querySelector('button[type=submit]'); bt.disabled = true; bt.textContent = 'Aguarde...';
+        try {
+          if (modo === 'entrar') {
+            const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+            if (error) throw error;
+            el.remove(); aoEntrar();
+          } else if (modo === 'criar') {
+            const { data, error } = await sb.auth.signUp({ email, password: senha, options: { emailRedirectTo: location.href.split('#')[0] } });
+            if (error) throw error;
+            if (data.session) { el.remove(); aoEntrar(); }
+            else { modo = 'entrar'; desenhar('Conta criada. Abra o e-mail de confirmação que enviamos para ' + email + ' e depois entre aqui.', 'ok'); }
+          } else {
+            const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] });
+            if (error) throw error;
+            modo = 'entrar'; desenhar('Se esse e-mail tiver conta, você vai receber um link para criar uma nova senha.', 'ok');
+          }
+        } catch (err) { desenhar(traduz(err)); const fe = el.querySelector('[name=email]'); if (fe) fe.value = email; }
+      };
+    };
+    desenhar();
+  };
+
+  C.novaSenha = () => {
+    App.UI.modal({
+      title: 'Criar nova senha', size: 'sm',
+      body: `<form class="form" id="fNs"><label class="f full"><span>Nova senha</span><input type="password" name="senha" minlength="8" required autofocus autocomplete="new-password"></label><p class="ferr" id="errNs" hidden></p></form>`,
+      footer: `<button class="btn primary" form="fNs" type="submit">Salvar senha</button>`,
+      onMount(el, api) {
+        el.querySelector('#fNs').onsubmit = async e => {
+          e.preventDefault();
+          const { error } = await sb.auth.updateUser({ password: e.target.senha.value });
+          if (error) { const er = el.querySelector('#errNs'); er.textContent = traduz(error); er.hidden = false; return; }
+          api.close(); App.UI.toast('Senha atualizada');
+        };
+      }
+    });
+  };
+
+  C.sair = async () => {
+    if (Store.pendente()) {
+      const ok = await App.UI.confirm({ title: 'Sair com alterações pendentes?', text: 'Algumas alterações ainda não foram enviadas para a nuvem. Se sair agora, elas se perdem. Conecte-se à internet e espere aparecer "Salvo na nuvem".', ok: 'Sair mesmo assim' });
+      if (!ok) return;
+    }
+    try { await sb.auth.signOut(); } catch (e) {}
+    Store.limparCopiaLocal();
+    location.reload();
+  };
+
+  /* ---------- Primeiro acesso: banco vazio ---------- */
+  C.boasVindas = () => {
+    const m = App.UI.modal({
+      title: 'Bem-vindo ao Horus Gestão', size: 'md',
+      body: `<p>Sua conta está pronta e ainda não tem dados. Como você quer começar?</p>
+        <div class="welcome">
+          <label class="wopt"><b>Trazer meus dados do painel antigo</b><span>Escolha o backup (.json) baixado em "Backup e dados" do arquivo que você já usava.</span><input type="file" accept=".json,application/json" id="wFile"></label>
+          <button class="wopt" data-w="resp"><b>Começar com as minhas 4 responsabilidades</b><span>Assessoria, Capitão de Vida, Capitão de Xceed e Projetos pessoais, sem atividades.</span></button>
+          <button class="wopt" data-w="demo"><b>Ver com exemplos</b><span>Inclui a Campanha de indicações 2027. Você apaga depois em "Backup e dados".</span></button>
+        </div><p class="ferr" id="wErr" hidden></p>`,
+      onMount(el, api) {
+        el.querySelector('#wFile').onchange = async e => {
+          const file = e.target.files[0]; if (!file) return;
+          try { const r = await App.Backup.ler(file); App.Backup.restaurar(r.dados); api.close(); App.UI.toast(`Backup importado: ${r.resumo.atividades} atividades e ${r.resumo.metas} metas`); }
+          catch (err) { const er = el.querySelector('#wErr'); er.textContent = err.message; er.hidden = false; }
+        };
+        el.querySelectorAll('[data-w]').forEach(b => b.onclick = () => {
+          if (b.dataset.w === 'demo') App.Demo.seed();
+          else { App.Demo.RESP.forEach(r => Store.insert('responsabilidades', { ...r, status: 'ativa' }, { silent: true })); Store.commit(); Store.config('inicializado', true); }
+          api.close(); App.UI.toast('Tudo pronto');
+        });
+      }
+    });
+    return m;
+  };
+
+  /* Atualiza ao voltar para a aba e a cada minuto, para ver o que foi feito em outro aparelho */
+  C.vigiar = () => {
+    const tentar = () => { if (document.visibilityState === 'visible' && !document.querySelector('.modal-wrap')) Store.sincronizar().catch(() => {}); };
+    document.addEventListener('visibilitychange', tentar);
+    setInterval(tentar, 60000);
+  };
+
+  App.Cloud = C;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/ui/components.js */
+/* Componentes de interface reutilizáveis: ícones, janelas, confirmação, avisos e etiquetas. */
+(function (App) {
+  const { U, M } = App;
+  const UI = {};
+
+  const P = {
+    painel: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+    atividades: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L7 5M3.5 12l1.2 1.2L7 11M3.5 18l1.2 1.2L7 17"/>',
+    metas: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+    resp: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+    dados: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+    mais: '<path d="M12 5v14M5 12h14"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    editar: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+    lixo: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+    adiar: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>',
+    arquivo: '<rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v11h14V9M10 13h4"/>',
+    lista: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+    kanban: '<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="10" rx="1"/><rect x="17" y="4" width="4" height="13" rx="1"/>',
+    x: '<path d="M6 6l12 12M18 6L6 18"/>',
+    busca: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+    seta: '<path d="M9 6l6 6-6 6"/>',
+    voltar: '<path d="M15 18l-6-6 6-6"/>',
+    dinheiro: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/>',
+    negocio: '<path d="M3 12l4-4 4 3 3-3 7 6"/><path d="M14 14l3 3M11 17l2 2M7 13l-4 4"/>',
+    historico: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'
+  };
+  UI.icon = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${P[n] || ''}</svg>`;
+
+  /* ---------- Aviso rápido ---------- */
+  let tt;
+  UI.toast = (msg, tipo = 'ok', acao) => {
+    const el = document.getElementById('toast');
+    el.className = 'toast ' + tipo;
+    el.innerHTML = `<span>${U.esc(msg)}</span>${acao ? `<button class="toast-act">${U.esc(acao.label)}</button>` : ''}`;
+    el.hidden = false;
+    if (acao) el.querySelector('.toast-act').onclick = () => { el.hidden = true; acao.fn(); };
+    clearTimeout(tt); tt = setTimeout(() => { el.hidden = true; }, acao ? 6000 : 3000);
+  };
+
+  /* ---------- Janela (modal) ---------- */
+  let pilha = [];
+  UI.modal = ({ title, body, footer = '', size = '', onMount, onClose }) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'modal-wrap';
+    wrap.innerHTML = `<div class="modal-bd"></div><div class="modal ${size}" role="dialog" aria-modal="true" aria-label="${U.esc(title)}">
+      <div class="modal-h"><h2>${U.esc(title)}</h2><button class="icon-btn" data-close aria-label="Fechar">${UI.icon('x')}</button></div>
+      <div class="modal-b">${body}</div>${footer ? `<div class="modal-f">${footer}</div>` : ''}</div>`;
+    document.body.appendChild(wrap);
+    const last = document.activeElement;
+    const api = {
+      el: wrap.querySelector('.modal'),
+      close() { wrap.remove(); pilha = pilha.filter(x => x !== api); if (onClose) onClose(); if (last && last.focus) last.focus(); }
+    };
+    pilha.push(api);
+    wrap.querySelector('.modal-bd').onclick = () => api.close();
+    wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = () => api.close());
+    if (onMount) onMount(api.el, api);
+    const f = api.el.querySelector('[autofocus]') || api.el.querySelector('input,select,textarea,button:not([data-close])');
+    if (f) setTimeout(() => f.focus(), 30);
+    return api;
+  };
+  UI.closeTop = () => { const t = pilha[pilha.length - 1]; if (t) { t.close(); return true; } return false; };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && UI.closeTop()) e.preventDefault(); });
+
+  /* ---------- Confirmação antes de excluir ---------- */
+  UI.confirm = ({ title, text, ok = 'Confirmar', danger = true }) => new Promise(resolve => {
+    let done = false;
+    const m = UI.modal({
+      title, size: 'sm',
+      body: `<p class="confirm-text">${text}</p>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn ${danger ? 'danger' : 'primary'}" data-ok>${U.esc(ok)}</button>`,
+      onMount: el => { el.querySelector('[data-ok]').onclick = () => { done = true; m.close(); resolve(true); }; setTimeout(() => el.querySelector('[data-ok]').focus(), 40); },
+      onClose: () => { if (!done) resolve(false); }
+    });
+  });
+
+  /* ---------- Etiquetas ---------- */
+  UI.respChip = id => `<span class="rchip"><i style="background:${M.respCor(id)}"></i>${U.esc(M.respNome(id))}</span>`;
+  UI.prioPill = id => `<span class="prio p-${id}">${M.prio(id).label}</span>`;
+  UI.statusPill = id => `<span class="st s-${id}">${M.status(id).label}</span>`;
+  UI.due = a => {
+    if (a.status === 'concluida') return `<span class="due done">${a.prazo ? U.fmtDate(a.prazo) : 'Concluída'}</span>`;
+    const cls = M.atrasada(a) ? 'late' : M.hoje(a) ? 'today' : a.prazo && U.diff(a.prazo, U.today()) <= 2 ? 'soon' : '';
+    return `<span class="due ${cls}">${UI.icon('adiar')}${U.relDue(a.prazo)}</span>`;
+  };
+  /* Etiqueta de negócio: tipo, cliente e valor */
+  UI.negChip = a => a.tipoNegocio ? `<span class="neg">${UI.icon('negocio')}${U.esc(M.tipoNeg(a.tipoNegocio).label)}${a.valorNegocio ? ' · ' + U.brlShort(a.valorNegocio) : ''}</span>${a.cliente ? `<span class="cli">${U.esc(a.cliente)}</span>` : ''}` : '';
+  UI.bar = (pct, cor) => `<div class="pbar"><i style="width:${Math.min(100, Math.round(pct * 100))}%;${cor ? 'background:' + cor : ''}"></i></div>`;
+
+  /* ---------- Formulários ---------- */
+  UI.options = (list, sel, { vazio } = {}) => (vazio ? `<option value="">${U.esc(vazio)}</option>` : '') +
+    list.map(o => `<option value="${U.esc(o.id)}"${o.id === sel ? ' selected' : ''}>${U.esc(o.label || o.nome)}</option>`).join('');
+  UI.respOptions = (sel, vazio) => UI.options(App.Store.all('responsabilidades').filter(r => r.status !== 'arquivada' || r.id === sel), sel, { vazio });
+  UI.formData = form => {
+    const o = {};
+    form.querySelectorAll('[name]').forEach(el => {
+      if (el.type === 'radio' && !el.checked) return;
+      let v = el.value;
+      if (el.dataset.num !== undefined) v = U.parseNum(v);
+      else v = v.trim();
+      o[el.name] = v === '' ? null : v;
+    });
+    return o;
+  };
+  UI.segmented = (name, list, sel) => `<div class="segpick" role="radiogroup">${list.map(o => `<label class="sp sp-${o.id}"><input type="radio" name="${name}" value="${o.id}"${o.id === sel ? ' checked' : ''}><span>${U.esc(o.label)}</span></label>`).join('')}</div>`;
+
+  App.UI = UI;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/ui/charts.js */
+/* Gráficos simples em SVG, sem bibliotecas. */
+(function (App) {
+  const C = {};
+  /* Anel de percentual */
+  C.ring = (pct, size = 96, cor = 'var(--accent)') => {
+    const r = size / 2 - 7, c = 2 * Math.PI * r, p = Math.max(0, Math.min(1, pct));
+    return `<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${Math.round(p * 100)}%">
+      <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--track)" stroke-width="8"/>
+      <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${cor}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 ${size / 2} ${size / 2})"/>
+      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="${size / 4.6}" font-weight="700" fill="var(--ink)">${Math.round(p * 100)}%</text></svg>`;
+  };
+  /* Linha de evolução com linha da meta */
+  C.spark = (vals, alvo, w = 300, h = 70) => {
+    if (!vals.length) return '';
+    const mx = Math.max(alvo || 0, ...vals, 1), n = vals.length;
+    const x = i => 6 + (n === 1 ? (w - 12) / 2 : i * (w - 12) / (n - 1)), y = v => h - 8 - (v / mx) * (h - 20);
+    const pts = vals.map((v, i) => [x(i), y(v)]);
+    return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="Evolução do resultado">
+      ${alvo ? `<line x1="0" x2="${w}" y1="${y(alvo)}" y2="${y(alvo)}" stroke="var(--muted)" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>` : ''}
+      <path d="M${pts.map(p => p.join(' ')).join(' L')} L${pts[n - 1][0]} ${h} L${pts[0][0]} ${h}Z" fill="var(--accent)" opacity=".12"/>
+      <polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+  };
+  App.Charts = C;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/ui/forms.js */
+/* Formulários e janelas de ação: atividade, concluir, adiar, detalhes, meta e responsabilidade. */
+(function (App) {
+  const { U, M, UI, Store } = App;
+  const F = {};
+
+  const categorias = () => [...new Set(Store.all('atividades').map(a => a.categoria).filter(Boolean))].sort();
+  const metasDe = respId => Store.all('metas').filter(m => !respId || m.responsabilidadeId === respId);
+  const datasRapidas = () => [
+    ['Hoje', U.today()], ['Amanhã', U.addDays(U.today(), 1)], ['Sexta', U.nextWeekday(5)], ['Próx. segunda', U.nextWeekday(1)], ['Sem prazo', '']
+  ];
+
+  /* ---------- Nova atividade / editar atividade ---------- */
+  F.atividade = (id, preset = {}) => {
+    const a = id ? Store.get('atividades', id) : null;
+    const v = a || { prioridade: 'media', status: 'pendente', prazo: U.today(), responsabilidadeId: (M.respAtivas()[0] || {}).id, ...preset };
+    if (!M.respAtivas().length && !a) {
+      UI.toast('Cadastre uma responsabilidade antes de criar atividades.', 'aviso');
+      return F.resp(null);
+    }
+    const metaOpts = r => UI.options(metasDe(r).map(m => ({ id: m.id, label: m.nome })), v.metaId, { vazio: 'Nenhuma' });
+    const m = UI.modal({
+      title: a ? 'Editar atividade' : 'Nova atividade', size: 'md',
+      body: `<form class="form" id="fAt" novalidate>
+        <label class="f full"><span>Título</span><input name="titulo" required maxlength="140" value="${U.esc(v.titulo || '')}" placeholder="O que precisa ser feito?" autofocus></label>
+        <div class="row2">
+          <label class="f"><span>Responsabilidade</span><select name="responsabilidadeId">${UI.respOptions(v.responsabilidadeId)}</select></label>
+          <label class="f"><span>Prazo de conclusão</span><input type="date" name="prazo" value="${v.prazo || ''}"></label>
+        </div>
+        <div class="quick-dates">${datasRapidas().map(([l, d]) => `<button type="button" class="qd" data-d="${d}">${l}</button>`).join('')}</div>
+        <div class="f full"><span>Prioridade</span>${UI.segmented('prioridade', M.PRIORIDADES, v.prioridade)}</div>
+        ${a ? `<div class="f full"><span>Status</span>${UI.segmented('status', M.STATUS, v.status)}</div>` : ''}
+        <div class="negbox${v.tipoNegocio ? ' on' : ''}">
+          <label class="neg-toggle"><input type="checkbox" id="chkNeg" ${v.tipoNegocio ? 'checked' : ''}><span class="tg"><i></i></span><span><b>É um negócio</b><small>Consórcio, seguro, câmbio, investimentos... Aparece em Negócios em andamento.</small></span></label>
+          <div class="neg-fields" ${v.tipoNegocio ? '' : 'hidden'}>
+            <div class="row3">
+              <label class="f"><span>Tipo de negócio</span><select name="tipoNegocio">${UI.options(M.TIPOS_NEGOCIO, v.tipoNegocio || 'investimentos')}</select></label>
+              <label class="f"><span>Cliente</span><input name="cliente" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente"></label>
+              <label class="f"><span>Valor estimado</span><input name="valorNegocio" data-num inputmode="decimal" value="${v.valorNegocio ?? ''}" placeholder="R$"></label>
+            </div>
+          </div>
+        </div>
+        <details class="more" ${a ? 'open' : ''}><summary>Mais detalhes</summary>
+          <div class="more-b">
+            <label class="f full"><span>Descrição</span><textarea name="descricao" rows="2">${U.esc(v.descricao || '')}</textarea></label>
+            <div class="row2">
+              <label class="f"><span>Categoria ou projeto</span><input name="categoria" list="dlCat" value="${U.esc(v.categoria || '')}" placeholder="Ex.: Campanha de indicações 2027"><datalist id="dlCat">${categorias().map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
+              <label class="f"><span>Data de início</span><input type="date" name="inicio" value="${v.inicio || ''}"></label>
+            </div>
+            <div class="row2">
+              <label class="f"><span>Meta relacionada</span><select name="metaId" id="selMeta">${metaOpts(v.responsabilidadeId)}</select></label>
+              <label class="f"><span>Resultado esperado</span><input name="resultadoEsperado" data-num inputmode="decimal" value="${v.resultadoEsperado ?? ''}" placeholder="Ex.: 3"></label>
+            </div>
+            <div class="row2">
+              <label class="f"><span>Resultado alcançado</span><input name="resultado" data-num inputmode="decimal" value="${v.resultado ?? ''}" placeholder="Número"></label>
+              <label class="f"><span>Resultado em texto</span><input name="resultadoTexto" value="${U.esc(v.resultadoTexto || '')}" placeholder="Ex.: 3 indicações, 1 reunião marcada"></label>
+            </div>
+            <label class="f full"><span>Observações</span><textarea name="observacoes" rows="2">${U.esc(v.observacoes || '')}</textarea></label>
+          </div>
+        </details>
+        <p class="ferr" id="errAt" hidden></p>
+      </form>`,
+      footer: `<span class="kbd-hint">Enter salva</span><button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fAt" type="submit">${a ? 'Salvar alterações' : 'Criar atividade'}</button>`,
+      onMount(el, api) {
+        const form = el.querySelector('#fAt');
+        const marcar = () => el.querySelectorAll('.qd').forEach(b => b.classList.toggle('on', b.dataset.d === form.prazo.value));
+        el.querySelectorAll('.qd').forEach(b => b.onclick = () => { form.prazo.value = b.dataset.d; marcar(); });
+        form.prazo.oninput = marcar; marcar();
+        const chk = el.querySelector('#chkNeg');
+        chk.onchange = () => { el.querySelector('.neg-fields').hidden = !chk.checked; el.querySelector('.negbox').classList.toggle('on', chk.checked); if (chk.checked) form.cliente.focus(); };
+        form.responsabilidadeId.onchange = () => { el.querySelector('#selMeta').innerHTML = metaOpts(form.responsabilidadeId.value); };
+        form.onsubmit = e => {
+          e.preventDefault();
+          const d = UI.formData(form);
+          if (!d.titulo) { const er = el.querySelector('#errAt'); er.textContent = 'Escreva um título para a atividade.'; er.hidden = false; form.titulo.focus(); return; }
+          if (!chk.checked) { d.tipoNegocio = null; d.valorNegocio = null; d.cliente = null; }
+          if (a) { M.editarAtividade(a.id, d); UI.toast('Atividade atualizada'); }
+          else { if (d.resultado != null && !d.status) d.status = 'pendente'; M.criarAtividade(d); UI.toast('Atividade criada'); }
+          api.close();
+        };
+        form.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !['TEXTAREA', 'SUMMARY', 'SELECT'].includes(e.target.tagName)) { e.preventDefault(); form.requestSubmit(); } });
+      }
+    });
+  };
+
+  /* ---------- Concluir ---------- */
+  F.concluir = id => {
+    const a = Store.get('atividades', id); if (!a) return;
+    if (a.tipoNegocio) return F.concluirNegocio(id);
+    const meta = a.metaId ? Store.get('metas', a.metaId) : null;
+    const pedeResultado = (meta && meta.modo === 'atividades') || a.resultadoEsperado != null;
+    if (!pedeResultado) {
+      M.concluir(id);
+      UI.toast('Atividade concluída', 'ok', { label: 'Desfazer', fn: () => M.reabrir(id) });
+      return;
+    }
+    const un = meta ? meta.unidade : 'resultado';
+    UI.modal({
+      title: 'Concluir atividade', size: 'sm',
+      body: `<form class="form" id="fCon"><p class="muted" style="margin:0">${U.esc(a.titulo)}</p>
+        <label class="f full"><span>Quantas ${U.esc(un)} você obteve?${a.resultadoEsperado != null ? ' Esperado: ' + U.num(a.resultadoEsperado) : ''}</span><input name="resultado" data-num inputmode="decimal" value="${a.resultado ?? ''}" autofocus placeholder="0"></label>
+        <label class="f full"><span>Anotação (opcional)</span><input name="nota" value="${U.esc(a.resultadoTexto || '')}" placeholder="Ex.: dois sócios e o irmão"></label>
+        ${meta ? `<p class="note">O resultado entra na meta "${U.esc(meta.nome)}". Realizar a reunião é a atividade. As ${U.esc(un)} são o resultado.</p>` : ''}</form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCon" type="submit">${UI.icon('check')}Concluir</button>`,
+      onMount(el, api) {
+        el.querySelector('#fCon').onsubmit = e => {
+          e.preventDefault(); const d = UI.formData(e.target);
+          M.concluir(id, { resultado: d.resultado, nota: d.nota }); api.close();
+          UI.toast('Atividade concluída', 'ok', { label: 'Desfazer', fn: () => M.reabrir(id) });
+        };
+      }
+    });
+  };
+
+  /* ---------- Adiar ---------- */
+  F.adiar = id => {
+    const a = Store.get('atividades', id); if (!a) return;
+    const base = a.prazo && a.prazo > U.today() ? a.prazo : U.today();
+    const op = [['+1 dia', U.addDays(base, 1)], ['+3 dias', U.addDays(base, 3)], ['+1 semana', U.addDays(base, 7)], ['Próx. segunda', U.nextWeekday(1)]];
+    UI.modal({
+      title: 'Adiar atividade', size: 'sm',
+      body: `<form class="form" id="fAd"><p class="muted" style="margin:0">${U.esc(a.titulo)} · prazo atual: <b>${a.prazo ? U.fmtDate(a.prazo) : 'sem prazo'}</b></p>
+        <div class="quick-dates">${op.map(([l, d]) => `<button type="button" class="qd" data-d="${d}">${l}<small>${U.fmtDate(d)}</small></button>`).join('')}</div>
+        <label class="f full"><span>Novo prazo</span><input type="date" name="prazo" value="${op[0][1]}" required></label>
+        <label class="f full"><span>Motivo (opcional)</span><input name="motivo" placeholder="Fica no histórico da atividade"></label></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fAd" type="submit">Adiar</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fAd');
+        const marcar = () => el.querySelectorAll('.qd').forEach(b => b.classList.toggle('on', b.dataset.d === f.prazo.value));
+        el.querySelectorAll('.qd').forEach(b => b.onclick = () => { f.prazo.value = b.dataset.d; marcar(); }); f.prazo.oninput = marcar; marcar();
+        f.onsubmit = e => { e.preventDefault(); const d = UI.formData(f); if (!d.prazo) return; M.adiar(id, d.prazo, d.motivo); api.close(); UI.toast('Adiada para ' + U.fmtDate(d.prazo)); };
+      }
+    });
+  };
+
+  F.excluirAtividade = async id => {
+    const a = Store.get('atividades', id); if (!a) return false;
+    const ok = await UI.confirm({ title: 'Excluir atividade?', text: `"${U.esc(a.titulo)}" e o histórico dela serão apagados. Isso não pode ser desfeito.`, ok: 'Excluir' });
+    if (ok) { M.excluirAtividade(id); UI.toast('Atividade excluída'); }
+    return ok;
+  };
+
+  /* ---------- Detalhes + histórico ---------- */
+  F.detalhes = id => {
+    const a = Store.get('atividades', id); if (!a) return;
+    const meta = a.metaId ? Store.get('metas', a.metaId) : null;
+    const lin = (k, v) => v ? `<div class="kv"><span>${k}</span><div>${v}</div></div>` : '';
+    const hist = M.historico(id);
+    const m = UI.modal({
+      title: a.titulo, size: 'md',
+      body: `<div class="det-chips">${UI.respChip(a.responsabilidadeId)}${UI.statusPill(a.status)}${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
+        <div class="kvs">
+          ${lin('Descrição', U.esc(a.descricao))}
+          ${lin('Categoria', U.esc(a.categoria))}
+          ${lin('Prazo', a.prazo ? U.fmtDateLong(a.prazo) : 'Sem prazo')}
+          ${lin('Início', a.inicio ? U.fmtDateLong(a.inicio) : '')}
+          ${lin('Negócio', a.tipoNegocio ? `${U.esc(M.tipoNeg(a.tipoNegocio).label)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}${a.valorNegocio ? ' · <b>' + U.brl(a.valorNegocio) + '</b>' : ''}${a.resultadoNegocio ? ` <span class="tag ${a.resultadoNegocio === 'ganho' ? 't-ok' : 't-erro'}">${a.resultadoNegocio === 'ganho' ? 'Fechado' : 'Não fechou'}</span>` : ''}` : '')}
+          ${lin('Meta', meta ? U.esc(meta.nome) : '')}
+          ${lin('Resultado', a.resultado != null || a.resultadoEsperado != null ? `<b>${a.resultado != null ? U.num(a.resultado) : '—'}</b>${a.resultadoEsperado != null ? ' de ' + U.num(a.resultadoEsperado) + ' esperado(s)' : ''}${meta ? ' ' + U.esc(meta.unidade) : ''}${a.resultadoTexto ? '<br><span class="muted">' + U.esc(a.resultadoTexto) + '</span>' : ''}` : (a.resultadoTexto ? U.esc(a.resultadoTexto) : ''))}
+          ${lin('Observações', U.esc(a.observacoes))}
+          ${lin('Criada em', U.fmtDateTime(a.criadoEm))}
+          ${lin('Concluída em', a.concluidaEm ? U.fmtDateTime(a.concluidaEm) : '')}
+          ${lin('Adiamentos', a.adiamentos ? String(a.adiamentos) : '')}
+        </div>
+        <h3 class="sub-h">${UI.icon('historico')}Histórico</h3>
+        <ol class="timeline">${hist.length ? hist.map(h => `<li class="t-${h.tipo}"><b>${U.esc(h.descricao)}</b><small>${U.fmtDateTime(h.em)}</small></li>`).join('') : '<li><small>Sem registros.</small></li>'}</ol>`,
+      footer: `<button class="btn ghost danger-text" data-a="del">${UI.icon('lixo')}Excluir</button><span class="grow"></span>
+        ${a.status !== 'concluida' ? `<button class="btn ghost" data-a="adiar">${UI.icon('adiar')}Adiar</button>` : ''}
+        <button class="btn ghost" data-a="edit">${UI.icon('editar')}Editar</button>
+        ${a.status !== 'concluida' ? `<button class="btn primary" data-a="ok">${UI.icon('check')}Concluir</button>` : `<button class="btn ghost" data-a="reabrir">Reabrir</button>`}`,
+      onMount(el, api) {
+        el.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
+          const act = b.dataset.a;
+          if (act === 'del') { if (await F.excluirAtividade(id)) api.close(); return; }
+          api.close();
+          if (act === 'edit') F.atividade(id);
+          if (act === 'adiar') F.adiar(id);
+          if (act === 'ok') F.concluir(id);
+          if (act === 'reabrir') { M.reabrir(id); UI.toast('Atividade reaberta'); }
+        });
+      }
+    });
+    return m;
+  };
+
+  /* ---------- Responsabilidade ---------- */
+  F.resp = id => {
+    const r = id ? Store.get('responsabilidades', id) : null;
+    const v = r || { cor: M.CORES[Store.all('responsabilidades').length % M.CORES.length] };
+    UI.modal({
+      title: r ? 'Editar responsabilidade' : 'Nova responsabilidade', size: 'sm',
+      body: `<form class="form" id="fRe">
+        <label class="f full"><span>Nome</span><input name="nome" required maxlength="60" value="${U.esc(v.nome || '')}" autofocus placeholder="Ex.: Assessoria de Investimentos"></label>
+        <label class="f full"><span>Descrição</span><textarea name="descricao" rows="2">${U.esc(v.descricao || '')}</textarea></label>
+        <div class="f full"><span>Cor de identificação</span><div class="colors">${M.CORES.map(c => `<label class="cpick"><input type="radio" name="cor" value="${c}"${c === v.cor ? ' checked' : ''}><i style="background:${c}"></i></label>`).join('')}</div></div>
+        <p class="ferr" id="errRe" hidden></p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fRe" type="submit">${r ? 'Salvar' : 'Criar responsabilidade'}</button>`,
+      onMount(el, api) {
+        el.querySelector('#fRe').onsubmit = e => {
+          e.preventDefault(); const d = UI.formData(e.target);
+          if (!d.nome) { const er = el.querySelector('#errRe'); er.textContent = 'Dê um nome à responsabilidade.'; er.hidden = false; return; }
+          if (r) Store.update('responsabilidades', r.id, d); else Store.insert('responsabilidades', { ...d, status: 'ativa' });
+          api.close(); UI.toast(r ? 'Responsabilidade atualizada' : 'Responsabilidade criada');
+        };
+      }
+    });
+  };
+
+  /* ---------- Meta ---------- */
+  F.meta = id => {
+    const mt = id ? Store.get('metas', id) : null;
+    const t = U.today(), d0 = new Date();
+    const v = mt || { periodicidade: 'mensal', modo: 'manual', inicio: U.iso(new Date(d0.getFullYear(), d0.getMonth(), 1)), fim: U.iso(new Date(d0.getFullYear(), d0.getMonth() + 1, 0)), responsabilidadeId: (M.respAtivas()[0] || {}).id, atual: 0 };
+    UI.modal({
+      title: mt ? 'Editar meta' : 'Nova meta', size: 'md',
+      body: `<form class="form" id="fMe">
+        <label class="f full"><span>Nome da meta</span><input name="nome" required maxlength="100" value="${U.esc(v.nome || '')}" autofocus placeholder="Ex.: Conseguir 30 indicações"></label>
+        <div class="row2">
+          <label class="f"><span>Responsabilidade</span><select name="responsabilidadeId">${UI.respOptions(v.responsabilidadeId)}</select></label>
+          <label class="f"><span>Periodicidade</span><select name="periodicidade" id="selPer">${UI.options(M.PERIODICIDADES, v.periodicidade)}</select></label>
+        </div>
+        <div class="row3">
+          <label class="f"><span>Quantidade desejada</span><input name="alvo" data-num inputmode="decimal" required value="${v.alvo ?? ''}" placeholder="30"></label>
+          <label class="f"><span>Unidade de medida</span><input name="unidade" value="${U.esc(v.unidade || '')}" placeholder="indicações"></label>
+          <label class="f" id="boxAtual"><span>Resultado atual</span><input name="atual" data-num inputmode="decimal" value="${v.atual ?? 0}"></label>
+        </div>
+        <div class="row2">
+          <label class="f"><span>Data inicial</span><input type="date" name="inicio" value="${v.inicio || ''}"></label>
+          <label class="f"><span>Data final</span><input type="date" name="fim" value="${v.fim || ''}"></label>
+        </div>
+        <div class="f full"><span>Como o resultado é atualizado</span>${UI.segmented('modo', [{ id: 'manual', label: 'Eu atualizo manualmente' }, { id: 'atividades', label: 'Soma dos resultados das atividades' }], v.modo)}</div>
+        <p class="note" id="modoNote"></p>
+        <label class="f full"><span>Descrição</span><textarea name="descricao" rows="2">${U.esc(v.descricao || '')}</textarea></label>
+        <p class="ferr" id="errMe" hidden></p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fMe" type="submit">${mt ? 'Salvar' : 'Criar meta'}</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fMe');
+        const modo = () => { const at = f.querySelector('[name=modo]:checked').value === 'atividades'; el.querySelector('#boxAtual').hidden = at;
+          el.querySelector('#modoNote').textContent = at ? 'Cada atividade ligada a esta meta pede o resultado ao ser concluída, e a meta soma tudo automaticamente.' : 'Você registra o resultado atual sempre que quiser, e cada registro fica na evolução da meta.'; };
+        f.querySelectorAll('[name=modo]').forEach(r => r.onchange = modo); modo();
+        el.querySelector('#selPer').onchange = e => {
+          const n = new Date(), p = e.target.value; let a, b;
+          if (p === 'semanal') { const s = new Date(n); s.setDate(n.getDate() - ((n.getDay() + 6) % 7)); a = U.iso(s); b = U.addDays(a, 6); }
+          if (p === 'mensal') { a = U.iso(new Date(n.getFullYear(), n.getMonth(), 1)); b = U.iso(new Date(n.getFullYear(), n.getMonth() + 1, 0)); }
+          if (p === 'trimestral') { const q = Math.floor(n.getMonth() / 3) * 3; a = U.iso(new Date(n.getFullYear(), q, 1)); b = U.iso(new Date(n.getFullYear(), q + 3, 0)); }
+          if (p === 'anual') { a = n.getFullYear() + '-01-01'; b = n.getFullYear() + '-12-31'; }
+          f.inicio.value = a; f.fim.value = b;
+        };
+        f.onsubmit = e => {
+          e.preventDefault(); const d = UI.formData(f); const er = el.querySelector('#errMe');
+          if (!d.nome) { er.textContent = 'Dê um nome à meta.'; er.hidden = false; return; }
+          if (!(d.alvo > 0)) { er.textContent = 'Informe a quantidade desejada (maior que zero).'; er.hidden = false; return; }
+          if (d.inicio && d.fim && d.fim < d.inicio) { er.textContent = 'A data final precisa ser depois da inicial.'; er.hidden = false; return; }
+          d.atual = d.atual || 0;
+          if (mt) { const mudou = d.modo === 'manual' && d.atual !== mt.atual; Store.update('metas', mt.id, d); if (mudou) M.registrarMeta(mt.id, d.atual, 'Ajuste na edição'); }
+          else { const n = Store.insert('metas', d); if (d.modo === 'manual') M.registrarMeta(n.id, d.atual, 'Início'); }
+          api.close(); UI.toast(mt ? 'Meta atualizada' : 'Meta criada');
+        };
+      }
+    });
+  };
+
+  /* Atualizar resultado de meta manual, com evolução */
+  F.atualizarMeta = id => {
+    const mt = Store.get('metas', id); if (!mt) return;
+    const regs = M.metaRegistros(id);
+    UI.modal({
+      title: 'Atualizar resultado', size: 'sm',
+      body: `<form class="form" id="fUp"><p class="muted" style="margin:0">${U.esc(mt.nome)} · meta: <b>${U.num(mt.alvo)} ${U.esc(mt.unidade || '')}</b></p>
+        <div class="stepper"><button type="button" class="btn ghost" data-s="-1">−1</button><input name="valor" data-num inputmode="decimal" value="${mt.atual || 0}" autofocus><button type="button" class="btn ghost" data-s="1">+1</button><button type="button" class="btn ghost" data-s="5">+5</button></div>
+        <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: 2 indicações na reunião com a Lidy"></label>
+        ${regs.length ? `<h3 class="sub-h">Evolução</h3>${App.Charts.spark(regs.map(r => r.valor), mt.alvo)}<ol class="timeline compact">${regs.slice().reverse().slice(0, 6).map(r => `<li><b>${U.num(r.valor)} ${U.esc(mt.unidade || '')}</b>${r.nota ? ' · ' + U.esc(r.nota) : ''}<small>${U.fmtDateTime(r.em)}</small></li>`).join('')}</ol>` : ''}</form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fUp" type="submit">Registrar</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fUp');
+        el.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { f.valor.value = Math.max(0, (U.parseNum(f.valor.value) || 0) + +b.dataset.s); });
+        f.onsubmit = e => { e.preventDefault(); const d = UI.formData(f); if (d.valor == null) return; M.registrarMeta(id, d.valor, d.nota); api.close(); UI.toast('Resultado registrado'); };
+      }
+    });
+  };
+
+  /* ---------- Concluir negócio: fechou ou não, e lança no faturamento ---------- */
+  F.concluirNegocio = id => {
+    const a = Store.get('atividades', id); if (!a) return;
+    const meta = a.metaId ? Store.get('metas', a.metaId) : null;
+    const pedeResultado = (meta && meta.modo === 'atividades') || a.resultadoEsperado != null;
+    UI.modal({
+      title: 'Concluir negócio', size: 'sm',
+      body: `<form class="form" id="fCn"><p class="muted" style="margin:0">${U.esc(a.titulo)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}</p>
+        <div class="f full"><span>Como terminou?</span>${UI.segmented('res', [{ id: 'ganho', label: 'Fechado' }, { id: 'perdido', label: 'Não fechou' }], 'ganho')}</div>
+        <div id="cnGanho" class="form">
+          <div class="row2">
+            <label class="f"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${a.valorNegocio ?? ''}" placeholder="R$"></label>
+            <label class="f"><span>Receita gerada (opcional)</span><input name="receita" data-num inputmode="decimal" placeholder="Comissão, R$"></label>
+          </div>
+          <label class="neg-toggle sm"><input type="checkbox" name="lancar" id="cnLancar" checked><span class="tg"><i></i></span><span><b>Lançar no faturamento</b></span></label>
+        </div>
+        ${pedeResultado ? `<label class="f full"><span>Resultado para a meta (${U.esc(meta ? meta.unidade : 'resultado')})</span><input name="resultado" data-num inputmode="decimal" value="${a.resultado ?? ''}"></label>` : ''}
+        <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: fechou com carta de R$ 520 mil"></label></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCn" type="submit">${UI.icon('check')}Concluir</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fCn');
+        const sync = () => { el.querySelector('#cnGanho').hidden = f.querySelector('[name=res]:checked').value !== 'ganho'; };
+        f.querySelectorAll('[name=res]').forEach(r => r.onchange = sync);
+        f.onsubmit = e => {
+          e.preventDefault();
+          const d = UI.formData(f), ganho = d.res === 'ganho', lancar = ganho && el.querySelector('#cnLancar').checked;
+          Store.update('atividades', id, { resultadoNegocio: d.res, valorNegocio: ganho && d.valor != null ? d.valor : a.valorNegocio }, { silent: true });
+          M.concluir(id, { resultado: pedeResultado ? d.resultado : undefined, nota: (ganho ? 'Negócio fechado' : 'Negócio não fechou') + (d.nota ? ' · ' + d.nota : '') });
+          if (lancar) Store.insert('faturamento', { data: U.today(), cliente: a.cliente || null, tipo: a.tipoNegocio, descricao: a.titulo, valor: d.valor, receita: d.receita, responsabilidadeId: a.responsabilidadeId, atividadeId: a.id });
+          api.close();
+          UI.toast(lancar ? 'Negócio fechado e lançado no faturamento' : ganho ? 'Negócio fechado' : 'Negócio encerrado', 'ok', { label: 'Desfazer', fn: () => { M.reabrir(id); Store.update('atividades', id, { resultadoNegocio: null }); if (lancar) { const fl = Store.all('faturamento').find(x => x.atividadeId === id); if (fl) Store.remove('faturamento', fl.id); } } });
+        };
+      }
+    });
+  };
+
+  /* ---------- Lançamento de faturamento ---------- */
+  F.faturamento = (id, preset = {}) => {
+    const fx = id ? Store.get('faturamento', id) : null;
+    const v = fx || { data: U.today(), tipo: 'investimentos', responsabilidadeId: (M.respAtivas()[0] || {}).id, ...preset };
+    const clientes = [...new Set([...Store.all('faturamento').map(x => x.cliente), ...Store.all('atividades').map(x => x.cliente)].filter(Boolean))].sort();
+    UI.modal({
+      title: fx ? 'Editar lançamento' : 'Lançar negócio efetivado', size: 'md',
+      body: `<form class="form" id="fFa">
+        <div class="row3">
+          <label class="f"><span>Data</span><input type="date" name="data" required value="${v.data || ''}"></label>
+          <label class="f"><span>Tipo de negócio</span><select name="tipo">${UI.options(M.TIPOS_NEGOCIO, v.tipo)}</select></label>
+          <label class="f"><span>Responsabilidade</span><select name="responsabilidadeId">${UI.respOptions(v.responsabilidadeId, 'Nenhuma')}</select></label>
+        </div>
+        <div class="row2">
+          <label class="f"><span>Cliente</span><input name="cliente" list="dlCli" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente" autofocus><datalist id="dlCli">${clientes.map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
+          <label class="f"><span>Descrição</span><input name="descricao" value="${U.esc(v.descricao || '')}" placeholder="Ex.: Consórcio imobiliário, carta de R$ 500 mil"></label>
+        </div>
+        <div class="row2">
+          <label class="f"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${v.valor ?? ''}" placeholder="Volume, carta, prêmio..."></label>
+          <label class="f"><span>Receita gerada</span><input name="receita" data-num inputmode="decimal" value="${v.receita ?? ''}" placeholder="Comissão / faturamento"></label>
+        </div>
+        <label class="f full"><span>Observações</span><textarea name="observacoes" rows="2">${U.esc(v.observacoes || '')}</textarea></label>
+        <p class="ferr" id="errFa" hidden></p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fFa" type="submit">${fx ? 'Salvar' : 'Lançar'}</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fFa');
+        f.onsubmit = e => {
+          e.preventDefault(); const d = UI.formData(f), er = el.querySelector('#errFa');
+          if (!d.data) { er.textContent = 'Informe a data do negócio.'; er.hidden = false; return; }
+          if (d.valor == null && d.receita == null) { er.textContent = 'Informe o valor do negócio ou a receita gerada.'; er.hidden = false; return; }
+          if (fx) Store.update('faturamento', fx.id, d); else Store.insert('faturamento', { ...d, atividadeId: preset.atividadeId || null });
+          api.close(); UI.toast(fx ? 'Lançamento atualizado' : 'Negócio lançado no faturamento');
+        };
+      }
+    });
+  };
+
+  App.Forms = F;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/painel.js */
+/* Tela: Painel (dashboard principal). Responde: hoje, atrasadas, próximas, metas e execução. */
+(function (App) {
+  const { U, M, UI, Store, Charts } = App;
+  const V = { titulo: 'Painel' };
+  let filtroResp = '';
+
+  const itemAt = a => `<li class="pitem${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
+      <button class="check" data-act="concluir" aria-label="Concluir ${U.esc(a.titulo)}">${UI.icon('check')}</button>
+      <div class="pmain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${a.tipoNegocio ? UI.negChip(a) : (a.categoria ? `<span class="cat">${U.esc(a.categoria)}</span>` : '')}</div></div>
+      <div class="pside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
+      <button class="icon-btn" data-act="adiar" title="Adiar" aria-label="Adiar">${UI.icon('adiar')}</button></li>`;
+
+  V.render = el => {
+    const r = M.resumo(filtroResp);
+    const prior = M.prioridadesHoje().filter(a => !filtroResp || a.responsabilidadeId === filtroResp);
+    const prox = Store.all('atividades').filter(a => M.proximos(a, 7) && !prior.includes(a) && (!filtroResp || a.responsabilidadeId === filtroResp)).sort(M.ordemAtencao);
+    const metas = Store.all('metas').filter(m => (!filtroResp || m.responsabilidadeId === filtroResp) && !(m.fim && m.fim < U.addDays(U.today(), -30)));
+    const resps = M.respAtivas().filter(x => !filtroResp || x.id === filtroResp);
+    const exec = r.planejadas7 ? r.feitas7 / r.planejadas7 : null;
+    const demo = App.Demo.count();
+    const negs = M.negociosAbertos().filter(a => !filtroResp || a.responsabilidadeId === filtroResp);
+
+    el.innerHTML = `
+      ${demo.atividades + demo.metas ? `<div class="banner">Você está vendo <b>dados de demonstração</b>. Quando quiser começar com os seus, apague-os em <a href="#dados" data-go="dados">Backup e dados</a>.</div>` : ''}
+      <div class="page-h"><div><h1>Bom dia</h1><p class="muted cap">${U.todayLong()}</p></div>
+        <label class="filter"><span class="sr">Filtrar por responsabilidade</span><select id="fResp">${UI.options(M.respAtivas().map(x => ({ id: x.id, label: x.nome })), filtroResp, { vazio: 'Todas as responsabilidades' })}</select></label></div>
+
+      <section class="kpis" aria-label="Indicadores">
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=hoje"><span>Para hoje</span><b>${r.hoje}</b></a>
+        <a class="kpi ${r.atrasadas ? 'k-late' : ''}" href="#atividades" data-go="atividades" data-q="prazo=atrasadas"><span>Atrasadas</span><b>${r.atrasadas}</b></a>
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=7dias"><span>Próximos 7 dias</span><b>${r.proximos7}</b></a>
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=abertas"><span>Pendentes</span><b>${r.pendentes}</b></a>
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=concluida"><span>Concluídas</span><b>${r.concluidas}</b></a>
+        <a class="kpi k-neg" href="#negocios" data-go="negocios"><span>Negócios em andamento</span><b>${negs.length}</b><em>${negs.length ? U.brlShort(negs.reduce((s, a) => s + (+a.valorNegocio || 0), 0)) + ' em negociação' : 'Nenhum no momento'}</em></a>
+      </section>
+
+      <div class="grid-main">
+        <section class="card prio-card" aria-label="Minhas prioridades de hoje">
+          <div class="card-h"><h2>Minhas prioridades de hoje</h2><span class="count">${prior.length}</span></div>
+          ${prior.length ? `<ul class="plist" id="plist">${prior.map(itemAt).join('')}</ul>`
+            : `<div class="empty"><b>Nada urgente por aqui.</b><p>Nenhuma atividade atrasada ou para hoje. Aproveite para adiantar as próximas.</p></div>`}
+          ${prox.length ? `<details class="next"><summary>Próximos 7 dias · ${prox.length}</summary><ul class="plist">${prox.slice(0, 12).map(itemAt).join('')}</ul></details>` : ''}
+        </section>
+
+        <aside class="side-col">
+          <section class="card exec">
+            <div class="card-h"><h2>Estou executando o que planejei?</h2></div>
+            <div class="exec-b">${Charts.ring(r.pctConclusao, 92)}
+              <div><p class="big-l">${U.pct(r.pctConclusao)} <span class="muted">concluído no total</span></p>
+              <p class="muted small">${exec == null ? 'Nenhuma atividade venceu nos últimos 7 dias.' : `Últimos 7 dias: <b class="ink">${r.feitas7} de ${r.planejadas7}</b> atividades com prazo foram concluídas (${U.pct(exec)}).`}</p></div></div>
+          </section>
+          <section class="card">
+            <div class="card-h"><h2>Metas</h2><a class="link" href="#metas" data-go="metas">Ver todas</a></div>
+            ${metas.length ? `<ul class="mlist">${metas.slice(0, 5).map(m => { const p = M.metaPct(m), s = M.metaSituacao(m); return `<li><div class="mrow"><span class="mname">${U.esc(m.nome)}</span><span class="tag t-${s.id}">${s.label}</span></div>${UI.bar(p, M.respCor(m.responsabilidadeId))}<div class="mrow small muted"><span>${U.num(M.metaAtual(m))} de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><span>${U.pct(p)}</span></div></li>`; }).join('')}</ul>`
+              : `<div class="empty sm"><p>Nenhuma meta ativa.</p><a class="btn ghost" href="#metas" data-go="metas">Criar meta</a></div>`}
+          </section>
+        </aside>
+      </div>
+
+      <section class="card" aria-label="Desempenho por responsabilidade">
+        <div class="card-h"><h2>Desempenho por responsabilidade</h2><a class="link" href="#responsabilidades" data-go="responsabilidades">Gerenciar</a></div>
+        <div class="rgrid">${resps.map(x => {
+          const at = Store.where('atividades', a => a.responsabilidadeId === x.id), c = at.filter(a => a.status === 'concluida').length, l = at.filter(M.atrasada).length, h = at.filter(M.hoje).length;
+          return `<a class="rcard" href="#atividades" data-go="atividades" data-q="resp=${x.id}" style="--c:${x.cor}"><div class="rh"><i></i><b>${U.esc(x.nome)}</b></div>
+            ${UI.bar(at.length ? c / at.length : 0, x.cor)}
+            <div class="rnums"><span><b>${c}</b>/${at.length} concluídas</span><span class="${l ? 'late' : ''}"><b>${l}</b> atrasada${l === 1 ? '' : 's'}</span><span><b>${h}</b> hoje</span></div></a>`;
+        }).join('') || '<p class="muted">Cadastre suas responsabilidades para ver o desempenho de cada uma.</p>'}</div>
+      </section>`;
+
+    const h = new Date().getHours();
+    el.querySelector('.page-h h1').textContent = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+    el.querySelector('#fResp').onchange = e => { filtroResp = e.target.value; V.render(el); };
+    el.querySelectorAll('.pitem').forEach(li => li.addEventListener('click', e => {
+      const b = e.target.closest('[data-act]'); if (!b) return; const id = li.dataset.id;
+      if (b.dataset.act === 'concluir') App.Forms.concluir(id);
+      if (b.dataset.act === 'abrir') App.Forms.detalhes(id);
+      if (b.dataset.act === 'adiar') App.Forms.adiar(id);
+    }));
+  };
+
+  App.Views = App.Views || {};
+  App.Views.painel = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/atividades.js */
+/* Tela: Atividades, em lista agrupada por prazo ou em quadro Kanban, com filtros. */
+(function (App) {
+  const { U, M, UI, Store } = App;
+  const V = { titulo: 'Atividades' };
+  const PADRAO = { resp: '', status: 'abertas', prioridade: '', prazo: '', busca: '', categoria: '', metaId: '' };
+  let f = { ...PADRAO };
+  let modo = (() => { try { return localStorage.getItem('gestao-pessoal:modoAtividades') || 'lista'; } catch (e) { return 'lista'; } })();
+
+  V.setParams = q => { f = { ...PADRAO }; if (q) Object.assign(f, q); if (q && (q.prazo === 'atrasadas' || q.prazo === 'hoje' || q.prazo === '7dias')) f.status = 'abertas'; if (q && q.status === 'concluida') f.status = 'concluida'; };
+
+  const passa = (a, semStatus) => {
+    if (f.resp && a.responsabilidadeId !== f.resp) return false;
+    if (f.categoria && a.categoria !== f.categoria) return false;
+    if (f.metaId && a.metaId !== f.metaId) return false;
+    if (!semStatus && f.status === 'abertas' && !M.aberta(a)) return false;
+    if (!semStatus && f.status && f.status !== 'abertas' && a.status !== f.status) return false;
+    if (f.prioridade && a.prioridade !== f.prioridade) return false;
+    if (f.prazo === 'atrasadas' && !M.atrasada(a)) return false;
+    if (f.prazo === 'hoje' && !M.hoje(a)) return false;
+    if (f.prazo === '7dias' && !(M.hoje(a) || M.proximos(a, 7))) return false;
+    if (f.prazo === 'semprazo' && a.prazo) return false;
+    if (f.busca) { const q = f.busca.toLowerCase(); if (![a.titulo, a.descricao, a.categoria, a.observacoes].some(s => s && s.toLowerCase().includes(q))) return false; }
+    return true;
+  };
+
+  const grupo = a => {
+    if (a.status === 'concluida') return 'concluidas';
+    if (!a.prazo) return 'semprazo';
+    if (M.atrasada(a)) return 'atrasadas';
+    if (M.hoje(a)) return 'hoje';
+    if (U.diff(a.prazo, U.today()) <= 7) return 'semana';
+    return 'depois';
+  };
+  const GRUPOS = [['atrasadas', 'Atrasadas'], ['hoje', 'Hoje'], ['semana', 'Próximos 7 dias'], ['depois', 'Mais adiante'], ['semprazo', 'Sem prazo'], ['concluidas', 'Concluídas']];
+
+  const resultadoTxt = a => {
+    if (a.resultado == null && a.resultadoEsperado == null) return '';
+    const mt = a.metaId ? Store.get('metas', a.metaId) : null;
+    const un = U.esc(mt ? mt.unidade : 'resultado');
+    if (a.resultado == null) return `<span class="res pend">Esperado: ${U.num(a.resultadoEsperado)} ${un}</span>`;
+    return `<span class="res">${U.num(a.resultado)}${a.resultadoEsperado != null ? '/' + U.num(a.resultadoEsperado) : ''} ${un}</span>`;
+  };
+
+  const linha = a => `<li class="arow${a.status === 'concluida' ? ' is-done' : ''}${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
+    <button class="check${a.status === 'concluida' ? ' on' : ''}" data-act="${a.status === 'concluida' ? 'reabrir' : 'concluir'}" aria-label="${a.status === 'concluida' ? 'Reabrir' : 'Concluir'}">${UI.icon('check')}</button>
+    <div class="amain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${a.categoria && !a.tipoNegocio ? `<span class="cat">${U.esc(a.categoria)}</span>` : ''}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}${resultadoTxt(a)}</div></div>
+    <div class="aside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
+    <div class="aact">${a.status !== 'concluida' ? `<button class="icon-btn" data-act="adiar" title="Adiar" aria-label="Adiar">${UI.icon('adiar')}</button>` : ''}<button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button><button class="icon-btn" data-act="excluir" title="Excluir" aria-label="Excluir">${UI.icon('lixo')}</button></div></li>`;
+
+  const cartao = a => `<article class="kcard${M.atrasada(a) ? ' is-late' : ''}" draggable="true" data-id="${a.id}" tabindex="0">
+    <div class="kc-top">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
+    <b>${U.esc(a.titulo)}</b>
+    <div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${resultadoTxt(a)}</div></article>`;
+
+  V.render = el => {
+    const todas = Store.all('atividades');
+    const lista = todas.filter(passa);
+    const cats = [...new Set(todas.map(a => a.categoria).filter(Boolean))].sort();
+    const filtrado = JSON.stringify(f) !== JSON.stringify(PADRAO);
+
+    el.innerHTML = `
+      <div class="page-h"><div><h1>Atividades</h1><p class="muted">${U.plural(lista.length, 'atividade', 'atividades')}${filtrado ? ' com os filtros atuais' : ' em aberto'}</p></div>
+        <div class="seg" role="group" aria-label="Visualização"><button data-modo="lista" aria-pressed="${modo === 'lista'}">${UI.icon('lista')}Lista</button><button data-modo="kanban" aria-pressed="${modo === 'kanban'}">${UI.icon('kanban')}Kanban</button></div></div>
+      <div class="filters">
+        <label class="search">${UI.icon('busca')}<input id="fBusca" placeholder="Buscar" value="${U.esc(f.busca)}" aria-label="Buscar atividades"></label>
+        <select data-f="resp" aria-label="Responsabilidade">${UI.options(Store.all('responsabilidades').map(x => ({ id: x.id, label: x.nome })), f.resp, { vazio: 'Todas as responsabilidades' })}</select>
+        <select data-f="prazo" aria-label="Prazo">${UI.options([{ id: 'atrasadas', label: 'Atrasadas' }, { id: 'hoje', label: 'Para hoje' }, { id: '7dias', label: 'Até 7 dias' }, { id: 'semprazo', label: 'Sem prazo' }], f.prazo, { vazio: 'Qualquer prazo' })}</select>
+        <select data-f="prioridade" aria-label="Prioridade">${UI.options(M.PRIORIDADES, f.prioridade, { vazio: 'Qualquer prioridade' })}</select>
+        ${modo === 'lista' ? `<select data-f="status" aria-label="Status">${UI.options([{ id: 'abertas', label: 'Em aberto' }, ...M.STATUS], f.status, { vazio: 'Todos os status' })}</select>` : ''}
+        ${cats.length ? `<select data-f="categoria" aria-label="Categoria">${UI.options(cats.map(c => ({ id: c, label: c })), f.categoria, { vazio: 'Todas as categorias' })}</select>` : ''}
+        ${f.metaId && Store.get('metas', f.metaId) ? `<span class="fchip">Meta: ${U.esc(Store.get('metas', f.metaId).nome)}</span>` : ''}
+        ${filtrado ? `<button class="link" id="limpar">Limpar filtros</button>` : ''}
+      </div>
+      <div id="corpo"></div>`;
+
+    const corpo = el.querySelector('#corpo');
+    if (modo === 'lista') {
+      const gs = GRUPOS.map(([k, t]) => [k, t, lista.filter(a => grupo(a) === k)]).filter(g => g[2].length);
+      gs.forEach(g => g[2].sort(g[0] === 'concluidas' ? (a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || '') : M.ordemAtencao));
+      corpo.innerHTML = gs.length ? gs.map(([k, t, arr]) => `<section class="agroup g-${k}"><h2>${t} <span class="count">${arr.length}</span></h2><ul class="alist">${arr.map(linha).join('')}</ul></section>`).join('')
+        : `<div class="empty card"><b>Nenhuma atividade encontrada.</b><p>${filtrado ? 'Tente outros filtros.' : 'Crie a primeira atividade.'}</p><button class="btn primary" data-nova>${UI.icon('mais')}Nova atividade</button></div>`;
+    } else {
+      const base = todas.filter(a => passa(a, true));
+      corpo.innerHTML = `<div class="kanban">${M.STATUS.map(s => { const arr = base.filter(a => a.status === s.id).sort(s.id === 'concluida' ? (a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || '') : M.ordemAtencao);
+        return `<section class="kcol" data-status="${s.id}"><h2>${UI.statusPill(s.id)}<span class="count">${arr.length}</span></h2><div class="kdrop">${(s.id === 'concluida' ? arr.slice(0, 15) : arr).map(cartao).join('') || '<p class="kempty">Arraste atividades para cá</p>'}${s.id === 'concluida' && arr.length > 15 ? `<p class="kempty">+${arr.length - 15} concluídas</p>` : ''}</div></section>`; }).join('')}</div>
+        <p class="note">Arraste os cartões entre as colunas para mudar o status. No celular, toque no cartão e use Editar.</p>`;
+      bindKanban(corpo);
+    }
+
+    el.querySelectorAll('[data-modo]').forEach(b => b.onclick = () => { modo = b.dataset.modo; try { localStorage.setItem('gestao-pessoal:modoAtividades', modo); } catch (e) {} V.render(el); });
+    el.querySelectorAll('[data-f]').forEach(s => s.onchange = () => { f[s.dataset.f] = s.value; V.render(el); });
+    const busca = el.querySelector('#fBusca');
+    busca.oninput = () => { f.busca = busca.value; const pos = busca.selectionStart; V.render(el); const nb = el.querySelector('#fBusca'); nb.focus(); nb.setSelectionRange(pos, pos); };
+    const lim = el.querySelector('#limpar'); if (lim) lim.onclick = () => { f = { ...PADRAO }; V.render(el); };
+    const nova = el.querySelector('[data-nova]'); if (nova) nova.onclick = () => App.Forms.atividade(null, f.resp ? { responsabilidadeId: f.resp } : {});
+    corpo.querySelectorAll('.arow').forEach(li => li.addEventListener('click', e => {
+      const b = e.target.closest('[data-act]'); if (!b) return; const id = li.dataset.id, act = b.dataset.act;
+      if (act === 'concluir') App.Forms.concluir(id);
+      if (act === 'reabrir') { M.reabrir(id); UI.toast('Atividade reaberta'); }
+      if (act === 'abrir') App.Forms.detalhes(id);
+      if (act === 'adiar') App.Forms.adiar(id);
+      if (act === 'editar') App.Forms.atividade(id);
+      if (act === 'excluir') App.Forms.excluirAtividade(id);
+    }));
+  };
+
+  function bindKanban(root) {
+    let drag = null;
+    root.querySelectorAll('.kcard').forEach(c => {
+      c.addEventListener('dragstart', e => { drag = c.dataset.id; c.classList.add('dragging'); try { e.dataTransfer.setData('text/plain', drag); } catch (x) {} });
+      c.addEventListener('dragend', () => c.classList.remove('dragging'));
+      c.addEventListener('click', () => App.Forms.detalhes(c.dataset.id));
+      c.addEventListener('keydown', e => { if (e.key === 'Enter') App.Forms.detalhes(c.dataset.id); });
+    });
+    root.querySelectorAll('.kcol').forEach(col => {
+      col.addEventListener('dragover', e => { e.preventDefault(); col.classList.add('over'); });
+      col.addEventListener('dragleave', () => col.classList.remove('over'));
+      col.addEventListener('drop', e => {
+        e.preventDefault(); col.classList.remove('over');
+        const id = drag; drag = null; if (!id) return;
+        const a = Store.get('atividades', id); const st = col.dataset.status;
+        if (!a || a.status === st) return;
+        if (st === 'concluida') return App.Forms.concluir(id);
+        if (st === 'adiada') return App.Forms.adiar(id);
+        if (a.status === 'concluida') M.reabrir(id);
+        M.mudarStatus(id, st); UI.toast('Movida para ' + M.status(st).label);
+      });
+    });
+  }
+
+  App.Views = App.Views || {};
+  App.Views.atividades = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/negocios.js */
+/* Tela: Negócios em andamento (aberta pelo card do painel). */
+(function (App) {
+  const { U, M, UI, Store } = App;
+  const V = { titulo: 'Negócios em andamento' };
+  let fTipo = '';
+
+  const linha = a => `<li class="nrow${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
+      <button class="check" data-act="concluir" aria-label="Concluir negócio">${UI.icon('check')}</button>
+      <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span>${U.esc(a.cliente ? a.titulo : M.tipoNeg(a.tipoNegocio).label)}</span>${UI.respChip(a.responsabilidadeId)}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}</div></div>
+      <div class="nval">${a.valorNegocio ? U.brl(a.valorNegocio) : '<span class="muted">sem valor</span>'}</div>
+      <div class="aside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
+      <div class="aact"><button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`;
+
+  V.render = el => {
+    const abertos = M.negociosAbertos();
+    const lista = abertos.filter(a => !fTipo || a.tipoNegocio === fTipo).sort(M.ordemAtencao);
+    const total = lista.reduce((s, a) => s + (+a.valorNegocio || 0), 0);
+    const ini = U.addDays(U.today(), -30);
+    const fechados = Store.all('atividades').filter(a => M.ehNegocio(a) && a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10) >= ini).sort((a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || ''));
+    const ganhos = fechados.filter(a => a.resultadoNegocio !== 'perdido');
+    const mesIni = U.today().slice(0, 8) + '01';
+    const fatMes = M.faturamentoEntre(mesIni, U.today());
+    const semana = abertos.filter(a => a.prazo && U.diff(a.prazo, U.today()) <= 7).length;
+    const porTipo = M.TIPOS_NEGOCIO.map(t => { const arr = abertos.filter(a => a.tipoNegocio === t.id); return { ...t, n: arr.length, v: arr.reduce((s, a) => s + (+a.valorNegocio || 0), 0) }; }).filter(t => t.n);
+
+    el.innerHTML = `
+      <div class="page-h"><div><h1>Negócios em andamento</h1><p class="muted">Atividades marcadas como negócio que ainda não foram concluídas.</p></div>
+        <button class="btn primary" id="novoNeg">${UI.icon('mais')}Novo negócio</button></div>
+      <section class="kpis k4">
+        <div class="kpi"><span>Em andamento</span><b>${abertos.length}</b></div>
+        <div class="kpi"><span>Valor em negociação</span><b>${U.brlShort(abertos.reduce((s, a) => s + (+a.valorNegocio || 0), 0))}</b></div>
+        <div class="kpi ${semana ? 'k-warn' : ''}"><span>Fecham em até 7 dias</span><b>${semana}</b></div>
+        <a class="kpi" href="#faturamento" data-go="faturamento"><span>Faturado neste mês</span><b>${U.brlShort(fatMes.reduce((s, f) => s + (+f.receita || 0), 0))}</b><em>${U.plural(fatMes.length, 'negócio lançado', 'negócios lançados')}</em></a>
+      </section>
+      ${porTipo.length ? `<div class="tchips"><button class="tchip${!fTipo ? ' on' : ''}" data-t="">Todos <b>${abertos.length}</b></button>${porTipo.map(t => `<button class="tchip${fTipo === t.id ? ' on' : ''}" data-t="${t.id}">${t.label} <b>${t.n}</b><small>${U.brlShort(t.v)}</small></button>`).join('')}</div>` : ''}
+      <section class="card">
+        <div class="card-h"><h2>${fTipo ? M.tipoNeg(fTipo).label : 'Todos os negócios'}</h2><span class="muted small">${U.brl(total)}</span></div>
+        ${lista.length ? `<ul class="alist">${lista.map(linha).join('')}</ul>` : `<div class="empty"><b>Nenhum negócio em andamento.</b><p>Ao criar uma atividade, marque "É um negócio" e informe o tipo, o cliente e o valor.</p><button class="btn primary" id="novoNeg2">${UI.icon('mais')}Novo negócio</button></div>`}
+      </section>
+      ${fechados.length ? `<section class="card"><div class="card-h"><h2>Concluídos nos últimos 30 dias</h2><span class="muted small">${ganhos.length} fechados · ${fechados.length - ganhos.length} não fecharam</span></div>
+        <ul class="alist">${fechados.slice(0, 10).map(a => `<li class="nrow is-done" data-id="${a.id}"><span class="tag ${a.resultadoNegocio === 'perdido' ? 't-erro' : 't-ok'}">${a.resultadoNegocio === 'perdido' ? 'Não fechou' : 'Fechado'}</span>
+          <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span>${U.esc(M.tipoNeg(a.tipoNegocio).label)}</span><span>${U.fmtDate((a.concluidaEm || '').slice(0, 10))}</span></div></div>
+          <div class="nval">${a.valorNegocio ? U.brl(a.valorNegocio) : ''}</div></li>`).join('')}</ul></section>` : ''}`;
+
+    const novo = () => App.Forms.atividade(null, { tipoNegocio: fTipo || 'investimentos', categoria: 'Negócios', prioridade: 'alta' });
+    el.querySelector('#novoNeg').onclick = novo;
+    const n2 = el.querySelector('#novoNeg2'); if (n2) n2.onclick = novo;
+    el.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { fTipo = b.dataset.t; V.render(el); });
+    el.querySelectorAll('.nrow').forEach(li => li.addEventListener('click', e => {
+      const b = e.target.closest('[data-act]'); if (!b) return; const id = li.dataset.id;
+      if (b.dataset.act === 'concluir') App.Forms.concluir(id);
+      if (b.dataset.act === 'abrir') App.Forms.detalhes(id);
+      if (b.dataset.act === 'editar') App.Forms.atividade(id);
+    }));
+  };
+
+  App.Views = App.Views || {};
+  App.Views.negocios = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/faturamento.js */
+/* Tela: Faturamento (negócios efetivados). Fica só no menu lateral. */
+(function (App) {
+  const { U, M, UI, Store } = App;
+  const V = { titulo: 'Faturamento' };
+  let periodo = 'mes', fTipo = '', fResp = '', metrica = 'receita';
+
+  const PERIODOS = [
+    { id: 'mes', label: 'Este mês' }, { id: 'mesant', label: 'Mês passado' }, { id: 'tri', label: 'Este trimestre' },
+    { id: 'ano', label: 'Este ano' }, { id: '12m', label: 'Últimos 12 meses' }, { id: 'tudo', label: 'Tudo' }
+  ];
+  function intervalo(p) {
+    const n = new Date(), y = n.getFullYear(), m = n.getMonth(), hoje = U.today();
+    if (p === 'mes') return [U.iso(new Date(y, m, 1)), hoje];
+    if (p === 'mesant') return [U.iso(new Date(y, m - 1, 1)), U.iso(new Date(y, m, 0))];
+    if (p === 'tri') return [U.iso(new Date(y, Math.floor(m / 3) * 3, 1)), hoje];
+    if (p === 'ano') return [y + '-01-01', hoje];
+    if (p === '12m') return [U.iso(new Date(y, m - 11, 1)), hoje];
+    return [null, null];
+  }
+  const passa = f => (!fTipo || f.tipo === fTipo) && (!fResp || f.responsabilidadeId === fResp);
+  const val = f => +(metrica === 'receita' ? f.receita : f.valor) || 0;
+
+  V.render = el => {
+    const [ini, fim] = intervalo(periodo);
+    const todos = Store.all('faturamento').filter(passa);
+    const lista = todos.filter(f => (!ini || f.data >= ini) && (!fim || f.data <= fim)).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    const receita = lista.reduce((s, f) => s + (+f.receita || 0), 0), volume = lista.reduce((s, f) => s + (+f.valor || 0), 0);
+    const n = new Date();
+    const meses = Array.from({ length: 12 }, (_, i) => { const d = new Date(n.getFullYear(), n.getMonth() - 11 + i, 1); const k = U.iso(d).slice(0, 7); return { k, y: d.getFullYear(), m: d.getMonth(), v: todos.filter(f => (f.data || '').slice(0, 7) === k).reduce((s, f) => s + val(f), 0) }; });
+    const maxM = Math.max(...meses.map(x => x.v), 1);
+    const noPer = k => (!ini || k >= ini.slice(0, 7)) && (!fim || k <= fim.slice(0, 7));
+    const porTipo = M.TIPOS_NEGOCIO.map(t => ({ ...t, v: lista.filter(f => f.tipo === t.id).reduce((s, f) => s + val(f), 0), n: lista.filter(f => f.tipo === t.id).length })).filter(t => t.n).sort((a, b) => b.v - a.v);
+    const totTipo = porTipo.reduce((s, t) => s + t.v, 0) || 1;
+
+    el.innerHTML = `
+      <div class="page-h"><div><h1>Faturamento</h1><p class="muted">Negócios efetivados e a receita que cada um gerou.</p></div>
+        <button class="btn primary" id="novoFat">${UI.icon('mais')}Lançar negócio</button></div>
+      <div class="filters">
+        <select id="fPer" aria-label="Período">${UI.options(PERIODOS, periodo)}</select>
+        <select id="fTip" aria-label="Tipo">${UI.options(M.TIPOS_NEGOCIO, fTipo, { vazio: 'Todos os tipos' })}</select>
+        <select id="fRes" aria-label="Responsabilidade">${UI.options(Store.all('responsabilidades').map(x => ({ id: x.id, label: x.nome })), fResp, { vazio: 'Todas as responsabilidades' })}</select>
+      </div>
+      <section class="kpis k4">
+        <div class="kpi k-brand"><span>Receita gerada</span><b>${U.brlShort(receita)}</b><em>${PERIODOS.find(p => p.id === periodo).label.toLowerCase()}</em></div>
+        <div class="kpi"><span>Volume negociado</span><b>${U.brlShort(volume)}</b></div>
+        <div class="kpi"><span>Negócios fechados</span><b>${lista.length}</b></div>
+        <div class="kpi"><span>Receita média por negócio</span><b>${lista.length ? U.brlShort(receita / lista.length) : '—'}</b></div>
+      </section>
+      <div class="grid-main">
+        <section class="card">
+          <div class="card-h"><h2>Últimos 12 meses</h2><div class="seg" role="group" aria-label="Medida"><button data-m="receita" aria-pressed="${metrica === 'receita'}">Receita</button><button data-m="valor" aria-pressed="${metrica === 'valor'}">Volume</button></div></div>
+          <div class="mbars" role="img" aria-label="${metrica === 'receita' ? 'Receita' : 'Volume'} por mês">${meses.map(x => `<div class="mb${noPer(x.k) ? ' in' : ''}" title="${U.mesNome(x.y, x.m)}: ${U.brl(x.v)}"><span class="mv">${x.v ? U.brlShort(x.v).replace('R$ ', '') : ''}</span><i style="height:${Math.max(x.v ? 3 : 0, x.v / maxM * 100)}%"></i><small>${U.mesNome(x.y, x.m)}</small></div>`).join('')}</div>
+        </section>
+        <section class="card">
+          <div class="card-h"><h2>Por tipo de negócio</h2></div>
+          ${porTipo.length ? `<ul class="tbars">${porTipo.map(t => `<li><div class="mrow"><span>${t.label} <span class="muted small">· ${t.n}</span></span><b>${U.brlShort(t.v)}</b></div>${UI.bar(t.v / totTipo)}</li>`).join('')}</ul>` : '<p class="muted small">Sem lançamentos no período.</p>'}
+        </section>
+      </div>
+      <section class="card">
+        <div class="card-h"><h2>Lançamentos</h2><span class="muted small">${U.plural(lista.length, 'negócio', 'negócios')}</span></div>
+        ${lista.length ? `<div class="tw"><table class="ftable"><thead><tr><th>Data</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th class="r">Valor do negócio</th><th class="r">Receita</th><th></th></tr></thead><tbody>
+          ${lista.map(f => `<tr data-id="${f.id}"><td>${U.fmtDate(f.data)}</td><td><b>${U.esc(f.cliente || '—')}</b>${f.responsabilidadeId ? `<br>${UI.respChip(f.responsabilidadeId)}` : ''}</td><td><span class="neg">${U.esc(M.tipoNeg(f.tipo).label)}</span></td><td class="desc">${U.esc(f.descricao || '')}</td><td class="r">${f.valor != null ? U.brl(f.valor) : '—'}</td><td class="r"><b>${f.receita != null ? U.brl(f.receita) : '—'}</b></td>
+          <td class="r nowrap"><button class="icon-btn" data-act="editar" aria-label="Editar">${UI.icon('editar')}</button><button class="icon-btn" data-act="excluir" aria-label="Excluir">${UI.icon('lixo')}</button></td></tr>`).join('')}
+          </tbody><tfoot><tr><td colspan="4">Total</td><td class="r">${U.brl(volume)}</td><td class="r"><b>${U.brl(receita)}</b></td><td></td></tr></tfoot></table></div>`
+          : `<div class="empty"><b>Nenhum negócio lançado ${periodo === 'tudo' ? 'ainda' : 'neste período'}.</b><p>Lance aqui cada negócio efetivado. Ao concluir uma atividade marcada como negócio, o lançamento pode ser feito na hora.</p></div>`}
+      </section>`;
+
+    el.querySelector('#novoFat').onclick = () => App.Forms.faturamento(null, { tipo: fTipo || 'investimentos', responsabilidadeId: fResp || undefined });
+    el.querySelector('#fPer').onchange = e => { periodo = e.target.value; V.render(el); };
+    el.querySelector('#fTip').onchange = e => { fTipo = e.target.value; V.render(el); };
+    el.querySelector('#fRes').onchange = e => { fResp = e.target.value; V.render(el); };
+    el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { metrica = b.dataset.m; V.render(el); });
+    el.querySelectorAll('tbody tr').forEach(tr => tr.addEventListener('click', async e => {
+      const b = e.target.closest('[data-act]'); const id = tr.dataset.id;
+      if (!b || b.dataset.act === 'editar') return App.Forms.faturamento(id);
+      if (b.dataset.act === 'excluir') {
+        const f = Store.get('faturamento', id);
+        if (await UI.confirm({ title: 'Excluir lançamento?', text: `O lançamento de <b>${U.esc(f.cliente || 'cliente')}</b> em ${U.fmtDate(f.data)} (${f.receita != null ? U.brl(f.receita) : U.brl(f.valor)}) será apagado.`, ok: 'Excluir' })) { M.excluirFaturamento(id); UI.toast('Lançamento excluído'); }
+      }
+    }));
+  };
+
+  App.Views = App.Views || {};
+  App.Views.faturamento = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/metas.js */
+/* Tela: Metas e indicadores. Atividade realizada ≠ resultado alcançado. */
+(function (App) {
+  const { U, M, UI, Store, Charts } = App;
+  const V = { titulo: 'Metas' };
+  let fResp = '', fPer = '', verEncerradas = false;
+
+  V.setParams = q => { if (q && q.resp) fResp = q.resp; };
+
+  const cartao = m => {
+    const atual = M.metaAtual(m), p = M.metaPct(m), s = M.metaSituacao(m), t = M.metaTempo(m), cor = M.respCor(m.responsabilidadeId);
+    const ats = M.metaAtividades(m.id), feitas = ats.filter(a => a.status === 'concluida');
+    const regs = m.modo === 'manual' ? M.metaRegistros(m.id) : feitas.sort((a, b) => (a.concluidaEm || '').localeCompare(b.concluidaEm || '')).reduce((acc, a) => { acc.push((acc[acc.length - 1] || 0) + (+a.resultado || 0)); return acc; }, []);
+    const vals = m.modo === 'manual' ? regs.map(r => r.valor) : regs;
+    const falta = Math.max(0, m.alvo - atual);
+    return `<article class="card meta" data-id="${m.id}" style="--c:${cor}">
+      <div class="meta-h"><div>${UI.respChip(m.responsabilidadeId)}<h3>${U.esc(m.nome)}</h3></div><span class="tag t-${s.id}">${s.label}</span></div>
+      <div class="meta-num"><b>${U.num(atual)}</b><span>de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><em>${U.pct(p)}</em></div>
+      <div class="meta-bar">${UI.bar(p, cor)}${t != null ? `<i class="tmark" style="left:${t * 100}%" title="Tempo decorrido do período"></i>` : ''}</div>
+      <div class="meta-info small muted"><span>${M.period(m.periodicidade).label}${m.inicio && m.fim ? ' · ' + U.fmtDate(m.inicio) + ' a ' + U.fmtDate(m.fim) : ''}</span>${p < 1 ? `<span>Faltam ${U.num(falta)}</span>` : ''}</div>
+      ${vals.length > 1 ? Charts.spark(vals, m.alvo) : ''}
+      ${m.modo === 'atividades' ? `<div class="meta-acts-info"><span><b>${ats.length}</b> atividades vinculadas</span><span><b>${feitas.length}</b> realizadas</span><span><b>${U.num(atual)}</b> ${U.esc(m.unidade || 'resultados')} obtidos</span></div>` : ''}
+      ${m.descricao ? `<p class="small muted">${U.esc(m.descricao)}</p>` : ''}
+      <div class="meta-f">
+        ${m.modo === 'manual' ? `<button class="btn primary sm" data-act="atualizar">Atualizar resultado</button>` : `<button class="btn ghost sm" data-act="nova-at">${UI.icon('mais')}Atividade para esta meta</button>`}
+        <span class="grow"></span>
+        <button class="icon-btn" data-act="ver" title="Ver atividades" aria-label="Ver atividades">${UI.icon('atividades')}</button>
+        <button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button>
+        <button class="icon-btn" data-act="excluir" title="Excluir" aria-label="Excluir">${UI.icon('lixo')}</button>
+      </div></article>`;
+  };
+
+  V.render = el => {
+    const hoje = U.today();
+    const todas = Store.all('metas').filter(m => (!fResp || m.responsabilidadeId === fResp) && (!fPer || m.periodicidade === fPer));
+    const ativas = todas.filter(m => !(m.fim && m.fim < hoje)), enc = todas.filter(m => m.fim && m.fim < hoje);
+    const lista = verEncerradas ? enc : ativas;
+    el.innerHTML = `
+      <div class="page-h"><div><h1>Metas</h1><p class="muted">Atividades são o que você faz. Metas medem o resultado que você alcança.</p></div>
+        <button class="btn primary" id="novaMeta">${UI.icon('mais')}Nova meta</button></div>
+      <div class="filters">
+        <select id="mResp" aria-label="Responsabilidade">${UI.options(Store.all('responsabilidades').map(x => ({ id: x.id, label: x.nome })), fResp, { vazio: 'Todas as responsabilidades' })}</select>
+        <select id="mPer" aria-label="Periodicidade">${UI.options(M.PERIODICIDADES, fPer, { vazio: 'Qualquer periodicidade' })}</select>
+        <div class="seg" role="group"><button data-enc="0" aria-pressed="${!verEncerradas}">Ativas · ${ativas.length}</button><button data-enc="1" aria-pressed="${verEncerradas}">Encerradas · ${enc.length}</button></div>
+      </div>
+      ${lista.length ? `<div class="mgrid">${lista.map(cartao).join('')}</div>` : `<div class="empty card"><b>${verEncerradas ? 'Nenhuma meta encerrada.' : 'Nenhuma meta ativa.'}</b><p>Exemplos: conseguir 30 indicações, realizar 15 reuniões, prospectar 50 pessoas.</p>${verEncerradas ? '' : `<button class="btn primary" id="novaMeta2">${UI.icon('mais')}Criar meta</button>`}</div>`}`;
+    el.querySelector('#novaMeta').onclick = () => App.Forms.meta(null);
+    const n2 = el.querySelector('#novaMeta2'); if (n2) n2.onclick = () => App.Forms.meta(null);
+    el.querySelector('#mResp').onchange = e => { fResp = e.target.value; V.render(el); };
+    el.querySelector('#mPer').onchange = e => { fPer = e.target.value; V.render(el); };
+    el.querySelectorAll('[data-enc]').forEach(b => b.onclick = () => { verEncerradas = b.dataset.enc === '1'; V.render(el); });
+    el.querySelectorAll('.meta').forEach(c => c.addEventListener('click', async e => {
+      const b = e.target.closest('[data-act]'); if (!b) return; const id = c.dataset.id, mt = Store.get('metas', id);
+      if (b.dataset.act === 'atualizar') App.Forms.atualizarMeta(id);
+      if (b.dataset.act === 'editar') App.Forms.meta(id);
+      if (b.dataset.act === 'nova-at') App.Forms.atividade(null, { responsabilidadeId: mt.responsabilidadeId, metaId: id, resultadoEsperado: null });
+      if (b.dataset.act === 'ver') App.go('atividades', { status: '', resp: mt.responsabilidadeId, categoria: '', metaId: id }, { origem: true });
+      if (b.dataset.act === 'excluir') {
+        const n = M.metaAtividades(id).length;
+        if (await UI.confirm({ title: 'Excluir meta?', text: `"${U.esc(mt.nome)}" e a evolução registrada serão apagadas.${n ? ` As ${n} atividades vinculadas continuam, só perdem o vínculo.` : ''}`, ok: 'Excluir meta' })) { M.excluirMeta(id); UI.toast('Meta excluída'); }
+      }
+    }));
+  };
+
+  App.Views = App.Views || {};
+  App.Views.metas = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/responsabilidades.js */
+/* Tela: Responsabilidades (cadastrar, editar, arquivar e excluir). */
+(function (App) {
+  const { U, M, UI, Store } = App;
+  const V = { titulo: 'Responsabilidades' };
+  let verArq = false;
+
+  V.render = el => {
+    const todas = Store.all('responsabilidades'), arq = todas.filter(r => r.status === 'arquivada'), ativas = todas.filter(r => r.status !== 'arquivada');
+    const lista = verArq ? arq : ativas;
+    el.innerHTML = `
+      <div class="page-h"><div><h1>Responsabilidades</h1><p class="muted">As frentes da sua vida profissional e pessoal. Cada uma tem suas atividades e metas.</p></div>
+        <button class="btn primary" id="novaResp">${UI.icon('mais')}Nova responsabilidade</button></div>
+      <div class="filters"><div class="seg" role="group"><button data-arq="0" aria-pressed="${!verArq}">Ativas · ${ativas.length}</button><button data-arq="1" aria-pressed="${verArq}">Arquivadas · ${arq.length}</button></div></div>
+      ${lista.length ? `<div class="respgrid">${lista.map(r => {
+        const at = Store.where('atividades', a => a.responsabilidadeId === r.id), ab = at.filter(M.aberta), l = at.filter(M.atrasada).length, c = at.length - ab.length;
+        const mts = Store.where('metas', m => m.responsabilidadeId === r.id);
+        return `<article class="card resp" data-id="${r.id}" style="--c:${r.cor}">
+          <div class="resp-h"><i class="dot"></i><h3>${U.esc(r.nome)}</h3>${r.status === 'arquivada' ? '<span class="tag t-neutro">Arquivada</span>' : ''}</div>
+          ${r.descricao ? `<p class="muted small">${U.esc(r.descricao)}</p>` : ''}
+          <div class="resp-nums"><div><b>${ab.length}</b><span>em aberto</span></div><div class="${l ? 'late' : ''}"><b>${l}</b><span>atrasadas</span></div><div><b>${c}</b><span>concluídas</span></div><div><b>${mts.length}</b><span>metas</span></div></div>
+          ${UI.bar(at.length ? c / at.length : 0, r.cor)}
+          <div class="meta-f">
+            <button class="btn ghost sm" data-act="ativ">Atividades</button><button class="btn ghost sm" data-act="metas">Metas</button><span class="grow"></span>
+            <button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button>
+            <button class="icon-btn" data-act="arquivar" title="${r.status === 'arquivada' ? 'Reativar' : 'Arquivar'}" aria-label="${r.status === 'arquivada' ? 'Reativar' : 'Arquivar'}">${UI.icon('arquivo')}</button>
+            <button class="icon-btn" data-act="excluir" title="Excluir" aria-label="Excluir">${UI.icon('lixo')}</button>
+          </div></article>`;
+      }).join('')}</div>` : `<div class="empty card"><b>${verArq ? 'Nenhuma responsabilidade arquivada.' : 'Nenhuma responsabilidade cadastrada.'}</b><p>${verArq ? 'Arquive uma responsabilidade quando ela deixar de ser sua, sem perder o histórico.' : 'Comece pelas suas frentes, como Assessoria de Investimentos.'}</p></div>`}`;
+
+    el.querySelector('#novaResp').onclick = () => App.Forms.resp(null);
+    el.querySelectorAll('[data-arq]').forEach(b => b.onclick = () => { verArq = b.dataset.arq === '1'; V.render(el); });
+    el.querySelectorAll('.resp').forEach(c => c.addEventListener('click', async e => {
+      const b = e.target.closest('[data-act]'); if (!b) return; const r = Store.get('responsabilidades', c.dataset.id);
+      if (b.dataset.act === 'editar') App.Forms.resp(r.id);
+      if (b.dataset.act === 'ativ') App.go('atividades', { resp: r.id, status: '' }, { origem: true });
+      if (b.dataset.act === 'metas') App.go('metas', { resp: r.id }, { origem: true });
+      if (b.dataset.act === 'arquivar') {
+        const arquivar = r.status !== 'arquivada';
+        if (arquivar && !(await UI.confirm({ title: 'Arquivar responsabilidade?', text: `"${U.esc(r.nome)}" sai do painel e dos cadastros novos. As atividades e metas continuam guardadas, e você pode reativar quando quiser.`, ok: 'Arquivar', danger: false }))) return;
+        Store.update('responsabilidades', r.id, { status: arquivar ? 'arquivada' : 'ativa' }); UI.toast(arquivar ? 'Responsabilidade arquivada' : 'Responsabilidade reativada');
+      }
+      if (b.dataset.act === 'excluir') {
+        const na = Store.where('atividades', a => a.responsabilidadeId === r.id).length, nm = Store.where('metas', m => m.responsabilidadeId === r.id).length;
+        const ok = await UI.confirm({ title: 'Excluir responsabilidade?', text: `"${U.esc(r.nome)}" será apagada${na || nm ? ` junto com <b>${U.plural(na, 'atividade', 'atividades')}</b> e <b>${U.plural(nm, 'meta', 'metas')}</b>` : ''}. Isso não pode ser desfeito. Se quiser só tirar do caminho, use Arquivar.`, ok: 'Excluir tudo' });
+        if (ok) { M.excluirResp(r.id); UI.toast('Responsabilidade excluída'); }
+      }
+    }));
+  };
+
+  App.Views = App.Views || {};
+  App.Views.responsabilidades = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/dados.js */
+/* Tela: Backup e dados (exportar, importar, demonstração, apagar tudo). */
+(function (App) {
+  const { U, UI, Store, Backup, Demo } = App;
+  const V = { titulo: 'Backup e dados' };
+
+  V.render = el => {
+    const ult = Store.config('ultimoBackup'), demo = Demo.count();
+    const n = c => Store.all(c).length;
+    el.innerHTML = `
+      <div class="page-h"><div><h1>Backup e dados</h1><p class="muted">${Store.adapter().remote ? 'Seus dados ficam na nuvem. O backup em JSON é uma cópia extra, sua, para guardar.' : 'Seus dados ficam salvos neste navegador. Faça backups para não perdê-los e para levar a outro computador.'}</p></div></div>
+      <div class="dgrid">
+        <section class="card">
+          <div class="card-h"><h2>Backup</h2></div>
+          <p class="small">Último backup: <b>${ult ? U.fmtDateTime(ult) : 'nunca feito'}</b></p>
+          <div class="dnums"><span><b>${n('responsabilidades')}</b> responsabilidades</span><span><b>${n('atividades')}</b> atividades</span><span><b>${n('metas')}</b> metas</span><span><b>${n('faturamento')}</b> lançamentos de faturamento</span><span><b>${Store.sizeKB()} KB</b> usados</span></div>
+          <div class="btns"><button class="btn primary" id="exp">Baixar backup (.json)</button></div>
+          <p class="note">Guarde o arquivo numa pasta segura ou na nuvem (Google Drive, OneDrive). Recomendo um backup por semana.</p>
+        </section>
+        <section class="card">
+          <div class="card-h"><h2>Restaurar backup</h2></div>
+          <p class="small">Substitui <b>todos</b> os dados atuais pelos do arquivo. Você confirma antes.</p>
+          <label class="btn ghost file-btn">Escolher arquivo .json<input type="file" id="imp" accept=".json,application/json"></label>
+        </section>
+        <section class="card">
+          <div class="card-h"><h2>Dados de demonstração</h2></div>
+          ${demo.atividades + demo.metas + demo.faturamento ? `<p class="small">Existem <b>${U.plural(demo.atividades, 'atividade', 'atividades')}</b>, <b>${U.plural(demo.metas, 'meta', 'metas')}</b> e <b>${U.plural(demo.faturamento, 'lançamento', 'lançamentos')}</b> de faturamento de exemplo, incluindo a Campanha de indicações 2027. Suas responsabilidades e o que você cadastrou não são apagados.</p>
+            <div class="btns"><button class="btn danger" id="delDemo">Apagar dados de demonstração</button></div>`
+            : `<p class="small">Nenhum dado de demonstração no momento.</p><div class="btns"><button class="btn ghost" id="addDemo">Carregar exemplos</button></div>`}
+        </section>
+        <section class="card">
+          <div class="card-h"><h2>Apagar tudo</h2></div>
+          <p class="small">Remove responsabilidades, atividades, metas e históricos${Store.adapter().remote ? ' da nuvem e de todos os aparelhos' : ' deste navegador'}. Faça um backup antes.</p>
+          <div class="btns"><button class="btn danger" id="clear">Apagar todos os dados</button></div>
+        </section>
+        <section class="card wide">
+          <div class="card-h"><h2>Onde os dados ficam</h2></div>
+          ${Store.adapter().remote
+            ? `<p class="small">Na <b>nuvem (Supabase)</b>, na conta <b>${U.esc(Store.adapter().email || '')}</b>. Entre com essa conta em qualquer computador ou celular para ver os mesmos dados. Cada alteração é salva automaticamente, e sem internet ela fica guardada no aparelho até a conexão voltar.</p>
+               <div class="btns"><button class="btn ghost" id="sync">Atualizar agora</button><button class="btn ghost" id="logout">Sair da conta</button></div>`
+            : `<p class="small">Armazenamento atual: <b>${Store.adapter().name}</b>. ${Store.available() ? 'Os dados continuam aqui ao fechar e reabrir o navegador.' : '<b class="late">O navegador está bloqueando o armazenamento (janela anônima ou bloqueio de dados). Nada será guardado ao fechar.</b>'}</p>
+               <p class="note">Limpar os dados de navegação ou usar outro navegador começa com o painel vazio. Por isso o backup é importante.</p>`}
+        </section>
+      </div>`;
+
+    el.querySelector('#exp').onclick = async () => { const ok = await Backup.exportar(); UI.toast(ok ? 'Backup baixado' : 'O download não foi concluído', ok ? 'ok' : 'aviso'); if (ok) V.render(el); };
+    el.querySelector('#imp').onchange = async e => {
+      const file = e.target.files[0]; e.target.value = ''; if (!file) return;
+      try {
+        const r = await Backup.ler(file);
+        const ok = await UI.confirm({ title: 'Restaurar este backup?', text: `O arquivo tem <b>${r.resumo.responsabilidades}</b> responsabilidades, <b>${r.resumo.atividades}</b> atividades e <b>${r.resumo.metas}</b> metas${r.exportadoEm ? ', exportado em ' + U.fmtDateTime(r.exportadoEm) : ''}. Os dados atuais serão substituídos.`, ok: 'Restaurar' });
+        if (ok) { Backup.restaurar(r.dados); UI.toast('Backup restaurado'); App.go('painel'); }
+      } catch (err) { UI.toast(err.message, 'erro'); }
+    };
+    const dd = el.querySelector('#delDemo');
+    if (dd) dd.onclick = async () => { if (await UI.confirm({ title: 'Apagar dados de demonstração?', text: 'As atividades e metas de exemplo serão apagadas, inclusive se você tiver editado alguma delas. Metas de exemplo usadas por atividades suas são mantidas.', ok: 'Apagar exemplos' })) { const r = Demo.remove(); UI.toast(`Exemplos apagados: ${U.plural(r.atividades, 'atividade', 'atividades')}, ${U.plural(r.metas, 'meta', 'metas')} e ${U.plural(r.faturamento, 'lançamento', 'lançamentos')}`); } };
+    const ad = el.querySelector('#addDemo');
+    if (ad) ad.onclick = () => { Demo.seed(); UI.toast('Exemplos carregados'); };
+    const sy = el.querySelector('#sync'); if (sy) sy.onclick = async () => { try { await Store.sincronizar(); UI.toast('Dados atualizados'); } catch (e) { UI.toast('Não foi possível atualizar agora.', 'erro'); } };
+    const lo = el.querySelector('#logout'); if (lo) lo.onclick = () => App.Cloud.sair();
+    el.querySelector('#clear').onclick = async () => {
+      if (!(await UI.confirm({ title: 'Apagar todos os dados?', text: 'Tudo o que está neste navegador será apagado: responsabilidades, atividades, metas e históricos. Isso não pode ser desfeito.', ok: 'Continuar' }))) return;
+      if (!(await UI.confirm({ title: 'Tem certeza?', text: 'Última confirmação. Se ainda não fez backup, cancele e baixe o backup primeiro.', ok: 'Apagar tudo' }))) return;
+      Store.clear(); UI.toast('Todos os dados foram apagados');
+    };
+  };
+
+  App.Views = App.Views || {};
+  App.Views.dados = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/app.js */
+/* Inicialização, navegação entre telas e botão "+ Nova atividade". */
+(function (App) {
+  const { Store, UI, Demo } = App;
+  const ROTAS = ['painel', 'atividades', 'negocios', 'metas', 'faturamento', 'responsabilidades', 'dados'];
+  let atual = 'painel';
+  const main = () => document.getElementById('view');
+
+  /* origem: tela de onde viemos, para o botão Voltar */
+  App.origem = null;
+  App.go = (rota, params, opts = {}) => {
+    if (!ROTAS.includes(rota)) rota = 'painel';
+    App.origem = opts.origem && atual !== rota ? atual : null;
+    const v = App.Views[rota];
+    if (v.setParams) v.setParams(params || null);
+    atual = rota;
+    try { if (location.hash !== '#' + rota) history.replaceState(null, '', '#' + rota); } catch (e) {}
+    document.querySelectorAll('[data-go]').forEach(a => a.classList.toggle('active', a.dataset.go === rota && !a.dataset.q));
+    document.title = v.titulo + ' · Horus Gestão';
+    render();
+    window.scrollTo({ top: 0 });
+  };
+  function render() {
+    App.Views[atual].render(main());
+    if (App.origem) main().insertAdjacentHTML('afterbegin', `<button class="back" data-voltar>${UI.icon('voltar')}Voltar para ${App.Views[App.origem].titulo}</button>`);
+  }
+  document.addEventListener('click', e => { if (e.target.closest('[data-voltar]')) { const o = App.origem || 'painel'; App.go(o); } });
+
+  /* Links internos: <a data-go="atividades" data-q="prazo=hoje"> */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-go]');
+    if (!a) return;
+    e.preventDefault();
+    const q = a.dataset.q ? Object.fromEntries(new URLSearchParams(a.dataset.q)) : null;
+    App.go(a.dataset.go, q, { origem: !!a.closest('#view') });
+  });
+  document.addEventListener('click', e => { if (e.target.closest('[data-nova-atividade]')) App.Forms.atividade(null); });
+  /* Atalho: tecla N abre "Nova atividade" */
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'n' && !e.ctrlKey && !e.metaKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.querySelector('.modal-wrap')) { e.preventDefault(); App.Forms.atividade(null); }
+  });
+  window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (!h || h.includes('=')) return; const r = h.split('?')[0]; if (r !== atual) App.go(r); });
+
+  /* Ao mudar qualquer dado, a tela atual é redesenhada */
+  Store.onChange(() => { if (!document.querySelector('.modal-wrap .modal')) render(); else pend = true; });
+  let pend = false;
+  new MutationObserver(() => { if (pend && !document.querySelector('.modal-wrap')) { pend = false; render(); } }).observe(document.body, { childList: true });
+
+  /* Status de salvamento (rodapé do menu e ponto no topo do celular) */
+  const ROT = { ok: 'Salvo na nuvem', salvando: 'Salvando...', offline: 'Sem internet · guardado no aparelho', erro: 'Erro ao salvar · tentando de novo', carregando: 'Carregando...', local: 'Salvo neste navegador' };
+  function statusUI(st) {
+    const el = document.getElementById('syncSt'), dot = document.getElementById('syncDot');
+    if (el) { el.className = 'sync s-' + st.id; el.innerHTML = `<i></i><span>${ROT[st.id] || ''}</span>${st.id === 'erro' || st.id === 'offline' ? '<button class="link" id="syncRetry">Tentar agora</button>' : ''}`;
+      const r = el.querySelector('#syncRetry'); if (r) r.onclick = () => Store.tentarDeNovo(); el.title = st.msg || ROT[st.id] || ''; }
+    if (dot) { dot.className = 'syncdot s-' + st.id; dot.title = ROT[st.id] || ''; }
+  }
+  function conta(email) {
+    const el = document.getElementById('account'); if (!el) return;
+    el.hidden = false;
+    el.innerHTML = email ? `<span class="acc-mail" title="${App.U.esc(email)}">${App.U.esc(email)}</span><button class="link" id="sair">Sair</button>` : '';
+    const b = el.querySelector('#sair'); if (b) b.onclick = () => App.Cloud.sair();
+  }
+  const rotaInicial = () => { const h = location.hash.slice(1); return h && !h.includes('=') ? h.split('?')[0] : 'painel'; };
+
+  async function iniciar() {
+    const C = App.Cloud;
+    if (C.configurado()) {
+      if (!window.supabase) {
+        document.getElementById('view').innerHTML = '<div class="empty card"><b>Não foi possível conectar.</b><p>Verifique a internet e recarregue a página.</p><button class="btn primary" onclick="location.reload()">Recarregar</button></div>';
+        return;
+      }
+      C.init();
+      let s = null;
+      try { s = await C.sessao(); } catch (e) {}
+      if (!s) { C.telaLogin(() => location.reload()); return; }
+      Store.useAdapter(C.adapter(s.user));
+      Store.onStatus(statusUI);
+      Store.init();
+      conta(s.user.email);
+      App.go(rotaInicial());
+      try {
+        const r = await Store.sincronizar();
+        if (r.vazio && !Store.config('inicializado')) C.boasVindas();
+      } catch (e) {
+        console.error(e);
+        UI.toast('Não foi possível carregar da nuvem. Mostrando a cópia deste aparelho.', 'erro');
+      }
+      C.vigiar();
+    } else {
+      Store.onStatus(statusUI);
+      const primeiro = Store.init();
+      if (primeiro || !Store.config('inicializado')) Demo.seed();
+      if (!Store.available()) setTimeout(() => UI.toast('O navegador está bloqueando o armazenamento. Os dados não serão guardados.', 'erro'), 500);
+      App.go(rotaInicial());
+    }
+  }
+  iniciar();
+})(window.App = window.App || {});
+
+</script>
+
+</body>
+</html>
