@@ -413,6 +413,82 @@ select:hover, .search:hover { border-color: var(--faint); }
 .ftable .desc { color: var(--muted); max-width: 260px; }
 .ftable tfoot td { font-weight: 700; border-bottom: 0; padding-top: 12px; }
 
+/* ---------- Faturamento v2 ---------- */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { border: 0; background: none; padding: 10px 14px; font-weight: 600; font-size: 14px; color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap; margin-bottom: -1px; }
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { color: var(--accent); border-image: var(--grad) 1; border-bottom: 3px solid; }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.mnav { display: inline-flex; align-items: center; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 2px; }
+.mnav b { font-family: var(--display); font-size: 14px; min-width: 150px; text-align: center; }
+.mnav b::first-letter { text-transform: uppercase; }
+.card-h .mnav b { min-width: 48px; }
+.icon-btn.flip .ic { transform: rotate(180deg); }
+.fat-top { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(0, 1.6fr); gap: 16px; align-items: stretch; }
+@media (max-width: 1000px) { .fat-top { grid-template-columns: 1fr; } }
+.hero-pay { display: grid; gap: 8px; align-content: start; position: relative; overflow: hidden; background: linear-gradient(150deg, #1D1438 0%, #0B0A10 100%); color: #fff; border: 0; }
+.hero-pay::after { content: ""; position: absolute; inset: auto -40px -60px auto; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(169,139,255,.35), transparent 70%); pointer-events: none; }
+.hero-pay .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #C9B6FF; }
+.hero-pay .big { font-family: var(--display); font-size: 34px; font-weight: 800; background: linear-gradient(90deg, #fff, #E2D6FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-pay .muted { color: #A9A2C4; }
+.hero-pay .btn.ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.25); justify-self: start; position: relative; z-index: 1; }
+.hero-pay .btn.ghost:hover { border-color: #C9B6FF; color: #fff; }
+.plin { list-style: none; margin: 4px 0; padding: 0; display: grid; gap: 6px; position: relative; z-index: 1; }
+.plin li { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,.08); padding-bottom: 6px; }
+.plin span { display: inline-flex; align-items: center; gap: 7px; color: #E2DDF2; }
+.kpis.k2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kpis.k3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 600px) { .kpis.k3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ldot { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 6px; flex: none; vertical-align: 1px; }
+.ldot.big { width: 12px; height: 12px; }
+button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
+.mb .stack { width: 100%; max-width: 34px; display: flex; flex-direction: column; border-radius: 6px 6px 2px 2px; overflow: hidden; min-height: 0; transition: height .3s; }
+.mb .stack i { display: block; min-height: 0; }
+.mb .stack .rc, .legend-l .rc { background: var(--grad-btn); }
+.mb .stack .ab, .legend-l .ab { background: repeating-linear-gradient(45deg, #DCD0FB, #DCD0FB 4px, #EEE8FD 4px, #EEE8FD 8px); }
+.mb.now small { color: var(--accent); font-weight: 800; }
+.mb:hover .stack { filter: brightness(1.08); }
+.legend-l { display: flex; gap: 16px; font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+.legend-l span { display: inline-flex; align-items: center; gap: 6px; }
+.legend-l i { width: 14px; height: 10px; border-radius: 3px; display: inline-block; }
+.rkpos { font-family: var(--display); color: var(--accent); margin-right: 8px; font-size: 13px; }
+.tbars .mrow span { display: inline-flex; align-items: center; }
+.pblock { border-left: 4px solid var(--c); }
+.pblock .card-h h2 { display: inline-flex; align-items: center; }
+.rlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.rlist li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto 120px; align-items: center; gap: 12px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.rlist li[data-rc] { grid-template-columns: auto minmax(0, 1fr) auto auto; cursor: pointer; }
+.rlist li.ok { background: var(--surface-2); }
+.rlist li.ok .amain b { color: var(--muted); }
+.rlist li.late { border-left: 3px solid var(--late); }
+.rlist .amain { cursor: pointer; }
+.rvals { display: grid; justify-items: end; gap: 1px; white-space: nowrap; }
+.rvals b { font-family: var(--display); font-size: 15px; }
+.rin { width: 110px; text-align: right; border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; font-weight: 700; font-family: var(--display); background: var(--surface); }
+.rin.dif { border-color: var(--warn); color: var(--warn); }
+.rin:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+@media (max-width: 640px) { .rlist li { grid-template-columns: auto minmax(0, 1fr) auto; } .rlist li .rvals:last-child { grid-column: 2 / 4; justify-items: start; grid-auto-flow: column; align-items: center; gap: 8px; } .rlist li .rvals:last-child:empty { display: none; } }
+.lgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.lcard { border-top: 3px solid var(--c); display: grid; gap: 8px; align-content: start; }
+.lcard.off { opacity: .55; }
+.lcard .card-h h2 { display: inline-flex; align-items: center; }
+.prods { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.prods li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 9px; border-radius: 8px; cursor: pointer; background: var(--surface-2); flex-wrap: wrap; }
+.prods li:hover { background: var(--accent-soft); }
+.prods li.off { opacity: .5; text-decoration: line-through; }
+.sched { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; font-size: 13.5px; }
+.sched-l { display: flex; gap: 6px; flex-wrap: wrap; }
+.sched-l span { display: grid; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font-weight: 700; font-size: 12.5px; }
+.sched-l small { font-weight: 500; color: var(--muted); font-size: 11px; }
+.liq { align-items: end; }
+.hgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+@media (max-width: 520px) { .hgrid { grid-template-columns: 1fr; } }
+.hgrid .f > span { display: inline-flex; align-items: center; }
+.neg-toggle.sm small { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+
+@media (max-width: 860px) { .nav .l-long { display: none; } .nav .l-short { display: inline; } }
+
 </style>
 
 <div class="app">
@@ -500,6 +576,7 @@ window.HORUS_CONFIG = {
   const nf = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
   U.num = v => nf.format(+v || 0);
   U.brl = v => 'R$ ' + new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(Math.round(+v || 0));
+  U.brlC = v => 'R$ ' + (+v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   U.brlShort = v => { v = +v || 0; const a = Math.abs(v); if (a >= 1e6) return 'R$ ' + (v / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: a >= 1e7 ? 1 : 2 }) + ' mi'; if (a >= 1e4) return 'R$ ' + Math.round(v / 1e3).toLocaleString('pt-BR') + ' mil'; return U.brl(v); };
   U.mesNome = (y, m) => ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'][m] + (y !== new Date().getFullYear() ? '/' + String(y).slice(2) : '');
   U.pct = v => Math.round((v || 0) * 100) + '%';
@@ -526,7 +603,7 @@ window.HORUS_CONFIG = {
  */
 (function (App) {
   const BASE = 'gestao-pessoal:dados:v1', QBASE = 'gestao-pessoal:fila:v1';
-  const COLS = ['responsabilidades', 'atividades', 'metas', 'metaRegistros', 'historico', 'faturamento'];
+  const COLS = ['responsabilidades', 'atividades', 'metas', 'metaRegistros', 'historico', 'faturamento', 'linhas', 'produtos', 'producoes', 'recebiveis', 'recorrencias'];
   const SCHEMA = 1;
 
   const ls = {
@@ -868,9 +945,6 @@ window.HORUS_CONFIG = {
     };
   };
 
-  M.excluirFaturamento = id => { Store.remove('faturamento', id); };
-  /* Faturamento dentro de um período [ini, fim] (datas AAAA-MM-DD) */
-  M.faturamentoEntre = (ini, fim) => Store.all('faturamento').filter(f => (!ini || f.data >= ini) && (!fim || f.data <= fim));
 
   App.M = M;
 })(window.App = window.App || {});
@@ -947,15 +1021,16 @@ window.HORUS_CONFIG = {
       if (a.status === 'adiada') Store.insert('historico', { atividadeId: rec.id, tipo: 'adiada', descricao: 'Adiada de ' + U.fmtDate(U.addDays(a.prazo, -3)) + ' para ' + U.fmtDate(a.prazo) + ' · seguradora pediu mais documentos', em: U.nowISO(), demo: true }, { silent: true });
       if (a.status === 'concluida') Store.insert('historico', { atividadeId: rec.id, tipo: 'concluida', descricao: 'Concluída' + (a.resultado != null ? ' · resultado: ' + a.resultado : ''), em: rec.concluidaEm, demo: true }, { silent: true });
     });
+    /* Produção de exemplo (o faturamento calcula sozinho quando cada valor entra) */
+    App.Fat.garantir();
     const mes = (n, dia) => { const x = new Date(); x.setMonth(x.getMonth() - n, Math.min(dia, 28)); return U.iso(x); };
     [
-      { data: mes(0, 5), cliente: 'Carla Menezes', tipo: 'seguro', descricao: 'Whole Life 20 anos', valor: 14400, receita: 7200, responsabilidadeId: R('r_vida') },
-      { data: mes(0, 2), cliente: 'Grupo Vieira', tipo: 'investimentos', descricao: 'Captação de carteira', valor: 1200000, receita: 3600, responsabilidadeId: R('r_assessoria') },
-      { data: mes(1, 18), cliente: 'Marcos Prado', tipo: 'consorcio', descricao: 'Consórcio de veículo', valor: 150000, receita: 4500, responsabilidadeId: R('r_assessoria') },
-      { data: mes(1, 9), cliente: 'Juliana Costa', tipo: 'previdencia', descricao: 'Portabilidade de PGBL', valor: 380000, receita: 1900, responsabilidadeId: R('r_assessoria') },
-      { data: mes(2, 22), cliente: 'Renato Dias', tipo: 'cambio', descricao: 'Remessa para o exterior', valor: 60000, receita: 600, responsabilidadeId: R('r_assessoria') },
-      { data: mes(3, 12), cliente: 'Beatriz Rocha', tipo: 'seguro', descricao: 'Seguro de vida resgatável', valor: 9600, receita: 4800, responsabilidadeId: R('r_vida') }
-    ].forEach(f => Store.insert('faturamento', { ...f, demo: true }, { silent: true }));
+      { data: mes(0, 4), cliente: 'Carla Menezes', produtoId: 'p_vida', valor: 14400, comissaoPct: 50, bruto: 7200, liquido: 432, regra: 'mes_seguinte' },
+      { data: mes(0, 6), cliente: 'Ana Ribeiro', produtoId: 'p_rf', valor: 41000, comissaoPct: 0.64, bruto: 262.4, liquido: 83.97, regra: 'mes_seguinte' },
+      { data: mes(0, 9), cliente: 'Leandro Prado', produtoId: 'p_consorcio', valor: 200000, comissaoPct: 4, bruto: 8000, liquidoParcela: 213.33, liquidoUltima: 213.37, regra: 'parcelado', parcelas: 12, grupo: 'novo' },
+      { data: mes(1, 12), cliente: 'Grupo Vieira', produtoId: 'p_global', valor: 120000, comissaoPct: 1, bruto: 1200, liquido: 384, regra: 'mesmo_mes' },
+      { data: mes(1, 18), cliente: 'Marcos Prado', produtoId: 'p_eqseed', valor: 30000, comissaoPct: 6, bruto: 1800, liquido: 576, regra: 'mes_seguinte' }
+    ].forEach(p => { const pr = App.Fat.produto(p.produtoId) || {}; App.Fat.salvarProducao({ ...p, linhaId: pr.linhaId, demo: true }, null, { silent: true }); });
     Store.commit();
     Store.config('inicializado', true);
   };
@@ -963,7 +1038,7 @@ window.HORUS_CONFIG = {
   Demo.count = () => ({
     atividades: Store.where('atividades', a => a.demo).length,
     metas: Store.where('metas', m => m.demo).length,
-    faturamento: Store.where('faturamento', f => f.demo).length
+    faturamento: Store.where('producoes', f => f.demo).length
   });
 
   /* Apaga só o que é demonstração. Metas de exemplo usadas por atividades suas são mantidas. */
@@ -976,12 +1051,183 @@ window.HORUS_CONFIG = {
     Store.removeWhere('historico', h => ats.includes(h.atividadeId), { silent: true });
     Store.removeWhere('metas', m => mts.includes(m.id), { silent: true });
     Store.removeWhere('metaRegistros', r => mts.includes(r.metaId), { silent: true });
-    const nf = Store.removeWhere('faturamento', f => f.demo, { silent: true });
+    const prs = Store.where('producoes', f => f.demo).map(f => f.id);
+    Store.removeWhere('recebiveis', r => r.demo || prs.includes(r.producaoId), { silent: true });
+    const nf = Store.removeWhere('producoes', f => f.demo, { silent: true });
     Store.commit();
     return { atividades: ats.length, metas: mts.length, faturamento: nf };
   };
 
   App.Demo = Demo;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/fat.js */
+/*
+ * Faturamento: produção (o que você gerou) e recebíveis (quando e quanto entra na conta).
+ *
+ * Coleções:
+ *  linhas        Linhas de negócio (InvestSmart, BeSmart, Eqseed, Dolarize.me, MB...)
+ *  produtos      Produtos de cada linha, com % de comissão e regra de pagamento padrão
+ *  producoes     Lançamentos cliente a cliente (data de produção, valor, bruto, líquido)
+ *  recebiveis    Parcelas previstas/recebidas. Geradas a partir das produções, ou lançadas
+ *                como avulso (campanha, bônus) ou histórico (mês + linha + valor recebido)
+ *  recorrencias  Valores fixos mensais (ex.: Mensal Eqseed). Os meses aparecem como previstos
+ *                e viram registro quando você confirma o recebimento.
+ */
+(function (App) {
+  const { U, Store } = App;
+  const Fat = {};
+
+  Fat.REGRAS = [
+    { id: 'mes_seguinte', label: 'Dia 15 do mês seguinte' },
+    { id: 'mesmo_mes', label: 'No mesmo mês' },
+    { id: 'parcelado', label: 'Parcelado' }
+  ];
+  Fat.GRUPOS = [{ id: 'novo', label: 'Grupo novo (pula o 2º mês)' }, { id: 'andamento', label: 'Grupo em andamento' }];
+  Fat.CORES = ['#6E3FF0', '#2F855A', '#1E7A86', '#B7791F', '#C2412D', '#A0466B', '#2B5A8C', '#5A6474'];
+
+  const DEF_LINHAS = [
+    { id: 'l_investsmart', nome: 'InvestSmart (XP)', cor: '#2B5A8C', ordem: 1 },
+    { id: 'l_besmart', nome: 'BeSmart', cor: '#6E3FF0', ordem: 2 },
+    { id: 'l_eqseed', nome: 'Eqseed', cor: '#2F855A', ordem: 3 },
+    { id: 'l_dolarize', nome: 'Dolarize.me', cor: '#B7791F', ordem: 4 },
+    { id: 'l_mb', nome: 'MB (Mercado Bitcoin)', cor: '#1E7A86', ordem: 5 },
+    { id: 'l_outras', nome: 'Outras', cor: '#5A6474', ordem: 9 }
+  ];
+  const P = (id, linhaId, nome, regra = 'mes_seguinte', extra = {}) => ({ id, linhaId, nome, regra, ...extra });
+  const DEF_PRODUTOS = [
+    P('p_rf', 'l_investsmart', 'Renda fixa'), P('p_coe', 'l_investsmart', 'COE'), P('p_rv', 'l_investsmart', 'Renda variável'),
+    P('p_global', 'l_investsmart', 'XP Global (internacional)', 'mesmo_mes'),
+    P('p_vida', 'l_besmart', 'Seguro de vida (novo)'), P('p_vidafixo', 'l_besmart', 'Vida fixo'), P('p_adm', 'l_besmart', 'ADM'),
+    P('p_prev', 'l_besmart', 'Previdência'), P('p_saude', 'l_besmart', 'Saúde'), P('p_re', 'l_besmart', 'RE'),
+    P('p_consorcio', 'l_besmart', 'Consórcio', 'parcelado', { parcelas: 12, grupo: 'novo' }),
+    P('p_eqseed', 'l_eqseed', 'Eqseed', 'mes_seguinte', { comissaoPct: 6 }),
+    P('p_cambio', 'l_dolarize', 'Câmbio'), P('p_dol_inter', 'l_dolarize', 'Internacional', 'mesmo_mes'),
+    P('p_mb', 'l_mb', 'Mercado Bitcoin'),
+    P('p_outros', 'l_outras', 'Outros')
+  ];
+  /* Negócio do painel -> produto sugerido ao lançar no faturamento */
+  Fat.PRODUTO_DO_NEGOCIO = { investimentos: 'p_rf', consorcio: 'p_consorcio', seguro: 'p_vida', previdencia: 'p_prev', cambio: 'p_cambio', credito: 'p_outros', outro: 'p_outros' };
+
+  /* ---------- Datas por mês ---------- */
+  Fat.ym = d => String(d || '').slice(0, 7);
+  Fat.ymHoje = () => U.today().slice(0, 7);
+  Fat.addMes = (ym, n) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + n, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+  Fat.nomeMes = (ym, longo) => { const [y, m] = ym.split('-').map(Number); const nomes = longo ? ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'] : ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']; return nomes[m - 1] + (longo ? ' de ' + y : '/' + String(y).slice(2)); };
+  Fat.dia15 = ym => ym + '-15';
+  /* Próximo dia de pagamento (dia 15): este mês se ainda não passou, senão o próximo */
+  Fat.proximoPagamento = () => { const h = U.today(); return h.slice(8) <= '15' ? Fat.ymHoje() : Fat.addMes(Fat.ymHoje(), 1); };
+
+  /* ---------- Cadastros ---------- */
+  Fat.linhas = (todas) => Store.all('linhas').filter(l => todas || l.ativa !== false).sort((a, b) => (a.ordem || 50) - (b.ordem || 50) || a.nome.localeCompare(b.nome));
+  Fat.linha = id => Store.get('linhas', id);
+  Fat.linhaNome = id => (Fat.linha(id) || {}).nome || 'Sem linha';
+  Fat.linhaCor = id => (Fat.linha(id) || {}).cor || '#8F88A6';
+  Fat.produtos = linhaId => Store.all('produtos').filter(p => (!linhaId || p.linhaId === linhaId) && p.ativo !== false).sort((a, b) => a.nome.localeCompare(b.nome));
+  Fat.produto = id => Store.get('produtos', id);
+  Fat.produtoNome = id => (Fat.produto(id) || {}).nome || '—';
+  Fat.regraTxt = (regra, n, grupo) => regra === 'parcelado' ? `${n || 1}x${grupo === 'novo' ? ' · grupo novo' : grupo === 'andamento' ? ' · em andamento' : ''}` : regra === 'mesmo_mes' ? 'Mesmo mês' : 'Dia 15 do mês seguinte';
+
+  /* Primeiro uso do novo faturamento: cria linhas/produtos padrão e converte lançamentos antigos */
+  Fat.garantir = () => {
+    if (Store.config('fatV2')) return;
+    let mudou = false;
+    if (!Store.all('linhas').length) { DEF_LINHAS.forEach(l => Store.insert('linhas', { ...l, ativa: true }, { silent: true })); mudou = true; }
+    if (!Store.all('produtos').length) { DEF_PRODUTOS.forEach(p => Store.insert('produtos', { ...p, ativo: true }, { silent: true })); mudou = true; }
+    const antigos = Store.all('faturamento').slice();
+    antigos.forEach(f => {
+      const txt = ((f.cliente || '') + ' ' + (f.descricao || '')).toLowerCase();
+      const produtoId = /eqseed/.test(txt) ? 'p_eqseed' : /dolarize/.test(txt) ? 'p_cambio' : Fat.PRODUTO_DO_NEGOCIO[f.tipo] || 'p_outros';
+      const pr = Fat.produto(produtoId) || {};
+      Fat.salvarProducao({ data: f.data || U.today(), cliente: f.cliente, linhaId: pr.linhaId || 'l_outras', produtoId, valor: f.valor, bruto: f.receita ?? f.valor, liquido: f.receita ?? null, regra: 'mes_seguinte', observacoes: [f.descricao, f.observacoes].filter(Boolean).join(' · '), atividadeId: f.atividadeId || null, demo: !!f.demo }, null, { silent: true });
+      Store.remove('faturamento', f.id, { silent: true }); mudou = true;
+    });
+    if (mudou) Store.commit();
+    Store.config('fatV2', true);
+  };
+
+  /* ---------- Produção -> recebíveis ---------- */
+  Fat.datas = (data, regra, n, grupo) => {
+    const ym = Fat.ym(data);
+    if (regra === 'mesmo_mes') return [data];
+    if (regra !== 'parcelado') return [Fat.dia15(Fat.addMes(ym, 1))];
+    n = Math.max(1, Math.round(n || 1));
+    return Array.from({ length: n }, (_, i) => { const k = i + 1; const off = grupo === 'novo' ? (k === 1 ? 1 : k + 1) : k; return Fat.dia15(Fat.addMes(ym, off)); });
+  };
+  /* Valores líquidos de cada parcela. Sem líquido informado, usa o bruto (marcado como estimado) */
+  Fat.valores = p => {
+    const n = p.regra === 'parcelado' ? Math.max(1, Math.round(p.parcelas || 1)) : 1;
+    const estimado = p.liquido == null && p.liquidoParcela == null;
+    let liq;
+    if (p.regra === 'parcelado') {
+      const por = p.liquidoParcela != null ? +p.liquidoParcela : (p.liquido != null ? +p.liquido / n : (+p.bruto || 0) / n);
+      liq = Array.from({ length: n }, (_, i) => Math.round(por * 100) / 100);
+      if (p.liquidoUltima != null && n > 1) liq[n - 1] = +p.liquidoUltima;
+    } else liq = [p.liquido != null ? +p.liquido : (+p.bruto || 0)];
+    const brPor = (+p.bruto || 0) / n;
+    return { n, estimado, liq, bruto: liq.map(() => Math.round(brPor * 100) / 100) };
+  };
+  Fat.liquidoTotal = p => Fat.valores(p).liq.reduce((s, v) => s + v, 0);
+  Fat.gerarRecebiveis = (prod, silent) => {
+    const atuais = Store.where('recebiveis', r => r.producaoId === prod.id);
+    const recebidos = new Set(atuais.filter(r => r.status === 'recebido').map(r => r.numero));
+    Store.removeWhere('recebiveis', r => r.producaoId === prod.id && r.status !== 'recebido', { silent: true });
+    const ds = Fat.datas(prod.data, prod.regra, prod.parcelas, prod.grupo), v = Fat.valores(prod);
+    ds.forEach((dt, i) => {
+      if (recebidos.has(i + 1)) return;
+      Store.insert('recebiveis', { tipo: 'producao', producaoId: prod.id, linhaId: prod.linhaId, produtoId: prod.produtoId, cliente: prod.cliente || null, descricao: Fat.produtoNome(prod.produtoId), previstoEm: dt, numero: i + 1, total: ds.length, previsto: v.liq[i], bruto: v.bruto[i], estimado: v.estimado, status: 'previsto', demo: !!prod.demo }, { silent: true });
+    });
+    if (!silent) Store.commit();
+  };
+  Fat.salvarProducao = (dados, id, { silent } = {}) => {
+    let p;
+    if (id) p = Store.update('producoes', id, dados, { silent: true });
+    else p = Store.insert('producoes', dados, { silent: true });
+    Fat.gerarRecebiveis(p, true);
+    if (!silent) Store.commit();
+    return p;
+  };
+  Fat.excluirProducao = id => { Store.removeWhere('recebiveis', r => r.producaoId === id, { silent: true }); Store.remove('producoes', id, { silent: true }); Store.commit(); };
+  Fat.recebidosDaProducao = id => Store.where('recebiveis', r => r.producaoId === id && r.status === 'recebido').length;
+
+  /* ---------- Recebíveis do mês (inclui recorrências ainda não confirmadas) ---------- */
+  Fat.recorrenciaAtiva = (rc, ym) => rc.ativa !== false && rc.inicio && Fat.ym(rc.inicio) <= ym && (!rc.fim || Fat.ym(rc.fim) >= ym);
+  Fat.virtuais = ym => Store.all('recorrencias').filter(rc => Fat.recorrenciaAtiva(rc, ym) && !Store.all('recebiveis').some(r => r.recorrenciaId === rc.id && Fat.ym(r.previstoEm) === ym))
+    .map(rc => ({ id: 'v_' + rc.id + '_' + ym, virtual: true, tipo: 'recorrente', recorrenciaId: rc.id, linhaId: rc.linhaId, cliente: null, descricao: rc.descricao, previstoEm: ym + '-' + String(rc.dia || 15).padStart(2, '0'), previsto: +rc.valor || 0, status: 'previsto' }));
+  Fat.doMes = ym => [...Store.all('recebiveis').filter(r => Fat.ym(r.previstoEm) === ym), ...Fat.virtuais(ym)];
+  Fat.valorRecebido = r => r.status === 'recebido' ? (r.recebido != null ? +r.recebido : +r.previsto || 0) : 0;
+  Fat.pendente = r => r.status !== 'recebido' && r.previstoEm < U.today();
+  Fat.marcarRecebido = (r, valor, silent) => {
+    const v = valor != null ? valor : r.previsto;
+    if (r.virtual) Store.insert('recebiveis', { tipo: 'recorrente', recorrenciaId: r.recorrenciaId, linhaId: r.linhaId, descricao: r.descricao, previstoEm: r.previstoEm, previsto: r.previsto, recebido: v, status: 'recebido', recebidoEm: U.nowISO() }, { silent });
+    else Store.update('recebiveis', r.id, { status: 'recebido', recebido: v, recebidoEm: U.nowISO() }, { silent });
+  };
+  Fat.desmarcar = r => {
+    if (r.virtual) return;
+    if (r.tipo === 'recorrente') Store.remove('recebiveis', r.id);
+    else Store.update('recebiveis', r.id, { status: 'previsto', recebido: null, recebidoEm: null });
+  };
+  Fat.resumoMes = ym => {
+    const itens = Fat.doMes(ym);
+    const out = { itens, previsto: 0, recebido: 0, aberto: 0, pendentes: 0, porLinha: {} };
+    itens.forEach(r => {
+      const rec = Fat.valorRecebido(r), prev = +r.previsto || 0;
+      out.previsto += prev; out.recebido += rec; if (r.status !== 'recebido') { out.aberto += prev; if (Fat.pendente(r)) out.pendentes++; }
+      const l = out.porLinha[r.linhaId] || (out.porLinha[r.linhaId] = { previsto: 0, recebido: 0, aberto: 0, n: 0 });
+      l.previsto += prev; l.recebido += rec; if (r.status !== 'recebido') l.aberto += prev; l.n++;
+    });
+    return out;
+  };
+  /* Valor do mês para gráficos: recebido + o que ainda está em aberto */
+  Fat.totalMes = ym => { const r = Fat.resumoMes(ym); return { recebido: r.recebido, aberto: r.aberto }; };
+
+  /* Produção (competência): líquido gerado por mês e por linha */
+  Fat.producoesDoMes = ym => Store.all('producoes').filter(p => Fat.ym(p.data) === ym);
+  Fat.producaoEntre = (ymIni, ymFim) => Store.all('producoes').filter(p => { const k = Fat.ym(p.data); return k >= ymIni && k <= ymFim; });
+
+  App.Fat = Fat;
 })(window.App = window.App || {});
 
 </script>
@@ -1036,7 +1282,7 @@ window.HORUS_CONFIG = {
     fr.readAsText(file);
   });
 
-  B.restaurar = dados => { Store.replaceAll(dados); Store.config('inicializado', true); };
+  B.restaurar = dados => { Store.replaceAll(dados); Store.config('inicializado', true); if (App.Fat) App.Fat.garantir(); };
 
   App.Backup = B;
 })(window.App = window.App || {});
@@ -1063,6 +1309,9 @@ window.HORUS_CONFIG = {
     historico: ['id', 'atividadeId', 'tipo', 'descricao', 'em', 'demo', 'criadoEm', 'atualizadoEm'],
     faturamento: ['id', 'data', 'cliente', 'tipo', 'descricao', 'valor', 'receita', 'responsabilidadeId', 'atividadeId', 'observacoes', 'demo', 'criadoEm', 'atualizadoEm']
   };
+  /* Tabelas do faturamento guardam o registro inteiro em JSON (fácil de evoluir sem mudar o banco) */
+  const JSONT = { linhas: 'fat_linhas', produtos: 'fat_produtos', producoes: 'fat_producoes', recebiveis: 'fat_recebiveis', recorrencias: 'fat_recorrencias' };
+  Object.assign(TABELAS, JSONT);
   const DATAS = ['inicio', 'prazo', 'fim', 'data', 'concluidaEm', 'em', 'criadoEm', 'atualizadoEm'];
   const NUMEROS = ['resultadoEsperado', 'resultado', 'alvo', 'atual', 'valor', 'adiamentos', 'valorNegocio', 'receita'];
   const OBRIG = { responsabilidades: ['nome', 'Sem nome'], atividades: ['titulo', 'Sem título'], metas: ['nome', 'Sem nome'] };
@@ -1070,6 +1319,7 @@ window.HORUS_CONFIG = {
   const camel = k => k.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 
   C.paraLinha = (col, rec, uid) => {
+    if (JSONT[col]) { const { id, demo, ...dados } = rec; return { user_id: uid, id, dados, demo: !!demo, atualizado_em: rec.atualizadoEm || U.nowISO() }; }
     const r = { user_id: uid };
     CAMPOS[col].forEach(k => {
       let v = rec[k];
@@ -1083,6 +1333,7 @@ window.HORUS_CONFIG = {
     return r;
   };
   C.deLinha = row => {
+    if (row.dados && typeof row.dados === 'object' && !('titulo' in row) && !('nome' in row)) return { ...row.dados, id: row.id, demo: !!row.demo };
     const o = {};
     Object.entries(row).forEach(([k, v]) => { if (k === 'user_id' || v === null) return; o[camel(k)] = v; });
     return o;
@@ -1701,11 +1952,8 @@ window.HORUS_CONFIG = {
       body: `<form class="form" id="fCn"><p class="muted" style="margin:0">${U.esc(a.titulo)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}</p>
         <div class="f full"><span>Como terminou?</span>${UI.segmented('res', [{ id: 'ganho', label: 'Fechado' }, { id: 'perdido', label: 'Não fechou' }], 'ganho')}</div>
         <div id="cnGanho" class="form">
-          <div class="row2">
-            <label class="f"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${a.valorNegocio ?? ''}" placeholder="R$"></label>
-            <label class="f"><span>Receita gerada (opcional)</span><input name="receita" data-num inputmode="decimal" placeholder="Comissão, R$"></label>
-          </div>
-          <label class="neg-toggle sm"><input type="checkbox" name="lancar" id="cnLancar" checked><span class="tg"><i></i></span><span><b>Lançar no faturamento</b></span></label>
+          <label class="f full"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${a.valorNegocio ?? ''}" placeholder="R$"></label>
+          <label class="neg-toggle sm"><input type="checkbox" name="lancar" id="cnLancar" checked><span class="tg"><i></i></span><span><b>Lançar a produção no faturamento</b><small>Abre o lançamento com cliente, produto e valor preenchidos.</small></span></label>
         </div>
         ${pedeResultado ? `<label class="f full"><span>Resultado para a meta (${U.esc(meta ? meta.unidade : 'resultado')})</span><input name="resultado" data-num inputmode="decimal" value="${a.resultado ?? ''}"></label>` : ''}
         <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: fechou com carta de R$ 520 mil"></label></form>`,
@@ -1719,52 +1967,238 @@ window.HORUS_CONFIG = {
           const d = UI.formData(f), ganho = d.res === 'ganho', lancar = ganho && el.querySelector('#cnLancar').checked;
           Store.update('atividades', id, { resultadoNegocio: d.res, valorNegocio: ganho && d.valor != null ? d.valor : a.valorNegocio }, { silent: true });
           M.concluir(id, { resultado: pedeResultado ? d.resultado : undefined, nota: (ganho ? 'Negócio fechado' : 'Negócio não fechou') + (d.nota ? ' · ' + d.nota : '') });
-          if (lancar) Store.insert('faturamento', { data: U.today(), cliente: a.cliente || null, tipo: a.tipoNegocio, descricao: a.titulo, valor: d.valor, receita: d.receita, responsabilidadeId: a.responsabilidadeId, atividadeId: a.id });
+          if (lancar) setTimeout(() => F.producao(null, { cliente: a.cliente || null, valor: d.valor, produtoId: App.Fat.PRODUTO_DO_NEGOCIO[a.tipoNegocio] || 'p_outros', atividadeId: a.id, observacoes: a.titulo }), 60);
           api.close();
-          UI.toast(lancar ? 'Negócio fechado e lançado no faturamento' : ganho ? 'Negócio fechado' : 'Negócio encerrado', 'ok', { label: 'Desfazer', fn: () => { M.reabrir(id); Store.update('atividades', id, { resultadoNegocio: null }); if (lancar) { const fl = Store.all('faturamento').find(x => x.atividadeId === id); if (fl) Store.remove('faturamento', fl.id); } } });
-        };
-      }
-    });
-  };
-
-  /* ---------- Lançamento de faturamento ---------- */
-  F.faturamento = (id, preset = {}) => {
-    const fx = id ? Store.get('faturamento', id) : null;
-    const v = fx || { data: U.today(), tipo: 'investimentos', responsabilidadeId: (M.respAtivas()[0] || {}).id, ...preset };
-    const clientes = [...new Set([...Store.all('faturamento').map(x => x.cliente), ...Store.all('atividades').map(x => x.cliente)].filter(Boolean))].sort();
-    UI.modal({
-      title: fx ? 'Editar lançamento' : 'Lançar negócio efetivado', size: 'md',
-      body: `<form class="form" id="fFa">
-        <div class="row3">
-          <label class="f"><span>Data</span><input type="date" name="data" required value="${v.data || ''}"></label>
-          <label class="f"><span>Tipo de negócio</span><select name="tipo">${UI.options(M.TIPOS_NEGOCIO, v.tipo)}</select></label>
-          <label class="f"><span>Responsabilidade</span><select name="responsabilidadeId">${UI.respOptions(v.responsabilidadeId, 'Nenhuma')}</select></label>
-        </div>
-        <div class="row2">
-          <label class="f"><span>Cliente</span><input name="cliente" list="dlCli" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente" autofocus><datalist id="dlCli">${clientes.map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
-          <label class="f"><span>Descrição</span><input name="descricao" value="${U.esc(v.descricao || '')}" placeholder="Ex.: Consórcio imobiliário, carta de R$ 500 mil"></label>
-        </div>
-        <div class="row2">
-          <label class="f"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${v.valor ?? ''}" placeholder="Volume, carta, prêmio..."></label>
-          <label class="f"><span>Receita gerada</span><input name="receita" data-num inputmode="decimal" value="${v.receita ?? ''}" placeholder="Comissão / faturamento"></label>
-        </div>
-        <label class="f full"><span>Observações</span><textarea name="observacoes" rows="2">${U.esc(v.observacoes || '')}</textarea></label>
-        <p class="ferr" id="errFa" hidden></p></form>`,
-      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fFa" type="submit">${fx ? 'Salvar' : 'Lançar'}</button>`,
-      onMount(el, api) {
-        const f = el.querySelector('#fFa');
-        f.onsubmit = e => {
-          e.preventDefault(); const d = UI.formData(f), er = el.querySelector('#errFa');
-          if (!d.data) { er.textContent = 'Informe a data do negócio.'; er.hidden = false; return; }
-          if (d.valor == null && d.receita == null) { er.textContent = 'Informe o valor do negócio ou a receita gerada.'; er.hidden = false; return; }
-          if (fx) Store.update('faturamento', fx.id, d); else Store.insert('faturamento', { ...d, atividadeId: preset.atividadeId || null });
-          api.close(); UI.toast(fx ? 'Lançamento atualizado' : 'Negócio lançado no faturamento');
+          if (!lancar) UI.toast(ganho ? 'Negócio fechado' : 'Negócio encerrado', 'ok', { label: 'Desfazer', fn: () => { M.reabrir(id); Store.update('atividades', id, { resultadoNegocio: null }); } });
         };
       }
     });
   };
 
   App.Forms = F;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/ui/forms-fat.js */
+/* Formulários do faturamento: produção, linha, produto, recorrência, histórico e avulso. */
+(function (App) {
+  const { U, M, UI, Store, Fat } = App;
+  const F = App.Forms;
+
+  const linhaOpts = sel => UI.options(Fat.linhas(true).map(l => ({ id: l.id, label: l.nome })), sel);
+  const produtoOpts = (linhaId, sel) => UI.options(Fat.produtos(linhaId).map(p => ({ id: p.id, label: p.nome })), sel);
+  const clientes = () => [...new Set([...Store.all('producoes').map(x => x.cliente), ...Store.all('atividades').map(x => x.cliente)].filter(Boolean))].sort();
+  const num = v => v == null || v === '' ? '' : U.num(v);
+
+  /* ---------- Lançar produção (cliente a cliente) ---------- */
+  F.producao = (id, preset = {}) => {
+    const p = id ? Store.get('producoes', id) : null;
+    const prod0 = Fat.produto(preset.produtoId || (p && p.produtoId)) || Fat.produtos()[0] || {};
+    const v = p || { data: U.today(), linhaId: prod0.linhaId, produtoId: prod0.id, regra: prod0.regra || 'mes_seguinte', parcelas: prod0.parcelas || 12, grupo: prod0.grupo || 'novo', comissaoPct: prod0.comissaoPct ?? null, ...preset };
+    if (!Fat.linhas().length) { UI.toast('Cadastre uma linha de negócio primeiro.', 'aviso'); return; }
+    const jaRec = p ? Fat.recebidosDaProducao(p.id) : 0;
+    UI.modal({
+      title: p ? 'Editar produção' : 'Lançar produção', size: 'md',
+      body: `<form class="form" id="fPr">
+        <div class="row3">
+          <label class="f"><span>Data da produção</span><input type="date" name="data" required value="${v.data || ''}"></label>
+          <label class="f"><span>Linha de negócio</span><select name="linhaId" id="prLinha">${linhaOpts(v.linhaId)}</select></label>
+          <label class="f"><span>Produto</span><select name="produtoId" id="prProd">${produtoOpts(v.linhaId, v.produtoId)}</select></label>
+        </div>
+        <label class="f full"><span>Cliente</span><input name="cliente" list="dlCliP" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente" autofocus><datalist id="dlCliP">${clientes().map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
+        <div class="row3">
+          <label class="f"><span>Valor / aporte</span><input name="valor" data-num inputmode="decimal" value="${num(v.valor)}" placeholder="R$"></label>
+          <label class="f"><span>% comissão</span><input name="comissaoPct" data-num inputmode="decimal" value="${num(v.comissaoPct)}" placeholder="Ex.: 0,85"></label>
+          <label class="f"><span>Resultado bruto</span><input name="bruto" data-num inputmode="decimal" value="${num(v.bruto)}" placeholder="Calculado"></label>
+        </div>
+        <div class="f full"><span>Quando recebe</span>${UI.segmented('regra', Fat.REGRAS.map(r => ({ id: r.id, label: r.id === 'mes_seguinte' ? 'Mês seguinte (dia 15)' : r.id === 'mesmo_mes' ? 'Mesmo mês' : 'Parcelado' })), v.regra)}</div>
+        <div class="row2" id="prParc">
+          <label class="f"><span>Número de parcelas</span><input name="parcelas" data-num inputmode="numeric" value="${v.parcelas || 12}"></label>
+          <label class="f"><span>Grupo</span><select name="grupo">${UI.options(Fat.GRUPOS, v.grupo || 'novo')}</select></label>
+        </div>
+        <div class="row2 liq">
+          <label class="f" id="boxLiq"><span>Líquido (já descontado)</span><input name="liquido" data-num inputmode="decimal" value="${num(v.liquido)}" placeholder="O que entra na conta"></label>
+          <label class="f" id="boxLiqP"><span>Líquido por parcela</span><input name="liquidoParcela" data-num inputmode="decimal" value="${num(v.liquidoParcela)}" placeholder="R$"></label>
+          <label class="f" id="boxLiqU"><span>Última parcela (se diferente)</span><input name="liquidoUltima" data-num inputmode="decimal" value="${num(v.liquidoUltima)}" placeholder="Opcional"></label>
+        </div>
+        <div class="sched" id="prSched"></div>
+        <label class="f full"><span>Observações</span><input name="observacoes" value="${U.esc(v.observacoes || '')}" placeholder="Ex.: campanha de novembro"></label>
+        ${jaRec ? `<p class="note">${U.plural(jaRec, 'parcela já foi recebida e não muda', 'parcelas já foram recebidas e não mudam')}. As demais são recalculadas.</p>` : ''}
+        <p class="ferr" id="errPr" hidden></p></form>`,
+      footer: `${p ? `<button class="btn ghost danger-text" data-del>${UI.icon('lixo')}Excluir</button><span class="grow"></span>` : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fPr" type="submit">${p ? 'Salvar' : 'Lançar'}</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fPr');
+        let brutoManual = v.bruto != null && !(v.valor != null && v.comissaoPct != null);
+        const regra = () => f.querySelector('[name=regra]:checked').value;
+        const ler = () => { const d = UI.formData(f); d.parcelas = Math.max(1, Math.round(d.parcelas || 1)); return d; };
+        const atualizar = () => {
+          const r = regra();
+          el.querySelector('#prParc').hidden = r !== 'parcelado';
+          el.querySelector('#boxLiq').hidden = r === 'parcelado';
+          el.querySelector('#boxLiqP').hidden = el.querySelector('#boxLiqU').hidden = r !== 'parcelado';
+          const d = ler();
+          if (!brutoManual && d.valor != null && d.comissaoPct != null) f.bruto.value = num(Math.round(d.valor * d.comissaoPct) / 100);
+          const d2 = ler(); if (r !== 'parcelado') { d2.liquidoParcela = null; d2.liquidoUltima = null; } else d2.liquido = null;
+          const ds = Fat.datas(d2.data || U.today(), r, d2.parcelas, d2.grupo), vv = Fat.valores({ ...d2, regra: r });
+          const tot = vv.liq.reduce((s, x) => s + x, 0);
+          el.querySelector('#prSched').innerHTML = `<b>Você recebe</b>${vv.estimado ? ' <span class="tag t-aviso">sem líquido: usando o bruto</span>' : ''}
+            <div class="sched-l">${ds.slice(0, 13).map((dt, i) => `<span><small>${U.fmtDate(dt)}</small>${U.brlC(vv.liq[i])}</span>`).join('')}${ds.length > 13 ? `<span><small>+${ds.length - 13}</small>…</span>` : ''}</div>
+            <div class="small muted">Total líquido: <b class="ink">${U.brlC(tot)}</b>${ds.length > 1 ? ` em ${ds.length} parcelas, de ${Fat.nomeMes(Fat.ym(ds[0]))} a ${Fat.nomeMes(Fat.ym(ds[ds.length - 1]))}` : ''}</div>`;
+        };
+        el.querySelector('#prLinha').onchange = e => { el.querySelector('#prProd').innerHTML = produtoOpts(e.target.value); aplicarProduto(); };
+        const aplicarProduto = () => {
+          const pr = Fat.produto(el.querySelector('#prProd').value); if (!pr) return atualizar();
+          const rr = f.querySelector(`[name=regra][value="${pr.regra || 'mes_seguinte'}"]`); if (rr) rr.checked = true;
+          if (pr.comissaoPct != null) f.comissaoPct.value = num(pr.comissaoPct);
+          if (pr.regra === 'parcelado') { f.parcelas.value = pr.parcelas || 12; f.grupo.value = pr.grupo || 'novo'; }
+          atualizar();
+        };
+        el.querySelector('#prProd').onchange = aplicarProduto;
+        f.bruto.addEventListener('input', () => { brutoManual = f.bruto.value.trim() !== ''; });
+        f.addEventListener('input', atualizar); f.addEventListener('change', atualizar); atualizar();
+        f.onsubmit = e => {
+          e.preventDefault(); const d = ler(), er = el.querySelector('#errPr'); d.regra = regra();
+          if (!d.data) { er.textContent = 'Informe a data da produção.'; er.hidden = false; return; }
+          if (!d.produtoId) { er.textContent = 'Escolha o produto.'; er.hidden = false; return; }
+          if (d.bruto == null && d.liquido == null && d.liquidoParcela == null) { er.textContent = 'Informe o resultado bruto ou o líquido.'; er.hidden = false; return; }
+          if (d.regra !== 'parcelado') { d.liquidoParcela = null; d.liquidoUltima = null; d.parcelas = null; d.grupo = null; } else d.liquido = null;
+          if (preset.atividadeId && !p) d.atividadeId = preset.atividadeId;
+          Fat.salvarProducao(d, p ? p.id : null); api.close();
+          UI.toast(p ? 'Produção atualizada' : 'Produção lançada');
+        };
+        const del = el.querySelector('[data-del]');
+        if (del) del.onclick = async () => {
+          if (await UI.confirm({ title: 'Excluir produção?', text: `A produção de <b>${U.esc(p.cliente || 'cliente')}</b> e todas as parcelas dela, inclusive as já marcadas como recebidas, serão apagadas.`, ok: 'Excluir' })) { Fat.excluirProducao(p.id); api.close(); UI.toast('Produção excluída'); }
+        };
+      }
+    });
+  };
+  /* Atalho antigo: "Lançar negócio" agora lança produção */
+  F.faturamento = (id, preset) => F.producao(id, preset);
+
+  /* ---------- Linha de negócio ---------- */
+  F.linha = id => {
+    const l = id ? Fat.linha(id) : null;
+    const v = l || { cor: Fat.CORES[Store.all('linhas').length % Fat.CORES.length] };
+    UI.modal({
+      title: l ? 'Editar linha de negócio' : 'Nova linha de negócio', size: 'sm',
+      body: `<form class="form" id="fLi"><label class="f full"><span>Nome</span><input name="nome" required value="${U.esc(v.nome || '')}" placeholder="Ex.: InvestSmart (XP)" autofocus></label>
+        <div class="f full"><span>Cor</span><div class="colors">${Fat.CORES.map(c => `<label class="cpick"><input type="radio" name="cor" value="${c}"${c === v.cor ? ' checked' : ''}><i style="background:${c}"></i></label>`).join('')}</div></div><p class="ferr" id="errLi" hidden></p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fLi" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        el.querySelector('#fLi').onsubmit = e => { e.preventDefault(); const d = UI.formData(e.target);
+          if (!d.nome) { const er = el.querySelector('#errLi'); er.textContent = 'Dê um nome à linha.'; er.hidden = false; return; }
+          if (l) Store.update('linhas', l.id, d); else Store.insert('linhas', { ...d, ativa: true, ordem: 50 }); api.close(); UI.toast('Linha salva'); };
+      }
+    });
+  };
+
+  /* ---------- Produto ---------- */
+  F.produto = (id, linhaId) => {
+    const p = id ? Fat.produto(id) : null;
+    const v = p || { linhaId, regra: 'mes_seguinte', parcelas: 12, grupo: 'novo' };
+    UI.modal({
+      title: p ? 'Editar produto' : 'Novo produto', size: 'sm',
+      body: `<form class="form" id="fPd"><label class="f full"><span>Nome</span><input name="nome" required value="${U.esc(v.nome || '')}" placeholder="Ex.: Renda fixa" autofocus></label>
+        <div class="row2"><label class="f"><span>Linha</span><select name="linhaId">${linhaOpts(v.linhaId)}</select></label>
+        <label class="f"><span>% comissão padrão</span><input name="comissaoPct" data-num inputmode="decimal" value="${num(v.comissaoPct)}" placeholder="Opcional"></label></div>
+        <div class="f full"><span>Quando recebe (padrão)</span>${UI.segmented('regra', Fat.REGRAS.map(r => ({ id: r.id, label: r.id === 'mes_seguinte' ? 'Mês seguinte' : r.id === 'mesmo_mes' ? 'Mesmo mês' : 'Parcelado' })), v.regra)}</div>
+        <div class="row2" id="pdParc"><label class="f"><span>Parcelas</span><input name="parcelas" data-num inputmode="numeric" value="${v.parcelas || 12}"></label><label class="f"><span>Grupo</span><select name="grupo">${UI.options(Fat.GRUPOS, v.grupo || 'novo')}</select></label></div>
+        <p class="ferr" id="errPd" hidden></p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fPd" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fPd'); const sync = () => { el.querySelector('#pdParc').hidden = f.querySelector('[name=regra]:checked').value !== 'parcelado'; };
+        f.querySelectorAll('[name=regra]').forEach(r => r.onchange = sync); sync();
+        f.onsubmit = e => { e.preventDefault(); const d = UI.formData(f);
+          if (!d.nome) { const er = el.querySelector('#errPd'); er.textContent = 'Dê um nome ao produto.'; er.hidden = false; return; }
+          if (p) Store.update('produtos', p.id, d); else Store.insert('produtos', { ...d, ativo: true }); api.close(); UI.toast('Produto salvo'); };
+      }
+    });
+  };
+
+  /* ---------- Recorrência (valor fixo mensal) ---------- */
+  F.recorrencia = id => {
+    const r = id ? Store.get('recorrencias', id) : null;
+    const v = r || { inicio: Fat.ymHoje(), dia: 15, linhaId: (Fat.linhas()[0] || {}).id };
+    UI.modal({
+      title: r ? 'Editar recorrência' : 'Nova recorrência', size: 'sm',
+      body: `<form class="form" id="fRc"><label class="f full"><span>Descrição</span><input name="descricao" required value="${U.esc(v.descricao || '')}" placeholder="Ex.: Mensal Eqseed" autofocus></label>
+        <div class="row2"><label class="f"><span>Linha</span><select name="linhaId">${linhaOpts(v.linhaId)}</select></label>
+        <label class="f"><span>Valor líquido por mês</span><input name="valor" data-num inputmode="decimal" required value="${num(v.valor)}" placeholder="R$"></label></div>
+        <div class="row3"><label class="f"><span>Primeiro mês</span><input type="month" name="inicio" required value="${Fat.ym(v.inicio)}"></label>
+        <label class="f"><span>Último mês (opcional)</span><input type="month" name="fim" value="${v.fim ? Fat.ym(v.fim) : ''}"></label>
+        <label class="f"><span>Dia que cai</span><input name="dia" data-num inputmode="numeric" value="${v.dia || 15}"></label></div>
+        <p class="note">Cada mês aparece como previsto. Ao conferir o recebimento, ele vira um registro com o valor real.</p><p class="ferr" id="errRc" hidden></p></form>`,
+      footer: `${r ? `<button class="btn ghost danger-text" data-del>${UI.icon('lixo')}Excluir</button><span class="grow"></span>` : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fRc" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        el.querySelector('#fRc').onsubmit = e => { e.preventDefault(); const d = UI.formData(e.target), er = el.querySelector('#errRc');
+          if (!d.descricao || d.valor == null || !d.inicio) { er.textContent = 'Preencha descrição, valor e primeiro mês.'; er.hidden = false; return; }
+          if (d.fim && d.fim < d.inicio) { er.textContent = 'O último mês precisa ser depois do primeiro.'; er.hidden = false; return; }
+          d.dia = Math.min(28, Math.max(1, Math.round(d.dia || 15)));
+          if (r) Store.update('recorrencias', r.id, d); else Store.insert('recorrencias', { ...d, ativa: true }); api.close(); UI.toast('Recorrência salva'); };
+        const del = el.querySelector('[data-del]');
+        if (del) del.onclick = async () => { if (await UI.confirm({ title: 'Excluir recorrência?', text: 'Os meses futuros deixam de aparecer. Os meses já conferidos como recebidos continuam no histórico.', ok: 'Excluir' })) { Store.remove('recorrencias', r.id); api.close(); UI.toast('Recorrência excluída'); } };
+      }
+    });
+  };
+
+  /* ---------- Histórico: quanto recebeu em meses anteriores, por linha ---------- */
+  F.historico = (ym) => {
+    const mes = ym || Fat.addMes(Fat.ymHoje(), -1);
+    const existentes = m => Store.where('recebiveis', r => r.tipo === 'historico' && Fat.ym(r.previstoEm) === m);
+    const linhas = Fat.linhas();
+    const corpo = m => `<div class="hgrid">${linhas.map(l => { const ex = existentes(m).find(r => r.linhaId === l.id); return `<label class="f"><span><i class="ldot" style="background:${l.cor}"></i>${U.esc(l.nome)}</span><input data-num inputmode="decimal" data-linha="${l.id}" value="${ex ? num(ex.recebido) : ''}" placeholder="R$ 0"></label>`; }).join('')}</div>`;
+    UI.modal({
+      title: 'Lançar histórico de recebimentos', size: 'md',
+      body: `<form class="form" id="fHi"><p class="muted small" style="margin:0">Quanto você recebeu em cada linha num mês que já passou. Serve para completar o ano sem detalhar cliente.</p>
+        <label class="f"><span>Mês</span><input type="month" name="mes" value="${mes}" max="${Fat.ymHoje()}"></label>
+        <div id="hiCorpo">${corpo(mes)}</div><p class="note">Deixe em branco as linhas sem recebimento. Para corrigir, abra o mesmo mês e altere.</p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fHi" type="submit">Salvar mês</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fHi');
+        f.mes.onchange = () => { el.querySelector('#hiCorpo').innerHTML = corpo(f.mes.value); };
+        f.onsubmit = e => {
+          e.preventDefault(); const m = f.mes.value; if (!m) return;
+          let n = 0;
+          f.querySelectorAll('[data-linha]').forEach(inp => {
+            const v = U.parseNum(inp.value), lid = inp.dataset.linha, ex = existentes(m).find(r => r.linhaId === lid);
+            if (v == null || v === 0) { if (ex) Store.remove('recebiveis', ex.id, { silent: true }); return; }
+            n++;
+            if (ex) Store.update('recebiveis', ex.id, { previsto: v, recebido: v }, { silent: true });
+            else Store.insert('recebiveis', { tipo: 'historico', linhaId: lid, descricao: 'Histórico', previstoEm: Fat.dia15(m), previsto: v, recebido: v, status: 'recebido', recebidoEm: U.nowISO() }, { silent: true });
+          });
+          Store.commit(); api.close(); UI.toast(`Histórico de ${Fat.nomeMes(m, true)} salvo`);
+        };
+      }
+    });
+  };
+
+  /* ---------- Recebimento avulso (campanha, bônus, pendência) ---------- */
+  F.avulso = (id, preset = {}) => {
+    const r = id ? Store.get('recebiveis', id) : null;
+    const v = r || { previstoEm: Fat.dia15(Fat.proximoPagamento()), linhaId: (Fat.linhas()[0] || {}).id, ...preset };
+    UI.modal({
+      title: r ? 'Editar recebimento avulso' : 'Recebimento avulso', size: 'sm',
+      body: `<form class="form" id="fAv"><label class="f full"><span>Descrição</span><input name="descricao" required value="${U.esc(v.descricao || '')}" placeholder="Ex.: Campanha Vida, Adicional Eqseed, Pendência Avenue" autofocus></label>
+        <div class="row2"><label class="f"><span>Linha</span><select name="linhaId">${linhaOpts(v.linhaId)}</select></label>
+        <label class="f"><span>Valor líquido</span><input name="previsto" data-num inputmode="decimal" required value="${num(v.previsto)}" placeholder="R$"></label></div>
+        <div class="row2"><label class="f"><span>Data prevista</span><input type="date" name="previstoEm" required value="${v.previstoEm}"></label>
+        <label class="f"><span>Cliente (opcional)</span><input name="cliente" value="${U.esc(v.cliente || '')}"></label></div>
+        <label class="neg-toggle sm"><input type="checkbox" id="avRec" ${v.status === 'recebido' ? 'checked' : ''}><span class="tg"><i></i></span><span><b>Já recebi</b></span></label>
+        <p class="ferr" id="errAv" hidden></p></form>`,
+      footer: `${r ? `<button class="btn ghost danger-text" data-del>${UI.icon('lixo')}Excluir</button><span class="grow"></span>` : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fAv" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        el.querySelector('#fAv').onsubmit = e => { e.preventDefault(); const d = UI.formData(e.target), er = el.querySelector('#errAv');
+          if (!d.descricao || d.previsto == null || !d.previstoEm) { er.textContent = 'Preencha descrição, valor e data.'; er.hidden = false; return; }
+          const rec = el.querySelector('#avRec').checked;
+          const dados = { ...d, tipo: 'avulso', status: rec ? 'recebido' : 'previsto', recebido: rec ? d.previsto : null, recebidoEm: rec ? U.nowISO() : null };
+          if (r) Store.update('recebiveis', r.id, dados); else Store.insert('recebiveis', dados); api.close(); UI.toast('Recebimento salvo'); };
+        const del = el.querySelector('[data-del]');
+        if (del) del.onclick = async () => { if (await UI.confirm({ title: 'Excluir recebimento?', text: `"${U.esc(r.descricao)}" será apagado.`, ok: 'Excluir' })) { Store.remove('recebiveis', r.id); api.close(); UI.toast('Recebimento excluído'); } };
+      }
+    });
+  };
 })(window.App = window.App || {});
 
 </script>
@@ -2015,7 +2449,7 @@ window.HORUS_CONFIG = {
     const fechados = Store.all('atividades').filter(a => M.ehNegocio(a) && a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10) >= ini).sort((a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || ''));
     const ganhos = fechados.filter(a => a.resultadoNegocio !== 'perdido');
     const mesIni = U.today().slice(0, 8) + '01';
-    const fatMes = M.faturamentoEntre(mesIni, U.today());
+    const prodMes = App.Fat.producoesDoMes(App.Fat.ymHoje());
     const semana = abertos.filter(a => a.prazo && U.diff(a.prazo, U.today()) <= 7).length;
     const porTipo = M.TIPOS_NEGOCIO.map(t => { const arr = abertos.filter(a => a.tipoNegocio === t.id); return { ...t, n: arr.length, v: arr.reduce((s, a) => s + (+a.valorNegocio || 0), 0) }; }).filter(t => t.n);
 
@@ -2026,7 +2460,7 @@ window.HORUS_CONFIG = {
         <div class="kpi"><span>Em andamento</span><b>${abertos.length}</b></div>
         <div class="kpi"><span>Valor em negociação</span><b>${U.brlShort(abertos.reduce((s, a) => s + (+a.valorNegocio || 0), 0))}</b></div>
         <div class="kpi ${semana ? 'k-warn' : ''}"><span>Fecham em até 7 dias</span><b>${semana}</b></div>
-        <a class="kpi" href="#faturamento" data-go="faturamento"><span>Faturado neste mês</span><b>${U.brlShort(fatMes.reduce((s, f) => s + (+f.receita || 0), 0))}</b><em>${U.plural(fatMes.length, 'negócio lançado', 'negócios lançados')}</em></a>
+        <a class="kpi" href="#faturamento" data-go="faturamento"><span>Produção do mês (líquido)</span><b>${U.brlShort(prodMes.reduce((s, p) => s + App.Fat.liquidoTotal(p), 0))}</b><em>${U.plural(prodMes.length, 'lançamento', 'lançamentos')}</em></a>
       </section>
       ${porTipo.length ? `<div class="tchips"><button class="tchip${!fTipo ? ' on' : ''}" data-t="">Todos <b>${abertos.length}</b></button>${porTipo.map(t => `<button class="tchip${fTipo === t.id ? ' on' : ''}" data-t="${t.id}">${t.label} <b>${t.n}</b><small>${U.brlShort(t.v)}</small></button>`).join('')}</div>` : ''}
       <section class="card">
@@ -2057,86 +2491,178 @@ window.HORUS_CONFIG = {
 </script>
 <script>
 /* js/views/faturamento.js */
-/* Tela: Faturamento (negócios efetivados). Fica só no menu lateral. */
+/*
+ * Tela: Faturamento. Fica só no menu lateral.
+ * Abas: Resumo · Produção · Recebimentos (conferência do dia 15) · Recorrências e histórico · Linhas e produtos
+ */
 (function (App) {
-  const { U, M, UI, Store } = App;
+  const { U, UI, Store, Fat } = App;
   const V = { titulo: 'Faturamento' };
-  let periodo = 'mes', fTipo = '', fResp = '', metrica = 'receita';
+  const ABAS = [['resumo', 'Resumo'], ['producao', 'Produção'], ['recebimentos', 'Recebimentos'], ['recorrencias', 'Recorrências e histórico'], ['linhas', 'Linhas e produtos']];
+  let aba = 'resumo', ano = new Date().getFullYear(), mesProd = null, mesRec = null, fLinha = '', rank = 'recebido';
 
-  const PERIODOS = [
-    { id: 'mes', label: 'Este mês' }, { id: 'mesant', label: 'Mês passado' }, { id: 'tri', label: 'Este trimestre' },
-    { id: 'ano', label: 'Este ano' }, { id: '12m', label: 'Últimos 12 meses' }, { id: 'tudo', label: 'Tudo' }
-  ];
-  function intervalo(p) {
-    const n = new Date(), y = n.getFullYear(), m = n.getMonth(), hoje = U.today();
-    if (p === 'mes') return [U.iso(new Date(y, m, 1)), hoje];
-    if (p === 'mesant') return [U.iso(new Date(y, m - 1, 1)), U.iso(new Date(y, m, 0))];
-    if (p === 'tri') return [U.iso(new Date(y, Math.floor(m / 3) * 3, 1)), hoje];
-    if (p === 'ano') return [y + '-01-01', hoje];
-    if (p === '12m') return [U.iso(new Date(y, m - 11, 1)), hoje];
-    return [null, null];
-  }
-  const passa = f => (!fTipo || f.tipo === fTipo) && (!fResp || f.responsabilidadeId === fResp);
-  const val = f => +(metrica === 'receita' ? f.receita : f.valor) || 0;
+  V.setParams = q => { if (q && q.aba) aba = q.aba; };
 
-  V.render = el => {
-    const [ini, fim] = intervalo(periodo);
-    const todos = Store.all('faturamento').filter(passa);
-    const lista = todos.filter(f => (!ini || f.data >= ini) && (!fim || f.data <= fim)).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-    const receita = lista.reduce((s, f) => s + (+f.receita || 0), 0), volume = lista.reduce((s, f) => s + (+f.valor || 0), 0);
-    const n = new Date();
-    const meses = Array.from({ length: 12 }, (_, i) => { const d = new Date(n.getFullYear(), n.getMonth() - 11 + i, 1); const k = U.iso(d).slice(0, 7); return { k, y: d.getFullYear(), m: d.getMonth(), v: todos.filter(f => (f.data || '').slice(0, 7) === k).reduce((s, f) => s + val(f), 0) }; });
-    const maxM = Math.max(...meses.map(x => x.v), 1);
-    const noPer = k => (!ini || k >= ini.slice(0, 7)) && (!fim || k <= fim.slice(0, 7));
-    const porTipo = M.TIPOS_NEGOCIO.map(t => ({ ...t, v: lista.filter(f => f.tipo === t.id).reduce((s, f) => s + val(f), 0), n: lista.filter(f => f.tipo === t.id).length })).filter(t => t.n).sort((a, b) => b.v - a.v);
-    const totTipo = porTipo.reduce((s, t) => s + t.v, 0) || 1;
+  const ldot = id => `<i class="ldot" style="background:${Fat.linhaCor(id)}"></i>`;
+  const navMes = (id, ym) => `<div class="mnav"><button class="icon-btn" data-nav="${id}" data-d="-1" aria-label="Mês anterior">${UI.icon('voltar')}</button><b>${Fat.nomeMes(ym, true)}</b><button class="icon-btn flip" data-nav="${id}" data-d="1" aria-label="Próximo mês">${UI.icon('voltar')}</button></div>`;
+  const linhaFiltro = () => `<select id="fLinha" aria-label="Linha de negócio">${UI.options(Fat.linhas(true).map(l => ({ id: l.id, label: l.nome })), fLinha, { vazio: 'Todas as linhas' })}</select>`;
 
-    el.innerHTML = `
-      <div class="page-h"><div><h1>Faturamento</h1><p class="muted">Negócios efetivados e a receita que cada um gerou.</p></div>
-        <button class="btn primary" id="novoFat">${UI.icon('mais')}Lançar negócio</button></div>
-      <div class="filters">
-        <select id="fPer" aria-label="Período">${UI.options(PERIODOS, periodo)}</select>
-        <select id="fTip" aria-label="Tipo">${UI.options(M.TIPOS_NEGOCIO, fTipo, { vazio: 'Todos os tipos' })}</select>
-        <select id="fRes" aria-label="Responsabilidade">${UI.options(Store.all('responsabilidades').map(x => ({ id: x.id, label: x.nome })), fResp, { vazio: 'Todas as responsabilidades' })}</select>
+  /* ---------- Resumo ---------- */
+  function resumo() {
+    const prox = Fat.proximoPagamento(), rp = Fat.resumoMes(prox), hoje = Fat.ymHoje();
+    const prodMes = Fat.producoesDoMes(hoje), liqMes = prodMes.reduce((s, p) => s + Fat.liquidoTotal(p), 0), brMes = prodMes.reduce((s, p) => s + (+p.bruto || 0), 0);
+    const meses = Array.from({ length: 12 }, (_, i) => { const ym = ano + '-' + String(i + 1).padStart(2, '0'); return { ym, ...Fat.totalMes(ym) }; });
+    const anoAtual = String(new Date().getFullYear());
+    let recAno = 0; for (let i = 1; i <= 12; i++) { const ym = anoAtual + '-' + String(i).padStart(2, '0'); if (ym <= hoje) recAno += Fat.totalMes(ym).recebido; }
+    let futuro = 0; for (let i = 1; i <= 12; i++) futuro += Fat.totalMes(Fat.addMes(hoje, i)).aberto;
+    const pend = Store.all('recebiveis').filter(Fat.pendente), pendV = pend.reduce((s, r) => s + (+r.previsto || 0), 0);
+    const maxM = Math.max(...meses.map(m => m.recebido + m.aberto), 1);
+    /* ranking das linhas no ano */
+    const rk = {};
+    if (rank === 'recebido') meses.forEach(m => Object.entries(Fat.resumoMes(m.ym).porLinha).forEach(([l, v]) => { rk[l] = (rk[l] || 0) + v.recebido; }));
+    else Fat.producaoEntre(ano + '-01', ano + '-12').forEach(p => { rk[p.linhaId] = (rk[p.linhaId] || 0) + Fat.liquidoTotal(p); });
+    const rkArr = Object.entries(rk).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]), rkTot = rkArr.reduce((s, [, v]) => s + v, 0) || 1;
+    const linhasProx = Object.entries(rp.porLinha).sort((a, b) => (b[1].recebido + b[1].aberto) - (a[1].recebido + a[1].aberto));
+
+    return `
+      <div class="fat-top">
+        <section class="card hero-pay">
+          <span class="eyebrow">Você recebe em 15 de ${Fat.nomeMes(prox, true).replace(/ de \d+$/, '')}</span>
+          <b class="big">${U.brlC(rp.recebido + rp.aberto)}</b>
+          <span class="muted small">${rp.recebido ? `${U.brlC(rp.recebido)} já conferido · ` : ''}${U.plural(rp.itens.length, 'lançamento previsto', 'lançamentos previstos')}</span>
+          ${linhasProx.length ? `<ul class="plin">${linhasProx.map(([l, v]) => `<li><span>${ldot(l)}${U.esc(Fat.linhaNome(l))}</span><b>${U.brlC(v.recebido + v.aberto)}</b></li>`).join('')}</ul>` : '<p class="muted small">Nenhum valor previsto. Lance a produção do mês para ver a previsão.</p>'}
+          <button class="btn ghost sm" data-aba="recebimentos" data-mes="${prox}">Conferir recebimentos</button>
+        </section>
+        <div class="kpis k2">
+          <div class="kpi"><span>Produção de ${Fat.nomeMes(hoje, true).replace(/ de \d+$/, '')} (líquido)</span><b>${U.brlShort(liqMes)}</b><em>${U.brlShort(brMes)} bruto · ${U.plural(prodMes.length, 'lançamento', 'lançamentos')}</em></div>
+          <div class="kpi k-brand"><span>Recebido em ${new Date().getFullYear()}</span><b>${U.brlShort(recAno)}</b><em>até ${Fat.nomeMes(hoje)}</em></div>
+          <div class="kpi"><span>A receber nos próximos 12 meses</span><b>${U.brlShort(futuro)}</b><em>parcelas e recorrências já previstas</em></div>
+          <div class="kpi ${pend.length ? 'k-warn' : ''}"><span>Pendências</span><b>${pend.length}</b><em>${pend.length ? U.brlC(pendV) + ' previstos que não foram conferidos' : 'Nada atrasado'}</em></div>
+        </div>
       </div>
-      <section class="kpis k4">
-        <div class="kpi k-brand"><span>Receita gerada</span><b>${U.brlShort(receita)}</b><em>${PERIODOS.find(p => p.id === periodo).label.toLowerCase()}</em></div>
-        <div class="kpi"><span>Volume negociado</span><b>${U.brlShort(volume)}</b></div>
-        <div class="kpi"><span>Negócios fechados</span><b>${lista.length}</b></div>
-        <div class="kpi"><span>Receita média por negócio</span><b>${lista.length ? U.brlShort(receita / lista.length) : '—'}</b></div>
-      </section>
       <div class="grid-main">
         <section class="card">
-          <div class="card-h"><h2>Últimos 12 meses</h2><div class="seg" role="group" aria-label="Medida"><button data-m="receita" aria-pressed="${metrica === 'receita'}">Receita</button><button data-m="valor" aria-pressed="${metrica === 'valor'}">Volume</button></div></div>
-          <div class="mbars" role="img" aria-label="${metrica === 'receita' ? 'Receita' : 'Volume'} por mês">${meses.map(x => `<div class="mb${noPer(x.k) ? ' in' : ''}" title="${U.mesNome(x.y, x.m)}: ${U.brl(x.v)}"><span class="mv">${x.v ? U.brlShort(x.v).replace('R$ ', '') : ''}</span><i style="height:${Math.max(x.v ? 3 : 0, x.v / maxM * 100)}%"></i><small>${U.mesNome(x.y, x.m)}</small></div>`).join('')}</div>
+          <div class="card-h"><h2>Recebimentos de ${ano}</h2><div class="mnav"><button class="icon-btn" data-ano="-1" aria-label="Ano anterior">${UI.icon('voltar')}</button><b>${ano}</b><button class="icon-btn flip" data-ano="1" aria-label="Próximo ano">${UI.icon('voltar')}</button></div></div>
+          <div class="mbars">${meses.map(m => { const t = m.recebido + m.aberto; return `<button class="mb${m.ym === hoje ? ' now' : ''}" data-aba="recebimentos" data-mes="${m.ym}" title="${Fat.nomeMes(m.ym, true)}: ${U.brlC(m.recebido)} recebido${m.aberto ? ' · ' + U.brlC(m.aberto) + ' em aberto' : ''}"><span class="mv">${t ? U.brlShort(t).replace('R$ ', '') : ''}</span><span class="stack" style="height:${t / maxM * 100}%"><i class="ab" style="flex:${m.aberto}"></i><i class="rc" style="flex:${m.recebido}"></i></span><small>${Fat.nomeMes(m.ym).slice(0, 3)}</small></button>`; }).join('')}</div>
+          <div class="legend-l"><span><i class="rc"></i>Recebido</span><span><i class="ab"></i>Previsto em aberto</span></div>
         </section>
         <section class="card">
-          <div class="card-h"><h2>Por tipo de negócio</h2></div>
-          ${porTipo.length ? `<ul class="tbars">${porTipo.map(t => `<li><div class="mrow"><span>${t.label} <span class="muted small">· ${t.n}</span></span><b>${U.brlShort(t.v)}</b></div>${UI.bar(t.v / totTipo)}</li>`).join('')}</ul>` : '<p class="muted small">Sem lançamentos no período.</p>'}
+          <div class="card-h"><h2>Linhas de negócio</h2><div class="seg" role="group"><button data-rank="recebido" aria-pressed="${rank === 'recebido'}">Recebido</button><button data-rank="producao" aria-pressed="${rank === 'producao'}">Produção</button></div></div>
+          ${rkArr.length ? `<ul class="tbars">${rkArr.map(([l, v], i) => `<li><div class="mrow"><span><b class="rkpos">${i + 1}º</b>${ldot(l)}${U.esc(Fat.linhaNome(l))}</span><b>${U.brlShort(v)} <span class="muted small">${Math.round(v / rkTot * 100)}%</span></b></div>${UI.bar(v / rkArr[0][1], Fat.linhaCor(l))}</li>`).join('')}</ul>` : `<p class="muted small">Sem ${rank === 'recebido' ? 'recebimentos' : 'produção'} em ${ano}.</p>`}
         </section>
-      </div>
-      <section class="card">
-        <div class="card-h"><h2>Lançamentos</h2><span class="muted small">${U.plural(lista.length, 'negócio', 'negócios')}</span></div>
-        ${lista.length ? `<div class="tw"><table class="ftable"><thead><tr><th>Data</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th class="r">Valor do negócio</th><th class="r">Receita</th><th></th></tr></thead><tbody>
-          ${lista.map(f => `<tr data-id="${f.id}"><td>${U.fmtDate(f.data)}</td><td><b>${U.esc(f.cliente || '—')}</b>${f.responsabilidadeId ? `<br>${UI.respChip(f.responsabilidadeId)}` : ''}</td><td><span class="neg">${U.esc(M.tipoNeg(f.tipo).label)}</span></td><td class="desc">${U.esc(f.descricao || '')}</td><td class="r">${f.valor != null ? U.brl(f.valor) : '—'}</td><td class="r"><b>${f.receita != null ? U.brl(f.receita) : '—'}</b></td>
-          <td class="r nowrap"><button class="icon-btn" data-act="editar" aria-label="Editar">${UI.icon('editar')}</button><button class="icon-btn" data-act="excluir" aria-label="Excluir">${UI.icon('lixo')}</button></td></tr>`).join('')}
-          </tbody><tfoot><tr><td colspan="4">Total</td><td class="r">${U.brl(volume)}</td><td class="r"><b>${U.brl(receita)}</b></td><td></td></tr></tfoot></table></div>`
-          : `<div class="empty"><b>Nenhum negócio lançado ${periodo === 'tudo' ? 'ainda' : 'neste período'}.</b><p>Lance aqui cada negócio efetivado. Ao concluir uma atividade marcada como negócio, o lançamento pode ser feito na hora.</p></div>`}
-      </section>`;
+      </div>`;
+  }
 
-    el.querySelector('#novoFat').onclick = () => App.Forms.faturamento(null, { tipo: fTipo || 'investimentos', responsabilidadeId: fResp || undefined });
-    el.querySelector('#fPer').onchange = e => { periodo = e.target.value; V.render(el); };
-    el.querySelector('#fTip').onchange = e => { fTipo = e.target.value; V.render(el); };
-    el.querySelector('#fRes').onchange = e => { fResp = e.target.value; V.render(el); };
-    el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { metrica = b.dataset.m; V.render(el); });
-    el.querySelectorAll('tbody tr').forEach(tr => tr.addEventListener('click', async e => {
-      const b = e.target.closest('[data-act]'); const id = tr.dataset.id;
-      if (!b || b.dataset.act === 'editar') return App.Forms.faturamento(id);
-      if (b.dataset.act === 'excluir') {
-        const f = Store.get('faturamento', id);
-        if (await UI.confirm({ title: 'Excluir lançamento?', text: `O lançamento de <b>${U.esc(f.cliente || 'cliente')}</b> em ${U.fmtDate(f.data)} (${f.receita != null ? U.brl(f.receita) : U.brl(f.valor)}) será apagado.`, ok: 'Excluir' })) { M.excluirFaturamento(id); UI.toast('Lançamento excluído'); }
-      }
-    }));
+  /* ---------- Produção ---------- */
+  function producao() {
+    const ym = mesProd || Fat.ymHoje();
+    const lista = Fat.producoesDoMes(ym).filter(p => !fLinha || p.linhaId === fLinha).sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+    const liq = lista.reduce((s, p) => s + Fat.liquidoTotal(p), 0), br = lista.reduce((s, p) => s + (+p.bruto || 0), 0);
+    const grupos = {};
+    lista.forEach(p => { const k = p.linhaId + '|' + p.produtoId; (grupos[k] = grupos[k] || []).push(p); });
+    const ordem = Object.keys(grupos).sort((a, b) => { const la = Fat.linha(a.split('|')[0]) || {}, lb = Fat.linha(b.split('|')[0]) || {}; return (la.ordem || 50) - (lb.ordem || 50) || a.localeCompare(b); });
+    return `
+      <div class="toolbar">${navMes('prod', ym)}${linhaFiltro()}<span class="grow"></span><button class="btn primary" id="novaProd">${UI.icon('mais')}Lançar produção</button></div>
+      <section class="kpis k3"><div class="kpi k-brand"><span>Líquido gerado</span><b>${U.brlShort(liq)}</b></div><div class="kpi"><span>Resultado bruto</span><b>${U.brlShort(br)}</b></div><div class="kpi"><span>Lançamentos</span><b>${lista.length}</b></div></section>
+      ${ordem.length ? ordem.map(k => { const [l, pId] = k.split('|'), arr = grupos[k], tl = arr.reduce((s, p) => s + Fat.liquidoTotal(p), 0), tb = arr.reduce((s, p) => s + (+p.bruto || 0), 0);
+        return `<section class="card pblock" style="--c:${Fat.linhaCor(l)}"><div class="card-h"><h2>${ldot(l)}${U.esc(Fat.linhaNome(l))} · ${U.esc(Fat.produtoNome(pId))}</h2><span class="muted small">${U.brlC(tb)} bruto · <b class="ink">${U.brlC(tl)} líquido</b></span></div>
+          <div class="tw"><table class="ftable"><thead><tr><th>Data</th><th>Cliente</th><th class="r">Valor / aporte</th><th class="r">Comissão</th><th class="r">Bruto</th><th class="r">Líquido</th><th>Recebe</th></tr></thead><tbody>
+          ${arr.map(p => { const ds = Fat.datas(p.data, p.regra, p.parcelas, p.grupo), v = Fat.valores(p), rec = Fat.recebidosDaProducao(p.id);
+            return `<tr data-prod="${p.id}"><td>${U.fmtDate(p.data)}</td><td><b>${U.esc(p.cliente || '—')}</b>${p.observacoes ? `<br><span class="muted small">${U.esc(p.observacoes)}</span>` : ''}</td><td class="r">${p.valor != null ? U.brlC(p.valor) : '—'}</td><td class="r">${p.comissaoPct != null ? U.num(p.comissaoPct) + '%' : '—'}</td><td class="r">${p.bruto != null ? U.brlC(p.bruto) : '—'}</td>
+              <td class="r"><b>${U.brlC(v.liq.reduce((s, x) => s + x, 0))}</b>${v.estimado ? '<br><span class="tag t-aviso">sem líquido</span>' : ''}${v.n > 1 ? `<br><span class="muted small">${v.n}x ${U.brlC(v.liq[0])}</span>` : ''}</td>
+              <td><span class="small">${Fat.regraTxt(p.regra, p.parcelas, p.grupo)}</span><br><span class="muted small">${v.n > 1 ? `de ${U.fmtDate(ds[0])} a ${U.fmtDate(ds[ds.length - 1])}` : U.fmtDate(ds[0])}${rec ? ` · ${rec}/${v.n} recebida${rec > 1 ? 's' : ''}` : ''}</span></td></tr>`; }).join('')}
+          </tbody></table></div></section>`; }).join('')
+      : `<div class="empty card"><b>Nenhuma produção em ${Fat.nomeMes(ym, true)}.</b><p>Lance cada negócio com o cliente, o valor, o resultado bruto e o líquido. O faturamento calcula quando cada valor entra.</p><button class="btn primary" id="novaProd2">${UI.icon('mais')}Lançar produção</button></div>`}`;
+  }
+
+  /* ---------- Recebimentos (conferência do dia 15) ---------- */
+  const TIPO_TAG = { recorrente: 'Recorrente', avulso: 'Avulso', historico: 'Histórico' };
+  function recebimentos() {
+    const ym = mesRec || Fat.proximoPagamento(), r = Fat.resumoMes(ym);
+    const itens = r.itens.filter(x => !fLinha || x.linhaId === fLinha);
+    const porL = {}; itens.forEach(x => (porL[x.linhaId] = porL[x.linhaId] || []).push(x));
+    const linhasOrd = Object.keys(porL).sort((a, b) => ((Fat.linha(a) || {}).ordem || 50) - ((Fat.linha(b) || {}).ordem || 50));
+    const abertos = itens.filter(x => x.status !== 'recebido');
+    return `
+      <div class="toolbar">${navMes('rec', ym)}${linhaFiltro()}<span class="grow"></span><button class="btn ghost" id="novoAv">${UI.icon('mais')}Avulso</button>${abertos.length ? `<button class="btn primary" id="todos">${UI.icon('check')}Marcar todos como recebidos</button>` : ''}</div>
+      <section class="kpis k4"><div class="kpi"><span>Previsto</span><b>${U.brlShort(r.previsto)}</b><em>${U.brlC(r.previsto)}</em></div><div class="kpi k-brand"><span>Recebido</span><b>${U.brlShort(r.recebido)}</b></div><div class="kpi"><span>Em aberto</span><b>${U.brlShort(r.aberto)}</b></div><div class="kpi ${r.pendentes ? 'k-warn' : ''}"><span>Pendentes</span><b>${r.pendentes}</b><em>${r.pendentes ? 'passou da data e não foi conferido' : 'nada atrasado'}</em></div></section>
+      ${linhasOrd.length ? linhasOrd.map(l => { const arr = porL[l].sort((a, b) => (a.cliente || a.descricao || '').localeCompare(b.cliente || b.descricao || '')), tp = arr.reduce((s, x) => s + (+x.previsto || 0), 0), tr = arr.reduce((s, x) => s + Fat.valorRecebido(x), 0);
+        return `<section class="card"><div class="card-h"><h2>${ldot(l)}${U.esc(Fat.linhaNome(l))}</h2><span class="muted small">previsto ${U.brlC(tp)} · <b class="ink">recebido ${U.brlC(tr)}</b></span></div>
+          <ul class="rlist">${arr.map(x => { const ok = x.status === 'recebido', dif = ok && x.recebido != null && Math.abs(x.recebido - x.previsto) >= 0.01;
+            return `<li class="${ok ? 'ok' : Fat.pendente(x) ? 'late' : ''}" data-rid="${x.id}"><button class="check${ok ? ' on' : ''}" data-act="toggle" aria-label="${ok ? 'Desmarcar' : 'Marcar como recebido'}">${UI.icon('check')}</button>
+              <div class="amain" data-act="${x.producaoId ? 'prod' : x.tipo === 'recorrente' ? 'rec' : x.tipo === 'avulso' ? 'av' : 'hist'}"><b>${U.esc(x.cliente || x.descricao)}</b><div class="pmeta"><span>${U.esc(x.cliente ? x.descricao : '')}</span>${x.total > 1 ? `<span class="tag t-neutro">${x.numero}/${x.total}</span>` : ''}${TIPO_TAG[x.tipo] ? `<span class="tag t-neutro">${TIPO_TAG[x.tipo]}</span>` : ''}${x.estimado ? '<span class="tag t-aviso">sem líquido</span>' : ''}${Fat.pendente(x) ? '<span class="tag t-erro">Pendente</span>' : ''}<span>${U.fmtDate(x.previstoEm)}</span></div></div>
+              <div class="rvals"><span class="muted small">previsto</span><b>${U.brlC(x.previsto)}</b></div>
+              <div class="rvals">${ok ? `<span class="muted small">recebido</span><input class="rin${dif ? ' dif' : ''}" data-num inputmode="decimal" value="${String(x.recebido ?? x.previsto).replace('.', ',')}" aria-label="Valor recebido" ${x.virtual ? 'disabled' : ''}>` : ''}</div></li>`; }).join('')}</ul></section>`; }).join('')
+      : `<div class="empty card"><b>Nada previsto para ${Fat.nomeMes(ym, true)}.</b><p>Os valores aparecem aqui conforme você lança produção, recorrências e avulsos.</p></div>`}`;
+  }
+
+  /* ---------- Recorrências e histórico ---------- */
+  function recorrencias() {
+    const rcs = Store.all('recorrencias').slice().sort((a, b) => a.descricao.localeCompare(b.descricao));
+    const hist = Store.all('recebiveis').filter(r => r.tipo === 'historico'), meses = [...new Set(hist.map(h => Fat.ym(h.previstoEm)))].sort().reverse();
+    const ativa = rc => Fat.recorrenciaAtiva(rc, Fat.ymHoje()) || Fat.ym(rc.inicio) > Fat.ymHoje();
+    return `
+      <section class="card"><div class="card-h"><h2>Recorrências</h2><button class="btn primary sm" id="novaRc">${UI.icon('mais')}Nova recorrência</button></div>
+        <p class="muted small" style="margin-top:-6px">Valores fixos todo mês, como Mensal Eqseed ou Recorrência Vida.</p>
+        ${rcs.length ? `<ul class="rlist">${rcs.map(rc => `<li data-rc="${rc.id}" class="${ativa(rc) ? '' : 'ok'}"><span class="ldot big" style="background:${Fat.linhaCor(rc.linhaId)}"></span><div class="amain"><b>${U.esc(rc.descricao)}</b><div class="pmeta"><span>${U.esc(Fat.linhaNome(rc.linhaId))}</span><span>de ${Fat.nomeMes(Fat.ym(rc.inicio))}${rc.fim ? ' a ' + Fat.nomeMes(Fat.ym(rc.fim)) : ' sem fim definido'} · dia ${rc.dia || 15}</span>${ativa(rc) ? '' : '<span class="tag t-neutro">Encerrada</span>'}</div></div><div class="rvals"><span class="muted small">por mês</span><b>${U.brlC(rc.valor)}</b></div><button class="icon-btn" aria-label="Editar">${UI.icon('editar')}</button></li>`).join('')}</ul>` : '<p class="muted small">Nenhuma recorrência cadastrada.</p>'}
+      </section>
+      <section class="card"><div class="card-h"><h2>Histórico de recebimentos</h2><button class="btn primary sm" id="novoHi">${UI.icon('mais')}Lançar mês</button></div>
+        <p class="muted small" style="margin-top:-6px">Quanto você recebeu em meses anteriores, por linha, para completar o ano.</p>
+        ${meses.length ? `<div class="tw"><table class="ftable"><thead><tr><th>Mês</th>${Fat.linhas(true).map(l => `<th class="r">${U.esc(l.nome)}</th>`).join('')}<th class="r">Total</th></tr></thead><tbody>
+          ${meses.map(m => { const hs = hist.filter(h => Fat.ym(h.previstoEm) === m); return `<tr data-hi="${m}"><td><b>${Fat.nomeMes(m, true)}</b></td>${Fat.linhas(true).map(l => { const h = hs.find(x => x.linhaId === l.id); return `<td class="r">${h ? U.brlC(h.recebido) : '<span class="muted">—</span>'}</td>`; }).join('')}<td class="r"><b>${U.brlC(hs.reduce((s, h) => s + (+h.recebido || 0), 0))}</b></td></tr>`; }).join('')}
+        </tbody></table></div>` : '<p class="muted small">Nenhum mês lançado.</p>'}
+      </section>`;
+  }
+
+  /* ---------- Linhas e produtos ---------- */
+  function linhas() {
+    return `<div class="toolbar"><p class="muted small" style="margin:0">Cada produto define o % de comissão e quando você recebe. No lançamento você pode mudar.</p><span class="grow"></span><button class="btn primary" id="novaLinha">${UI.icon('mais')}Nova linha</button></div>
+      <div class="lgrid">${Fat.linhas(true).map(l => `<section class="card lcard${l.ativa === false ? ' off' : ''}" style="--c:${l.cor}"><div class="card-h"><h2>${ldot(l.id)}${U.esc(l.nome)}</h2><div><button class="icon-btn" data-ed-linha="${l.id}" aria-label="Editar linha">${UI.icon('editar')}</button><button class="icon-btn" data-arq-linha="${l.id}" title="${l.ativa === false ? 'Reativar' : 'Arquivar'}" aria-label="${l.ativa === false ? 'Reativar' : 'Arquivar'}">${UI.icon('arquivo')}</button></div></div>
+        <ul class="prods">${Store.all('produtos').filter(p => p.linhaId === l.id).sort((a, b) => a.nome.localeCompare(b.nome)).map(p => `<li data-ed-prod="${p.id}" class="${p.ativo === false ? 'off' : ''}"><b>${U.esc(p.nome)}</b><span class="muted small">${Fat.regraTxt(p.regra, p.parcelas, p.grupo)}${p.comissaoPct != null ? ' · ' + U.num(p.comissaoPct) + '%' : ''}</span></li>`).join('')}</ul>
+        <button class="link" data-novo-prod="${l.id}">+ Produto</button></section>`).join('')}</div>`;
+  }
+
+  V.render = el => {
+    const corpo = { resumo, producao, recebimentos, recorrencias, linhas }[aba]();
+    el.innerHTML = `<div class="page-h"><div><h1>Faturamento</h1><p class="muted">O que você produziu, quando recebe e quanto já entrou.</p></div>${aba === 'resumo' ? `<button class="btn primary" id="novaProdTop">${UI.icon('mais')}Lançar produção</button>` : ''}</div>
+      <nav class="tabs" role="tablist">${ABAS.map(([k, t]) => `<button role="tab" data-aba="${k}" aria-selected="${aba === k}">${t}</button>`).join('')}</nav>${corpo}`;
+
+    const q = s => el.querySelector(s), on = (s, fn) => { const x = q(s); if (x) x.onclick = fn; };
+    el.querySelectorAll('[data-aba]').forEach(b => b.onclick = () => { aba = b.dataset.aba; if (b.dataset.mes) mesRec = b.dataset.mes; V.render(el); });
+    el.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => { const d = +b.dataset.d; if (b.dataset.nav === 'prod') mesProd = Fat.addMes(mesProd || Fat.ymHoje(), d); else mesRec = Fat.addMes(mesRec || Fat.proximoPagamento(), d); V.render(el); });
+    el.querySelectorAll('[data-ano]').forEach(b => b.onclick = () => { ano += +b.dataset.ano; V.render(el); });
+    el.querySelectorAll('[data-rank]').forEach(b => b.onclick = () => { rank = b.dataset.rank; V.render(el); });
+    const fl = q('#fLinha'); if (fl) fl.onchange = () => { fLinha = fl.value; V.render(el); };
+    ['#novaProd', '#novaProd2', '#novaProdTop'].forEach(s => on(s, () => App.Forms.producao(null, mesProd && mesProd !== Fat.ymHoje() ? { data: mesProd + '-01' } : {})));
+    el.querySelectorAll('[data-prod]').forEach(tr => tr.onclick = () => App.Forms.producao(tr.dataset.prod));
+    on('#novoAv', () => App.Forms.avulso(null, { previstoEm: Fat.dia15(mesRec || Fat.proximoPagamento()) }));
+    on('#todos', async () => {
+      const ym = mesRec || Fat.proximoPagamento(), ab = Fat.doMes(ym).filter(x => x.status !== 'recebido' && (!fLinha || x.linhaId === fLinha));
+      if (!(await UI.confirm({ title: 'Marcar todos como recebidos?', text: `${U.plural(ab.length, 'lançamento', 'lançamentos')} de ${Fat.nomeMes(ym, true)} somando <b>${U.brlC(ab.reduce((s, x) => s + (+x.previsto || 0), 0))}</b> serão marcados com o valor previsto. Você pode corrigir cada valor depois.`, ok: 'Marcar todos', danger: false }))) return;
+      ab.forEach(x => Fat.marcarRecebido(x, null, true)); Store.commit(); UI.toast('Recebimentos conferidos');
+    });
+    el.querySelectorAll('.rlist [data-rid]').forEach(li => {
+      const achar = () => Fat.doMes(mesRec || Fat.proximoPagamento()).find(x => x.id === li.dataset.rid);
+      li.addEventListener('click', e => {
+        const b = e.target.closest('[data-act]'); if (!b) return; const x = achar(); if (!x) return;
+        if (b.dataset.act === 'toggle') { if (x.status === 'recebido') Fat.desmarcar(x); else { Fat.marcarRecebido(x); Store.commit(); } return; }
+        if (b.dataset.act === 'prod') App.Forms.producao(x.producaoId);
+        if (b.dataset.act === 'rec') App.Forms.recorrencia(x.recorrenciaId);
+        if (b.dataset.act === 'av') App.Forms.avulso(x.id);
+        if (b.dataset.act === 'hist') App.Forms.historico(Fat.ym(x.previstoEm));
+      });
+      const inp = li.querySelector('.rin');
+      if (inp) inp.addEventListener('change', () => { const v = U.parseNum(inp.value); const x = achar(); if (v != null && x && !x.virtual) { Store.update('recebiveis', x.id, { recebido: v }); UI.toast('Valor recebido ajustado'); } });
+    });
+    on('#novaRc', () => App.Forms.recorrencia(null));
+    el.querySelectorAll('[data-rc]').forEach(li => li.onclick = () => App.Forms.recorrencia(li.dataset.rc));
+    on('#novoHi', () => App.Forms.historico());
+    el.querySelectorAll('[data-hi]').forEach(tr => tr.onclick = () => App.Forms.historico(tr.dataset.hi));
+    on('#novaLinha', () => App.Forms.linha(null));
+    el.querySelectorAll('[data-ed-linha]').forEach(b => b.onclick = () => App.Forms.linha(b.dataset.edLinha));
+    el.querySelectorAll('[data-arq-linha]').forEach(b => b.onclick = () => { const l = Fat.linha(b.dataset.arqLinha); Store.update('linhas', l.id, { ativa: l.ativa === false }); UI.toast(l.ativa === false ? 'Linha arquivada' : 'Linha reativada'); });
+    el.querySelectorAll('[data-ed-prod]').forEach(li => li.onclick = () => App.Forms.produto(li.dataset.edProd));
+    el.querySelectorAll('[data-novo-prod]').forEach(b => b.onclick = () => App.Forms.produto(null, b.dataset.novoProd));
   };
 
   App.Views = App.Views || {};
@@ -2334,7 +2860,7 @@ window.HORUS_CONFIG = {
     el.querySelector('#clear').onclick = async () => {
       if (!(await UI.confirm({ title: 'Apagar todos os dados?', text: 'Tudo o que está neste navegador será apagado: responsabilidades, atividades, metas e históricos. Isso não pode ser desfeito.', ok: 'Continuar' }))) return;
       if (!(await UI.confirm({ title: 'Tem certeza?', text: 'Última confirmação. Se ainda não fez backup, cancele e baixe o backup primeiro.', ok: 'Apagar tudo' }))) return;
-      Store.clear(); UI.toast('Todos os dados foram apagados');
+      Store.clear(); App.Fat.garantir(); UI.toast('Todos os dados foram apagados');
     };
   };
 
@@ -2426,6 +2952,7 @@ window.HORUS_CONFIG = {
       App.go(rotaInicial());
       try {
         const r = await Store.sincronizar();
+        App.Fat.garantir();
         if (r.vazio && !Store.config('inicializado')) C.boasVindas();
       } catch (e) {
         console.error(e);
@@ -2436,6 +2963,7 @@ window.HORUS_CONFIG = {
       Store.onStatus(statusUI);
       const primeiro = Store.init();
       if (primeiro || !Store.config('inicializado')) Demo.seed();
+      App.Fat.garantir();
       if (!Store.available()) setTimeout(() => UI.toast('O navegador está bloqueando o armazenamento. Os dados não serão guardados.', 'erro'), 500);
       App.go(rotaInicial());
     }
