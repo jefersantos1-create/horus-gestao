@@ -269,15 +269,19 @@ select:hover, .search:hover { border-color: var(--faint); }
 /* ---------- Janelas e formulários ---------- */
 .modal-wrap { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
 .modal-bd { position: absolute; inset: 0; background: rgba(15, 8, 35, .5); backdrop-filter: blur(2px); }
-.modal { position: relative; width: min(560px, 100%); max-height: 100%; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px rgba(10, 20, 40, .28); animation: pop .16s ease-out; }
+.modal { position: relative; width: min(560px, 100%); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); min-height: 0; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px rgba(10, 20, 40, .28); animation: pop .16s ease-out; }
 .modal.sm { width: min(420px, 100%); } .modal.md { width: min(640px, 100%); }
 @keyframes pop { from { transform: translateY(8px) scale(.99); } to { transform: none; } }
 .modal-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px 6px; }
 .modal-h h2 { font-size: 18px; }
-.modal-b { padding: 8px 18px 16px; overflow: auto; }
+.modal-b { padding: 8px 18px 16px; overflow-y: auto; flex: 1 1 auto; min-height: 0; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #C9BEF0 transparent; }
+.modal-b::-webkit-scrollbar { width: 10px; }
+.modal-b::-webkit-scrollbar-thumb { background: #C9BEF0; border-radius: 999px; border: 3px solid var(--surface); }
+.modal-b::-webkit-scrollbar-thumb:hover { background: #A995EE; }
+.modal-h, .modal-f { flex: none; }
 .modal-f { display: flex; gap: 8px; justify-content: flex-end; align-items: center; padding: 12px 18px; border-top: 1px solid var(--line); flex-wrap: wrap; }
 .kbd-hint { margin-right: auto; color: var(--faint); font-size: 12px; }
-@media (max-width: 520px) { .kbd-hint { display: none; } .modal-wrap { place-items: end center; padding-bottom: 0; } .modal { border-radius: 14px 14px 0 0; max-height: 92%; } }
+@media (max-width: 520px) { .kbd-hint { display: none; } .modal-wrap { place-items: end center; padding-bottom: 0; } .modal { border-radius: 14px 14px 0 0; max-height: 92vh; max-height: 92dvh; } }
 .confirm-text { margin: 0; line-height: 1.55; }
 .form { display: grid; gap: 12px; }
 .f { display: grid; gap: 5px; min-width: 0; }
@@ -488,6 +492,80 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 .neg-toggle.sm small { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
 
 @media (max-width: 860px) { .nav .l-long { display: none; } .nav .l-short { display: inline; } }
+
+/* ---------- Metas da atividade (várias) ---------- */
+.metas-f > span em { font-style: normal; font-weight: 500; color: var(--faint); margin-left: 6px; }
+.mpicks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.mpick { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 12px 5px 10px; font-size: 13px; font-weight: 600; color: var(--ink); cursor: pointer; transition: border-color .12s, background .12s; max-width: 100%; }
+.mpick i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.mpick small { color: var(--faint); font-weight: 500; }
+.mpick .ck { width: 14px; height: 14px; stroke-width: 2.6; display: none; }
+.mpick:hover { border-color: var(--accent); }
+.mpick.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.mpick.on .ck { display: inline; }
+.mp-sep { flex-basis: 100%; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--faint); margin-top: 4px; }
+.mres:empty { display: none; }
+.mres { display: grid; gap: 6px; margin-top: 4px; padding: 10px 12px; border-radius: 10px; background: #FBF9FF; border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); }
+.mres-h, .mres-r { display: grid; grid-template-columns: minmax(0, 1fr) 96px 96px; gap: 8px; align-items: center; }
+.mres-h span { font-size: 11.5px; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; }
+.mres-n { display: flex; align-items: center; gap: 7px; font-weight: 600; font-size: 13.5px; min-width: 0; }
+.mres-n i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.mres-n small { color: var(--faint); font-weight: 500; white-space: nowrap; }
+.mres-r input { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px; font-size: 14px; text-align: right; }
+.mres-r input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+@media (max-width: 520px) { .mres-h { display: none; } .mres-r { grid-template-columns: 1fr 1fr; } .mres-n { grid-column: 1 / -1; } .mres-r input { text-align: left; } }
+.neg-fields { display: grid; gap: 10px; }
+.tipo-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: -2px; }
+.liq-est { min-height: 38px; display: grid; align-content: center; padding: 4px 10px; border-radius: 8px; background: var(--surface-2); font-size: 13px; }
+.liq-est b { font-family: var(--display); font-size: 15px; color: var(--accent); }
+.liq-est small { color: var(--muted); font-size: 11.5px; }
+.liq-box { display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: linear-gradient(150deg, #1D1438 0%, #0B0A10 100%); color: #fff; }
+.liq-box span { font-size: 12px; color: #C9BEF0; font-weight: 600; }
+.liq-box b { font-family: var(--display); font-size: 22px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.liq-box small { color: #B7AED6; font-size: 12px; }
+.chk { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.chk input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+.rmetas { display: grid; gap: 8px; }
+.rmeta { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; }
+.rmeta-h { display: flex; align-items: center; gap: 8px; }
+.rmeta-h i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.rmeta-h small { margin-left: auto; color: var(--faint); font-weight: 600; }
+.rmeta-b { display: grid; gap: 6px; }
+.dmeta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.dmeta + .dmeta { margin-top: 4px; }
+.dmeta i { width: 8px; height: 8px; border-radius: 50%; }
+.nval small { display: block; font-size: 11.5px; color: var(--accent); font-weight: 600; text-align: right; }
+.res.meta { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+
+/* ---------- Próximos passos ---------- */
+.prox { border: 1px dashed color-mix(in srgb, var(--accent) 40%, var(--line)); border-radius: 12px; padding: 12px; display: grid; gap: 10px; }
+.prox.on { border-style: solid; background: #FBF9FF; }
+.prox-h { display: grid; gap: 2px; }
+.prox-h b { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.prox-h b .ic { width: 16px; height: 16px; color: var(--accent); }
+.prox-h small { color: var(--muted); font-size: 12.5px; }
+.prox-sug { display: flex; flex-wrap: wrap; gap: 6px; }
+.prox-list { display: grid; gap: 8px; }
+.prox-list:empty { display: none; }
+.prox-r { display: grid; grid-template-columns: 140px minmax(0, 1fr) 34px; gap: 6px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+.prox-r .pt, .prox-r .pd { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--surface); color: var(--ink); }
+.prox-r .pt:focus, .prox-r .pd:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.prox-r .pt { grid-column: 1 / 3; }
+.prox-r .pr-x { grid-column: 3; grid-row: 1; }
+.prox-r .pd { grid-column: 1; grid-row: 2; padding: 6px 8px; font-size: 13px; }
+.prox-r .pm { grid-column: 2 / -1; grid-row: 2; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.mpick.sm { padding: 3px 10px 3px 8px; font-size: 12px; }
+.pr-x { width: 34px; height: 34px; }
+@media (max-width: 520px) { .prox-r { grid-template-columns: minmax(0, 1fr) 34px; } .prox-r .pt { grid-column: 1; } .prox-r .pd { grid-column: 1 / -1; } .prox-r .pm { grid-column: 1 / -1; grid-row: 3; } }
+.orig-banner { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); font-size: 13px; }
+.orig-banner .ic { width: 16px; height: 16px; flex: none; }
+.orig-banner b { color: var(--ink); }
+.lig { font-size: 12px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.dlink { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: var(--ink); text-decoration: none; font-weight: 600; padding: 2px 0; }
+.dlink:hover { color: var(--accent); }
+.dlink .ic { width: 15px; height: 15px; color: var(--accent); }
+.dlink + .dlink { margin-top: 4px; }
+.toast .toast-act + .toast-act { margin-left: 4px; }
 
 </style>
 
@@ -798,7 +876,41 @@ window.HORUS_CONFIG = {
     { id: 'investimentos', label: 'Investimentos' }, { id: 'consorcio', label: 'Consórcio' }, { id: 'seguro', label: 'Seguro' },
     { id: 'previdencia', label: 'Previdência' }, { id: 'cambio', label: 'Câmbio' }, { id: 'credito', label: 'Crédito' }, { id: 'outro', label: 'Outro' }
   ];
+  /* Tipo de negócio é livre: aceita os ids antigos (consorcio...) ou qualquer texto digitado */
+  M.norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
   M.tipoNeg = id => M.TIPOS_NEGOCIO.find(t => t.id === id) || { id, label: id || 'Negócio' };
+  M.tipoChave = v => M.norm(M.tipoNeg(v).label);
+  /* Texto digitado -> o que é salvo (se for um dos tipos padrão, guarda o id antigo) */
+  M.tipoSalvar = txt => { txt = String(txt || '').trim().replace(/\s+/g, ' '); if (!txt) return null; const t = M.TIPOS_NEGOCIO.find(x => M.norm(x.label) === M.norm(txt) || x.id === M.norm(txt)); return t ? t.id : txt; };
+  /* Tipos já usados, do mais usado para o menos usado */
+  M.tiposUsados = () => {
+    const c = {};
+    Store.all('atividades').forEach(a => { if (!a.tipoNegocio) return; const l = M.tipoNeg(a.tipoNegocio).label, k = M.norm(l); c[k] = c[k] || { label: l, n: 0 }; c[k].n++; });
+    return Object.values(c).sort((a, b) => b.n - a.n || a.label.localeCompare(b.label));
+  };
+  /* Sugestões para o campo: usados + produtos e linhas do faturamento + padrões */
+  M.tiposSugestoes = () => {
+    const out = [], vis = new Set(), add = l => { const k = M.norm(l); if (l && !vis.has(k)) { vis.add(k); out.push(l); } };
+    M.tiposUsados().forEach(t => add(t.label));
+    M.TIPOS_NEGOCIO.filter(t => t.id !== 'outro').forEach(t => add(t.label));
+    if (App.Fat) { App.Fat.produtos().forEach(p => add(p.nome)); App.Fat.linhas().forEach(l => add(l.nome)); }
+    return out;
+  };
+  /* Produto do faturamento que corresponde ao tipo do negócio */
+  M.produtoDoTipo = tipo => {
+    const Fat = App.Fat; if (!Fat || !tipo) return null;
+    const ps = Store.all('produtos').filter(p => p.ativo !== false), k = M.tipoChave(tipo);
+    const porNome = ps.find(p => M.norm(p.nome) === k); if (porNome) return porNome;
+    const fixo = Fat.PRODUTO_DO_NEGOCIO[tipo]; if (fixo && Fat.produto(fixo)) return Fat.produto(fixo);
+    const lin = Store.all('linhas').find(l => M.norm(l.nome) === k || M.norm(l.nome).split(' ')[0] === k);
+    if (lin) { const p = ps.find(x => x.linhaId === lin.id); if (p) return p; }
+    const parcial = ps.find(p => k.length > 3 && (M.norm(p.nome).includes(k) || k.includes(M.norm(p.nome))));
+    return parcial || Fat.produto('p_outros') || null;
+  };
+  /* % que fica com você: o da atividade, senão o padrão do produto */
+  M.pctPadrao = tipo => { const p = M.produtoDoTipo(tipo); return p && p.pctComigo != null ? +p.pctComigo : null; };
+  M.pctDe = a => a.pctComigo != null ? +a.pctComigo : M.pctPadrao(a.tipoNegocio);
+  M.liquidoEstimado = a => { const pct = M.pctDe(a); return a.valorNegocio != null && pct != null ? (+a.valorNegocio) * pct / 100 : null; };
   M.ehNegocio = a => !!a.tipoNegocio;
   M.negociosAbertos = () => Store.all('atividades').filter(a => M.ehNegocio(a) && M.aberta(a));
   M.prio = id => M.PRIORIDADES.find(p => p.id === id) || M.PRIORIDADES[2];
@@ -833,11 +945,26 @@ window.HORUS_CONFIG = {
     Store.insert('historico', { atividadeId, tipo, descricao, em: U.nowISO() }, { silent });
   M.historico = id => Store.where('historico', h => h.atividadeId === id).sort((a, b) => b.em.localeCompare(a.em));
 
-  M.criarAtividade = dados => {
+  M.criarAtividade = (dados, { semCommit } = {}) => {
     const a = Store.insert('atividades', { status: 'pendente', prioridade: 'media', ...dados }, { silent: true });
-    M.log(a.id, 'criada', 'Atividade criada' + (a.prazo ? ' com prazo para ' + U.fmtDate(a.prazo) : ''));
-    Store.commit();
+    const pai = a.origemId ? Store.get('atividades', a.origemId) : null;
+    M.log(a.id, 'criada', 'Atividade criada' + (a.prazo ? ' com prazo para ' + U.fmtDate(a.prazo) : '') + (pai ? ' · próximo passo de "' + pai.titulo + '"' : ''));
+    if (pai) M.log(pai.id, 'gerou', 'Gerou o próximo passo "' + a.titulo + '"' + (a.prazo ? ' para ' + U.fmtDate(a.prazo) : ''));
+    if (!semCommit) Store.commit();
     return a;
+  };
+
+  /* ---------- Próximos passos: atividades geradas a partir de outra ---------- */
+  M.origem = a => a && a.origemId ? Store.get('atividades', a.origemId) : null;
+  M.filhos = id => Store.where('atividades', x => x.origemId === id).sort((a, b) => (a.criadoEm || '').localeCompare(b.criadoEm || ''));
+  /* O que o próximo passo herda da atividade de origem */
+  M.herdar = pai => ({ origemId: pai.id, responsabilidadeId: pai.responsabilidadeId, cliente: pai.cliente || null, categoria: pai.categoria || null, prioridade: pai.prioridade || 'media' });
+  /* itens: [{ titulo, prazo, metaIds }] */
+  M.criarProximos = (paiId, itens) => {
+    const pai = Store.get('atividades', paiId); if (!pai || !itens.length) return [];
+    const criados = itens.map(it => M.criarAtividade({ ...M.herdar(pai), titulo: it.titulo, prazo: it.prazo || null, metaIds: it.metaIds || [], metaId: (it.metaIds || [])[0] || null, esperados: {}, resultados: {} }, { semCommit: true }));
+    Store.commit();
+    return criados;
   };
   M.editarAtividade = (id, dados) => {
     const a = Store.get('atividades', id); if (!a) return;
@@ -845,18 +972,37 @@ window.HORUS_CONFIG = {
     if (dados.prazo !== undefined && dados.prazo !== a.prazo) mud.push('prazo de ' + (a.prazo ? U.fmtDate(a.prazo) : 'sem prazo') + ' para ' + (dados.prazo ? U.fmtDate(dados.prazo) : 'sem prazo'));
     if (dados.status && dados.status !== a.status) mud.push('status de ' + M.status(a.status).label + ' para ' + M.status(dados.status).label);
     if (dados.prioridade && dados.prioridade !== a.prioridade) mud.push('prioridade de ' + M.prio(a.prioridade).label + ' para ' + M.prio(dados.prioridade).label);
+    if (dados.metaIds) { const antes = M.metasDa(a).join(','), dep = dados.metaIds.join(','); if (antes !== dep) mud.push('metas: ' + (dados.metaIds.map(i => (Store.get('metas', i) || {}).nome).filter(Boolean).join(', ') || 'nenhuma')); }
     if (dados.status === 'concluida' && a.status !== 'concluida') dados.concluidaEm = U.nowISO();
     if (dados.status && dados.status !== 'concluida') dados.concluidaEm = null;
     Store.update('atividades', id, dados, { silent: true });
     M.log(id, 'editada', mud.length ? 'Alterado: ' + mud.join('; ') : 'Informações editadas');
     Store.commit();
   };
-  M.concluir = (id, { resultado, nota } = {}) => {
+  /* resultados: { metaId: valor }  ·  somarManual: metas manuais que recebem o valor */
+  M.concluir = (id, { resultado, nota, resultados, somarManual } = {}) => {
+    const a = Store.get('atividades', id); if (!a) return;
     const patch = { status: 'concluida', concluidaEm: U.nowISO() };
     if (resultado !== undefined && resultado !== null) patch.resultado = resultado;
+    const partes = [];
+    if (resultados && Object.keys(resultados).length) {
+      patch.resultados = { ...(a.resultados || {}), ...resultados };
+      Object.assign(patch, M.espelho(M.metasDa(a), patch.resultados, a.esperados || {}));
+      if (!M.metasDa(a).length && resultado != null) patch.resultado = resultado;
+      Object.entries(resultados).forEach(([mid, v]) => {
+        const mt = Store.get('metas', mid); if (!mt || v == null) return;
+        partes.push(M.fmtMeta(v, mt) + ' em "' + mt.nome + '"');
+        if (mt.modo === 'manual' && (somarManual || []).includes(mid)) {
+          const novo = (+mt.atual || 0) + (+v || 0);
+          Store.update('metas', mid, { atual: novo }, { silent: true });
+          Store.insert('metaRegistros', { metaId: mid, valor: novo, nota: 'Atividade: ' + a.titulo, em: U.nowISO() }, { silent: true });
+        }
+      });
+    } else if (resultado != null) partes.push('resultado: ' + U.num(resultado));
+    if (somarManual && somarManual.length) patch.somadas = [...new Set([...(a.somadas || []), ...somarManual])];
     if (nota) patch.resultadoTexto = nota;
     Store.update('atividades', id, patch, { silent: true });
-    M.log(id, 'concluida', 'Concluída' + (resultado != null ? ' · resultado: ' + U.num(resultado) : '') + (nota ? ' · ' + nota : ''));
+    M.log(id, 'concluida', 'Concluída' + (partes.length ? ' · ' + partes.join(', ') : '') + (nota ? ' · ' + nota : ''));
     Store.commit();
   };
   M.reabrir = id => {
@@ -882,10 +1028,34 @@ window.HORUS_CONFIG = {
   };
 
   /* ---------- Metas ---------- */
-  M.metaAtividades = metaId => Store.where('atividades', a => a.metaId === metaId);
+  /* Uma atividade pode servir a várias metas. Registros antigos têm só metaId. */
+  M.metasDa = a => Array.isArray(a.metaIds) ? a.metaIds.filter(Boolean) : (a.metaId ? [a.metaId] : []);
+  const doMapa = (a, mapa, campo, mid) => {
+    const o = a[mapa]; if (o && o[mid] != null) return +o[mid];
+    return M.metasDa(a).length <= 1 && a[campo] != null ? +a[campo] : null;
+  };
+  M.resMeta = (a, mid) => doMapa(a, 'resultados', 'resultado', mid);
+  M.espMeta = (a, mid) => doMapa(a, 'esperados', 'resultadoEsperado', mid);
+  /* Campos antigos (metaId, resultado, resultadoEsperado) espelham a primeira/única meta */
+  M.espelho = (ids, resultados, esperados) => {
+    const um = ids.length === 1 ? ids[0] : null;
+    return { metaId: ids[0] || null, resultado: um ? (resultados[um] ?? null) : null, resultadoEsperado: um ? (esperados[um] ?? null) : null };
+  };
+  /* Meta em dinheiro (unidade R$) mostra "R$ 5.000"; as outras, "3 indicações" */
+  M.ehDinheiro = m => /^(r\$|reais|brl|real)$/i.test(String((m && m.unidade) || '').trim());
+  M.fmtMeta = (v, m, semUn) => M.ehDinheiro(m) ? U.brl(v) : U.num(v) + (semUn || !m.unidade ? '' : ' ' + m.unidade);
+  M.metaAtividades = metaId => Store.where('atividades', a => M.metasDa(a).includes(metaId));
   M.metaAtual = m => m.modo === 'atividades'
-    ? M.metaAtividades(m.id).reduce((s, a) => s + (+a.resultado || 0), 0)
+    ? M.metaAtividades(m.id).reduce((s, a) => s + (M.resMeta(a, m.id) || 0), 0)
     : (+m.atual || 0);
+  /* Metas que pedem resultado ao concluir a atividade */
+  M.metasComResultado = a => M.metasDa(a).map(i => Store.get('metas', i)).filter(Boolean);
+  /* Tira metas apagadas das atividades */
+  M.desvincular = ids => Store.all('atividades').filter(a => M.metasDa(a).some(i => ids.includes(i))).forEach(a => {
+    const rest = M.metasDa(a).filter(i => !ids.includes(i));
+    const r = { ...(a.resultados || {}) }, e = { ...(a.esperados || {}) }; ids.forEach(i => { delete r[i]; delete e[i]; });
+    Store.update('atividades', a.id, { metaIds: rest, resultados: r, esperados: e, metaId: rest[0] || null }, { silent: true });
+  });
   M.metaPct = m => m.alvo > 0 ? M.metaAtual(m) / m.alvo : 0;
   /* Quanto do período já passou (0 a 1) */
   M.metaTempo = m => {
@@ -911,7 +1081,7 @@ window.HORUS_CONFIG = {
   M.excluirMeta = id => {
     Store.remove('metas', id, { silent: true });
     Store.removeWhere('metaRegistros', r => r.metaId === id, { silent: true });
-    Store.all('atividades').filter(a => a.metaId === id).forEach(a => Store.update('atividades', a.id, { metaId: null }, { silent: true }));
+    M.desvincular([id]);
     Store.commit();
   };
 
@@ -923,7 +1093,7 @@ window.HORUS_CONFIG = {
     Store.removeWhere('historico', h => ats.includes(h.atividadeId), { silent: true });
     Store.removeWhere('metas', m => mts.includes(m.id), { silent: true });
     Store.removeWhere('metaRegistros', r => mts.includes(r.metaId), { silent: true });
-    Store.all('atividades').filter(a => mts.includes(a.metaId)).forEach(a => Store.update('atividades', a.id, { metaId: null }, { silent: true }));
+    M.desvincular(mts);
     Store.remove('responsabilidades', id, { silent: true });
     Store.commit();
   };
@@ -1044,7 +1214,7 @@ window.HORUS_CONFIG = {
   /* Apaga só o que é demonstração. Metas de exemplo usadas por atividades suas são mantidas. */
   Demo.remove = () => {
     const ats = Store.where('atividades', a => a.demo).map(a => a.id);
-    const usadas = new Set(Store.where('atividades', a => !a.demo && a.metaId).map(a => a.metaId));
+    const usadas = new Set(Store.where('atividades', a => !a.demo).flatMap(a => M.metasDa(a)));
     Store.all('metas').filter(m => m.demo && usadas.has(m.id)).forEach(m => Store.update('metas', m.id, { demo: false }, { silent: true }));
     const mts = Store.where('metas', m => m.demo).map(m => m.id);
     Store.removeWhere('atividades', a => ats.includes(a.id), { silent: true });
@@ -1315,6 +1485,10 @@ window.HORUS_CONFIG = {
   const DATAS = ['inicio', 'prazo', 'fim', 'data', 'concluidaEm', 'em', 'criadoEm', 'atualizadoEm'];
   const NUMEROS = ['resultadoEsperado', 'resultado', 'alvo', 'atual', 'valor', 'adiamentos', 'valorNegocio', 'receita'];
   const OBRIG = { responsabilidades: ['nome', 'Sem nome'], atividades: ['titulo', 'Sem título'], metas: ['nome', 'Sem nome'] };
+  /* Campos que não têm coluna própria (várias metas, % que fica com você...) vão para "extras" (jsonb) */
+  const COM_EXTRAS = { atividades: true, metas: true };
+  const semExtras = {};
+  let avisouExtras = false;
   const snake = k => k.replace(/[A-Z]/g, m => '_' + m.toLowerCase());
   const camel = k => k.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 
@@ -1330,12 +1504,18 @@ window.HORUS_CONFIG = {
       r[snake(k)] = v;
     });
     const ob = OBRIG[col]; if (ob && !r[ob[0]]) r[ob[0]] = ob[1];
+    if (COM_EXTRAS[col]) {
+      const ex = {};
+      Object.keys(rec).forEach(k => { if (!CAMPOS[col].includes(k) && k !== 'user_id' && k !== 'extras' && !k.startsWith('_') && rec[k] !== undefined) ex[k] = rec[k]; });
+      r.extras = ex;
+    }
     return r;
   };
   C.deLinha = row => {
     if (row.dados && typeof row.dados === 'object' && !('titulo' in row) && !('nome' in row)) return { ...row.dados, id: row.id, demo: !!row.demo };
     const o = {};
-    Object.entries(row).forEach(([k, v]) => { if (k === 'user_id' || v === null) return; o[camel(k)] = v; });
+    Object.entries(row).forEach(([k, v]) => { if (k === 'user_id' || k === 'extras' || v === null) return; o[camel(k)] = v; });
+    if (row.extras && typeof row.extras === 'object') Object.entries(row.extras).forEach(([k, v]) => { if (!(k in o) && v !== null) o[k] = v; });
     return o;
   };
 
@@ -1351,7 +1531,19 @@ window.HORUS_CONFIG = {
     return out;
   }
   const lotes = (arr, n = 400) => { const r = []; for (let i = 0; i < arr.length; i += n) r.push(arr.slice(i, i + n)); return r; };
-  async function gravar(tabela, linhas) { for (const l of lotes(linhas)) { const { error } = await sb.from(tabela).upsert(l, { onConflict: 'user_id,id' }); if (error) throw error; } }
+  /* Se o banco ainda não tem a coluna "extras" (SQL novo não rodou), grava sem ela e avisa uma vez */
+  async function gravar(tabela, linhas) {
+    for (let l of lotes(linhas)) {
+      if (semExtras[tabela]) l = l.map(({ extras, ...r }) => r);
+      let { error } = await sb.from(tabela).upsert(l, { onConflict: 'user_id,id' });
+      if (error && !semExtras[tabela] && /extras/i.test(error.message || '')) {
+        semExtras[tabela] = true;
+        if (!avisouExtras) { avisouExtras = true; setTimeout(() => App.UI && App.UI.toast('Rode o supabase-schema.sql novo no Supabase para salvar várias metas e o % na nuvem.', 'aviso'), 500); }
+        ({ error } = await sb.from(tabela).upsert(l.map(({ extras, ...r }) => r), { onConflict: 'user_id,id' }));
+      }
+      if (error) throw error;
+    }
+  }
   async function apagar(tabela, ids, uid) { for (const l of lotes(ids)) { const { error } = await sb.from(tabela).delete().eq('user_id', uid).in('id', l); if (error) throw error; } }
 
   C.adapter = user => ({
@@ -1555,9 +1747,10 @@ window.HORUS_CONFIG = {
   UI.toast = (msg, tipo = 'ok', acao) => {
     const el = document.getElementById('toast');
     el.className = 'toast ' + tipo;
-    el.innerHTML = `<span>${U.esc(msg)}</span>${acao ? `<button class="toast-act">${U.esc(acao.label)}</button>` : ''}`;
+    const acoes = acao ? (Array.isArray(acao) ? acao : [acao]) : [];
+    el.innerHTML = `<span>${U.esc(msg)}</span>${acoes.map((x, i) => `<button class="toast-act" data-i="${i}">${U.esc(x.label)}</button>`).join('')}`;
     el.hidden = false;
-    if (acao) el.querySelector('.toast-act').onclick = () => { el.hidden = true; acao.fn(); };
+    el.querySelectorAll('.toast-act').forEach(b => b.onclick = () => { el.hidden = true; acoes[+b.dataset.i].fn(); });
     clearTimeout(tt); tt = setTimeout(() => { el.hidden = true; }, acao ? 6000 : 3000);
   };
 
@@ -1668,10 +1861,114 @@ window.HORUS_CONFIG = {
   const F = {};
 
   const categorias = () => [...new Set(Store.all('atividades').map(a => a.categoria).filter(Boolean))].sort();
-  const metasDe = respId => Store.all('metas').filter(m => !respId || m.responsabilidadeId === respId);
   const datasRapidas = () => [
     ['Hoje', U.today()], ['Amanhã', U.addDays(U.today(), 1)], ['Sexta', U.nextWeekday(5)], ['Próx. segunda', U.nextWeekday(1)], ['Sem prazo', '']
   ];
+
+  /* ---------- Metas da atividade (pode ser mais de uma) ---------- */
+  const metaAtiva = m => !(m.fim && m.fim < U.today());
+  /* Metas para escolher: as da responsabilidade primeiro, depois as outras */
+  const metasEscolha = (respId, sel) => {
+    const ms = Store.all('metas').filter(m => metaAtiva(m) || sel.has(m.id));
+    const da = ms.filter(m => m.responsabilidadeId === respId), outras = ms.filter(m => m.responsabilidadeId !== respId);
+    const ord = arr => arr.sort((a, b) => a.nome.localeCompare(b.nome));
+    return { da: ord(da), outras: ord(outras) };
+  };
+  const chipMeta = (m, on) => `<button type="button" class="mpick${on ? ' on' : ''}" data-mid="${m.id}" aria-pressed="${on}"><i style="background:${M.respCor(m.responsabilidadeId)}"></i>${U.esc(m.nome)}${m.unidade ? `<small>${U.esc(m.unidade)}</small>` : ''}<svg class="ic ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`;
+  const numTxt = v => v == null ? '' : U.num(v);
+
+  /* Campos de resultado por meta, usados ao concluir (atividade comum e negócio) */
+  const camposResultado = a => {
+    const metas = M.metasComResultado(a);
+    if (!metas.length) return a.resultadoEsperado != null
+      ? `<label class="f full"><span>Quanto você obteve? Esperado: ${U.num(a.resultadoEsperado)}</span><input name="resultado" data-num inputmode="decimal" value="${a.resultado ?? ''}" placeholder="0"></label>` : '';
+    const somadas = a.somadas || [];
+    return `<div class="rmetas">${metas.map((m, i) => { const esp = M.espMeta(a, m.id), res = M.resMeta(a, m.id);
+      return `<div class="rmeta"><div class="rmeta-h"><i style="background:${M.respCor(m.responsabilidadeId)}"></i><b>${U.esc(m.nome)}</b>${esp != null ? `<small>esperado: ${U.esc(M.fmtMeta(esp, m))}</small>` : ''}</div>
+        <div class="rmeta-b"><label class="f"><span>${M.ehDinheiro(m) ? 'Quanto você gerou (R$)?' : 'Quantas ' + U.esc(m.unidade || 'unidades') + ' você obteve?'}</span><input data-res="${m.id}" data-num inputmode="decimal" value="${res ?? ''}" placeholder="0"${i === 0 ? ' autofocus' : ''}></label>
+        ${m.modo === 'manual' ? `<label class="chk"><input type="checkbox" data-soma="${m.id}"${somadas.includes(m.id) ? '' : ' checked'}><span>Somar à meta (hoje: ${U.esc(M.fmtMeta(m.atual || 0, m, true))})</span></label>` : '<small class="muted">Entra na meta automaticamente.</small>'}</div></div>`; }).join('')}</div>
+      <p class="note">Realizar a atividade é o que você fez. ${metas.length > 1 ? 'Cada meta recebe o próprio resultado.' : 'O número acima é o resultado.'} Deixe em branco a meta que não teve resultado.</p>`;
+  };
+  const lerResultados = (el, form) => {
+    const resultados = {}, somarManual = [];
+    el.querySelectorAll('[data-res]').forEach(i => { const v = U.parseNum(i.value); if (v != null) resultados[i.dataset.res] = v; });
+    el.querySelectorAll('[data-soma]').forEach(c => { if (c.checked && resultados[c.dataset.soma] != null) somarManual.push(c.dataset.soma); });
+    const r = form.resultado ? U.parseNum(form.resultado.value) : null;
+    return { resultados, somarManual, resultado: r };
+  };
+  F._camposResultado = camposResultado; F._lerResultados = lerResultados;
+
+  /* ---------- Próximos passos (o que a atividade gerou) ---------- */
+  const PRAZOS = [['1', 'Amanhã'], ['3', 'Em 3 dias'], ['7', 'Em 1 semana'], ['15', 'Em 15 dias'], ['30', 'Em 30 dias'], ['', 'Sem prazo']];
+  const blocoProximos = (a, aberto) => {
+    const metas = M.metasComResultado(a), com = a.cliente ? ' · ' + a.cliente : '';
+    const sug = [
+      ...metas.map(m => ({ t: 'Retomar: ' + m.nome + com, m: [m.id], l: 'Retomar ' + m.nome })),
+      { t: 'Reunião com especialista' + com, m: [], l: 'Reunião com especialista' },
+      { t: 'Enviar proposta' + com, m: [], l: 'Enviar proposta' },
+      { t: 'Retorno' + com, m: [], l: 'Retorno / follow-up' }
+    ];
+    return `<div class="prox${aberto ? ' on' : ''}" id="prox">
+      <div class="prox-h"><b>${UI.icon('mais')}Essa atividade gerou algo?</b><small>Cada próximo passo vira uma nova atividade ligada a esta, com o mesmo cliente e responsabilidade.</small></div>
+      <div class="prox-sug">${sug.map((x, i) => `<button type="button" class="qd" data-sug="${i}">+ ${U.esc(x.l)}</button>`).join('')}<button type="button" class="qd" data-sug="novo">+ Outro</button></div>
+      <div class="prox-list" id="proxList"></div>
+    </div>`;
+  };
+  const montarProximos = (el, a) => {
+    const metas = M.metasComResultado(a), com = a.cliente ? ' · ' + a.cliente : '';
+    const sug = [
+      ...metas.map(m => ({ t: 'Retomar: ' + m.nome + com, m: [m.id] })),
+      { t: 'Reunião com especialista' + com, m: [] }, { t: 'Enviar proposta' + com, m: [] }, { t: 'Retorno' + com, m: [] }
+    ];
+    const lista = el.querySelector('#proxList');
+    const add = (titulo, mids) => {
+      el.querySelector('#prox').classList.add('on');
+      /* Se já existe uma linha vazia, a sugestão preenche ela */
+      const vazia = [...lista.querySelectorAll('.prox-r')].find(x => !x.querySelector('.pt').value.trim());
+      if (vazia && titulo) { vazia.querySelector('.pt').value = titulo; vazia.querySelectorAll('.pm [data-mid]').forEach(b => b.classList.toggle('on', mids.includes(b.dataset.mid))); vazia.querySelector('.pt').focus(); return; }
+      if (vazia && !titulo) { vazia.querySelector('.pt').focus(); return; }
+      const r = document.createElement('div'); r.className = 'prox-r';
+      r.innerHTML = `<input class="pt" maxlength="140" value="${U.esc(titulo)}" placeholder="Ex.: Reunião com o especialista de seguros" aria-label="Próximo passo">
+        <select class="pd" aria-label="Prazo">${PRAZOS.map(([d, l]) => `<option value="${d}"${d === '7' ? ' selected' : ''}>${l}</option>`).join('')}</select>
+        <button type="button" class="icon-btn pr-x" title="Remover" aria-label="Remover">${UI.icon('x')}</button>
+        ${metas.length ? `<div class="pm" title="Metas deste próximo passo">${metas.map(m => `<button type="button" class="mpick sm${mids.includes(m.id) ? ' on' : ''}" data-mid="${m.id}"><i style="background:${M.respCor(m.responsabilidadeId)}"></i>${U.esc(m.nome)}<svg class="ic ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`).join('')}</div>` : ''}`;
+      r.querySelector('.pr-x').onclick = () => { r.remove(); if (!lista.children.length) el.querySelector('#prox').classList.remove('on'); };
+      r.querySelectorAll('.pm [data-mid]').forEach(b => b.onclick = () => b.classList.toggle('on'));
+      lista.appendChild(r);
+      const i = r.querySelector('.pt'); i.focus(); if (!titulo) return; i.setSelectionRange(i.value.length, i.value.length);
+    };
+    el.querySelectorAll('[data-sug]').forEach(b => b.onclick = () => { const k = b.dataset.sug; if (k === 'novo') add('', []); else add(sug[+k].t, sug[+k].m); });
+    return { add };
+  };
+  const lerProximos = el => [...el.querySelectorAll('.prox-r')].map(r => {
+    const d = r.querySelector('.pd').value;
+    return { titulo: r.querySelector('.pt').value.trim(), prazo: d === '' ? null : U.addDays(U.today(), +d), metaIds: [...r.querySelectorAll('.pm .on')].map(b => b.dataset.mid) };
+  }).filter(x => x.titulo);
+  const avisarProximos = (criados, extra) => {
+    if (!criados.length) return false;
+    UI.toast((extra ? extra + ' · ' : '') + U.plural(criados.length, 'próximo passo criado', 'próximos passos criados'), 'ok', { label: 'Ver', fn: () => F.detalhes(criados[0].origemId) });
+    return true;
+  };
+
+  /* Só os próximos passos (pelo detalhe ou depois de concluir) */
+  F.proximos = id => {
+    const a = Store.get('atividades', id); if (!a) return;
+    UI.modal({
+      title: 'Próximos passos', size: 'sm',
+      body: `<form class="form" id="fPx"><p class="muted" style="margin:0">A partir de: <b>${U.esc(a.titulo)}</b></p>${blocoProximos(a, true)}
+        <p class="note">Precisa de mais campos (valor, negócio, descrição)? <a href="#" id="pxFull">Abrir o formulário completo</a>.</p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fPx" type="submit">Criar</button>`,
+      onMount(el, api) {
+        const px = montarProximos(el, a); px.add('', []);
+        el.querySelector('#pxFull').onclick = e => { e.preventDefault(); api.close(); F.atividade(null, { ...M.herdar(a), prazo: U.addDays(U.today(), 7) }); };
+        el.querySelector('#fPx').onsubmit = e => {
+          e.preventDefault(); const itens = lerProximos(el);
+          if (!itens.length) { UI.toast('Escreva pelo menos um próximo passo.', 'aviso'); return; }
+          api.close(); avisarProximos(M.criarProximos(id, itens));
+        };
+      }
+    });
+  };
 
   /* ---------- Nova atividade / editar atividade ---------- */
   F.atividade = (id, preset = {}) => {
@@ -1681,10 +1978,17 @@ window.HORUS_CONFIG = {
       UI.toast('Cadastre uma responsabilidade antes de criar atividades.', 'aviso');
       return F.resp(null);
     }
-    const metaOpts = r => UI.options(metasDe(r).map(m => ({ id: m.id, label: m.nome })), v.metaId, { vazio: 'Nenhuma' });
+    const sel = new Set(M.metasDa(v));
+    const esp = {}, res = {};
+    sel.forEach(mid => { esp[mid] = M.espMeta(v, mid); res[mid] = M.resMeta(v, mid); });
+    const tiposTop = M.tiposUsados().slice(0, 6).map(t => t.label);
+    const tiposChips = (tiposTop.length >= 3 ? tiposTop : [...new Set([...tiposTop, 'Investimentos', 'Consórcio', 'Seguro de vida', 'Previdência', 'Câmbio'])].slice(0, 6));
+    const tipoTxt = v.tipoNegocio ? M.tipoNeg(v.tipoNegocio).label : '';
+    const ehNeg = !!(v.tipoNegocio || v._neg);
     const m = UI.modal({
       title: a ? 'Editar atividade' : 'Nova atividade', size: 'md',
       body: `<form class="form" id="fAt" novalidate>
+        ${M.origem(v) ? `<div class="orig-banner">${UI.icon('seta')}<span>Próximo passo de <b>${U.esc(M.origem(v).titulo)}</b></span></div>` : ''}
         <label class="f full"><span>Título</span><input name="titulo" required maxlength="140" value="${U.esc(v.titulo || '')}" placeholder="O que precisa ser feito?" autofocus></label>
         <div class="row2">
           <label class="f"><span>Responsabilidade</span><select name="responsabilidadeId">${UI.respOptions(v.responsabilidadeId)}</select></label>
@@ -1693,13 +1997,22 @@ window.HORUS_CONFIG = {
         <div class="quick-dates">${datasRapidas().map(([l, d]) => `<button type="button" class="qd" data-d="${d}">${l}</button>`).join('')}</div>
         <div class="f full"><span>Prioridade</span>${UI.segmented('prioridade', M.PRIORIDADES, v.prioridade)}</div>
         ${a ? `<div class="f full"><span>Status</span>${UI.segmented('status', M.STATUS, v.status)}</div>` : ''}
-        <div class="negbox${v.tipoNegocio ? ' on' : ''}">
-          <label class="neg-toggle"><input type="checkbox" id="chkNeg" ${v.tipoNegocio ? 'checked' : ''}><span class="tg"><i></i></span><span><b>É um negócio</b><small>Consórcio, seguro, câmbio, investimentos... Aparece em Negócios em andamento.</small></span></label>
-          <div class="neg-fields" ${v.tipoNegocio ? '' : 'hidden'}>
+        <div class="f full metas-f"><span>Metas que esta atividade ajuda <em>marque uma ou mais</em></span>
+          <div class="mpicks" id="mpicks"></div>
+          <div class="mres" id="mres"></div>
+        </div>
+        <div class="negbox${ehNeg ? ' on' : ''}">
+          <label class="neg-toggle"><input type="checkbox" id="chkNeg" ${ehNeg ? 'checked' : ''}><span class="tg"><i></i></span><span><b>É um negócio</b><small>Aparece em Negócios em andamento. Escreva o tipo do jeito que você usa.</small></span></label>
+          <div class="neg-fields" ${ehNeg ? '' : 'hidden'}>
+            <div class="row2">
+              <label class="f"><span>Tipo de negócio</span><input name="tipoNegocio" list="dlTipo" maxlength="60" value="${U.esc(tipoTxt)}" placeholder="Digite ou escolha" autocomplete="off"><datalist id="dlTipo">${M.tiposSugestoes().map(t => `<option value="${U.esc(t)}">`).join('')}</datalist></label>
+              <label class="f"><span>Cliente</span><input name="cliente" list="dlCli" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente"><datalist id="dlCli">${[...new Set(Store.all('atividades').map(x => x.cliente).filter(Boolean))].sort().map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
+            </div>
+            <div class="tipo-chips">${tiposChips.map(t => `<button type="button" class="qd" data-tipo="${U.esc(t)}">${U.esc(t)}</button>`).join('')}</div>
             <div class="row3">
-              <label class="f"><span>Tipo de negócio</span><select name="tipoNegocio">${UI.options(M.TIPOS_NEGOCIO, v.tipoNegocio || 'investimentos')}</select></label>
-              <label class="f"><span>Cliente</span><input name="cliente" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente"></label>
-              <label class="f"><span>Valor estimado</span><input name="valorNegocio" data-num inputmode="decimal" value="${v.valorNegocio ?? ''}" placeholder="R$"></label>
+              <label class="f"><span>Valor estimado</span><input name="valorNegocio" data-num inputmode="decimal" value="${numTxt(v.valorNegocio)}" placeholder="R$"></label>
+              <label class="f"><span>% que fica com você</span><input name="pctComigo" data-num inputmode="decimal" value="${numTxt(v.pctComigo)}" placeholder="Ex.: 30"></label>
+              <div class="f"><span>Fica com você</span><div class="liq-est" id="liqEst">—</div></div>
             </div>
           </div>
         </div>
@@ -1710,15 +2023,12 @@ window.HORUS_CONFIG = {
               <label class="f"><span>Categoria ou projeto</span><input name="categoria" list="dlCat" value="${U.esc(v.categoria || '')}" placeholder="Ex.: Campanha de indicações 2027"><datalist id="dlCat">${categorias().map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
               <label class="f"><span>Data de início</span><input type="date" name="inicio" value="${v.inicio || ''}"></label>
             </div>
-            <div class="row2">
-              <label class="f"><span>Meta relacionada</span><select name="metaId" id="selMeta">${metaOpts(v.responsabilidadeId)}</select></label>
-              <label class="f"><span>Resultado esperado</span><input name="resultadoEsperado" data-num inputmode="decimal" value="${v.resultadoEsperado ?? ''}" placeholder="Ex.: 3"></label>
+            <div class="row2" id="resGen">
+              <label class="f"><span>Resultado esperado</span><input name="resultadoEsperado" data-num inputmode="decimal" value="${sel.size ? '' : numTxt(v.resultadoEsperado)}" placeholder="Ex.: 3"></label>
+              <label class="f"><span>Resultado alcançado</span><input name="resultado" data-num inputmode="decimal" value="${sel.size ? '' : numTxt(v.resultado)}" placeholder="Número"></label>
             </div>
-            <div class="row2">
-              <label class="f"><span>Resultado alcançado</span><input name="resultado" data-num inputmode="decimal" value="${v.resultado ?? ''}" placeholder="Número"></label>
-              <label class="f"><span>Resultado em texto</span><input name="resultadoTexto" value="${U.esc(v.resultadoTexto || '')}" placeholder="Ex.: 3 indicações, 1 reunião marcada"></label>
-            </div>
-            <label class="f full"><span>Observações</span><textarea name="observacoes" rows="2">${U.esc(v.observacoes || '')}</textarea></label>
+            <label class="f full"><span>Resultado em texto</span><input name="resultadoTexto" value="${U.esc(v.resultadoTexto || '')}" placeholder="Ex.: 3 indicações, 1 reunião marcada"></label>
+            <label class="f full"><span>Observações</span><textarea name="observacoes" rows="3">${U.esc(v.observacoes || '')}</textarea></label>
           </div>
         </details>
         <p class="ferr" id="errAt" hidden></p>
@@ -1726,50 +2036,95 @@ window.HORUS_CONFIG = {
       footer: `<span class="kbd-hint">Enter salva</span><button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fAt" type="submit">${a ? 'Salvar alterações' : 'Criar atividade'}</button>`,
       onMount(el, api) {
         const form = el.querySelector('#fAt');
-        const marcar = () => el.querySelectorAll('.qd').forEach(b => b.classList.toggle('on', b.dataset.d === form.prazo.value));
-        el.querySelectorAll('.qd').forEach(b => b.onclick = () => { form.prazo.value = b.dataset.d; marcar(); });
+        const marcar = () => el.querySelectorAll('.qd[data-d]').forEach(b => b.classList.toggle('on', b.dataset.d === form.prazo.value));
+        el.querySelectorAll('.qd[data-d]').forEach(b => b.onclick = () => { form.prazo.value = b.dataset.d; marcar(); });
         form.prazo.oninput = marcar; marcar();
+
+        /* Metas */
+        const guardar = () => { el.querySelectorAll('[data-esp]').forEach(i => { esp[i.dataset.esp] = U.parseNum(i.value); }); el.querySelectorAll('[data-res]').forEach(i => { res[i.dataset.res] = U.parseNum(i.value); }); };
+        const desenharMetas = () => {
+          guardar();
+          const { da, outras } = metasEscolha(form.responsabilidadeId.value, sel);
+          const box = el.querySelector('#mpicks');
+          box.innerHTML = (da.length || outras.length)
+            ? da.map(x => chipMeta(x, sel.has(x.id))).join('') + (outras.length ? `<span class="mp-sep">Outras responsabilidades</span>` + outras.map(x => chipMeta(x, sel.has(x.id))).join('') : '')
+            : `<span class="muted small">Nenhuma meta cadastrada ainda. Crie em Metas.</span>`;
+          box.querySelectorAll('[data-mid]').forEach(b => b.onclick = () => { const k = b.dataset.mid; sel.has(k) ? sel.delete(k) : sel.add(k); desenharMetas(); });
+          const ms = [...sel].map(i => Store.get('metas', i)).filter(Boolean);
+          el.querySelector('#mres').innerHTML = ms.length ? `<div class="mres-h"><span></span><span>Esperado</span><span>Alcançado</span></div>` + ms.map(x => `<div class="mres-r"><span class="mres-n"><i style="background:${M.respCor(x.responsabilidadeId)}"></i>${U.esc(x.nome)}<small>${U.esc(x.unidade || '')}</small></span>
+            <input data-esp="${x.id}" data-num inputmode="decimal" value="${numTxt(esp[x.id])}" placeholder="Esperado" aria-label="Esperado em ${U.esc(x.nome)}">
+            <input data-res="${x.id}" data-num inputmode="decimal" value="${numTxt(res[x.id])}" placeholder="Alcançado" aria-label="Alcançado em ${U.esc(x.nome)}"></div>`).join('') : '';
+          el.querySelector('#resGen').hidden = ms.length > 0;
+        };
+        form.responsabilidadeId.onchange = desenharMetas;
+        desenharMetas();
+
+        /* Negócio */
         const chk = el.querySelector('#chkNeg');
-        chk.onchange = () => { el.querySelector('.neg-fields').hidden = !chk.checked; el.querySelector('.negbox').classList.toggle('on', chk.checked); if (chk.checked) form.cliente.focus(); };
-        form.responsabilidadeId.onchange = () => { el.querySelector('#selMeta').innerHTML = metaOpts(form.responsabilidadeId.value); };
+        const liq = () => {
+          const t = M.tipoSalvar(form.tipoNegocio.value), pad = M.pctPadrao(t);
+          form.pctComigo.placeholder = pad != null ? 'Padrão: ' + U.num(pad) : 'Ex.: 30';
+          const val = U.parseNum(form.valorNegocio.value), pct = U.parseNum(form.pctComigo.value) ?? pad;
+          el.querySelector('#liqEst').innerHTML = val != null && pct != null ? `<b>${U.brlC(val * pct / 100)}</b><small>${U.num(pct)}% de ${U.brl(val)}</small>` : '<span class="muted">Informe valor e %</span>';
+        };
+        el.querySelectorAll('[data-tipo]').forEach(b => b.onclick = () => { form.tipoNegocio.value = b.dataset.tipo; marcarTipo(); liq(); form.cliente.focus(); });
+        const marcarTipo = () => el.querySelectorAll('[data-tipo]').forEach(b => b.classList.toggle('on', M.norm(b.dataset.tipo) === M.norm(form.tipoNegocio.value)));
+        ['input', 'change'].forEach(ev => [form.tipoNegocio, form.valorNegocio, form.pctComigo].forEach(i => i.addEventListener(ev, () => { marcarTipo(); liq(); })));
+        marcarTipo(); liq();
+        chk.onchange = () => { el.querySelector('.neg-fields').hidden = !chk.checked; el.querySelector('.negbox').classList.toggle('on', chk.checked); if (chk.checked) (form.tipoNegocio.value ? form.cliente : form.tipoNegocio).focus(); };
+
         form.onsubmit = e => {
           e.preventDefault();
-          const d = UI.formData(form);
-          if (!d.titulo) { const er = el.querySelector('#errAt'); er.textContent = 'Escreva um título para a atividade.'; er.hidden = false; form.titulo.focus(); return; }
-          if (!chk.checked) { d.tipoNegocio = null; d.valorNegocio = null; d.cliente = null; }
+          const d = UI.formData(form), er = el.querySelector('#errAt');
+          const erro = (msg, campo) => { er.textContent = msg; er.hidden = false; if (campo) campo.focus(); };
+          if (!d.titulo) return erro('Escreva um título para a atividade.', form.titulo);
+          if (chk.checked) {
+            d.tipoNegocio = M.tipoSalvar(d.tipoNegocio);
+            if (!d.tipoNegocio) return erro('Escreva o tipo de negócio (ex.: Consórcio, Seguro de vida, Eqseed).', form.tipoNegocio);
+            if (d.pctComigo != null && (d.pctComigo < 0 || d.pctComigo > 100)) return erro('O % que fica com você precisa estar entre 0 e 100.', form.pctComigo);
+          } else { d.tipoNegocio = null; d.valorNegocio = null; d.cliente = null; d.pctComigo = null; }
+          guardar();
+          const ids = [...sel].filter(i => Store.get('metas', i));
+          d.metaIds = ids;
+          d.esperados = {}; d.resultados = {};
+          ids.forEach(i => { if (esp[i] != null) d.esperados[i] = esp[i]; if (res[i] != null) d.resultados[i] = res[i]; });
+          if (ids.length) Object.assign(d, M.espelho(ids, d.resultados, d.esperados));
+          else d.metaId = null;
+          if (!a && v.origemId) d.origemId = v.origemId;
           if (a) { M.editarAtividade(a.id, d); UI.toast('Atividade atualizada'); }
-          else { if (d.resultado != null && !d.status) d.status = 'pendente'; M.criarAtividade(d); UI.toast('Atividade criada'); }
+          else { M.criarAtividade(d); UI.toast('Atividade criada'); }
           api.close();
         };
-        form.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !['TEXTAREA', 'SUMMARY', 'SELECT'].includes(e.target.tagName)) { e.preventDefault(); form.requestSubmit(); } });
+        form.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !['TEXTAREA', 'SUMMARY', 'SELECT'].includes(e.target.tagName) && !(e.target.list && e.target.value === '')) { e.preventDefault(); form.requestSubmit(); } });
       }
     });
+    return m;
   };
 
   /* ---------- Concluir ---------- */
   F.concluir = id => {
     const a = Store.get('atividades', id); if (!a) return;
     if (a.tipoNegocio) return F.concluirNegocio(id);
-    const meta = a.metaId ? Store.get('metas', a.metaId) : null;
-    const pedeResultado = (meta && meta.modo === 'atividades') || a.resultadoEsperado != null;
-    if (!pedeResultado) {
+    const metas = M.metasComResultado(a);
+    if (!metas.length && a.resultadoEsperado == null) {
       M.concluir(id);
-      UI.toast('Atividade concluída', 'ok', { label: 'Desfazer', fn: () => M.reabrir(id) });
+      UI.toast('Atividade concluída', 'ok', [{ label: 'Gerou algo?', fn: () => F.proximos(id) }, { label: 'Desfazer', fn: () => M.reabrir(id) }]);
       return;
     }
-    const un = meta ? meta.unidade : 'resultado';
     UI.modal({
       title: 'Concluir atividade', size: 'sm',
       body: `<form class="form" id="fCon"><p class="muted" style="margin:0">${U.esc(a.titulo)}</p>
-        <label class="f full"><span>Quantas ${U.esc(un)} você obteve?${a.resultadoEsperado != null ? ' Esperado: ' + U.num(a.resultadoEsperado) : ''}</span><input name="resultado" data-num inputmode="decimal" value="${a.resultado ?? ''}" autofocus placeholder="0"></label>
-        <label class="f full"><span>Anotação (opcional)</span><input name="nota" value="${U.esc(a.resultadoTexto || '')}" placeholder="Ex.: dois sócios e o irmão"></label>
-        ${meta ? `<p class="note">O resultado entra na meta "${U.esc(meta.nome)}". Realizar a reunião é a atividade. As ${U.esc(un)} são o resultado.</p>` : ''}</form>`,
+        ${camposResultado(a)}
+        ${blocoProximos(a)}
+        <label class="f full"><span>Anotação (opcional)</span><input name="nota" value="${U.esc(a.resultadoTexto || '')}" placeholder="Ex.: dois sócios e o irmão"></label></form>`,
       footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCon" type="submit">${UI.icon('check')}Concluir</button>`,
       onMount(el, api) {
-        el.querySelector('#fCon').onsubmit = e => {
-          e.preventDefault(); const d = UI.formData(e.target);
-          M.concluir(id, { resultado: d.resultado, nota: d.nota }); api.close();
-          UI.toast('Atividade concluída', 'ok', { label: 'Desfazer', fn: () => M.reabrir(id) });
+        const f = el.querySelector('#fCon');
+        montarProximos(el, a);
+        f.onsubmit = e => {
+          e.preventDefault(); const r = lerResultados(el, f), prox = lerProximos(el);
+          M.concluir(id, { ...r, nota: f.nota.value.trim() || null }); api.close();
+          if (!avisarProximos(M.criarProximos(id, prox), 'Atividade concluída')) UI.toast('Atividade concluída', 'ok', { label: 'Desfazer', fn: () => M.reabrir(id) });
         };
       }
     });
@@ -1806,7 +2161,7 @@ window.HORUS_CONFIG = {
   /* ---------- Detalhes + histórico ---------- */
   F.detalhes = id => {
     const a = Store.get('atividades', id); if (!a) return;
-    const meta = a.metaId ? Store.get('metas', a.metaId) : null;
+    const metas = M.metasComResultado(a);
     const lin = (k, v) => v ? `<div class="kv"><span>${k}</span><div>${v}</div></div>` : '';
     const hist = M.historico(id);
     const m = UI.modal({
@@ -1818,8 +2173,11 @@ window.HORUS_CONFIG = {
           ${lin('Prazo', a.prazo ? U.fmtDateLong(a.prazo) : 'Sem prazo')}
           ${lin('Início', a.inicio ? U.fmtDateLong(a.inicio) : '')}
           ${lin('Negócio', a.tipoNegocio ? `${U.esc(M.tipoNeg(a.tipoNegocio).label)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}${a.valorNegocio ? ' · <b>' + U.brl(a.valorNegocio) + '</b>' : ''}${a.resultadoNegocio ? ` <span class="tag ${a.resultadoNegocio === 'ganho' ? 't-ok' : 't-erro'}">${a.resultadoNegocio === 'ganho' ? 'Fechado' : 'Não fechou'}</span>` : ''}` : '')}
-          ${lin('Meta', meta ? U.esc(meta.nome) : '')}
-          ${lin('Resultado', a.resultado != null || a.resultadoEsperado != null ? `<b>${a.resultado != null ? U.num(a.resultado) : '—'}</b>${a.resultadoEsperado != null ? ' de ' + U.num(a.resultadoEsperado) + ' esperado(s)' : ''}${meta ? ' ' + U.esc(meta.unidade) : ''}${a.resultadoTexto ? '<br><span class="muted">' + U.esc(a.resultadoTexto) + '</span>' : ''}` : (a.resultadoTexto ? U.esc(a.resultadoTexto) : ''))}
+          ${lin(metas.length > 1 ? 'Metas' : 'Meta', metas.map(m => { const r = M.resMeta(a, m.id), e = M.espMeta(a, m.id); return `<div class="dmeta"><i style="background:${M.respCor(m.responsabilidadeId)}"></i>${U.esc(m.nome)} <b>${r != null ? U.esc(M.fmtMeta(r, m, true)) : '—'}</b>${e != null ? ' de ' + U.esc(M.fmtMeta(e, m)) : (M.ehDinheiro(m) ? '' : ' ' + U.esc(m.unidade || ''))}</div>`; }).join(''))}
+          ${lin('Fica com você', a.tipoNegocio && M.liquidoEstimado(a) != null ? `<b>${U.brlC(M.liquidoEstimado(a))}</b> <span class="muted">(${U.num(M.pctDe(a))}% de ${U.brl(a.valorNegocio)})</span>` : '')}
+          ${lin('Resultado', !metas.length && (a.resultado != null || a.resultadoEsperado != null) ? `<b>${a.resultado != null ? U.num(a.resultado) : '—'}</b>${a.resultadoEsperado != null ? ' de ' + U.num(a.resultadoEsperado) + ' esperado(s)' : ''}${a.resultadoTexto ? '<br><span class="muted">' + U.esc(a.resultadoTexto) + '</span>' : ''}` : (a.resultadoTexto ? U.esc(a.resultadoTexto) : ''))}
+          ${lin('Veio de', M.origem(a) ? `<a href="#" class="dlink" data-open="${M.origem(a).id}">${UI.icon('seta')}${U.esc(M.origem(a).titulo)}</a>` : '')}
+          ${lin('Gerou', M.filhos(a.id).map(x => `<a href="#" class="dlink" data-open="${x.id}">${U.esc(x.titulo)} ${UI.statusPill(x.status)}${x.prazo && x.status !== 'concluida' ? ' <small class="muted">' + U.fmtDate(x.prazo) + '</small>' : ''}</a>`).join(''))}
           ${lin('Observações', U.esc(a.observacoes))}
           ${lin('Criada em', U.fmtDateTime(a.criadoEm))}
           ${lin('Concluída em', a.concluidaEm ? U.fmtDateTime(a.concluidaEm) : '')}
@@ -1829,14 +2187,17 @@ window.HORUS_CONFIG = {
         <ol class="timeline">${hist.length ? hist.map(h => `<li class="t-${h.tipo}"><b>${U.esc(h.descricao)}</b><small>${U.fmtDateTime(h.em)}</small></li>`).join('') : '<li><small>Sem registros.</small></li>'}</ol>`,
       footer: `<button class="btn ghost danger-text" data-a="del">${UI.icon('lixo')}Excluir</button><span class="grow"></span>
         ${a.status !== 'concluida' ? `<button class="btn ghost" data-a="adiar">${UI.icon('adiar')}Adiar</button>` : ''}
+        <button class="btn ghost" data-a="prox" title="Criar atividades geradas por esta">${UI.icon('mais')}Próximo passo</button>
         <button class="btn ghost" data-a="edit">${UI.icon('editar')}Editar</button>
         ${a.status !== 'concluida' ? `<button class="btn primary" data-a="ok">${UI.icon('check')}Concluir</button>` : `<button class="btn ghost" data-a="reabrir">Reabrir</button>`}`,
       onMount(el, api) {
+        el.querySelectorAll('[data-open]').forEach(l => l.onclick = e => { e.preventDefault(); api.close(); F.detalhes(l.dataset.open); });
         el.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
           const act = b.dataset.a;
           if (act === 'del') { if (await F.excluirAtividade(id)) api.close(); return; }
           api.close();
           if (act === 'edit') F.atividade(id);
+          if (act === 'prox') F.proximos(id);
           if (act === 'adiar') F.adiar(id);
           if (act === 'ok') F.concluir(id);
           if (act === 'reabrir') { M.reabrir(id); UI.toast('Atividade reaberta'); }
@@ -1942,33 +2303,62 @@ window.HORUS_CONFIG = {
     });
   };
 
-  /* ---------- Concluir negócio: fechou ou não, e lança no faturamento ---------- */
+  /* ---------- Concluir negócio: fechou ou não, quanto fica com você, e lança no faturamento ---------- */
   F.concluirNegocio = id => {
     const a = Store.get('atividades', id); if (!a) return;
-    const meta = a.metaId ? Store.get('metas', a.metaId) : null;
-    const pedeResultado = (meta && meta.modo === 'atividades') || a.resultadoEsperado != null;
+    const prod = M.produtoDoTipo(a.tipoNegocio);
+    const pad = prod && prod.pctComigo != null ? +prod.pctComigo : null;
+    const pct0 = a.pctComigo != null ? +a.pctComigo : pad;
     UI.modal({
       title: 'Concluir negócio', size: 'sm',
-      body: `<form class="form" id="fCn"><p class="muted" style="margin:0">${U.esc(a.titulo)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}</p>
+      body: `<form class="form" id="fCn"><p class="muted" style="margin:0">${U.esc(a.titulo)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''} · <b>${U.esc(M.tipoNeg(a.tipoNegocio).label)}</b></p>
         <div class="f full"><span>Como terminou?</span>${UI.segmented('res', [{ id: 'ganho', label: 'Fechado' }, { id: 'perdido', label: 'Não fechou' }], 'ganho')}</div>
         <div id="cnGanho" class="form">
-          <label class="f full"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${a.valorNegocio ?? ''}" placeholder="R$"></label>
-          <label class="neg-toggle sm"><input type="checkbox" name="lancar" id="cnLancar" checked><span class="tg"><i></i></span><span><b>Lançar a produção no faturamento</b><small>Abre o lançamento com cliente, produto e valor preenchidos.</small></span></label>
+          <div class="row2">
+            <label class="f"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${a.valorNegocio != null ? U.num(a.valorNegocio) : ''}" placeholder="R$" autofocus></label>
+            <label class="f"><span>% que fica com você</span><input name="pct" data-num inputmode="decimal" value="${pct0 != null ? U.num(pct0) : ''}" placeholder="Ex.: 30"></label>
+          </div>
+          <div class="liq-box" id="cnLiq"></div>
+          ${prod && prod.id !== 'p_outros' ? `<label class="chk" id="cnPadBox" hidden><input type="checkbox" id="cnPad"><span id="cnPadTxt"></span></label>` : ''}
+          <label class="neg-toggle sm"><input type="checkbox" id="cnLancar" checked><span class="tg"><i></i></span><span><b>Lançar a produção no faturamento</b><small>Abre o lançamento com cliente, produto, valor e % preenchidos.</small></span></label>
         </div>
-        ${pedeResultado ? `<label class="f full"><span>Resultado para a meta (${U.esc(meta ? meta.unidade : 'resultado')})</span><input name="resultado" data-num inputmode="decimal" value="${a.resultado ?? ''}"></label>` : ''}
+        ${camposResultado(a)}
+        ${blocoProximos(a)}
         <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: fechou com carta de R$ 520 mil"></label></form>`,
       footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCn" type="submit">${UI.icon('check')}Concluir</button>`,
       onMount(el, api) {
         const f = el.querySelector('#fCn');
+        const calc = () => {
+          const val = U.parseNum(f.valor.value), pct = U.parseNum(f.pct.value);
+          const com = prod && prod.comissaoPct != null ? +prod.comissaoPct : null;
+          const base = val != null ? (com != null ? val * com / 100 : val) : null;
+          const box = el.querySelector('#cnLiq');
+          box.innerHTML = base != null && pct != null
+            ? `<span>Fica com você</span><b>${U.brlC(base * pct / 100)}</b><small>${com != null ? `${U.brl(val)} × ${U.num(com)}% de comissão = ${U.brlC(base)} bruto, × ${U.num(pct)}%` : `${U.brlC(base)} × ${U.num(pct)}%`}</small>`
+            : `<span>Fica com você</span><small>Informe o valor e o % para ver quanto fica com você.</small>`;
+          const pb = el.querySelector('#cnPadBox');
+          if (pb) { const mostra = pct != null && pct !== pad; pb.hidden = !mostra; el.querySelector('#cnPadTxt').textContent = `Usar ${U.num(pct ?? 0)}% como padrão para "${prod.nome}"`; }
+          return { val, pct, base };
+        };
         const sync = () => { el.querySelector('#cnGanho').hidden = f.querySelector('[name=res]:checked').value !== 'ganho'; };
         f.querySelectorAll('[name=res]').forEach(r => r.onchange = sync);
+        f.addEventListener('input', calc); calc();
+        montarProximos(el, a);
         f.onsubmit = e => {
           e.preventDefault();
           const d = UI.formData(f), ganho = d.res === 'ganho', lancar = ganho && el.querySelector('#cnLancar').checked;
-          Store.update('atividades', id, { resultadoNegocio: d.res, valorNegocio: ganho && d.valor != null ? d.valor : a.valorNegocio }, { silent: true });
-          M.concluir(id, { resultado: pedeResultado ? d.resultado : undefined, nota: (ganho ? 'Negócio fechado' : 'Negócio não fechou') + (d.nota ? ' · ' + d.nota : '') });
-          if (lancar) setTimeout(() => F.producao(null, { cliente: a.cliente || null, valor: d.valor, produtoId: App.Fat.PRODUTO_DO_NEGOCIO[a.tipoNegocio] || 'p_outros', atividadeId: a.id, observacoes: a.titulo }), 60);
+          const { val, pct, base } = calc();
+          if (ganho && pct != null && (pct < 0 || pct > 100)) { UI.toast('O % precisa estar entre 0 e 100.', 'aviso'); f.pct.focus(); return; }
+          const r = lerResultados(el, f), prox = lerProximos(el);
+          Store.update('atividades', id, { resultadoNegocio: d.res, valorNegocio: ganho && val != null ? val : a.valorNegocio, pctComigo: ganho && pct != null ? pct : a.pctComigo ?? null }, { silent: true });
+          const pad2 = el.querySelector('#cnPad');
+          if (ganho && prod && pad2 && pad2.checked && pct != null) Store.update('produtos', prod.id, { pctComigo: pct }, { silent: true });
+          const liqTxt = ganho && base != null && pct != null ? ' · fica com você ' + U.brlC(base * pct / 100) : '';
+          M.concluir(id, { ...r, nota: (ganho ? 'Negócio fechado' : 'Negócio não fechou') + liqTxt + (d.nota ? ' · ' + d.nota : '') });
+          const criados = M.criarProximos(id, prox);
+          if (lancar) setTimeout(() => F.producao(null, { cliente: a.cliente || null, valor: val, bruto: prod && prod.comissaoPct != null ? undefined : val, pctComigo: pct, produtoId: prod ? prod.id : 'p_outros', linhaId: prod ? prod.linhaId : undefined, atividadeId: a.id, observacoes: a.titulo }), 60);
           api.close();
+          if (!lancar && avisarProximos(criados, ganho ? 'Negócio fechado' : 'Negócio encerrado')) return;
           if (!lancar) UI.toast(ganho ? 'Negócio fechado' : 'Negócio encerrado', 'ok', { label: 'Desfazer', fn: () => { M.reabrir(id); Store.update('atividades', id, { resultadoNegocio: null }); } });
         };
       }
@@ -1995,7 +2385,7 @@ window.HORUS_CONFIG = {
   F.producao = (id, preset = {}) => {
     const p = id ? Store.get('producoes', id) : null;
     const prod0 = Fat.produto(preset.produtoId || (p && p.produtoId)) || Fat.produtos()[0] || {};
-    const v = p || { data: U.today(), linhaId: prod0.linhaId, produtoId: prod0.id, regra: prod0.regra || 'mes_seguinte', parcelas: prod0.parcelas || 12, grupo: prod0.grupo || 'novo', comissaoPct: prod0.comissaoPct ?? null, ...preset };
+    const v = p || { data: U.today(), linhaId: prod0.linhaId, produtoId: prod0.id, regra: prod0.regra || 'mes_seguinte', parcelas: prod0.parcelas || 12, grupo: prod0.grupo || 'novo', comissaoPct: prod0.comissaoPct ?? null, pctComigo: prod0.pctComigo ?? null, ...preset };
     if (!Fat.linhas().length) { UI.toast('Cadastre uma linha de negócio primeiro.', 'aviso'); return; }
     const jaRec = p ? Fat.recebidosDaProducao(p.id) : 0;
     UI.modal({
@@ -2017,7 +2407,8 @@ window.HORUS_CONFIG = {
           <label class="f"><span>Número de parcelas</span><input name="parcelas" data-num inputmode="numeric" value="${v.parcelas || 12}"></label>
           <label class="f"><span>Grupo</span><select name="grupo">${UI.options(Fat.GRUPOS, v.grupo || 'novo')}</select></label>
         </div>
-        <div class="row2 liq">
+        <div class="row3 liq">
+          <label class="f"><span>% que fica com você</span><input name="pctComigo" data-num inputmode="decimal" value="${num(v.pctComigo)}" placeholder="Opcional"></label>
           <label class="f" id="boxLiq"><span>Líquido (já descontado)</span><input name="liquido" data-num inputmode="decimal" value="${num(v.liquido)}" placeholder="O que entra na conta"></label>
           <label class="f" id="boxLiqP"><span>Líquido por parcela</span><input name="liquidoParcela" data-num inputmode="decimal" value="${num(v.liquidoParcela)}" placeholder="R$"></label>
           <label class="f" id="boxLiqU"><span>Última parcela (se diferente)</span><input name="liquidoUltima" data-num inputmode="decimal" value="${num(v.liquidoUltima)}" placeholder="Opcional"></label>
@@ -2030,6 +2421,10 @@ window.HORUS_CONFIG = {
       onMount(el, api) {
         const f = el.querySelector('#fPr');
         let brutoManual = v.bruto != null && !(v.valor != null && v.comissaoPct != null);
+        /* Líquido calculado pelo % que fica com você, até você digitar um valor */
+        let liqManual = v.liquido != null && v.pctComigo == null, liqPManual = v.liquidoParcela != null && v.pctComigo == null;
+        f.liquido.addEventListener('input', () => { liqManual = f.liquido.value.trim() !== ''; });
+        f.liquidoParcela.addEventListener('input', () => { liqPManual = f.liquidoParcela.value.trim() !== ''; });
         const regra = () => f.querySelector('[name=regra]:checked').value;
         const ler = () => { const d = UI.formData(f); d.parcelas = Math.max(1, Math.round(d.parcelas || 1)); return d; };
         const atualizar = () => {
@@ -2039,6 +2434,12 @@ window.HORUS_CONFIG = {
           el.querySelector('#boxLiqP').hidden = el.querySelector('#boxLiqU').hidden = r !== 'parcelado';
           const d = ler();
           if (!brutoManual && d.valor != null && d.comissaoPct != null) f.bruto.value = num(Math.round(d.valor * d.comissaoPct) / 100);
+          const d1 = ler();
+          if (d1.bruto != null && d1.pctComigo != null) {
+            const tot = d1.bruto * d1.pctComigo / 100;
+            if (r !== 'parcelado' && !liqManual) f.liquido.value = num(Math.round(tot * 100) / 100);
+            if (r === 'parcelado' && !liqPManual) f.liquidoParcela.value = num(Math.round(tot / d1.parcelas * 100) / 100);
+          }
           const d2 = ler(); if (r !== 'parcelado') { d2.liquidoParcela = null; d2.liquidoUltima = null; } else d2.liquido = null;
           const ds = Fat.datas(d2.data || U.today(), r, d2.parcelas, d2.grupo), vv = Fat.valores({ ...d2, regra: r });
           const tot = vv.liq.reduce((s, x) => s + x, 0);
@@ -2051,6 +2452,7 @@ window.HORUS_CONFIG = {
           const pr = Fat.produto(el.querySelector('#prProd').value); if (!pr) return atualizar();
           const rr = f.querySelector(`[name=regra][value="${pr.regra || 'mes_seguinte'}"]`); if (rr) rr.checked = true;
           if (pr.comissaoPct != null) f.comissaoPct.value = num(pr.comissaoPct);
+          if (pr.pctComigo != null) f.pctComigo.value = num(pr.pctComigo);
           if (pr.regra === 'parcelado') { f.parcelas.value = pr.parcelas || 12; f.grupo.value = pr.grupo || 'novo'; }
           atualizar();
         };
@@ -2103,6 +2505,7 @@ window.HORUS_CONFIG = {
       body: `<form class="form" id="fPd"><label class="f full"><span>Nome</span><input name="nome" required value="${U.esc(v.nome || '')}" placeholder="Ex.: Renda fixa" autofocus></label>
         <div class="row2"><label class="f"><span>Linha</span><select name="linhaId">${linhaOpts(v.linhaId)}</select></label>
         <label class="f"><span>% comissão padrão</span><input name="comissaoPct" data-num inputmode="decimal" value="${num(v.comissaoPct)}" placeholder="Opcional"></label></div>
+        <label class="f full"><span>% que fica com você (padrão)</span><input name="pctComigo" data-num inputmode="decimal" value="${num(v.pctComigo)}" placeholder="Ex.: 30 · usado ao concluir negócios deste produto"></label>
         <div class="f full"><span>Quando recebe (padrão)</span>${UI.segmented('regra', Fat.REGRAS.map(r => ({ id: r.id, label: r.id === 'mes_seguinte' ? 'Mês seguinte' : r.id === 'mesmo_mes' ? 'Mesmo mês' : 'Parcelado' })), v.regra)}</div>
         <div class="row2" id="pdParc"><label class="f"><span>Parcelas</span><input name="parcelas" data-num inputmode="numeric" value="${v.parcelas || 12}"></label><label class="f"><span>Grupo</span><select name="grupo">${UI.options(Fat.GRUPOS, v.grupo || 'novo')}</select></label></div>
         <p class="ferr" id="errPd" hidden></p></form>`,
@@ -2304,7 +2707,7 @@ window.HORUS_CONFIG = {
   const passa = (a, semStatus) => {
     if (f.resp && a.responsabilidadeId !== f.resp) return false;
     if (f.categoria && a.categoria !== f.categoria) return false;
-    if (f.metaId && a.metaId !== f.metaId) return false;
+    if (f.metaId && !M.metasDa(a).includes(f.metaId)) return false;
     if (!semStatus && f.status === 'abertas' && !M.aberta(a)) return false;
     if (!semStatus && f.status && f.status !== 'abertas' && a.status !== f.status) return false;
     if (f.prioridade && a.prioridade !== f.prioridade) return false;
@@ -2326,24 +2729,36 @@ window.HORUS_CONFIG = {
   };
   const GRUPOS = [['atrasadas', 'Atrasadas'], ['hoje', 'Hoje'], ['semana', 'Próximos 7 dias'], ['depois', 'Mais adiante'], ['semprazo', 'Sem prazo'], ['concluidas', 'Concluídas']];
 
+  /* Ligação com outras atividades: "↳ veio de..." e "gerou 2" */
+  const ligacao = a => {
+    const o = M.origem(a), n = M.filhos(a.id).length;
+    return (o ? `<span class="lig" title="Próximo passo de: ${U.esc(o.titulo)}">↳ ${U.esc(o.titulo.length > 28 ? o.titulo.slice(0, 27) + '…' : o.titulo)}</span>` : '')
+      + (n ? `<span class="lig" title="Esta atividade gerou ${n}">gerou ${n}</span>` : '');
+  };
+  /* Resultado por meta: "2/3 indicações · R$ 40 mil produção" */
   const resultadoTxt = a => {
-    if (a.resultado == null && a.resultadoEsperado == null) return '';
-    const mt = a.metaId ? Store.get('metas', a.metaId) : null;
-    const un = U.esc(mt ? mt.unidade : 'resultado');
-    if (a.resultado == null) return `<span class="res pend">Esperado: ${U.num(a.resultadoEsperado)} ${un}</span>`;
-    return `<span class="res">${U.num(a.resultado)}${a.resultadoEsperado != null ? '/' + U.num(a.resultadoEsperado) : ''} ${un}</span>`;
+    const ms = M.metasComResultado(a);
+    if (!ms.length) {
+      if (a.resultado == null && a.resultadoEsperado == null) return '';
+      if (a.resultado == null) return `<span class="res pend">Esperado: ${U.num(a.resultadoEsperado)}</span>`;
+      return `<span class="res">${U.num(a.resultado)}${a.resultadoEsperado != null ? '/' + U.num(a.resultadoEsperado) : ''} resultado</span>`;
+    }
+    return ms.map(m => { const r = M.resMeta(a, m.id), e = M.espMeta(a, m.id), t = U.esc(m.nome);
+      if (r == null && e == null) return `<span class="res meta" title="Meta: ${t}">${t}</span>`;
+      if (r == null) return `<span class="res pend" title="Meta: ${t}">Esperado: ${U.esc(M.fmtMeta(e, m))}</span>`;
+      return `<span class="res" title="Meta: ${t}">${U.esc(M.ehDinheiro(m) ? M.fmtMeta(r, m) + (e != null ? ' de ' + M.fmtMeta(e, m) : '') : U.num(r) + (e != null ? '/' + U.num(e) : '') + ' ' + (m.unidade || ''))}</span>`; }).join('');
   };
 
   const linha = a => `<li class="arow${a.status === 'concluida' ? ' is-done' : ''}${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
     <button class="check${a.status === 'concluida' ? ' on' : ''}" data-act="${a.status === 'concluida' ? 'reabrir' : 'concluir'}" aria-label="${a.status === 'concluida' ? 'Reabrir' : 'Concluir'}">${UI.icon('check')}</button>
-    <div class="amain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${a.categoria && !a.tipoNegocio ? `<span class="cat">${U.esc(a.categoria)}</span>` : ''}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}${resultadoTxt(a)}</div></div>
+    <div class="amain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${a.categoria && !a.tipoNegocio ? `<span class="cat">${U.esc(a.categoria)}</span>` : ''}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}${resultadoTxt(a)}${ligacao(a)}</div></div>
     <div class="aside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
     <div class="aact">${a.status !== 'concluida' ? `<button class="icon-btn" data-act="adiar" title="Adiar" aria-label="Adiar">${UI.icon('adiar')}</button>` : ''}<button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button><button class="icon-btn" data-act="excluir" title="Excluir" aria-label="Excluir">${UI.icon('lixo')}</button></div></li>`;
 
   const cartao = a => `<article class="kcard${M.atrasada(a) ? ' is-late' : ''}" draggable="true" data-id="${a.id}" tabindex="0">
     <div class="kc-top">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
     <b>${U.esc(a.titulo)}</b>
-    <div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${resultadoTxt(a)}</div></article>`;
+    <div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${resultadoTxt(a)}${ligacao(a)}</div></article>`;
 
   V.render = el => {
     const todas = Store.all('atividades');
@@ -2436,14 +2851,14 @@ window.HORUS_CONFIG = {
 
   const linha = a => `<li class="nrow${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
       <button class="check" data-act="concluir" aria-label="Concluir negócio">${UI.icon('check')}</button>
-      <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span>${U.esc(a.cliente ? a.titulo : M.tipoNeg(a.tipoNegocio).label)}</span>${UI.respChip(a.responsabilidadeId)}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}</div></div>
-      <div class="nval">${a.valorNegocio ? U.brl(a.valorNegocio) : '<span class="muted">sem valor</span>'}</div>
+      <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span class="neg">${U.esc(M.tipoNeg(a.tipoNegocio).label)}</span>${a.cliente ? `<span>${U.esc(a.titulo)}</span>` : ''}${UI.respChip(a.responsabilidadeId)}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}</div></div>
+      <div class="nval">${a.valorNegocio ? U.brl(a.valorNegocio) : '<span class="muted">sem valor</span>'}${M.liquidoEstimado(a) != null ? `<small>fica ${U.brlShort(M.liquidoEstimado(a))}</small>` : ''}</div>
       <div class="aside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
       <div class="aact"><button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`;
 
   V.render = el => {
     const abertos = M.negociosAbertos();
-    const lista = abertos.filter(a => !fTipo || a.tipoNegocio === fTipo).sort(M.ordemAtencao);
+    const lista = abertos.filter(a => !fTipo || M.tipoChave(a.tipoNegocio) === fTipo).sort(M.ordemAtencao);
     const total = lista.reduce((s, a) => s + (+a.valorNegocio || 0), 0);
     const ini = U.addDays(U.today(), -30);
     const fechados = Store.all('atividades').filter(a => M.ehNegocio(a) && a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10) >= ini).sort((a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || ''));
@@ -2451,28 +2866,34 @@ window.HORUS_CONFIG = {
     const mesIni = U.today().slice(0, 8) + '01';
     const prodMes = App.Fat.producoesDoMes(App.Fat.ymHoje());
     const semana = abertos.filter(a => a.prazo && U.diff(a.prazo, U.today()) <= 7).length;
-    const porTipo = M.TIPOS_NEGOCIO.map(t => { const arr = abertos.filter(a => a.tipoNegocio === t.id); return { ...t, n: arr.length, v: arr.reduce((s, a) => s + (+a.valorNegocio || 0), 0) }; }).filter(t => t.n);
+    /* Agrupa pelo tipo digitado (sem diferenciar maiúsculas e acentos) */
+    const grupos = {};
+    abertos.forEach(a => { const k = M.tipoChave(a.tipoNegocio); const g = grupos[k] || (grupos[k] = { id: k, label: M.tipoNeg(a.tipoNegocio).label, n: 0, v: 0 }); g.n++; g.v += +a.valorNegocio || 0; });
+    const porTipo = Object.values(grupos).sort((a, b) => b.n - a.n || b.v - a.v);
+    if (fTipo && !grupos[fTipo]) fTipo = '';
+    const liqTotal = abertos.reduce((s, a) => s + (M.liquidoEstimado(a) || 0), 0);
+    const tituloTipo = fTipo ? grupos[fTipo].label : 'Todos os negócios';
 
     el.innerHTML = `
       <div class="page-h"><div><h1>Negócios em andamento</h1><p class="muted">Atividades marcadas como negócio que ainda não foram concluídas.</p></div>
         <button class="btn primary" id="novoNeg">${UI.icon('mais')}Novo negócio</button></div>
       <section class="kpis k4">
         <div class="kpi"><span>Em andamento</span><b>${abertos.length}</b></div>
-        <div class="kpi"><span>Valor em negociação</span><b>${U.brlShort(abertos.reduce((s, a) => s + (+a.valorNegocio || 0), 0))}</b></div>
+        <div class="kpi"><span>Valor em negociação</span><b>${U.brlShort(abertos.reduce((s, a) => s + (+a.valorNegocio || 0), 0))}</b>${liqTotal ? `<em>≈ ${U.brlShort(liqTotal)} ficam com você</em>` : ''}</div>
         <div class="kpi ${semana ? 'k-warn' : ''}"><span>Fecham em até 7 dias</span><b>${semana}</b></div>
         <a class="kpi" href="#faturamento" data-go="faturamento"><span>Produção do mês (líquido)</span><b>${U.brlShort(prodMes.reduce((s, p) => s + App.Fat.liquidoTotal(p), 0))}</b><em>${U.plural(prodMes.length, 'lançamento', 'lançamentos')}</em></a>
       </section>
-      ${porTipo.length ? `<div class="tchips"><button class="tchip${!fTipo ? ' on' : ''}" data-t="">Todos <b>${abertos.length}</b></button>${porTipo.map(t => `<button class="tchip${fTipo === t.id ? ' on' : ''}" data-t="${t.id}">${t.label} <b>${t.n}</b><small>${U.brlShort(t.v)}</small></button>`).join('')}</div>` : ''}
+      ${porTipo.length ? `<div class="tchips"><button class="tchip${!fTipo ? ' on' : ''}" data-t="">Todos <b>${abertos.length}</b></button>${porTipo.map(t => `<button class="tchip${fTipo === t.id ? ' on' : ''}" data-t="${U.esc(t.id)}">${U.esc(t.label)} <b>${t.n}</b><small>${U.brlShort(t.v)}</small></button>`).join('')}</div>` : ''}
       <section class="card">
-        <div class="card-h"><h2>${fTipo ? M.tipoNeg(fTipo).label : 'Todos os negócios'}</h2><span class="muted small">${U.brl(total)}</span></div>
-        ${lista.length ? `<ul class="alist">${lista.map(linha).join('')}</ul>` : `<div class="empty"><b>Nenhum negócio em andamento.</b><p>Ao criar uma atividade, marque "É um negócio" e informe o tipo, o cliente e o valor.</p><button class="btn primary" id="novoNeg2">${UI.icon('mais')}Novo negócio</button></div>`}
+        <div class="card-h"><h2>${U.esc(tituloTipo)}</h2><span class="muted small">${U.brl(total)}</span></div>
+        ${lista.length ? `<ul class="alist">${lista.map(linha).join('')}</ul>` : `<div class="empty"><b>Nenhum negócio em andamento.</b><p>Ao criar uma atividade, marque "É um negócio" e escreva o tipo, o cliente e o valor.</p><button class="btn primary" id="novoNeg2">${UI.icon('mais')}Novo negócio</button></div>`}
       </section>
       ${fechados.length ? `<section class="card"><div class="card-h"><h2>Concluídos nos últimos 30 dias</h2><span class="muted small">${ganhos.length} fechados · ${fechados.length - ganhos.length} não fecharam</span></div>
         <ul class="alist">${fechados.slice(0, 10).map(a => `<li class="nrow is-done" data-id="${a.id}"><span class="tag ${a.resultadoNegocio === 'perdido' ? 't-erro' : 't-ok'}">${a.resultadoNegocio === 'perdido' ? 'Não fechou' : 'Fechado'}</span>
           <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span>${U.esc(M.tipoNeg(a.tipoNegocio).label)}</span><span>${U.fmtDate((a.concluidaEm || '').slice(0, 10))}</span></div></div>
           <div class="nval">${a.valorNegocio ? U.brl(a.valorNegocio) : ''}</div></li>`).join('')}</ul></section>` : ''}`;
 
-    const novo = () => App.Forms.atividade(null, { tipoNegocio: fTipo || 'investimentos', categoria: 'Negócios', prioridade: 'alta' });
+    const novo = () => App.Forms.atividade(null, { tipoNegocio: fTipo ? grupos[fTipo].label : null, categoria: 'Negócios', prioridade: 'alta', _neg: true });
     el.querySelector('#novoNeg').onclick = novo;
     const n2 = el.querySelector('#novoNeg2'); if (n2) n2.onclick = novo;
     el.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { fTipo = b.dataset.t; V.render(el); });
@@ -2618,7 +3039,7 @@ window.HORUS_CONFIG = {
   function linhas() {
     return `<div class="toolbar"><p class="muted small" style="margin:0">Cada produto define o % de comissão e quando você recebe. No lançamento você pode mudar.</p><span class="grow"></span><button class="btn primary" id="novaLinha">${UI.icon('mais')}Nova linha</button></div>
       <div class="lgrid">${Fat.linhas(true).map(l => `<section class="card lcard${l.ativa === false ? ' off' : ''}" style="--c:${l.cor}"><div class="card-h"><h2>${ldot(l.id)}${U.esc(l.nome)}</h2><div><button class="icon-btn" data-ed-linha="${l.id}" aria-label="Editar linha">${UI.icon('editar')}</button><button class="icon-btn" data-arq-linha="${l.id}" title="${l.ativa === false ? 'Reativar' : 'Arquivar'}" aria-label="${l.ativa === false ? 'Reativar' : 'Arquivar'}">${UI.icon('arquivo')}</button></div></div>
-        <ul class="prods">${Store.all('produtos').filter(p => p.linhaId === l.id).sort((a, b) => a.nome.localeCompare(b.nome)).map(p => `<li data-ed-prod="${p.id}" class="${p.ativo === false ? 'off' : ''}"><b>${U.esc(p.nome)}</b><span class="muted small">${Fat.regraTxt(p.regra, p.parcelas, p.grupo)}${p.comissaoPct != null ? ' · ' + U.num(p.comissaoPct) + '%' : ''}</span></li>`).join('')}</ul>
+        <ul class="prods">${Store.all('produtos').filter(p => p.linhaId === l.id).sort((a, b) => a.nome.localeCompare(b.nome)).map(p => `<li data-ed-prod="${p.id}" class="${p.ativo === false ? 'off' : ''}"><b>${U.esc(p.nome)}</b><span class="muted small">${Fat.regraTxt(p.regra, p.parcelas, p.grupo)}${p.comissaoPct != null ? ' · ' + U.num(p.comissaoPct) + '% comissão' : ''}${p.pctComigo != null ? ' · fica ' + U.num(p.pctComigo) + '%' : ''}</span></li>`).join('')}</ul>
         <button class="link" data-novo-prod="${l.id}">+ Produto</button></section>`).join('')}</div>`;
   }
 
@@ -2683,7 +3104,7 @@ window.HORUS_CONFIG = {
   const cartao = m => {
     const atual = M.metaAtual(m), p = M.metaPct(m), s = M.metaSituacao(m), t = M.metaTempo(m), cor = M.respCor(m.responsabilidadeId);
     const ats = M.metaAtividades(m.id), feitas = ats.filter(a => a.status === 'concluida');
-    const regs = m.modo === 'manual' ? M.metaRegistros(m.id) : feitas.sort((a, b) => (a.concluidaEm || '').localeCompare(b.concluidaEm || '')).reduce((acc, a) => { acc.push((acc[acc.length - 1] || 0) + (+a.resultado || 0)); return acc; }, []);
+    const regs = m.modo === 'manual' ? M.metaRegistros(m.id) : feitas.sort((a, b) => (a.concluidaEm || '').localeCompare(b.concluidaEm || '')).reduce((acc, a) => { acc.push((acc[acc.length - 1] || 0) + (M.resMeta(a, m.id) || 0)); return acc; }, []);
     const vals = m.modo === 'manual' ? regs.map(r => r.valor) : regs;
     const falta = Math.max(0, m.alvo - atual);
     return `<article class="card meta" data-id="${m.id}" style="--c:${cor}">
@@ -2726,7 +3147,7 @@ window.HORUS_CONFIG = {
       const b = e.target.closest('[data-act]'); if (!b) return; const id = c.dataset.id, mt = Store.get('metas', id);
       if (b.dataset.act === 'atualizar') App.Forms.atualizarMeta(id);
       if (b.dataset.act === 'editar') App.Forms.meta(id);
-      if (b.dataset.act === 'nova-at') App.Forms.atividade(null, { responsabilidadeId: mt.responsabilidadeId, metaId: id, resultadoEsperado: null });
+      if (b.dataset.act === 'nova-at') App.Forms.atividade(null, { responsabilidadeId: mt.responsabilidadeId, metaIds: [id] });
       if (b.dataset.act === 'ver') App.go('atividades', { status: '', resp: mt.responsabilidadeId, categoria: '', metaId: id }, { origem: true });
       if (b.dataset.act === 'excluir') {
         const n = M.metaAtividades(id).length;
