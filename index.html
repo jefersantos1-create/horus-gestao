@@ -567,6 +567,29 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 .dlink + .dlink { margin-top: 4px; }
 .toast .toast-act + .toast-act { margin-left: 4px; }
 
+/* ---------- Vários negócios por card ---------- */
+.negs-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.negs-h span { font-size: 13px; font-weight: 700; color: var(--ink); }
+.negs-h small { color: var(--faint); font-size: 12px; }
+.negs { display: grid; gap: 8px; }
+.neg-r { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) 84px minmax(0, 1fr) 32px; gap: 8px; align-items: end; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.neg-r .nx { align-self: center; margin-top: 18px; }
+.neg-r .liq-est { min-height: 40px; }
+@media (max-width: 620px) { .neg-r { grid-template-columns: 1fr 1fr 32px; } .neg-r > label:first-child { grid-column: 1 / 3; } .neg-r .nx { grid-column: 3; grid-row: 1; } .neg-r > :nth-child(4) { grid-column: 1 / -1; } }
+.tc-l { font-size: 12px; font-weight: 600; color: var(--faint); align-self: center; }
+.negs-tot:empty { display: none; }
+.negs-tot { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; font-size: 13px; color: var(--muted); padding: 2px 2px 0; }
+.negs-tot b { color: var(--ink); font-family: var(--display); }
+.cnegs { display: grid; gap: 10px; }
+.cneg { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 10px; transition: background .15s; }
+.cneg.perdido { background: var(--surface-2); }
+.cneg-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.cneg-h b { display: flex; align-items: center; gap: 6px; font-size: 15px; }
+.cneg-h b .ic { width: 16px; height: 16px; color: var(--accent); }
+.cneg-b { display: grid; gap: 8px; }
+.dneg + .dneg { margin-top: 4px; }
+.neg.perdido { opacity: .55; text-decoration: line-through; }
+
 </style>
 
 <div class="app">
@@ -885,7 +908,7 @@ window.HORUS_CONFIG = {
   /* Tipos já usados, do mais usado para o menos usado */
   M.tiposUsados = () => {
     const c = {};
-    Store.all('atividades').forEach(a => { if (!a.tipoNegocio) return; const l = M.tipoNeg(a.tipoNegocio).label, k = M.norm(l); c[k] = c[k] || { label: l, n: 0 }; c[k].n++; });
+    Store.all('atividades').forEach(a => M.negociosDa(a).forEach(n => { const l = M.tipoNeg(n.tipo).label, k = M.norm(l); c[k] = c[k] || { label: l, n: 0 }; c[k].n++; }));
     return Object.values(c).sort((a, b) => b.n - a.n || a.label.localeCompare(b.label));
   };
   /* Sugestões para o campo: usados + produtos e linhas do faturamento + padrões */
@@ -909,10 +932,34 @@ window.HORUS_CONFIG = {
   };
   /* % que fica com você: o da atividade, senão o padrão do produto */
   M.pctPadrao = tipo => { const p = M.produtoDoTipo(tipo); return p && p.pctComigo != null ? +p.pctComigo : null; };
-  M.pctDe = a => a.pctComigo != null ? +a.pctComigo : M.pctPadrao(a.tipoNegocio);
-  M.liquidoEstimado = a => { const pct = M.pctDe(a); return a.valorNegocio != null && pct != null ? (+a.valorNegocio) * pct / 100 : null; };
-  M.ehNegocio = a => !!a.tipoNegocio;
+  /* ---------- Vários negócios por card ----------
+     a.negocios = [{ id, tipo, valor, pct, resultado: null | 'ganho' | 'perdido' }]
+     Cards antigos têm só tipoNegocio/valorNegocio/pctComigo/resultadoNegocio: viram uma lista de 1. */
+  M.negociosDa = a => {
+    if (!a) return [];
+    if (Array.isArray(a.negocios)) return a.negocios.filter(n => n && n.tipo);
+    return a.tipoNegocio ? [{ id: 'n1', tipo: a.tipoNegocio, valor: a.valorNegocio ?? null, pct: a.pctComigo ?? null, resultado: a.resultadoNegocio || null }] : [];
+  };
+  M.novoNegId = () => 'n' + Math.random().toString(36).slice(2, 8);
+  /* Campos antigos espelham a lista: tipo e % do 1º negócio, valor = soma, resultado = geral */
+  M.espelhoNeg = negs => {
+    const n = negs[0];
+    return {
+      negocios: negs,
+      tipoNegocio: n ? n.tipo : null,
+      valorNegocio: negs.some(x => x.valor != null) ? negs.reduce((s, x) => s + (+x.valor || 0), 0) : null,
+      pctComigo: negs.length === 1 ? (n.pct ?? null) : null,
+      resultadoNegocio: negs.length && negs.every(x => x.resultado) ? (negs.some(x => x.resultado === 'ganho') ? 'ganho' : 'perdido') : null
+    };
+  };
+  M.pctNeg = n => n.pct != null ? +n.pct : M.pctPadrao(n.tipo);
+  M.liqNeg = n => { const p = M.pctNeg(n); return n.valor != null && p != null ? (+n.valor) * p / 100 : null; };
+  M.pctDe = a => { const ns = M.negociosDa(a); return ns.length === 1 ? M.pctNeg(ns[0]) : null; };
+  M.liquidoEstimado = a => { const v = M.negociosDa(a).map(M.liqNeg).filter(x => x != null); return v.length ? v.reduce((s, x) => s + x, 0) : null; };
+  M.ehNegocio = a => M.negociosDa(a).length > 0;
   M.negociosAbertos = () => Store.all('atividades').filter(a => M.ehNegocio(a) && M.aberta(a));
+  /* Cada negócio em aberto como item próprio: { a: atividade, n: negócio } */
+  M.negItensAbertos = () => M.negociosAbertos().flatMap(a => M.negociosDa(a).filter(n => !n.resultado).map(n => ({ a, n })));
   M.prio = id => M.PRIORIDADES.find(p => p.id === id) || M.PRIORIDADES[2];
   M.status = id => M.STATUS.find(s => s.id === id) || M.STATUS[0];
   M.period = id => M.PERIODICIDADES.find(p => p.id === id) || M.PERIODICIDADES[1];
@@ -1801,7 +1848,8 @@ window.HORUS_CONFIG = {
     return `<span class="due ${cls}">${UI.icon('adiar')}${U.relDue(a.prazo)}</span>`;
   };
   /* Etiqueta de negócio: tipo, cliente e valor */
-  UI.negChip = a => a.tipoNegocio ? `<span class="neg">${UI.icon('negocio')}${U.esc(M.tipoNeg(a.tipoNegocio).label)}${a.valorNegocio ? ' · ' + U.brlShort(a.valorNegocio) : ''}</span>${a.cliente ? `<span class="cli">${U.esc(a.cliente)}</span>` : ''}` : '';
+  UI.negChip = a => { const ns = M.negociosDa(a); if (!ns.length) return '';
+    return ns.map(n => `<span class="neg${n.resultado === 'perdido' ? ' perdido' : ''}">${UI.icon('negocio')}${U.esc(M.tipoNeg(n.tipo).label)}${n.valor ? ' · ' + U.brlShort(n.valor) : ''}</span>`).join('') + (a.cliente ? `<span class="cli">${U.esc(a.cliente)}</span>` : ''); };
   UI.bar = (pct, cor) => `<div class="pbar"><i style="width:${Math.min(100, Math.round(pct * 100))}%;${cor ? 'background:' + cor : ''}"></i></div>`;
 
   /* ---------- Formulários ---------- */
@@ -1983,8 +2031,8 @@ window.HORUS_CONFIG = {
     sel.forEach(mid => { esp[mid] = M.espMeta(v, mid); res[mid] = M.resMeta(v, mid); });
     const tiposTop = M.tiposUsados().slice(0, 6).map(t => t.label);
     const tiposChips = (tiposTop.length >= 3 ? tiposTop : [...new Set([...tiposTop, 'Investimentos', 'Consórcio', 'Seguro de vida', 'Previdência', 'Câmbio'])].slice(0, 6));
-    const tipoTxt = v.tipoNegocio ? M.tipoNeg(v.tipoNegocio).label : '';
-    const ehNeg = !!(v.tipoNegocio || v._neg);
+    const negs0 = M.negociosDa(v);
+    const ehNeg = !!(negs0.length || v._neg);
     const m = UI.modal({
       title: a ? 'Editar atividade' : 'Nova atividade', size: 'md',
       body: `<form class="form" id="fAt" novalidate>
@@ -2004,16 +2052,12 @@ window.HORUS_CONFIG = {
         <div class="negbox${ehNeg ? ' on' : ''}">
           <label class="neg-toggle"><input type="checkbox" id="chkNeg" ${ehNeg ? 'checked' : ''}><span class="tg"><i></i></span><span><b>É um negócio</b><small>Aparece em Negócios em andamento. Escreva o tipo do jeito que você usa.</small></span></label>
           <div class="neg-fields" ${ehNeg ? '' : 'hidden'}>
-            <div class="row2">
-              <label class="f"><span>Tipo de negócio</span><input name="tipoNegocio" list="dlTipo" maxlength="60" value="${U.esc(tipoTxt)}" placeholder="Digite ou escolha" autocomplete="off"><datalist id="dlTipo">${M.tiposSugestoes().map(t => `<option value="${U.esc(t)}">`).join('')}</datalist></label>
-              <label class="f"><span>Cliente</span><input name="cliente" list="dlCli" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente"><datalist id="dlCli">${[...new Set(Store.all('atividades').map(x => x.cliente).filter(Boolean))].sort().map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
-            </div>
-            <div class="tipo-chips">${tiposChips.map(t => `<button type="button" class="qd" data-tipo="${U.esc(t)}">${U.esc(t)}</button>`).join('')}</div>
-            <div class="row3">
-              <label class="f"><span>Valor estimado</span><input name="valorNegocio" data-num inputmode="decimal" value="${numTxt(v.valorNegocio)}" placeholder="R$"></label>
-              <label class="f"><span>% que fica com você</span><input name="pctComigo" data-num inputmode="decimal" value="${numTxt(v.pctComigo)}" placeholder="Ex.: 30"></label>
-              <div class="f"><span>Fica com você</span><div class="liq-est" id="liqEst">—</div></div>
-            </div>
+            <label class="f full"><span>Cliente</span><input name="cliente" list="dlCli" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente"><datalist id="dlCli">${[...new Set(Store.all('atividades').map(x => x.cliente).filter(Boolean))].sort().map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
+            <datalist id="dlTipo">${M.tiposSugestoes().map(t => `<option value="${U.esc(t)}">`).join('')}</datalist>
+            <div class="negs-h"><span>Negócios deste card</span><small>Uma reunião pode tratar de vários: cada um tem valor e % próprios.</small></div>
+            <div class="negs" id="negs"></div>
+            <div class="tipo-chips"><span class="tc-l">Adicionar:</span>${tiposChips.map(t => `<button type="button" class="qd" data-tipo="${U.esc(t)}">+ ${U.esc(t)}</button>`).join('')}<button type="button" class="qd" data-tipo="">+ Outro</button></div>
+            <div class="negs-tot" id="negsTot"></div>
           </div>
         </div>
         <details class="more" ${a ? 'open' : ''}><summary>Mais detalhes</summary>
@@ -2059,19 +2103,40 @@ window.HORUS_CONFIG = {
         form.responsabilidadeId.onchange = desenharMetas;
         desenharMetas();
 
-        /* Negócio */
-        const chk = el.querySelector('#chkNeg');
-        const liq = () => {
-          const t = M.tipoSalvar(form.tipoNegocio.value), pad = M.pctPadrao(t);
-          form.pctComigo.placeholder = pad != null ? 'Padrão: ' + U.num(pad) : 'Ex.: 30';
-          const val = U.parseNum(form.valorNegocio.value), pct = U.parseNum(form.pctComigo.value) ?? pad;
-          el.querySelector('#liqEst').innerHTML = val != null && pct != null ? `<b>${U.brlC(val * pct / 100)}</b><small>${U.num(pct)}% de ${U.brl(val)}</small>` : '<span class="muted">Informe valor e %</span>';
+        /* Negócios (vários por card) */
+        const chk = el.querySelector('#chkNeg'), box = el.querySelector('#negs');
+        const linhaNeg = n => {
+          const r = document.createElement('div'); r.className = 'neg-r'; r.dataset.nid = n.id || M.novoNegId(); r.dataset.res = n.resultado || '';
+          r.innerHTML = `<label class="f"><span>Tipo de negócio</span><input class="nt" list="dlTipo" maxlength="60" value="${U.esc(n.tipo ? M.tipoNeg(n.tipo).label : '')}" placeholder="Digite ou escolha" autocomplete="off"></label>
+            <label class="f"><span>Valor estimado</span><input class="nv" data-num inputmode="decimal" value="${numTxt(n.valor)}" placeholder="R$"></label>
+            <label class="f"><span>% que fica</span><input class="np" data-num inputmode="decimal" value="${numTxt(n.pct)}" placeholder="Ex.: 30"></label>
+            <div class="f"><span>Fica com você</span><div class="liq-est">—</div></div>
+            <button type="button" class="icon-btn nx" title="Tirar este negócio" aria-label="Tirar este negócio">${UI.icon('x')}</button>`;
+          r.querySelector('.nx').onclick = () => { r.remove(); if (!box.children.length) linhaNeg({}); calcNeg(); };
+          r.addEventListener('input', calcNeg);
+          box.appendChild(r); return r;
         };
-        el.querySelectorAll('[data-tipo]').forEach(b => b.onclick = () => { form.tipoNegocio.value = b.dataset.tipo; marcarTipo(); liq(); form.cliente.focus(); });
-        const marcarTipo = () => el.querySelectorAll('[data-tipo]').forEach(b => b.classList.toggle('on', M.norm(b.dataset.tipo) === M.norm(form.tipoNegocio.value)));
-        ['input', 'change'].forEach(ev => [form.tipoNegocio, form.valorNegocio, form.pctComigo].forEach(i => i.addEventListener(ev, () => { marcarTipo(); liq(); })));
-        marcarTipo(); liq();
-        chk.onchange = () => { el.querySelector('.neg-fields').hidden = !chk.checked; el.querySelector('.negbox').classList.toggle('on', chk.checked); if (chk.checked) (form.tipoNegocio.value ? form.cliente : form.tipoNegocio).focus(); };
+        const calcNeg = () => {
+          let tot = 0, totV = 0, n = 0;
+          box.querySelectorAll('.neg-r').forEach(r => {
+            const pad = M.pctPadrao(M.tipoSalvar(r.querySelector('.nt').value));
+            r.querySelector('.np').placeholder = pad != null ? 'Padrão ' + U.num(pad) : 'Ex.: 30';
+            const val = U.parseNum(r.querySelector('.nv').value), pct = U.parseNum(r.querySelector('.np').value) ?? pad;
+            r.querySelector('.liq-est').innerHTML = val != null && pct != null ? `<b>${U.brlC(val * pct / 100)}</b><small>${U.num(pct)}% de ${U.brl(val)}</small>` : '<span class="muted">valor e %</span>';
+            if (val != null) { totV += val; n++; } if (val != null && pct != null) tot += val * pct / 100;
+          });
+          const linhas = box.querySelectorAll('.neg-r').length;
+          el.querySelector('#negsTot').innerHTML = linhas > 1 && n ? `<span>${linhas} negócios</span><b>${U.brl(totV)}</b>${tot ? `<span>· fica com você ≈ ${U.brlC(tot)}</span>` : ''}` : '';
+          el.querySelectorAll('[data-tipo]').forEach(b => b.classList.toggle('on', !!b.dataset.tipo && [...box.querySelectorAll('.nt')].some(i => M.norm(i.value) === M.norm(b.dataset.tipo))));
+        };
+        (negs0.length ? negs0 : [{}]).forEach(linhaNeg); calcNeg();
+        el.querySelectorAll('[data-tipo]').forEach(b => b.onclick = () => {
+          const t = b.dataset.tipo, vazia = [...box.querySelectorAll('.nt')].find(i => !i.value.trim());
+          const inp = vazia || linhaNeg({}).querySelector('.nt');
+          if (t) { inp.value = t; inp.closest('.neg-r').querySelector('.nv').focus(); } else inp.focus();
+          calcNeg();
+        });
+        chk.onchange = () => { el.querySelector('.neg-fields').hidden = !chk.checked; el.querySelector('.negbox').classList.toggle('on', chk.checked); if (chk.checked) (box.querySelector('.nt').value ? form.cliente : box.querySelector('.nt')).focus(); };
 
         form.onsubmit = e => {
           e.preventDefault();
@@ -2079,10 +2144,16 @@ window.HORUS_CONFIG = {
           const erro = (msg, campo) => { er.textContent = msg; er.hidden = false; if (campo) campo.focus(); };
           if (!d.titulo) return erro('Escreva um título para a atividade.', form.titulo);
           if (chk.checked) {
-            d.tipoNegocio = M.tipoSalvar(d.tipoNegocio);
-            if (!d.tipoNegocio) return erro('Escreva o tipo de negócio (ex.: Consórcio, Seguro de vida, Eqseed).', form.tipoNegocio);
-            if (d.pctComigo != null && (d.pctComigo < 0 || d.pctComigo > 100)) return erro('O % que fica com você precisa estar entre 0 e 100.', form.pctComigo);
-          } else { d.tipoNegocio = null; d.valorNegocio = null; d.cliente = null; d.pctComigo = null; }
+            const negs = [];
+            for (const r of box.querySelectorAll('.neg-r')) {
+              const tipo = M.tipoSalvar(r.querySelector('.nt').value), valor = U.parseNum(r.querySelector('.nv').value), pct = U.parseNum(r.querySelector('.np').value);
+              if (!tipo) { if (valor != null || pct != null) return erro('Escreva o tipo de cada negócio (ex.: Zentis, Seguro de vida).', r.querySelector('.nt')); continue; }
+              if (pct != null && (pct < 0 || pct > 100)) return erro('O % que fica com você precisa estar entre 0 e 100.', r.querySelector('.np'));
+              negs.push({ id: r.dataset.nid, tipo, valor, pct, resultado: r.dataset.res || null });
+            }
+            if (!negs.length) return erro('Escreva o tipo de negócio (ex.: Zentis, Seguro de vida, Consórcio).', box.querySelector('.nt'));
+            Object.assign(d, M.espelhoNeg(negs));
+          } else { Object.assign(d, M.espelhoNeg([])); d.negocios = []; d.cliente = null; }
           guardar();
           const ids = [...sel].filter(i => Store.get('metas', i));
           d.metaIds = ids;
@@ -2104,7 +2175,7 @@ window.HORUS_CONFIG = {
   /* ---------- Concluir ---------- */
   F.concluir = id => {
     const a = Store.get('atividades', id); if (!a) return;
-    if (a.tipoNegocio) return F.concluirNegocio(id);
+    if (M.ehNegocio(a)) return F.concluirNegocio(id);
     const metas = M.metasComResultado(a);
     if (!metas.length && a.resultadoEsperado == null) {
       M.concluir(id);
@@ -2172,9 +2243,11 @@ window.HORUS_CONFIG = {
           ${lin('Categoria', U.esc(a.categoria))}
           ${lin('Prazo', a.prazo ? U.fmtDateLong(a.prazo) : 'Sem prazo')}
           ${lin('Início', a.inicio ? U.fmtDateLong(a.inicio) : '')}
-          ${lin('Negócio', a.tipoNegocio ? `${U.esc(M.tipoNeg(a.tipoNegocio).label)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}${a.valorNegocio ? ' · <b>' + U.brl(a.valorNegocio) + '</b>' : ''}${a.resultadoNegocio ? ` <span class="tag ${a.resultadoNegocio === 'ganho' ? 't-ok' : 't-erro'}">${a.resultadoNegocio === 'ganho' ? 'Fechado' : 'Não fechou'}</span>` : ''}` : '')}
+          ${lin('Cliente', M.ehNegocio(a) && a.cliente ? U.esc(a.cliente) : '')}
+          ${lin(M.negociosDa(a).length > 1 ? 'Negócios' : 'Negócio', M.negociosDa(a).map(n => { const lq = M.liqNeg(n);
+            return `<div class="dneg"><b>${U.esc(M.tipoNeg(n.tipo).label)}</b>${n.valor != null ? ' · ' + U.brl(n.valor) : ''}${lq != null ? ` <span class="muted">· fica ${U.brlC(lq)} (${U.num(M.pctNeg(n))}%)</span>` : ''}${n.resultado ? ` <span class="tag ${n.resultado === 'ganho' ? 't-ok' : 't-erro'}">${n.resultado === 'ganho' ? 'Fechado' : 'Não fechou'}</span>` : ''}</div>`; }).join(''))}
           ${lin(metas.length > 1 ? 'Metas' : 'Meta', metas.map(m => { const r = M.resMeta(a, m.id), e = M.espMeta(a, m.id); return `<div class="dmeta"><i style="background:${M.respCor(m.responsabilidadeId)}"></i>${U.esc(m.nome)} <b>${r != null ? U.esc(M.fmtMeta(r, m, true)) : '—'}</b>${e != null ? ' de ' + U.esc(M.fmtMeta(e, m)) : (M.ehDinheiro(m) ? '' : ' ' + U.esc(m.unidade || ''))}</div>`; }).join(''))}
-          ${lin('Fica com você', a.tipoNegocio && M.liquidoEstimado(a) != null ? `<b>${U.brlC(M.liquidoEstimado(a))}</b> <span class="muted">(${U.num(M.pctDe(a))}% de ${U.brl(a.valorNegocio)})</span>` : '')}
+          ${lin('Fica com você', M.negociosDa(a).length > 1 && M.liquidoEstimado(a) != null ? `<b>${U.brlC(M.liquidoEstimado(a))}</b> <span class="muted">somando os negócios</span>` : '')}
           ${lin('Resultado', !metas.length && (a.resultado != null || a.resultadoEsperado != null) ? `<b>${a.resultado != null ? U.num(a.resultado) : '—'}</b>${a.resultadoEsperado != null ? ' de ' + U.num(a.resultadoEsperado) + ' esperado(s)' : ''}${a.resultadoTexto ? '<br><span class="muted">' + U.esc(a.resultadoTexto) + '</span>' : ''}` : (a.resultadoTexto ? U.esc(a.resultadoTexto) : ''))}
           ${lin('Veio de', M.origem(a) ? `<a href="#" class="dlink" data-open="${M.origem(a).id}">${UI.icon('seta')}${U.esc(M.origem(a).titulo)}</a>` : '')}
           ${lin('Gerou', M.filhos(a.id).map(x => `<a href="#" class="dlink" data-open="${x.id}">${U.esc(x.titulo)} ${UI.statusPill(x.status)}${x.prazo && x.status !== 'concluida' ? ' <small class="muted">' + U.fmtDate(x.prazo) + '</small>' : ''}</a>`).join(''))}
@@ -2303,63 +2376,87 @@ window.HORUS_CONFIG = {
     });
   };
 
-  /* ---------- Concluir negócio: fechou ou não, quanto fica com você, e lança no faturamento ---------- */
+  /* ---------- Concluir negócio(s): cada negócio fecha ou não, com valor, % e lançamento no faturamento ---------- */
   F.concluirNegocio = id => {
     const a = Store.get('atividades', id); if (!a) return;
-    const prod = M.produtoDoTipo(a.tipoNegocio);
-    const pad = prod && prod.pctComigo != null ? +prod.pctComigo : null;
-    const pct0 = a.pctComigo != null ? +a.pctComigo : pad;
-    UI.modal({
-      title: 'Concluir negócio', size: 'sm',
-      body: `<form class="form" id="fCn"><p class="muted" style="margin:0">${U.esc(a.titulo)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''} · <b>${U.esc(M.tipoNeg(a.tipoNegocio).label)}</b></p>
-        <div class="f full"><span>Como terminou?</span>${UI.segmented('res', [{ id: 'ganho', label: 'Fechado' }, { id: 'perdido', label: 'Não fechou' }], 'ganho')}</div>
-        <div id="cnGanho" class="form">
+    const negs = M.negociosDa(a).map(n => ({ ...n }));
+    const info = negs.map(n => { const prod = M.produtoDoTipo(n.tipo); return { n, prod, pad: prod && prod.pctComigo != null ? +prod.pctComigo : null }; });
+    const varios = negs.length > 1;
+    const bloco = ({ n, prod, pad }, i) => {
+      const pct0 = n.pct != null ? +n.pct : pad;
+      return `<div class="cneg" data-i="${i}">
+        <div class="cneg-h"><b>${UI.icon('negocio')}${U.esc(M.tipoNeg(n.tipo).label)}</b>${UI.segmented('res' + i, [{ id: 'ganho', label: 'Fechou' }, { id: 'perdido', label: 'Não fechou' }], n.resultado || 'ganho')}</div>
+        <div class="cneg-b">
           <div class="row2">
-            <label class="f"><span>Valor do negócio</span><input name="valor" data-num inputmode="decimal" value="${a.valorNegocio != null ? U.num(a.valorNegocio) : ''}" placeholder="R$" autofocus></label>
-            <label class="f"><span>% que fica com você</span><input name="pct" data-num inputmode="decimal" value="${pct0 != null ? U.num(pct0) : ''}" placeholder="Ex.: 30"></label>
+            <label class="f"><span>Valor do negócio</span><input data-v="${i}" data-num inputmode="decimal" value="${n.valor != null ? U.num(n.valor) : ''}" placeholder="R$"${i === 0 ? ' autofocus' : ''}></label>
+            <label class="f"><span>% que fica com você</span><input data-p="${i}" data-num inputmode="decimal" value="${pct0 != null ? U.num(pct0) : ''}" placeholder="Ex.: 30"></label>
           </div>
-          <div class="liq-box" id="cnLiq"></div>
-          ${prod && prod.id !== 'p_outros' ? `<label class="chk" id="cnPadBox" hidden><input type="checkbox" id="cnPad"><span id="cnPadTxt"></span></label>` : ''}
-          <label class="neg-toggle sm"><input type="checkbox" id="cnLancar" checked><span class="tg"><i></i></span><span><b>Lançar a produção no faturamento</b><small>Abre o lançamento com cliente, produto, valor e % preenchidos.</small></span></label>
-        </div>
+          <div class="liq-box" data-l="${i}"></div>
+          ${prod && prod.id !== 'p_outros' ? `<label class="chk" data-padbox="${i}" hidden><input type="checkbox" data-pad="${i}"><span></span></label>` : ''}
+          <label class="chk"><input type="checkbox" data-lanc="${i}" checked><span>Lançar no faturamento${prod ? ' como <b>' + U.esc(prod.nome) + '</b>' : ''}</span></label>
+        </div></div>`;
+    };
+    UI.modal({
+      title: varios ? 'Concluir negócios' : 'Concluir negócio', size: 'sm',
+      body: `<form class="form" id="fCn"><p class="muted" style="margin:0">${U.esc(a.titulo)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}</p>
+        ${varios ? '<p class="note" style="margin:0">Marque o que fechou e o que não fechou. Cada negócio fechado vai para o faturamento com o produto dele.</p>' : ''}
+        <div class="cnegs">${info.map(bloco).join('')}</div>
         ${camposResultado(a)}
         ${blocoProximos(a)}
-        <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: fechou com carta de R$ 520 mil"></label></form>`,
+        <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: Zentis fechou, seguro ficou para janeiro"></label></form>`,
       footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCn" type="submit">${UI.icon('check')}Concluir</button>`,
       onMount(el, api) {
         const f = el.querySelector('#fCn');
-        const calc = () => {
-          const val = U.parseNum(f.valor.value), pct = U.parseNum(f.pct.value);
+        const calc = i => {
+          const { prod, pad } = info[i];
+          const val = U.parseNum(el.querySelector(`[data-v="${i}"]`).value), pct = U.parseNum(el.querySelector(`[data-p="${i}"]`).value);
+          const ganho = el.querySelector(`[name="res${i}"]:checked`).value === 'ganho';
           const com = prod && prod.comissaoPct != null ? +prod.comissaoPct : null;
           const base = val != null ? (com != null ? val * com / 100 : val) : null;
-          const box = el.querySelector('#cnLiq');
-          box.innerHTML = base != null && pct != null
+          el.querySelector(`.cneg[data-i="${i}"] .cneg-b`).hidden = !ganho;
+          el.querySelector(`.cneg[data-i="${i}"]`).classList.toggle('perdido', !ganho);
+          el.querySelector(`[data-l="${i}"]`).innerHTML = base != null && pct != null
             ? `<span>Fica com você</span><b>${U.brlC(base * pct / 100)}</b><small>${com != null ? `${U.brl(val)} × ${U.num(com)}% de comissão = ${U.brlC(base)} bruto, × ${U.num(pct)}%` : `${U.brlC(base)} × ${U.num(pct)}%`}</small>`
             : `<span>Fica com você</span><small>Informe o valor e o % para ver quanto fica com você.</small>`;
-          const pb = el.querySelector('#cnPadBox');
-          if (pb) { const mostra = pct != null && pct !== pad; pb.hidden = !mostra; el.querySelector('#cnPadTxt').textContent = `Usar ${U.num(pct ?? 0)}% como padrão para "${prod.nome}"`; }
-          return { val, pct, base };
+          const pb = el.querySelector(`[data-padbox="${i}"]`);
+          if (pb) { pb.hidden = !(pct != null && pct !== pad); pb.querySelector('span').textContent = `Usar ${U.num(pct ?? 0)}% como padrão para "${prod.nome}"`; }
+          return { val, pct, base, ganho };
         };
-        const sync = () => { el.querySelector('#cnGanho').hidden = f.querySelector('[name=res]:checked').value !== 'ganho'; };
-        f.querySelectorAll('[name=res]').forEach(r => r.onchange = sync);
-        f.addEventListener('input', calc); calc();
+        const tudo = () => info.forEach((_, i) => calc(i));
+        f.addEventListener('input', tudo); f.addEventListener('change', tudo); tudo();
         montarProximos(el, a);
         f.onsubmit = e => {
           e.preventDefault();
-          const d = UI.formData(f), ganho = d.res === 'ganho', lancar = ganho && el.querySelector('#cnLancar').checked;
-          const { val, pct, base } = calc();
-          if (ganho && pct != null && (pct < 0 || pct > 100)) { UI.toast('O % precisa estar entre 0 e 100.', 'aviso'); f.pct.focus(); return; }
-          const r = lerResultados(el, f), prox = lerProximos(el);
-          Store.update('atividades', id, { resultadoNegocio: d.res, valorNegocio: ganho && val != null ? val : a.valorNegocio, pctComigo: ganho && pct != null ? pct : a.pctComigo ?? null }, { silent: true });
-          const pad2 = el.querySelector('#cnPad');
-          if (ganho && prod && pad2 && pad2.checked && pct != null) Store.update('produtos', prod.id, { pctComigo: pct }, { silent: true });
-          const liqTxt = ganho && base != null && pct != null ? ' · fica com você ' + U.brlC(base * pct / 100) : '';
-          M.concluir(id, { ...r, nota: (ganho ? 'Negócio fechado' : 'Negócio não fechou') + liqTxt + (d.nota ? ' · ' + d.nota : '') });
+          const vals = info.map((_, i) => calc(i));
+          const ruim = vals.findIndex(v => v.ganho && v.pct != null && (v.pct < 0 || v.pct > 100));
+          if (ruim >= 0) { UI.toast('O % precisa estar entre 0 e 100.', 'aviso'); el.querySelector(`[data-p="${ruim}"]`).focus(); return; }
+          const r = lerResultados(el, f), prox = lerProximos(el), nota = f.nota.value.trim();
+          const fila = [], partes = [];
+          const novos = negs.map((n, i) => {
+            const v = vals[i], { prod } = info[i];
+            const nn = { ...n, resultado: v.ganho ? 'ganho' : 'perdido', valor: v.ganho && v.val != null ? v.val : n.valor ?? null, pct: v.ganho && v.pct != null ? v.pct : n.pct ?? null };
+            const lab = M.tipoNeg(n.tipo).label;
+            if (v.ganho) {
+              partes.push(lab + ': fechado' + (v.base != null && v.pct != null ? ' (fica ' + U.brlC(v.base * v.pct / 100) + ')' : ''));
+              const pd = el.querySelector(`[data-pad="${i}"]`);
+              if (prod && pd && pd.checked && v.pct != null) Store.update('produtos', prod.id, { pctComigo: v.pct }, { silent: true });
+              if (el.querySelector(`[data-lanc="${i}"]`).checked) fila.push({ cliente: a.cliente || null, valor: v.val, bruto: prod && prod.comissaoPct != null ? undefined : v.val, pctComigo: v.pct, produtoId: prod ? prod.id : 'p_outros', linhaId: prod ? prod.linhaId : undefined, atividadeId: a.id, observacoes: a.titulo + (varios ? ' · ' + lab : '') });
+            } else partes.push(lab + ': não fechou');
+            return nn;
+          });
+          Store.update('atividades', id, M.espelhoNeg(novos), { silent: true });
+          M.concluir(id, { ...r, nota: (varios ? partes.join(' · ') : (novos[0].resultado === 'ganho' ? 'Negócio fechado' + (vals[0].base != null && vals[0].pct != null ? ' · fica com você ' + U.brlC(vals[0].base * vals[0].pct / 100) : '') : 'Negócio não fechou')) + (nota ? ' · ' + nota : '') });
           const criados = M.criarProximos(id, prox);
-          if (lancar) setTimeout(() => F.producao(null, { cliente: a.cliente || null, valor: val, bruto: prod && prod.comissaoPct != null ? undefined : val, pctComigo: pct, produtoId: prod ? prod.id : 'p_outros', linhaId: prod ? prod.linhaId : undefined, atividadeId: a.id, observacoes: a.titulo }), 60);
           api.close();
-          if (!lancar && avisarProximos(criados, ganho ? 'Negócio fechado' : 'Negócio encerrado')) return;
-          if (!lancar) UI.toast(ganho ? 'Negócio fechado' : 'Negócio encerrado', 'ok', { label: 'Desfazer', fn: () => { M.reabrir(id); Store.update('atividades', id, { resultadoNegocio: null }); } });
+          const fechou = novos.some(n => n.resultado === 'ganho');
+          const msg = varios ? `${novos.filter(n => n.resultado === 'ganho').length} de ${novos.length} negócios fechados` : (fechou ? 'Negócio fechado' : 'Negócio encerrado');
+          if (fila.length) {
+            const abrir = k => { if (k >= fila.length) { avisarProximos(criados, msg); return; } F.producao(null, fila[k], { etapa: fila.length > 1 ? (k + 1) + ' de ' + fila.length : '', aoFechar: () => setTimeout(() => abrir(k + 1), 80) }); };
+            setTimeout(() => abrir(0), 60);
+            return;
+          }
+          if (avisarProximos(criados, msg)) return;
+          UI.toast(msg, 'ok', { label: 'Desfazer', fn: () => { M.reabrir(id); Store.update('atividades', id, M.espelhoNeg(negs)); } });
         };
       }
     });
@@ -2382,14 +2479,14 @@ window.HORUS_CONFIG = {
   const num = v => v == null || v === '' ? '' : U.num(v);
 
   /* ---------- Lançar produção (cliente a cliente) ---------- */
-  F.producao = (id, preset = {}) => {
+  F.producao = (id, preset = {}, opts = {}) => {
     const p = id ? Store.get('producoes', id) : null;
     const prod0 = Fat.produto(preset.produtoId || (p && p.produtoId)) || Fat.produtos()[0] || {};
     const v = p || { data: U.today(), linhaId: prod0.linhaId, produtoId: prod0.id, regra: prod0.regra || 'mes_seguinte', parcelas: prod0.parcelas || 12, grupo: prod0.grupo || 'novo', comissaoPct: prod0.comissaoPct ?? null, pctComigo: prod0.pctComigo ?? null, ...preset };
     if (!Fat.linhas().length) { UI.toast('Cadastre uma linha de negócio primeiro.', 'aviso'); return; }
     const jaRec = p ? Fat.recebidosDaProducao(p.id) : 0;
     UI.modal({
-      title: p ? 'Editar produção' : 'Lançar produção', size: 'md',
+      title: p ? 'Editar produção' : 'Lançar produção' + (opts.etapa ? ' · ' + opts.etapa : ''), size: 'md', onClose: opts.aoFechar,
       body: `<form class="form" id="fPr">
         <div class="row3">
           <label class="f"><span>Data da produção</span><input type="date" name="data" required value="${v.data || ''}"></label>
@@ -2615,7 +2712,7 @@ window.HORUS_CONFIG = {
 
   const itemAt = a => `<li class="pitem${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
       <button class="check" data-act="concluir" aria-label="Concluir ${U.esc(a.titulo)}">${UI.icon('check')}</button>
-      <div class="pmain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${a.tipoNegocio ? UI.negChip(a) : (a.categoria ? `<span class="cat">${U.esc(a.categoria)}</span>` : '')}</div></div>
+      <div class="pmain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${M.ehNegocio(a) ? UI.negChip(a) : (a.categoria ? `<span class="cat">${U.esc(a.categoria)}</span>` : '')}</div></div>
       <div class="pside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
       <button class="icon-btn" data-act="adiar" title="Adiar" aria-label="Adiar">${UI.icon('adiar')}</button></li>`;
 
@@ -2627,7 +2724,7 @@ window.HORUS_CONFIG = {
     const resps = M.respAtivas().filter(x => !filtroResp || x.id === filtroResp);
     const exec = r.planejadas7 ? r.feitas7 / r.planejadas7 : null;
     const demo = App.Demo.count();
-    const negs = M.negociosAbertos().filter(a => !filtroResp || a.responsabilidadeId === filtroResp);
+    const negs = M.negItensAbertos().filter(x => !filtroResp || x.a.responsabilidadeId === filtroResp);
 
     el.innerHTML = `
       ${demo.atividades + demo.metas ? `<div class="banner">Você está vendo <b>dados de demonstração</b>. Quando quiser começar com os seus, apague-os em <a href="#dados" data-go="dados">Backup e dados</a>.</div>` : ''}
@@ -2640,7 +2737,7 @@ window.HORUS_CONFIG = {
         <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=7dias"><span>Próximos 7 dias</span><b>${r.proximos7}</b></a>
         <a class="kpi" href="#atividades" data-go="atividades" data-q="status=abertas"><span>Pendentes</span><b>${r.pendentes}</b></a>
         <a class="kpi" href="#atividades" data-go="atividades" data-q="status=concluida"><span>Concluídas</span><b>${r.concluidas}</b></a>
-        <a class="kpi k-neg" href="#negocios" data-go="negocios"><span>Negócios em andamento</span><b>${negs.length}</b><em>${negs.length ? U.brlShort(negs.reduce((s, a) => s + (+a.valorNegocio || 0), 0)) + ' em negociação' : 'Nenhum no momento'}</em></a>
+        <a class="kpi k-neg" href="#negocios" data-go="negocios"><span>Negócios em andamento</span><b>${negs.length}</b><em>${negs.length ? U.brlShort(negs.reduce((s, x) => s + (+x.n.valor || 0), 0)) + ' em negociação' : 'Nenhum no momento'}</em></a>
       </section>
 
       <div class="grid-main">
@@ -2849,37 +2946,40 @@ window.HORUS_CONFIG = {
   const V = { titulo: 'Negócios em andamento' };
   let fTipo = '';
 
-  const linha = a => `<li class="nrow${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
+  /* Uma linha por negócio (um card com Zentis e Vida aparece duas vezes) */
+  const linha = ({ a, n }) => { const outros = M.negociosDa(a).filter(x => x.id !== n.id && !x.resultado), lq = M.liqNeg(n);
+    return `<li class="nrow${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
       <button class="check" data-act="concluir" aria-label="Concluir negócio">${UI.icon('check')}</button>
-      <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span class="neg">${U.esc(M.tipoNeg(a.tipoNegocio).label)}</span>${a.cliente ? `<span>${U.esc(a.titulo)}</span>` : ''}${UI.respChip(a.responsabilidadeId)}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}</div></div>
-      <div class="nval">${a.valorNegocio ? U.brl(a.valorNegocio) : '<span class="muted">sem valor</span>'}${M.liquidoEstimado(a) != null ? `<small>fica ${U.brlShort(M.liquidoEstimado(a))}</small>` : ''}</div>
+      <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span class="neg">${U.esc(M.tipoNeg(n.tipo).label)}</span>${a.cliente ? `<span>${U.esc(a.titulo)}</span>` : ''}${outros.length ? `<span class="lig" title="No mesmo card">+ ${U.esc(outros.map(x => M.tipoNeg(x.tipo).label).join(', '))}</span>` : ''}${UI.respChip(a.responsabilidadeId)}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}</div></div>
+      <div class="nval">${n.valor ? U.brl(n.valor) : '<span class="muted">sem valor</span>'}${lq != null ? `<small>fica ${U.brlShort(lq)}</small>` : ''}</div>
       <div class="aside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
-      <div class="aact"><button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`;
+      <div class="aact"><button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`; };
 
   V.render = el => {
-    const abertos = M.negociosAbertos();
-    const lista = abertos.filter(a => !fTipo || M.tipoChave(a.tipoNegocio) === fTipo).sort(M.ordemAtencao);
-    const total = lista.reduce((s, a) => s + (+a.valorNegocio || 0), 0);
+    const abertos = M.negItensAbertos();
+    const lista = abertos.filter(x => !fTipo || M.tipoChave(x.n.tipo) === fTipo).sort((x, y) => M.ordemAtencao(x.a, y.a));
+    const total = lista.reduce((s, x) => s + (+x.n.valor || 0), 0);
     const ini = U.addDays(U.today(), -30);
-    const fechados = Store.all('atividades').filter(a => M.ehNegocio(a) && a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10) >= ini).sort((a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || ''));
-    const ganhos = fechados.filter(a => a.resultadoNegocio !== 'perdido');
+    const fechados = Store.all('atividades').filter(a => M.ehNegocio(a) && a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10) >= ini).sort((a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || ''))
+      .flatMap(a => M.negociosDa(a).map(n => ({ a, n, perdido: (n.resultado || a.resultadoNegocio) === 'perdido' })));
+    const ganhos = fechados.filter(x => !x.perdido);
     const mesIni = U.today().slice(0, 8) + '01';
     const prodMes = App.Fat.producoesDoMes(App.Fat.ymHoje());
-    const semana = abertos.filter(a => a.prazo && U.diff(a.prazo, U.today()) <= 7).length;
+    const semana = abertos.filter(x => x.a.prazo && U.diff(x.a.prazo, U.today()) <= 7).length;
     /* Agrupa pelo tipo digitado (sem diferenciar maiúsculas e acentos) */
     const grupos = {};
-    abertos.forEach(a => { const k = M.tipoChave(a.tipoNegocio); const g = grupos[k] || (grupos[k] = { id: k, label: M.tipoNeg(a.tipoNegocio).label, n: 0, v: 0 }); g.n++; g.v += +a.valorNegocio || 0; });
+    abertos.forEach(({ n }) => { const k = M.tipoChave(n.tipo); const g = grupos[k] || (grupos[k] = { id: k, label: M.tipoNeg(n.tipo).label, n: 0, v: 0 }); g.n++; g.v += +n.valor || 0; });
     const porTipo = Object.values(grupos).sort((a, b) => b.n - a.n || b.v - a.v);
     if (fTipo && !grupos[fTipo]) fTipo = '';
-    const liqTotal = abertos.reduce((s, a) => s + (M.liquidoEstimado(a) || 0), 0);
+    const liqTotal = abertos.reduce((s, x) => s + (M.liqNeg(x.n) || 0), 0);
     const tituloTipo = fTipo ? grupos[fTipo].label : 'Todos os negócios';
 
     el.innerHTML = `
-      <div class="page-h"><div><h1>Negócios em andamento</h1><p class="muted">Atividades marcadas como negócio que ainda não foram concluídas.</p></div>
+      <div class="page-h"><div><h1>Negócios em andamento</h1><p class="muted">Cada negócio aparece separado, mesmo quando vários estão no mesmo card.</p></div>
         <button class="btn primary" id="novoNeg">${UI.icon('mais')}Novo negócio</button></div>
       <section class="kpis k4">
         <div class="kpi"><span>Em andamento</span><b>${abertos.length}</b></div>
-        <div class="kpi"><span>Valor em negociação</span><b>${U.brlShort(abertos.reduce((s, a) => s + (+a.valorNegocio || 0), 0))}</b>${liqTotal ? `<em>≈ ${U.brlShort(liqTotal)} ficam com você</em>` : ''}</div>
+        <div class="kpi"><span>Valor em negociação</span><b>${U.brlShort(abertos.reduce((s, x) => s + (+x.n.valor || 0), 0))}</b>${liqTotal ? `<em>≈ ${U.brlShort(liqTotal)} ficam com você</em>` : ''}</div>
         <div class="kpi ${semana ? 'k-warn' : ''}"><span>Fecham em até 7 dias</span><b>${semana}</b></div>
         <a class="kpi" href="#faturamento" data-go="faturamento"><span>Produção do mês (líquido)</span><b>${U.brlShort(prodMes.reduce((s, p) => s + App.Fat.liquidoTotal(p), 0))}</b><em>${U.plural(prodMes.length, 'lançamento', 'lançamentos')}</em></a>
       </section>
@@ -2889,9 +2989,9 @@ window.HORUS_CONFIG = {
         ${lista.length ? `<ul class="alist">${lista.map(linha).join('')}</ul>` : `<div class="empty"><b>Nenhum negócio em andamento.</b><p>Ao criar uma atividade, marque "É um negócio" e escreva o tipo, o cliente e o valor.</p><button class="btn primary" id="novoNeg2">${UI.icon('mais')}Novo negócio</button></div>`}
       </section>
       ${fechados.length ? `<section class="card"><div class="card-h"><h2>Concluídos nos últimos 30 dias</h2><span class="muted small">${ganhos.length} fechados · ${fechados.length - ganhos.length} não fecharam</span></div>
-        <ul class="alist">${fechados.slice(0, 10).map(a => `<li class="nrow is-done" data-id="${a.id}"><span class="tag ${a.resultadoNegocio === 'perdido' ? 't-erro' : 't-ok'}">${a.resultadoNegocio === 'perdido' ? 'Não fechou' : 'Fechado'}</span>
-          <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span>${U.esc(M.tipoNeg(a.tipoNegocio).label)}</span><span>${U.fmtDate((a.concluidaEm || '').slice(0, 10))}</span></div></div>
-          <div class="nval">${a.valorNegocio ? U.brl(a.valorNegocio) : ''}</div></li>`).join('')}</ul></section>` : ''}`;
+        <ul class="alist">${fechados.slice(0, 12).map(({ a, n, perdido }) => `<li class="nrow is-done" data-id="${a.id}"><span class="tag ${perdido ? 't-erro' : 't-ok'}">${perdido ? 'Não fechou' : 'Fechado'}</span>
+          <div class="amain" data-act="abrir"><b>${U.esc(a.cliente || a.titulo)}</b><div class="pmeta"><span>${U.esc(M.tipoNeg(n.tipo).label)}</span><span>${U.fmtDate((a.concluidaEm || '').slice(0, 10))}</span></div></div>
+          <div class="nval">${n.valor ? U.brl(n.valor) : ''}</div></li>`).join('')}</ul></section>` : ''}`;
 
     const novo = () => App.Forms.atividade(null, { tipoNegocio: fTipo ? grupos[fTipo].label : null, categoria: 'Negócios', prioridade: 'alta', _neg: true });
     el.querySelector('#novoNeg').onclick = novo;
