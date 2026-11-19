@@ -647,6 +647,27 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 }
 @media (max-width: 520px) { .mdet-h { grid-template-columns: 44px minmax(0, 1fr); } .mdet-m { grid-column: 1 / -1; justify-items: start; grid-auto-flow: column; justify-content: start; align-items: center; } }
 
+/* ---------- E-mails: convites e fila do Claude ---------- */
+.mtags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.mtags:empty { display: none; }
+.mconv, .mfila, .mconf, .mdraft { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.mconv { color: var(--accent); background: var(--accent-soft); }
+.mconf { color: #9A5B00; background: #FFF4DE; }
+.mdraft { color: var(--muted); background: var(--surface-2); }
+.mfila { color: #6E3FF0; background: #F1ECFF; border: 1px dashed #B9A4F5; }
+.mfila.ok { color: #2F855A; background: #E8F5EE; border-color: transparent; }
+.mfila.erro { color: #C2412D; background: #FCEDEA; border-color: transparent; white-space: normal; }
+.mconv .ic, .mfila .ic { width: 13px; height: 13px; flex: none; }
+.mbtn { border: 1px solid var(--accent); background: var(--surface); color: var(--accent); font-weight: 700; font-size: 12.5px; border-radius: 8px; padding: 5px 10px; cursor: pointer; }
+.mbtn:hover { background: var(--accent); color: #fff; }
+.mfila-box { display: grid; gap: 4px; }
+.mfila-box small { color: var(--muted); font-size: 12px; }
+.mbox.ev { background: #F4F0FF; border: 1px solid #DCD0FF; }
+.mbox.ev span { color: var(--accent); }
+.mconf-t { color: #9A5B00 !important; font-weight: 600; display: flex; gap: 6px; align-items: center; }
+.mconf-t .ic { width: 15px; height: 15px; }
+.mok-t { color: #2F855A !important; font-size: 13px !important; }
+
 </style>
 
 <div class="app">
@@ -1844,6 +1865,7 @@ window.HORUS_CONFIG = {
     dinheiro: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/>',
     negocio: '<path d="M3 12l4-4 4 3 3-3 7 6"/><path d="M14 14l3 3M11 17l2 2M7 13l-4 4"/>',
     historico: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+    calendario: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
     email: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6 8.5-6"/>',
     externo: '<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/>',
     copiar: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'
@@ -3457,7 +3479,11 @@ window.HORUS_CONFIG = {
 /* js/views/emails.js */
 /* E-mails para responder: triados pelo Claude a partir do Outlook e gravados na tabela "emails".
    Registro: { msgId, remetente, remetenteEmail, assunto, resumo, motivo, prioridade, recebidoEm, link,
-               sugestao, status: 'novo' | 'respondido' | 'arquivado', atividadeId, cliente, triadoEm } */
+               sugestao, status: 'novo' | 'respondido' | 'arquivado', atividadeId, cliente, triadoEm,
+               tipo: 'email' | 'convite', eventoId, evento: { inicio, fim, local, organizador }, conflito,
+               rascunhoId, rascunhoLink,
+               acao: { tipo: 'aceitar' | 'talvez' | 'recusar' | 'enviar', texto, comentario, status: 'pendente' | 'feito' | 'erro', pedidoEm, feitoEm, erro } }
+   O painel só registra o pedido em "acao"; o Claude executa no Outlook na próxima leitura. */
 (function (App) {
   const { U, M, UI, Store } = App;
   const E = {};
@@ -3465,11 +3491,39 @@ window.HORUS_CONFIG = {
   const PRIO = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
 
   E.todos = () => Store.all('emails');
-  E.novos = () => E.todos().filter(e => (e.status || 'novo') === 'novo').sort(E.ordem);
+  E.pendente = e => !!(e.acao && e.acao.status === 'pendente');
+  E.novos = () => E.todos().filter(e => (e.status || 'novo') === 'novo').sort((a, b) => E.pendente(a) - E.pendente(b) || E.ordem(a, b));
+  /* Para responder = novos que ainda não estão na fila do Claude */
+  E.paraResponder = () => E.novos().filter(e => !E.pendente(e));
+  const ACAO = { aceitar: 'aceitar o convite', talvez: 'responder talvez', recusar: 'recusar o convite', enviar: 'enviar a resposta' };
+  const ACAO_FEITA = { aceitar: 'Convite aceito', talvez: 'Respondido talvez', recusar: 'Convite recusado', enviar: 'Resposta enviada' };
+  const DSEM = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  /* "sex 21/11 · 10:00–11:00" (horário como veio do Outlook) */
+  E.quandoEvento = ev => {
+    if (!ev || !ev.inicio) return '';
+    const [d, h] = String(ev.inicio).split('T'), [y, m, dd] = d.split('-').map(Number), dt = new Date(y, m - 1, dd);
+    const hf = ev.fim ? String(ev.fim).split('T')[1] : '';
+    return `${DSEM[dt.getDay()]} ${String(dd).padStart(2, '0')}/${String(m).padStart(2, '0')}${h ? ' · ' + h.slice(0, 5) + (hf ? '–' + hf.slice(0, 5) : '') : ''}`;
+  };
+  E.pedir = (id, acao) => {
+    Store.update('emails', id, { acao: { ...acao, status: 'pendente', pedidoEm: U.nowISO() } });
+    UI.toast('Pedido registrado: o Claude vai ' + ACAO[acao.tipo] + ' na próxima leitura.', 'ok', { label: 'Cancelar', fn: () => E.cancelar(id) });
+  };
+  E.cancelar = id => Store.update('emails', id, { acao: null });
+  const fila = e => {
+    const a = e.acao; if (!a) return '';
+    if (a.status === 'pendente') return `<span class="mfila">${UI.icon('adiar')}Na fila do Claude: ${ACAO[a.tipo] || a.tipo}</span>`;
+    if (a.status === 'erro') return `<span class="mfila erro" title="${U.esc(a.erro || '')}">Não deu para ${ACAO[a.tipo] || a.tipo}${a.erro ? ': ' + U.esc(a.erro) : ''}</span>`;
+    if (a.status === 'feito') return `<span class="mfila ok">${UI.icon('check')}${ACAO_FEITA[a.tipo] || 'Feito'} pelo Claude</span>`;
+    return '';
+  };
+  const convite = e => e.tipo === 'convite' ? `<span class="mconv">${UI.icon('calendario')}Convite${e.evento ? ' · ' + U.esc(E.quandoEvento(e.evento)) : ''}</span>${e.conflito ? `<span class="mconf" title="${U.esc(e.conflito)}">Conflita: ${U.esc(e.conflito)}</span>` : ''}` : '';
   E.ordem = (a, b) => (PESO[b.prioridade] || 2) - (PESO[a.prioridade] || 2) || (b.recebidoEm || '').localeCompare(a.recebidoEm || '');
   E.ultimaLeitura = () => E.todos().reduce((m, e) => (e.triadoEm || '') > m ? e.triadoEm : m, '');
   /* Só abre links https (Outlook na web) */
   E.link = e => /^https:\/\//i.test(e.link || '') ? e.link : 'https://outlook.office.com/mail/';
+  /* Com rascunho pronto, abre o rascunho; senão, o e-mail */
+  E.linkAbrir = e => /^https:\/\//i.test(e.rascunhoLink || '') && (e.status || 'novo') === 'novo' ? e.rascunhoLink : E.link(e);
 
   /* "há 2 h", "ontem 14:10", "12 nov" */
   E.quando = iso => {
@@ -3501,12 +3555,15 @@ window.HORUS_CONFIG = {
         <div class="msub">${U.esc(e.assunto || '(sem assunto)')}</div>
         <p class="mresumo">${U.esc(e.resumo || '')}</p>
         ${!compacto && e.motivo ? `<p class="mwhy">${UI.icon('seta')}${U.esc(e.motivo)}</p>` : ''}
-        ${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<span class="lig">virou atividade</span>` : ''}
+        <div class="mtags">${convite(e)}${fila(e)}${e.rascunhoLink && !E.pendente(e) && (e.status || 'novo') === 'novo' ? '<span class="mdraft">rascunho pronto no Outlook</span>' : ''}${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<span class="lig">virou atividade</span>` : ''}</div>
       </div>
       <div class="mact">
-        <a class="icon-btn" href="${U.esc(E.link(e))}" target="_blank" rel="noopener" title="Abrir no Outlook" aria-label="Abrir no Outlook">${UI.icon('externo')}</a>
+        <a class="icon-btn" href="${U.esc(E.linkAbrir(e))}" target="_blank" rel="noopener" title="Abrir no Outlook" aria-label="Abrir no Outlook">${UI.icon('externo')}</a>
         ${(e.status || 'novo') === 'novo'
-          ? `<button class="icon-btn" data-ea="ok" title="Já respondi" aria-label="Já respondi">${UI.icon('check')}</button>${compacto ? '' : `<button class="icon-btn" data-ea="arq" title="Não precisa de resposta" aria-label="Não precisa de resposta">${UI.icon('arquivo')}</button>`}`
+          ? (E.pendente(e) ? `<button class="icon-btn" data-ea="cancelar" title="Cancelar pedido" aria-label="Cancelar pedido">${UI.icon('x')}</button>`
+            : e.tipo === 'convite' && e.eventoId ? `<button class="mbtn" data-ea="aceitar" title="Pedir ao Claude para aceitar">Aceitar</button>`
+            : `<button class="icon-btn" data-ea="ok" title="Já respondi" aria-label="Já respondi">${UI.icon('check')}</button>`)
+            + (compacto ? '' : `<button class="icon-btn" data-ea="arq" title="Não precisa de resposta" aria-label="Não precisa de resposta">${UI.icon('arquivo')}</button>`)
           : `<button class="icon-btn" data-ea="volta" title="Voltar para responder" aria-label="Voltar para responder">${UI.icon('voltar')}</button>`}
       </div></li>`;
 
@@ -3516,13 +3573,15 @@ window.HORUS_CONFIG = {
     if (b.dataset.ea === 'ok') E.marcar(id, 'respondido', 'Marcado como respondido');
     if (b.dataset.ea === 'arq') E.marcar(id, 'arquivado', 'E-mail descartado');
     if (b.dataset.ea === 'volta') E.marcar(id, 'novo');
+    if (b.dataset.ea === 'aceitar') E.pedir(id, { tipo: 'aceitar' });
+    if (b.dataset.ea === 'cancelar') { E.cancelar(id); UI.toast('Pedido cancelado'); }
   }));
 
   /* Quadro do Painel */
   E.quadro = () => {
-    const ns = E.novos(), ult = E.ultimaLeitura();
+    const ns = E.novos(), ult = E.ultimaLeitura(), falta = E.paraResponder().length;
     return `<section class="card mail-card" aria-label="E-mails para responder">
-      <div class="card-h"><h2>${UI.icon('email')}E-mails para responder</h2>${ns.length ? `<span class="count">${ns.length}</span>` : ''}</div>
+      <div class="card-h"><h2>${UI.icon('email')}E-mails para responder</h2>${falta ? `<span class="count">${falta}</span>` : ''}</div>
       ${ns.length ? `<ul class="mlist">${ns.slice(0, 5).map(e => E.item(e, true)).join('')}</ul>`
         : `<div class="empty sm"><b>Caixa em dia.</b><p>Nenhum e-mail pedindo resposta${ult ? '' : ' ainda'}. No chat, peça: “olha meus e-mails”.</p></div>`}
       <div class="mfoot"><span class="muted small">${ult ? 'Lidos pelo Claude ' + E.quando(ult) : 'Aguardando a primeira leitura'}</span><a class="link" href="#emails" data-go="emails">${ns.length > 5 ? 'Ver todos (' + ns.length + ')' : 'Abrir e-mails'}</a></div>
@@ -3532,7 +3591,8 @@ window.HORUS_CONFIG = {
   /* Detalhe: resumo, motivo, sugestão de resposta e ações */
   E.detalhe = id => {
     const e = Store.get('emails', id); if (!e) return;
-    const novo = (e.status || 'novo') === 'novo';
+    const novo = (e.status || 'novo') === 'novo', pend = E.pendente(e), conv = e.tipo === 'convite' && e.eventoId;
+    const ev = e.evento || {};
     UI.modal({
       title: e.assunto || '(sem assunto)', size: 'md',
       body: `<div class="mdet">
@@ -3540,17 +3600,23 @@ window.HORUS_CONFIG = {
           <div class="mdet-m"><span class="pill p-${e.prioridade || 'media'}">${PRIO[e.prioridade] || 'Média'}</span><small>${E.quando(e.recebidoEm)}</small></div></div>
         ${e.resumo ? `<div class="mbox"><span>Resumo</span><p>${U.esc(e.resumo)}</p></div>` : ''}
         ${e.motivo ? `<div class="mbox why"><span>Por que precisa de você</span><p>${U.esc(e.motivo)}</p></div>` : ''}
-        <label class="f full"><span>Sugestão de resposta <em class="muted">edite à vontade, copie e cole no Outlook</em></span><textarea id="mSug" rows="7">${U.esc(e.sugestao || '')}</textarea></label>
-        <div class="mdet-b"><button class="btn ghost sm" id="mCopy">${UI.icon('copiar')}Copiar resposta</button><a class="btn ghost sm" href="${U.esc(E.link(e))}" target="_blank" rel="noopener">${UI.icon('externo')}Abrir no Outlook</a>
+        ${fila(e) ? `<div class="mfila-box">${fila(e)}${pend ? '<small>O Claude executa na próxima leitura (até 1 h). Com pressa? Diga “executa” num chat.</small>' : ''}</div>` : ''}
+        ${conv ? `<div class="mbox ev"><span>Convite de reunião</span>
+            <p><b>${U.esc(E.quandoEvento(ev))}</b>${ev.local ? '<br>' + U.esc(ev.local) : ''}${ev.organizador ? '<br>Organizador: ' + U.esc(ev.organizador) : ''}</p>
+            ${e.conflito ? `<p class="mconf-t">${UI.icon('adiar')}Conflita com: ${U.esc(e.conflito)}</p>` : '<p class="mok-t">Sem conflito na sua agenda.</p>'}</div>
+          <label class="f full"><span>Comentário para o organizador <em class="muted">opcional</em></span><input id="mCom" maxlength="300" placeholder="Ex.: Confirmado, levo a proposta impressa." value="${U.esc((e.acao && e.acao.comentario) || '')}"></label>`
+        : `<label class="f full"><span>Resposta <em class="muted">${e.rascunhoLink ? 'o rascunho já está no Outlook; se editar aqui, o Claude atualiza antes de enviar' : 'edite à vontade'}</em></span><textarea id="mSug" rows="7">${U.esc((e.acao && e.acao.texto) || e.sugestao || '')}</textarea></label>`}
+        <div class="mdet-b">${conv ? '' : `<button class="btn ghost sm" id="mCopy">${UI.icon('copiar')}Copiar resposta</button>`}${e.rascunhoLink && novo ? `<a class="btn ghost sm" href="${U.esc(e.rascunhoLink)}" target="_blank" rel="noopener">${UI.icon('editar')}Abrir rascunho no Outlook</a>` : ''}<a class="btn ghost sm" href="${U.esc(E.link(e))}" target="_blank" rel="noopener">${UI.icon('externo')}Abrir no Outlook</a>
           ${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<button class="btn ghost sm" id="mAt">${UI.icon('seta')}Ver atividade</button>` : `<button class="btn ghost sm" id="mAt">${UI.icon('mais')}Virar atividade</button>`}</div>
       </div>`,
-      footer: novo
-        ? `<button class="btn ghost" data-a="arq">Não precisa de resposta</button><button class="btn primary" data-a="ok">${UI.icon('check')}Já respondi</button>`
-        : `<button class="btn ghost" data-a="volta">${UI.icon('voltar')}Voltar para responder</button><button class="btn primary" data-close>Fechar</button>`,
+      footer: !novo ? `<button class="btn ghost" data-a="volta">${UI.icon('voltar')}Voltar para responder</button><button class="btn primary" data-close>Fechar</button>`
+        : pend ? `<button class="btn ghost" data-a="cancelar">Cancelar pedido</button><button class="btn primary" data-close>Fechar</button>`
+        : conv ? `<button class="btn ghost" data-a="recusar">Recusar</button><button class="btn ghost" data-a="talvez">Talvez</button><button class="btn primary" data-a="aceitar">${UI.icon('check')}Aceitar</button>`
+        : `<button class="btn ghost" data-a="arq">Não precisa</button><button class="btn ghost" data-a="ok">Já respondi</button><button class="btn primary" data-a="enviar">${UI.icon('seta')}Enviar como está</button>`,
       onMount(el, api) {
-        const sug = el.querySelector('#mSug');
+        const sug = el.querySelector('#mSug') || { value: e.sugestao || '', addEventListener() {}, select() {} }, com = el.querySelector('#mCom');
         sug.addEventListener('change', () => Store.update('emails', id, { sugestao: sug.value }));
-        el.querySelector('#mCopy').onclick = async () => {
+        const cp = el.querySelector('#mCopy'); if (cp) cp.onclick = async () => {
           try { await navigator.clipboard.writeText(sug.value); UI.toast('Resposta copiada. Cole no Outlook.'); }
           catch (er) { sug.select(); document.execCommand && document.execCommand('copy'); UI.toast('Resposta selecionada. Use Ctrl+C.'); }
         };
@@ -3560,9 +3626,18 @@ window.HORUS_CONFIG = {
           if (at) return App.Forms.detalhes(at.id);
           App.Forms.atividade(null, { titulo: 'Responder: ' + (e.assunto || e.remetente || 'e-mail'), descricao: [e.remetente && 'De: ' + e.remetente, e.resumo].filter(Boolean).join('\n'), cliente: e.cliente || null, prioridade: e.prioridade === 'alta' ? 'alta' : 'media', prazo: U.today(), _emailId: id });
         };
-        el.querySelectorAll('[data-a]').forEach(b => b.onclick = () => {
-          if (sug.value !== (e.sugestao || '')) Store.update('emails', id, { sugestao: sug.value }, { silent: true });
+        el.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
+          const a = b.dataset.a;
+          if (a === 'enviar') {
+            if (!sug.value.trim()) { UI.toast('Escreva a resposta antes de enviar.', 'aviso'); return; }
+            const okEnv = await UI.confirm({ title: 'Enviar esta resposta?', text: `O Claude vai responder <b>${U.esc(e.remetente || e.remetenteEmail || '')}</b> no Outlook, na mesma conversa, com o texto que está aqui. Você pode cancelar até ele executar.`, ok: 'Pedir envio', danger: false });
+            if (!okEnv) return;
+          }
+          if (sug.value !== (e.sugestao || '') && !conv) Store.update('emails', id, { sugestao: sug.value }, { silent: true });
           api.close();
+          if (a === 'enviar') return E.pedir(id, { tipo: 'enviar', texto: sug.value });
+          if (['aceitar', 'talvez', 'recusar'].includes(a)) return E.pedir(id, { tipo: a, comentario: com && com.value.trim() ? com.value.trim() : null });
+          if (a === 'cancelar') { E.cancelar(id); return UI.toast('Pedido cancelado'); }
           if (b.dataset.a === 'ok') E.marcar(id, 'respondido', 'Marcado como respondido');
           if (b.dataset.a === 'arq') E.marcar(id, 'arquivado', 'E-mail descartado');
           if (b.dataset.a === 'volta') E.marcar(id, 'novo');
@@ -3578,13 +3653,14 @@ window.HORUS_CONFIG = {
     const todos = E.todos();
     const cont = { novo: 0, respondido: 0, arquivado: 0 };
     todos.forEach(e => { cont[e.status || 'novo'] = (cont[e.status || 'novo'] || 0) + 1; });
+    const naFila = todos.filter(e => (e.status || 'novo') === 'novo' && E.pendente(e)).length;
     const q = M.norm(busca);
     const lista = todos.filter(e => (e.status || 'novo') === aba && (!q || M.norm([e.remetente, e.remetenteEmail, e.assunto, e.resumo, e.cliente].join(' ')).includes(q)))
       .sort(aba === 'novo' ? E.ordem : (a, b) => (b.tratadoEm || b.recebidoEm || '').localeCompare(a.tratadoEm || a.recebidoEm || ''));
     const ult = E.ultimaLeitura();
     el.innerHTML = `
       <div class="page-h"><div><h1>E-mails</h1><p class="muted">O Claude lê o seu Outlook e traz aqui só o que precisa de resposta sua, com resumo e sugestão de resposta.</p></div>
-        <span class="muted small">${ult ? 'Última leitura: ' + E.quando(ult) : 'Ainda sem leitura'}</span></div>
+        <span class="muted small">${ult ? 'Última leitura: ' + E.quando(ult) : 'Ainda sem leitura'}${naFila ? ' · ' + U.plural(naFila, 'pedido na fila', 'pedidos na fila') : ''}</span></div>
       <div class="toolbar">
         <div class="seg-tabs">${[['novo', 'Para responder'], ['respondido', 'Respondidos'], ['arquivado', 'Descartados']].map(([k, l]) => `<button class="${aba === k ? 'on' : ''}" data-aba="${k}">${l} <b>${cont[k] || 0}</b></button>`).join('')}</div>
         <label class="search">${UI.icon('busca')}<input id="mBusca" placeholder="Buscar remetente, assunto ou cliente" value="${U.esc(busca)}"></label>
@@ -3629,7 +3705,7 @@ window.HORUS_CONFIG = {
     window.scrollTo({ top: 0 });
   };
   /* Número de e-mails para responder no menu */
-  function badge() { const b = document.getElementById('mailBadge'); if (!b || !App.Emails) return; const n = App.Emails.novos().length; b.hidden = !n; b.textContent = n > 99 ? '99+' : n; }
+  function badge() { const b = document.getElementById('mailBadge'); if (!b || !App.Emails) return; const n = App.Emails.paraResponder().length; b.hidden = !n; b.textContent = n > 99 ? '99+' : n; }
   function render() {
     badge();
     App.Views[atual].render(main());
