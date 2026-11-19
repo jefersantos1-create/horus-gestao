@@ -590,6 +590,63 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 .dneg + .dneg { margin-top: 4px; }
 .neg.perdido { opacity: .55; text-decoration: line-through; }
 
+/* ---------- E-mails ---------- */
+.nav a { position: relative; }
+.nbadge { margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--grad-btn); color: #fff; font-size: 11px; font-weight: 700; display: inline-grid; place-items: center; font-family: var(--body); }
+.mail-card .card-h h2 { display: flex; align-items: center; gap: 8px; }
+.mail-card .card-h h2 .ic { width: 18px; height: 18px; color: var(--accent); }
+.mail-card { position: relative; overflow: hidden; }
+.mail-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--grad); }
+.mlist { list-style: none; margin: 0; padding: 0; display: grid; }
+.mrow { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px 4px; border-top: 1px solid var(--line); position: relative; }
+.mlist .mrow:first-child { border-top: 0; }
+.mrow::before { content: ""; position: absolute; left: -12px; top: 12px; bottom: 12px; width: 3px; border-radius: 3px; background: transparent; }
+.mrow.mp-alta::before { background: var(--late, #C2412D); }
+.mav { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); font-family: var(--display); }
+.mav.lg { width: 44px; height: 44px; font-size: 15px; }
+.mmain { min-width: 0; cursor: pointer; display: grid; gap: 2px; }
+.mtop { display: flex; align-items: baseline; gap: 8px; }
+.mtop b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mwhen { margin-left: auto; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+.msub { font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mresumo { margin: 0; font-size: 12.5px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mwhy { margin: 2px 0 0; font-size: 12.5px; color: var(--accent); display: flex; gap: 4px; align-items: flex-start; }
+.mwhy .ic { width: 14px; height: 14px; flex: none; margin-top: 2px; }
+.mmain:hover .msub { color: var(--accent); }
+.mact { display: flex; gap: 2px; align-items: center; }
+.mact .icon-btn { width: 32px; height: 32px; }
+.mrow.is-done .mmain { opacity: .65; }
+.mlist.full .mrow { padding: 14px 6px; }
+.mlist.full .mresumo { -webkit-line-clamp: 3; }
+.mfoot { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--line); }
+.mdet { display: grid; gap: 14px; }
+.mdet-h { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.mdet-h b { display: block; font-size: 15px; }
+.mdet-h small { color: var(--muted); font-size: 12.5px; word-break: break-all; }
+.mdet-m { display: grid; justify-items: end; gap: 4px; }
+.mdet-m small { color: var(--faint); font-size: 12px; white-space: nowrap; }
+.pill { font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.pill.p-alta { color: #C2412D; background: #FCEDEA; } .pill.p-media { color: var(--accent); background: var(--accent-soft); } .pill.p-baixa { color: var(--muted); }
+.mbox { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+.mbox span { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
+.mbox p { margin: 4px 0 0; font-size: 14px; line-height: 1.5; white-space: pre-line; }
+.mbox.why { background: var(--accent-soft); } .mbox.why span { color: var(--accent); }
+.mdet textarea { font: inherit; font-size: 14px; line-height: 1.5; }
+.mdet .f > span em { font-style: normal; font-weight: 500; margin-left: 6px; font-size: 12px; }
+.mdet-b { display: flex; gap: 8px; flex-wrap: wrap; }
+.mdet-b .btn .ic { width: 16px; height: 16px; }
+.seg-tabs { display: inline-flex; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 11px; padding: 3px; flex-wrap: wrap; }
+.seg-tabs button { border: 0; background: none; padding: 7px 12px; border-radius: 8px; font-weight: 600; font-size: 13.5px; color: var(--muted); cursor: pointer; }
+.seg-tabs button b { margin-left: 4px; font-size: 12px; color: var(--faint); }
+.seg-tabs button.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(20,16,40,.08); }
+.seg-tabs button.on b { color: var(--accent); }
+@media (max-width: 860px) {
+  .nav { grid-template-columns: repeat(7, 1fr); }
+  .nav a { font-size: 10px; }
+  .nbadge { position: absolute; top: 0; right: calc(50% - 22px); min-width: 16px; height: 16px; font-size: 9.5px; padding: 0 4px; margin: 0; }
+}
+@media (max-width: 520px) { .mdet-h { grid-template-columns: 44px minmax(0, 1fr); } .mdet-m { grid-column: 1 / -1; justify-items: start; grid-auto-flow: column; justify-content: start; align-items: center; } }
+
 </style>
 
 <div class="app">
@@ -599,6 +656,7 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
     <nav class="nav">
       <a href="#painel" data-go="painel"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Painel</span></a>
       <a href="#atividades" data-go="atividades"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L7 5M3.5 12l1.2 1.2L7 11M3.5 18l1.2 1.2L7 17"/></svg><span>Atividades</span></a>
+      <a href="#emails" data-go="emails"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6 8.5-6"/></svg><span>E-mails</span><b class="nbadge" id="mailBadge" hidden></b></a>
       <a href="#metas" data-go="metas"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg><span>Metas</span></a>
       <a href="#faturamento" data-go="faturamento"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/></svg><span>Faturamento</span></a>
       <a href="#responsabilidades" data-go="responsabilidades"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span class="l-long">Responsabilidades</span><span class="l-short">Frentes</span></a>
@@ -704,7 +762,7 @@ window.HORUS_CONFIG = {
  */
 (function (App) {
   const BASE = 'gestao-pessoal:dados:v1', QBASE = 'gestao-pessoal:fila:v1';
-  const COLS = ['responsabilidades', 'atividades', 'metas', 'metaRegistros', 'historico', 'faturamento', 'linhas', 'produtos', 'producoes', 'recebiveis', 'recorrencias'];
+  const COLS = ['responsabilidades', 'atividades', 'metas', 'metaRegistros', 'historico', 'faturamento', 'linhas', 'produtos', 'producoes', 'recebiveis', 'recorrencias', 'emails'];
   const SCHEMA = 1;
 
   const ls = {
@@ -1527,7 +1585,7 @@ window.HORUS_CONFIG = {
     faturamento: ['id', 'data', 'cliente', 'tipo', 'descricao', 'valor', 'receita', 'responsabilidadeId', 'atividadeId', 'observacoes', 'demo', 'criadoEm', 'atualizadoEm']
   };
   /* Tabelas do faturamento guardam o registro inteiro em JSON (fácil de evoluir sem mudar o banco) */
-  const JSONT = { linhas: 'fat_linhas', produtos: 'fat_produtos', producoes: 'fat_producoes', recebiveis: 'fat_recebiveis', recorrencias: 'fat_recorrencias' };
+  const JSONT = { linhas: 'fat_linhas', produtos: 'fat_produtos', producoes: 'fat_producoes', recebiveis: 'fat_recebiveis', recorrencias: 'fat_recorrencias', emails: 'emails' };
   Object.assign(TABELAS, JSONT);
   const DATAS = ['inicio', 'prazo', 'fim', 'data', 'concluidaEm', 'em', 'criadoEm', 'atualizadoEm'];
   const NUMEROS = ['resultadoEsperado', 'resultado', 'alvo', 'atual', 'valor', 'adiamentos', 'valorNegocio', 'receita'];
@@ -1785,7 +1843,10 @@ window.HORUS_CONFIG = {
     voltar: '<path d="M15 18l-6-6 6-6"/>',
     dinheiro: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/>',
     negocio: '<path d="M3 12l4-4 4 3 3-3 7 6"/><path d="M14 14l3 3M11 17l2 2M7 13l-4 4"/>',
-    historico: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'
+    historico: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+    email: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6 8.5-6"/>',
+    externo: '<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/>',
+    copiar: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'
   };
   UI.icon = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${P[n] || ''}</svg>`;
 
@@ -2163,7 +2224,7 @@ window.HORUS_CONFIG = {
           else d.metaId = null;
           if (!a && v.origemId) d.origemId = v.origemId;
           if (a) { M.editarAtividade(a.id, d); UI.toast('Atividade atualizada'); }
-          else { M.criarAtividade(d); UI.toast('Atividade criada'); }
+          else { const nova = M.criarAtividade(d); if (v._emailId && Store.get('emails', v._emailId)) Store.update('emails', v._emailId, { atividadeId: nova.id }); UI.toast('Atividade criada'); }
           api.close();
         };
         form.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !['TEXTAREA', 'SUMMARY', 'SELECT'].includes(e.target.tagName) && !(e.target.list && e.target.value === '')) { e.preventDefault(); form.requestSubmit(); } });
@@ -2749,6 +2810,7 @@ window.HORUS_CONFIG = {
         </section>
 
         <aside class="side-col">
+          ${App.Emails ? App.Emails.quadro() : ''}
           <section class="card exec">
             <div class="card-h"><h2>Estou executando o que planejei?</h2></div>
             <div class="exec-b">${Charts.ring(r.pctConclusao, 92)}
@@ -2776,6 +2838,7 @@ window.HORUS_CONFIG = {
     const h = new Date().getHours();
     el.querySelector('.page-h h1').textContent = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
     el.querySelector('#fResp').onchange = e => { filtroResp = e.target.value; V.render(el); };
+    if (App.Emails) App.Emails.ligar(el.querySelector('.mail-card') || el);
     el.querySelectorAll('.pitem').forEach(li => li.addEventListener('click', e => {
       const b = e.target.closest('[data-act]'); if (!b) return; const id = li.dataset.id;
       if (b.dataset.act === 'concluir') App.Forms.concluir(id);
@@ -3391,11 +3454,163 @@ window.HORUS_CONFIG = {
 
 </script>
 <script>
+/* js/views/emails.js */
+/* E-mails para responder: triados pelo Claude a partir do Outlook e gravados na tabela "emails".
+   Registro: { msgId, remetente, remetenteEmail, assunto, resumo, motivo, prioridade, recebidoEm, link,
+               sugestao, status: 'novo' | 'respondido' | 'arquivado', atividadeId, cliente, triadoEm } */
+(function (App) {
+  const { U, M, UI, Store } = App;
+  const E = {};
+  const PESO = { alta: 3, media: 2, baixa: 1 };
+  const PRIO = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
+
+  E.todos = () => Store.all('emails');
+  E.novos = () => E.todos().filter(e => (e.status || 'novo') === 'novo').sort(E.ordem);
+  E.ordem = (a, b) => (PESO[b.prioridade] || 2) - (PESO[a.prioridade] || 2) || (b.recebidoEm || '').localeCompare(a.recebidoEm || '');
+  E.ultimaLeitura = () => E.todos().reduce((m, e) => (e.triadoEm || '') > m ? e.triadoEm : m, '');
+  /* Só abre links https (Outlook na web) */
+  E.link = e => /^https:\/\//i.test(e.link || '') ? e.link : 'https://outlook.office.com/mail/';
+
+  /* "há 2 h", "ontem 14:10", "12 nov" */
+  E.quando = iso => {
+    if (!iso) return '';
+    const d = new Date(iso), agora = new Date(), min = Math.round((agora - d) / 6e4);
+    if (min < 1) return 'agora';
+    if (min < 60) return 'há ' + min + ' min';
+    if (min < 60 * 12 && d.toDateString() === agora.toDateString()) return 'há ' + Math.round(min / 60) + ' h';
+    const hm = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    if (d.toDateString() === agora.toDateString()) return 'hoje ' + hm;
+    const ont = new Date(agora); ont.setDate(agora.getDate() - 1);
+    if (d.toDateString() === ont.toDateString()) return 'ontem ' + hm;
+    return U.fmtDate(U.iso(d));
+  };
+  const ini = n => String(n || '?').trim().split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+
+  E.marcar = (id, status, msg) => {
+    const e = Store.get('emails', id); if (!e) return;
+    const antes = e.status || 'novo';
+    Store.update('emails', id, { status, tratadoEm: status === 'novo' ? null : U.nowISO() });
+    if (msg) UI.toast(msg, 'ok', { label: 'Desfazer', fn: () => Store.update('emails', id, { status: antes }) });
+  };
+
+  /* Linha de e-mail (compacta no Painel, completa na tela E-mails) */
+  E.item = (e, compacto) => `<li class="mrow mp-${e.prioridade || 'media'}${(e.status || 'novo') !== 'novo' ? ' is-done' : ''}" data-eid="${e.id}">
+      <span class="mav" aria-hidden="true">${U.esc(ini(e.remetente))}</span>
+      <div class="mmain" data-ea="abrir">
+        <div class="mtop"><b>${U.esc(e.remetente || e.remetenteEmail || 'Remetente')}</b><span class="mwhen">${E.quando(e.recebidoEm)}</span></div>
+        <div class="msub">${U.esc(e.assunto || '(sem assunto)')}</div>
+        <p class="mresumo">${U.esc(e.resumo || '')}</p>
+        ${!compacto && e.motivo ? `<p class="mwhy">${UI.icon('seta')}${U.esc(e.motivo)}</p>` : ''}
+        ${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<span class="lig">virou atividade</span>` : ''}
+      </div>
+      <div class="mact">
+        <a class="icon-btn" href="${U.esc(E.link(e))}" target="_blank" rel="noopener" title="Abrir no Outlook" aria-label="Abrir no Outlook">${UI.icon('externo')}</a>
+        ${(e.status || 'novo') === 'novo'
+          ? `<button class="icon-btn" data-ea="ok" title="Já respondi" aria-label="Já respondi">${UI.icon('check')}</button>${compacto ? '' : `<button class="icon-btn" data-ea="arq" title="Não precisa de resposta" aria-label="Não precisa de resposta">${UI.icon('arquivo')}</button>`}`
+          : `<button class="icon-btn" data-ea="volta" title="Voltar para responder" aria-label="Voltar para responder">${UI.icon('voltar')}</button>`}
+      </div></li>`;
+
+  E.ligar = root => root.querySelectorAll('.mrow').forEach(li => li.addEventListener('click', ev => {
+    const b = ev.target.closest('[data-ea]'); if (!b) return; const id = li.dataset.eid;
+    if (b.dataset.ea === 'abrir') E.detalhe(id);
+    if (b.dataset.ea === 'ok') E.marcar(id, 'respondido', 'Marcado como respondido');
+    if (b.dataset.ea === 'arq') E.marcar(id, 'arquivado', 'E-mail descartado');
+    if (b.dataset.ea === 'volta') E.marcar(id, 'novo');
+  }));
+
+  /* Quadro do Painel */
+  E.quadro = () => {
+    const ns = E.novos(), ult = E.ultimaLeitura();
+    return `<section class="card mail-card" aria-label="E-mails para responder">
+      <div class="card-h"><h2>${UI.icon('email')}E-mails para responder</h2>${ns.length ? `<span class="count">${ns.length}</span>` : ''}</div>
+      ${ns.length ? `<ul class="mlist">${ns.slice(0, 5).map(e => E.item(e, true)).join('')}</ul>`
+        : `<div class="empty sm"><b>Caixa em dia.</b><p>Nenhum e-mail pedindo resposta${ult ? '' : ' ainda'}. No chat, peça: “olha meus e-mails”.</p></div>`}
+      <div class="mfoot"><span class="muted small">${ult ? 'Lidos pelo Claude ' + E.quando(ult) : 'Aguardando a primeira leitura'}</span><a class="link" href="#emails" data-go="emails">${ns.length > 5 ? 'Ver todos (' + ns.length + ')' : 'Abrir e-mails'}</a></div>
+    </section>`;
+  };
+
+  /* Detalhe: resumo, motivo, sugestão de resposta e ações */
+  E.detalhe = id => {
+    const e = Store.get('emails', id); if (!e) return;
+    const novo = (e.status || 'novo') === 'novo';
+    UI.modal({
+      title: e.assunto || '(sem assunto)', size: 'md',
+      body: `<div class="mdet">
+        <div class="mdet-h"><span class="mav lg">${U.esc(ini(e.remetente))}</span><div><b>${U.esc(e.remetente || '')}</b>${e.remetenteEmail ? `<small>${U.esc(e.remetenteEmail)}</small>` : ''}</div>
+          <div class="mdet-m"><span class="pill p-${e.prioridade || 'media'}">${PRIO[e.prioridade] || 'Média'}</span><small>${E.quando(e.recebidoEm)}</small></div></div>
+        ${e.resumo ? `<div class="mbox"><span>Resumo</span><p>${U.esc(e.resumo)}</p></div>` : ''}
+        ${e.motivo ? `<div class="mbox why"><span>Por que precisa de você</span><p>${U.esc(e.motivo)}</p></div>` : ''}
+        <label class="f full"><span>Sugestão de resposta <em class="muted">edite à vontade, copie e cole no Outlook</em></span><textarea id="mSug" rows="7">${U.esc(e.sugestao || '')}</textarea></label>
+        <div class="mdet-b"><button class="btn ghost sm" id="mCopy">${UI.icon('copiar')}Copiar resposta</button><a class="btn ghost sm" href="${U.esc(E.link(e))}" target="_blank" rel="noopener">${UI.icon('externo')}Abrir no Outlook</a>
+          ${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<button class="btn ghost sm" id="mAt">${UI.icon('seta')}Ver atividade</button>` : `<button class="btn ghost sm" id="mAt">${UI.icon('mais')}Virar atividade</button>`}</div>
+      </div>`,
+      footer: novo
+        ? `<button class="btn ghost" data-a="arq">Não precisa de resposta</button><button class="btn primary" data-a="ok">${UI.icon('check')}Já respondi</button>`
+        : `<button class="btn ghost" data-a="volta">${UI.icon('voltar')}Voltar para responder</button><button class="btn primary" data-close>Fechar</button>`,
+      onMount(el, api) {
+        const sug = el.querySelector('#mSug');
+        sug.addEventListener('change', () => Store.update('emails', id, { sugestao: sug.value }));
+        el.querySelector('#mCopy').onclick = async () => {
+          try { await navigator.clipboard.writeText(sug.value); UI.toast('Resposta copiada. Cole no Outlook.'); }
+          catch (er) { sug.select(); document.execCommand && document.execCommand('copy'); UI.toast('Resposta selecionada. Use Ctrl+C.'); }
+        };
+        el.querySelector('#mAt').onclick = () => {
+          const at = e.atividadeId && Store.get('atividades', e.atividadeId);
+          api.close();
+          if (at) return App.Forms.detalhes(at.id);
+          App.Forms.atividade(null, { titulo: 'Responder: ' + (e.assunto || e.remetente || 'e-mail'), descricao: [e.remetente && 'De: ' + e.remetente, e.resumo].filter(Boolean).join('\n'), cliente: e.cliente || null, prioridade: e.prioridade === 'alta' ? 'alta' : 'media', prazo: U.today(), _emailId: id });
+        };
+        el.querySelectorAll('[data-a]').forEach(b => b.onclick = () => {
+          if (sug.value !== (e.sugestao || '')) Store.update('emails', id, { sugestao: sug.value }, { silent: true });
+          api.close();
+          if (b.dataset.a === 'ok') E.marcar(id, 'respondido', 'Marcado como respondido');
+          if (b.dataset.a === 'arq') E.marcar(id, 'arquivado', 'E-mail descartado');
+          if (b.dataset.a === 'volta') E.marcar(id, 'novo');
+        });
+      }
+    });
+  };
+
+  /* Tela E-mails */
+  let aba = 'novo', busca = '';
+  const V = { titulo: 'E-mails' };
+  V.render = el => {
+    const todos = E.todos();
+    const cont = { novo: 0, respondido: 0, arquivado: 0 };
+    todos.forEach(e => { cont[e.status || 'novo'] = (cont[e.status || 'novo'] || 0) + 1; });
+    const q = M.norm(busca);
+    const lista = todos.filter(e => (e.status || 'novo') === aba && (!q || M.norm([e.remetente, e.remetenteEmail, e.assunto, e.resumo, e.cliente].join(' ')).includes(q)))
+      .sort(aba === 'novo' ? E.ordem : (a, b) => (b.tratadoEm || b.recebidoEm || '').localeCompare(a.tratadoEm || a.recebidoEm || ''));
+    const ult = E.ultimaLeitura();
+    el.innerHTML = `
+      <div class="page-h"><div><h1>E-mails</h1><p class="muted">O Claude lê o seu Outlook e traz aqui só o que precisa de resposta sua, com resumo e sugestão de resposta.</p></div>
+        <span class="muted small">${ult ? 'Última leitura: ' + E.quando(ult) : 'Ainda sem leitura'}</span></div>
+      <div class="toolbar">
+        <div class="seg-tabs">${[['novo', 'Para responder'], ['respondido', 'Respondidos'], ['arquivado', 'Descartados']].map(([k, l]) => `<button class="${aba === k ? 'on' : ''}" data-aba="${k}">${l} <b>${cont[k] || 0}</b></button>`).join('')}</div>
+        <label class="search">${UI.icon('busca')}<input id="mBusca" placeholder="Buscar remetente, assunto ou cliente" value="${U.esc(busca)}"></label>
+      </div>
+      <section class="card">
+        ${lista.length ? `<ul class="mlist full">${lista.map(e => E.item(e, false)).join('')}</ul>`
+          : `<div class="empty"><b>${aba === 'novo' ? 'Nenhum e-mail pedindo resposta.' : 'Nada por aqui.'}</b><p>${aba === 'novo' ? 'Quando o Claude ler sua caixa, o que precisar de você aparece aqui. No chat, peça: “olha meus e-mails”.' : ''}</p></div>`}
+      </section>`;
+    el.querySelectorAll('[data-aba]').forEach(b => b.onclick = () => { aba = b.dataset.aba; V.render(el); });
+    const inp = el.querySelector('#mBusca');
+    inp.oninput = () => { busca = inp.value; const pos = inp.selectionStart; V.render(el); const n = el.querySelector('#mBusca'); n.focus(); n.setSelectionRange(pos, pos); };
+    E.ligar(el);
+  };
+
+  App.Emails = E;
+  App.Views = App.Views || {};
+  App.Views.emails = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
 /* js/app.js */
 /* Inicialização, navegação entre telas e botão "+ Nova atividade". */
 (function (App) {
   const { Store, UI, Demo } = App;
-  const ROTAS = ['painel', 'atividades', 'negocios', 'metas', 'faturamento', 'responsabilidades', 'dados'];
+  const ROTAS = ['painel', 'atividades', 'negocios', 'emails', 'metas', 'faturamento', 'responsabilidades', 'dados'];
   let atual = 'painel';
   const main = () => document.getElementById('view');
 
@@ -3413,7 +3628,10 @@ window.HORUS_CONFIG = {
     render();
     window.scrollTo({ top: 0 });
   };
+  /* Número de e-mails para responder no menu */
+  function badge() { const b = document.getElementById('mailBadge'); if (!b || !App.Emails) return; const n = App.Emails.novos().length; b.hidden = !n; b.textContent = n > 99 ? '99+' : n; }
   function render() {
+    badge();
     App.Views[atual].render(main());
     if (App.origem) main().insertAdjacentHTML('afterbegin', `<button class="back" data-voltar>${UI.icon('voltar')}Voltar para ${App.Views[App.origem].titulo}</button>`);
   }
