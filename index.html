@@ -851,18 +851,47 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 .gen-list b { font-family: var(--display); color: var(--accent); }
 .gen-list small { color: var(--muted); text-align: right; }
 .ind-grid { margin-bottom: 16px; }
-.tree, .tree ul { list-style: none; margin: 0; padding: 0; }
-.tree { display: grid; gap: 6px; }
-.tree ul { margin-left: 18px; padding-left: 14px; border-left: 2px solid var(--line); display: grid; gap: 4px; padding-top: 4px; }
-.tree summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-.tree summary::-webkit-details-marker { display: none; }
-.tree summary::before { content: "▸"; color: var(--faint); font-size: 12px; transition: transform .15s; }
-.tree details[open] > summary::before { transform: rotate(90deg); }
-.tree li > .tn { margin-left: 18px; }
-.tn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--sc) 35%, var(--line)); background: color-mix(in srgb, var(--sc) 7%, #fff); cursor: pointer; font-size: 13.5px; }
-.tn:hover { border-color: var(--sc); }
-.tn i { width: 8px; height: 8px; border-radius: 50%; background: var(--sc); }
-.tn em { font-style: normal; font-size: 11px; font-weight: 800; color: #fff; background: var(--accent); border-radius: 999px; padding: 0 6px; }
+button.kpi { font: inherit; text-align: left; cursor: pointer; }
+.kpi em { font-style: normal; }
+.kpi.k-nao { border-color: color-mix(in srgb, #C2611A 30%, var(--line)); }
+.kpi.k-nao b { color: #C2611A; } .kpi.k-nao em { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+.rk-tog { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 8px; padding: 8px; border: 1px dashed var(--line); border-radius: 10px; background: transparent; font: inherit; font-size: 13px; font-weight: 600; color: var(--accent); cursor: pointer; }
+.rk-tog:hover { background: var(--accent-soft); border-color: var(--accent); }
+.rk-tog i { font-style: normal; transition: transform .15s; } .rk-tog[aria-expanded="true"] i { transform: rotate(180deg); }
+.nr-list { display: grid; gap: 6px; }
+.nr-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 8px; align-items: center; text-align: left; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font: inherit; color: var(--ink); cursor: pointer; }
+.nr-row:hover { border-color: var(--accent); }
+.nr-row small { grid-column: 1; color: var(--muted); font-size: 12px; } .nr-row .sit { grid-column: 2; grid-row: 1 / span 2; }
+.nr-h { font-size: 13px; margin: 16px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+/* Árvore (organograma da esquerda para a direita) */
+.ot-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; scrollbar-width: thin; }
+.ot-tabs button { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font: inherit; font-size: 13px; color: var(--ink); cursor: pointer; }
+.ot-tabs button em { font-style: normal; font-size: 11px; font-weight: 800; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 0 7px; }
+.ot-tabs button[aria-selected="true"] { background: var(--grad-btn); color: #fff; border-color: transparent; }
+.ot-tabs button[aria-selected="true"] em { background: rgba(255,255,255,.25); color: #fff; }
+.ot-dica { display: none; margin: -4px 0 8px; font-size: 12px; color: var(--faint); }
+.ot-sum { margin: 0 0 8px; font-size: 13px; color: var(--muted); } .ot-sum b { color: var(--ink); }
+.ot-wrap { overflow-x: auto; padding: 8px 2px 12px; border-radius: 12px; background: var(--surface-2); }
+.ot, .ot ul { list-style: none; margin: 0; padding: 0; }
+.ot { display: inline-flex; flex-direction: column; padding: 4px 12px; min-width: 100%; box-sizing: border-box; }
+.ot li { display: flex; align-items: center; position: relative; padding: 4px 0 4px 26px; }
+.ot > li { padding-left: 0; }
+.ot ul { display: flex; flex-direction: column; position: relative; padding-left: 26px; }
+.ot ul::before { content: ""; position: absolute; left: 0; top: 50%; width: 26px; border-top: 2px solid var(--line-strong, #CFC8E2); }
+.ot ul > li::before { content: ""; position: absolute; left: 0; top: 50%; width: 26px; border-top: 2px solid var(--line-strong, #CFC8E2); }
+.ot ul > li::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 2px solid var(--line-strong, #CFC8E2); }
+.ot ul > li:first-child::after { top: 50%; }
+.ot ul > li:last-child::after { bottom: 50%; }
+.ot ul > li:only-child::after { display: none; }
+.otn { position: relative; flex: none; display: grid; gap: 1px; width: 152px; box-sizing: border-box; padding: 7px 30px 7px 11px; text-align: left; border: 1px solid color-mix(in srgb, var(--sc) 30%, var(--line)); border-left: 4px solid var(--sc); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); font: inherit; color: var(--ink); cursor: pointer; z-index: 1; }
+.otn:hover { border-color: var(--sc); transform: translateY(-1px); }
+.otn b { font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.otn small { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+.otn small i { width: 7px; height: 7px; border-radius: 50%; background: var(--sc); flex: none; }
+.otn em { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-style: normal; font-size: 11px; font-weight: 800; color: #fff; background: var(--accent); border-radius: 999px; min-width: 18px; padding: 0 5px; text-align: center; }
+.otn.raiz { background: var(--grad-btn); border: 0; color: #fff; padding-top: 10px; padding-bottom: 10px; }
+.otn.raiz small { color: rgba(255,255,255,.85); } .otn.raiz small i { background: #fff; } .otn.raiz em { background: #fff; color: var(--accent); }
+@media (max-width: 520px) { .otn { width: 126px; } .ot-dica { display: block; } .ot li { padding-left: 18px; } .ot > li { padding-left: 0; } .ot ul { padding-left: 18px; } .ot ul::before, .ot ul > li::before { width: 18px; } }
 .ind-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; padding: 16px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); margin-bottom: 14px; }
 @media (max-width: 760px) { .ind-card { grid-template-columns: minmax(0, 1fr); } }
 .ind-card small { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); font-weight: 700; }
@@ -4432,11 +4461,33 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   const PART = ['de', 'da', 'do', 'das', 'dos', 'e'];
   const nomeCurto = c => { const n = c.nome || ''; if (n.includes('(')) return n; const p = n.split(' ').filter(w => !PART.includes(w.toLowerCase())); return p.slice(0, 2).join(' '); };
   const rodaram = n => n + (n === 1 ? ' rodou' : ' rodaram');
-  function noArvore(c, vis) {
+  const corDe = c => { const s = Cli.situacao(c.situacao); return c.saiu ? '#8F88A6' : s ? s.cor : (Cli.ehCliente(c) ? '#23864F' : '#8F88A6'); };
+  const rotDe = c => { if (c.saiu) return 'Ex-cliente'; const s = Cli.situacao(c.situacao); return s ? s.label : Cli.ehCliente(c) ? 'Cliente' : 'Indicação'; };
+  /* Árvore da esquerda para a direita: cada pessoa é um cartão, os indicados ficam à direita ligados por linhas */
+  function noArvore(c, vis, raiz) {
     if (vis.has(c.id)) return ''; vis.add(c.id);
-    const f = Cli.filhosDe(c.id), s = Cli.situacao(c.situacao), cor = c.saiu ? '#8F88A6' : s ? s.cor : (Cli.ehCliente(c) ? '#23864F' : '#8F88A6');
-    const no = `<span class="tn" data-pes="${c.id}" style="--sc:${cor}"><i></i><b>${U.esc(nomeCurto(c))}</b>${f.length ? `<em>${f.length}</em>` : ''}</span>`;
-    return f.length ? `<li><details open><summary>${no}</summary><ul>${f.map(x => noArvore(x, vis)).join('')}</ul></details></li>` : `<li>${no}</li>`;
+    const f = Cli.filhosDe(c.id).filter(x => !vis.has(x.id));
+    const no = `<button class="otn${raiz ? ' raiz' : ''}" data-pes="${c.id}" style="--sc:${corDe(c)}"><b>${U.esc(nomeCurto(c))}</b><small><i></i>${raiz ? (Cli.ehCliente(c) ? 'Cliente' : 'Contato') : rotDe(c)}</small>${f.length ? `<em title="indicou ${f.length}">${f.length}</em>` : ''}</button>`;
+    return `<li>${no}${f.length ? `<ul>${f.map(x => noArvore(x, vis)).join('')}</ul>` : ''}</li>`;
+  }
+  function desenhaArvore(box, raiz) {
+    const rede = Cli.rede(raiz), conv = rede.filter(Cli.converteu).length, ger = rede.length ? Math.max(...rede.map(x => Cli.geracao(x) - Cli.geracao(raiz))) : 0;
+    box.innerHTML = `<p class="ot-sum"><b>${U.plural(rede.length, 'pessoa', 'pessoas')}</b> na rede de ${U.esc(nomeCurto(raiz))} · ${rodaram(conv)} · ${U.plural(ger, 'geração', 'gerações')}</p>
+      <span class="ot-dica">Arraste a árvore para o lado para ver todos ›</span><div class="ot-wrap"><ul class="ot">${noArvore(raiz, new Set(), true)}</ul></div>`;
+    box.querySelectorAll('[data-pes]').forEach(b => b.onclick = e => { e.preventDefault(); pessoa(b.dataset.pes); });
+  }
+  /* Lista de quem não rodou (para retomar o contato) */
+  function naoRodaram() {
+    const todos = Store.all('clientes'), nao = todos.filter(c => c.situacao === 'nao'), conv = todos.filter(c => c.situacao === 'conversa');
+    const linha = c => { const i = Cli.indicador(c); return `<button class="nr-row" data-pes2="${c.id}"><b>${U.esc(c.nome)}</b><small>${i ? 'Indicação de ' + U.esc(nomeCurto(i)) : 'Sem indicador'}</small>${sitChip(c)}</button>`; };
+    const ord = a => a.slice().sort((x, y) => x.nome.localeCompare(y.nome, 'pt-BR'));
+    UI.modal({
+      title: 'Não rodaram', size: 'sm',
+      body: `<p class="muted small" style="margin:0 0 10px">Pessoas para retomar o contato no futuro. Clique num nome para ver o resumo.</p>
+        ${nao.length ? `<div class="nr-list">${ord(nao).map(linha).join('')}</div>` : '<p class="muted">Ninguém nessa situação.</p>'}
+        ${conv.length ? `<h3 class="nr-h">Em conversa · ${conv.length}</h3><div class="nr-list">${ord(conv).map(linha).join('')}</div>` : ''}`,
+      onMount(el, api) { el.querySelectorAll('[data-pes2]').forEach(b => b.onclick = () => { api.close(); setTimeout(() => pessoa(b.dataset.pes2), 30); }); }
+    });
   }
 
   /* Resumo de uma pessoa na rede (cliente ou não) */
@@ -4467,30 +4518,36 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const raizes = todos.filter(c => !c.indicadoPor && !(c.geracao > 1) && Cli.filhosDe(c.id).length).sort((a, b) => Cli.rede(b).length - Cli.rede(a).length);
     const semInd = todos.filter(c => !c.indicadoPor && c.geracao > 1);
     const ger = {}; indicados.forEach(c => { const g = Cli.geracao(c); ger[g] = ger[g] || { n: 0, c: 0 }; ger[g].n++; if (Cli.converteu(c)) ger[g].c++; });
-    const max = rk.length ? rk[0].rede : 1;
+    const max = rk.length ? rk[0].rede : 1, TOP = 5;
+    const naoN = todos.filter(c => c.situacao === 'nao').length, convN = todos.filter(c => c.situacao === 'conversa').length;
     el.innerHTML = `${voltar('Clientes', {})}
       <div class="page-h"><div><h1>Rede de indicações</h1><p class="muted">Quem trouxe quem. O cliente vale pelo patrimônio e também pelo relacionamento que ele abre.</p></div>
         <div class="page-act"><button class="btn primary" id="indNova">${UI.icon('mais')}Registrar indicação</button></div></div>
       <div class="kpis k4">
         <div class="kpi"><span>Pessoas indicadas</span><b>${indicados.length}</b></div>
         <div class="kpi"><span>Rodaram</span><b>${conv.length}</b><em>${indicados.length ? Math.round(conv.length / indicados.length * 100) + '% de conversão' : ''}</em></div>
-        <div class="kpi"><span>Pessoas que indicam</span><b>${rk.length}</b></div>
+        <button class="kpi k-nao" id="indNao"><span>Não rodaram</span><b>${naoN}</b><em>${convN ? convN + ' em conversa · ' : ''}ver nomes ›</em></button>
         <div class="kpi k-brand"><span>Maior rede</span><b>${rk.length ? U.esc(nomeCurto(rk[0].c)) : '—'}</b><em>${rk.length ? U.plural(rk[0].rede, 'pessoa', 'pessoas') + ' na rede' : ''}</em></div></div>
       <div class="grid-2 ind-grid">
         <section class="card"><div class="card-h"><h2>Quem mais traz relacionamento</h2></div>
-          ${rk.length ? `<div class="rk-head"><span>Quem indicou</span><span>Diretas</span><span>Rede</span><span>Rodaram</span></div><ul class="rk-list">${rk.map((r, i) => `<li data-pes="${r.c.id}"><span class="rk-pos">${i + 1}</span><div class="rk-n"><b>${U.esc(nomeCurto(r.c))}</b><div class="pbar"><i style="width:${r.rede / max * 100}%"></i></div><small>${r.patrimonio ? 'Rede trouxe ' + U.brlShort(r.patrimonio) + ' · ' : ''}${r.geracoes > 1 ? r.geracoes + ' gerações' : '1 geração'}</small></div><span>${r.diretas}<small>${rodaram(r.diretasConv)}</small></span><span><b>${r.rede}</b></span><span>${r.redeConv}<small>${r.rede ? Math.round(r.redeConv / r.rede * 100) + '%' : ''}</small></span></li>`).join('')}</ul>`
+          ${rk.length ? `<div class="rk-head"><span>Quem indicou</span><span>Diretas</span><span>Rede</span><span>Rodaram</span></div><ul class="rk-list">${rk.map((r, i) => `<li${i >= TOP ? ' class="rk-mais" hidden' : ''} data-pes="${r.c.id}"><span class="rk-pos">${i + 1}</span><div class="rk-n"><b>${U.esc(nomeCurto(r.c))}</b><div class="pbar"><i style="width:${r.rede / max * 100}%"></i></div><small>${r.patrimonio ? 'Rede trouxe ' + U.brlShort(r.patrimonio) + ' · ' : ''}${r.geracoes > 1 ? r.geracoes + ' gerações' : '1 geração'}</small></div><span>${r.diretas}<small>${rodaram(r.diretasConv)}</small></span><span><b>${r.rede}</b></span><span>${r.redeConv}<small>${r.rede ? Math.round(r.redeConv / r.rede * 100) + '%' : ''}</small></span></li>`).join('')}</ul>${rk.length > TOP ? `<button class="rk-tog" id="rkTog" aria-expanded="false"><span>Ver mais ${rk.length - TOP}</span><i>▾</i></button>` : ''}`
             : '<div class="empty sm"><b>Nenhuma indicação registrada ainda.</b><p>Use “Registrar indicação” ou conte no chat: “a Ana me indicou a Carla, rodou”.</p></div>'}</section>
         <div class="stack">
           <section class="card"><div class="card-h"><h2>Por geração</h2></div>
             ${Object.keys(ger).length ? `<div class="gen-list">${Object.keys(ger).sort((a, b) => a - b).map(g => `<div><b>${g}ª</b><span>${U.plural(ger[g].n, 'pessoa', 'pessoas')}</span><div class="pbar"><i style="width:${ger[g].c / ger[g].n * 100}%;background:#23864F"></i></div><small>${rodaram(ger[g].c)}</small></div>`).join('')}</div>` : '<p class="muted small">Sem dados ainda.</p>'}
             <div class="sit-leg">${Cli.SITUACOES.map(s => `<span class="sit" style="--sc:${s.cor}">${s.label}</span>`).join('')}</div></section>
         </div></div>
-      <section class="card"><div class="card-h"><h2>Árvore de indicações</h2><span class="muted small">clique num nome para ver os detalhes</span></div>
-        ${raizes.length ? `<ul class="tree">${(() => { const vis = new Set(); return raizes.map(r => noArvore(r, vis)).join(''); })()}</ul>` : '<p class="muted small">A árvore aparece quando houver indicações.</p>'}
+      <section class="card"><div class="card-h"><h2>Árvore de indicações</h2><span class="muted small">escolha a rede · clique num nome para ver os detalhes</span></div>
+        ${raizes.length ? `<div class="ot-tabs" role="tablist">${raizes.map((r, i) => `<button role="tab" data-raiz="${r.id}" aria-selected="${i === 0}"><b>${U.esc(nomeCurto(r))}</b><em>${Cli.rede(r).length}</em></button>`).join('')}</div><div id="otBox"></div>
+          <div class="sit-leg">${[['#23864F', 'Rodou / cliente'], ['#7FA83A', 'Rodou em parte'], ['#6E3FF0', 'Em conversa'], ['#C2611A', 'Não rodou'], ['#8F88A6', 'Ex-cliente / sem situação']].map(([c, l]) => `<span class="sit" style="--sc:${c}">${l}</span>`).join('')}<span class="muted small">O número no cartão é quantas pessoas ela indicou.</span></div>` : '<p class="muted small">A árvore aparece quando houver indicações.</p>'}
         ${semInd.length ? `<p class="muted small" style="margin-top:12px">Indicador não informado: ${semInd.map(c => `<a href="#" data-pes="${c.id}">${U.esc(nomeCurto(c))}</a>`).join(', ')}</p>` : ''}</section>`;
     el.querySelector('#indNova').onclick = () => App.Forms.indicacao();
     el.querySelectorAll('[data-pes]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); pessoa(b.dataset.pes); }));
-    el.querySelectorAll('.tree summary').forEach(sm => sm.addEventListener('click', e => { if (e.target.closest('.tn')) e.preventDefault(); }));
+    el.querySelector('#indNao').onclick = naoRodaram;
+    const tog = el.querySelector('#rkTog'); if (tog) tog.onclick = () => { const ab = tog.getAttribute('aria-expanded') !== 'true'; tog.setAttribute('aria-expanded', ab); el.querySelectorAll('.rk-mais').forEach(li => li.hidden = !ab); tog.querySelector('span').textContent = ab ? 'Mostrar só os 5 primeiros' : 'Ver mais ' + (rk.length - TOP); };
+    const box = el.querySelector('#otBox');
+    if (box) { const abre = id => { el.querySelectorAll('[data-raiz]').forEach(b => b.setAttribute('aria-selected', b.dataset.raiz === id)); desenhaArvore(box, Cli.cliente(id)); };
+      el.querySelectorAll('[data-raiz]').forEach(b => b.onclick = () => abre(b.dataset.raiz)); abre(raizes[0].id); }
     ligarComum(el);
   }
 
