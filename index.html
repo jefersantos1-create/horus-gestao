@@ -1636,11 +1636,19 @@ window.HORUS_CONFIG = {
       { k: 'seguradora', l: 'Seguradora', t: 'texto', lista: true }, { k: 'apolice', l: 'Apólice', t: 'texto' },
       { k: 'capital', l: 'Capital segurado', t: 'brl', lista: true }, { k: 'premio', l: 'Prêmio mensal', t: 'brl', lista: true },
       { k: 'inicio', l: 'Início', t: 'data' }, { k: 'renovacao', l: 'Renovação', t: 'data', lista: true }] },
-    { id: 'rc', nome: 'Seguro RC', sub: 'Responsabilidade civil', cor: '#A0466B', principal: 'cobertura', venc: 'fimVigencia', campos: [
+    { id: 're', nome: 'Ramos elementares', sub: 'RC, plano de saúde, vida em grupo', cor: '#A0466B', venc: 'fimVigencia', campos: [
+      { k: 'tipo', l: 'Tipo', t: 'opcoes', op: ['RC pessoal', 'RC profissional', 'Plano de saúde', 'Seguro de vida em grupo'], lista: true },
+      { k: 'seguradora', l: 'Seguradora / operadora', t: 'texto', lista: true }, { k: 'apolice', l: 'Apólice / contrato', t: 'texto' },
+      { k: 'cobertura', l: 'Cobertura / capital', t: 'brl', lista: true }, { k: 'vidas', l: 'Vidas', t: 'num', lista: true },
+      { k: 'premio', l: 'Prêmio / mensalidade', t: 'brl', lista: true }, { k: 'periodicidade', l: 'Pagamento', t: 'opcoes', op: ['Mensal', 'Anual'] },
+      { k: 'inicio', l: 'Início da vigência', t: 'data' }, { k: 'fimVigencia', l: 'Fim da vigência / renovação', t: 'data', lista: true },
+      { k: 'reajuste', l: 'Mês de reajuste', t: 'mes' }] },
+    /* rc e saude: formatos antigos, ficaram dentro de Ramos elementares (só para exibir registros antigos) */
+    { id: 'rc', oculto: true, nome: 'Seguro RC', sub: 'Responsabilidade civil', cor: '#A0466B', principal: 'cobertura', venc: 'fimVigencia', campos: [
       { k: 'seguradora', l: 'Seguradora', t: 'texto', lista: true }, { k: 'apolice', l: 'Apólice', t: 'texto' },
       { k: 'cobertura', l: 'Cobertura', t: 'brl', lista: true }, { k: 'premio', l: 'Prêmio anual', t: 'brl', lista: true },
       { k: 'inicio', l: 'Início da vigência', t: 'data' }, { k: 'fimVigencia', l: 'Fim da vigência', t: 'data', lista: true }] },
-    { id: 'saude', nome: 'Plano de saúde', cor: '#2F855A', principal: 'mensalidade', venc: 'reajuste', campos: [
+    { id: 'saude', oculto: true, nome: 'Plano de saúde', cor: '#2F855A', principal: 'mensalidade', venc: 'reajuste', campos: [
       { k: 'operadora', l: 'Operadora', t: 'texto', lista: true }, { k: 'plano', l: 'Plano', t: 'texto', lista: true },
       { k: 'vidas', l: 'Vidas', t: 'num', lista: true }, { k: 'mensalidade', l: 'Mensalidade', t: 'brl', lista: true },
       { k: 'inicio', l: 'Início', t: 'data' }, { k: 'reajuste', l: 'Mês de reajuste', t: 'mes', lista: true }] },
@@ -1695,11 +1703,15 @@ window.HORUS_CONFIG = {
   /* Próxima data relevante do contrato (renovação, fim de vigência, reajuste) */
   C.proxData = ct => {
     const p = C.produto(ct.produto); if (!p.venc || (ct.status || 'ativo') !== 'ativo') return null;
-    const v = ct[p.venc]; if (!v) return null;
-    if (p.venc === 'reajuste') { const hoje = new Date(), m = +v - 1; let y = hoje.getFullYear(); if (m < hoje.getMonth()) y++; return U.iso(new Date(y, m, 1)); }
+    let venc = p.venc; if (ct.produto === 're' && !ct.fimVigencia && ct.reajuste) venc = 'reajuste';
+    const v = ct[venc]; if (!v) return null;
+    if (venc === 'reajuste') { const hoje = new Date(), m = +v - 1; let y = hoje.getFullYear(); if (m < hoje.getMonth()) y++; return U.iso(new Date(y, m, 1)); }
     return v;
   };
-  C.rotuloVenc = ct => ({ renovacao: 'Renovação do seguro de vida', fimVigencia: 'Fim da vigência do seguro RC', reajuste: 'Reajuste do plano de saúde' }[C.produto(ct.produto).venc] || 'Vencimento');
+  C.rotuloVenc = ct => {
+    if (ct.produto === 're') return (ct.tipo || 'Ramos elementares') + (!ct.fimVigencia && ct.reajuste ? ' · reajuste' : ' · renovação');
+    return ({ renovacao: 'Renovação do seguro de vida', fimVigencia: 'Fim da vigência do seguro RC', reajuste: 'Reajuste do plano de saúde' }[C.produto(ct.produto).venc] || 'Vencimento');
+  };
   C.vencimentos = (dias = 60) => {
     const hoje = U.today(), lim = U.addDays(hoje, dias), out = [];
     Store.all('contratos').forEach(ct => {
@@ -1775,6 +1787,8 @@ window.HORUS_CONFIG = {
     const linhas = [];
     if (pid === 'consorcio') linhas.push(U.plural(cts.length, 'cota', 'cotas'), `${cts.filter(c => c.contemplado).length} contemplada(s)`);
     if (pid === 'vida') linhas.push(U.plural(cts.length, 'apólice', 'apólices'), 'Prêmio ' + U.brl(cts.reduce((s, c) => s + (+c.premio || 0), 0)) + '/mês');
+    if (pid === 're') { const t = {}; cts.forEach(c => { const k = c.tipo || 'Outros'; t[k] = (t[k] || 0) + 1; }); linhas.push(...(Object.keys(t).length ? Object.entries(t).map(([k, n]) => n + ' ' + k) : ['RC, saúde e vida em grupo']));
+      const mes = cts.reduce((a, c) => a + (+c.premio || 0) / (c.periodicidade === 'Anual' ? 12 : 1), 0); if (mes) linhas.push('≈ ' + U.brl(mes) + '/mês em prêmios'); }
     if (pid === 'rc') linhas.push(U.plural(cts.length, 'apólice', 'apólices'));
     if (pid === 'saude') linhas.push(U.plural(cts.reduce((s, c) => s + (+c.vidas || 0), 0), 'vida', 'vidas'));
     if (pid === 'eqseed') linhas.push(U.plural(cts.length, 'investimento', 'investimentos'));
@@ -3114,7 +3128,7 @@ window.HORUS_CONFIG = {
     const ct = id ? Store.get('contratos', id) : null;
     const v = ct || { status: 'ativo', ...preset };
     const fixoCli = ct ? Cli.cliente(ct.clienteId) : preset.clienteId ? Cli.cliente(preset.clienteId) : null;
-    const prods = Cli.PRODUTOS.filter(p => !p.especial);
+    const prods = Cli.PRODUTOS.filter(p => !p.especial && !p.oculto);
     let pid = v.produto && v.produto !== 'mb' ? v.produto : (preset.produto || 'consorcio');
     UI.modal({
       title: ct ? 'Editar produto do cliente' : 'Adicionar produto', size: 'md',
@@ -4108,7 +4122,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.innerHTML = `
       <div class="page-h"><div><h1>Clientes</h1><p class="muted">Seus clientes por produto. Clique num card para ver a lista, ou num cliente para ver tudo o que ele tem com você.</p></div>
         <div class="page-act"><button class="btn ghost" data-novo-cli>${UI.icon('mais')}Novo cliente</button><button class="btn primary" data-novo-ct>${UI.icon('mais')}Adicionar produto</button></div></div>
-      <div class="pcards">${Cli.PRODUTOS.map(p => { const r = Cli.resumo(p.id);
+      <div class="pcards">${Cli.PRODUTOS.filter(p => !p.oculto || Cli.contratos({ produto: p.id, todos: true }).length).map(p => { const r = Cli.resumo(p.id);
         return `<button class="pcard" data-prod="${p.id}" style="--pc:${p.cor}">
           <span class="pc-top"><b>${U.esc(p.nome)}</b>${r.avisos ? `<span class="pc-av">${r.avisos} aviso${r.avisos > 1 ? 's' : ''}</span>` : ''}</span>
           ${p.sub ? `<small class="pc-sub">${U.esc(p.sub)}</small>` : ''}
@@ -4237,7 +4251,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   function oportunidades(c, cts, m) {
     const tem = new Set(cts.filter(x => (x.status || 'ativo') === 'ativo').map(x => x.produto)); if (m) tem.add('mb');
     if (!tem.size) return '';
-    const falta = ['vida', 'consorcio', 'saude', 'ita'].filter(p => !tem.has(p)).map(p => Cli.produto(p).nome);
+    const falta = ['vida', 'consorcio', 're', 'ita'].filter(p => !tem.has(p)).map(p => Cli.produto(p).nome);
     return falta.length ? `${UI.icon('seta')}Ainda não tem: ${falta.map(U.esc).join(', ')}.` : '';
   }
 
