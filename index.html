@@ -597,44 +597,44 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 .mail-card .card-h h2 .ic { width: 18px; height: 18px; color: var(--accent); }
 .mail-card { position: relative; overflow: hidden; }
 .mail-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--grad); }
-.mlist { list-style: none; margin: 0; padding: 0; display: grid; }
-.mrow { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px 4px; border-top: 1px solid var(--line); position: relative; }
-.mlist .mrow:first-child { border-top: 0; }
-.mrow::before { content: ""; position: absolute; left: -12px; top: 12px; bottom: 12px; width: 3px; border-radius: 3px; background: transparent; }
-.mrow.mp-alta::before { background: var(--late, #C2412D); }
-.mav { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); font-family: var(--display); }
-.mav.lg { width: 44px; height: 44px; font-size: 15px; }
-.mmain { min-width: 0; cursor: pointer; display: grid; gap: 2px; }
-.mtop { display: flex; align-items: baseline; gap: 8px; }
-.mtop b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mwhen { margin-left: auto; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
-.msub { font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mresumo { margin: 0; font-size: 12.5px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.mwhy { margin: 2px 0 0; font-size: 12.5px; color: var(--accent); display: flex; gap: 4px; align-items: flex-start; }
-.mwhy .ic { width: 14px; height: 14px; flex: none; margin-top: 2px; }
-.mmain:hover .msub { color: var(--accent); }
-.mact { display: flex; gap: 2px; align-items: center; }
-.mact .icon-btn { width: 32px; height: 32px; }
-.mrow.is-done .mmain { opacity: .65; }
-.mlist.full .mrow { padding: 14px 6px; }
-.mlist.full .mresumo { -webkit-line-clamp: 3; }
-.mfoot { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--line); }
-.mdet { display: grid; gap: 14px; }
-.mdet-h { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 12px; align-items: center; }
-.mdet-h b { display: block; font-size: 15px; }
-.mdet-h small { color: var(--muted); font-size: 12.5px; word-break: break-all; }
-.mdet-m { display: grid; justify-items: end; gap: 4px; }
-.mdet-m small { color: var(--faint); font-size: 12px; white-space: nowrap; }
+.em-mlist { list-style: none; margin: 0; padding: 0; display: grid; }
+.em-mrow { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px 4px; border-top: 1px solid var(--line); position: relative; }
+.em-mlist .em-mrow:first-child { border-top: 0; }
+.em-mrow::before { content: ""; position: absolute; left: -12px; top: 12px; bottom: 12px; width: 3px; border-radius: 3px; background: transparent; }
+.em-mrow.em-mp-alta::before { background: var(--late, #C2412D); }
+.em-mav { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); font-family: var(--display); }
+.em-mav.lg { width: 44px; height: 44px; font-size: 15px; }
+.em-mmain { min-width: 0; cursor: pointer; display: grid; gap: 2px; }
+.em-mtop { display: flex; align-items: baseline; gap: 8px; }
+.em-mtop b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.em-mwhen { margin-left: auto; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+.em-msub { font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.em-mresumo { margin: 0; font-size: 12.5px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.em-mwhy { margin: 2px 0 0; font-size: 12.5px; color: var(--accent); display: flex; gap: 4px; align-items: flex-start; }
+.em-mwhy .ic { width: 14px; height: 14px; flex: none; margin-top: 2px; }
+.em-mmain:hover .em-msub { color: var(--accent); }
+.em-mact { display: flex; gap: 2px; align-items: center; }
+.em-mact .icon-btn { width: 32px; height: 32px; }
+.em-mrow.is-done .em-mmain { opacity: .65; }
+.em-mlist.full .em-mrow { padding: 14px 6px; }
+.em-mlist.full .em-mresumo { -webkit-line-clamp: 3; }
+.em-mfoot { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--line); }
+.em-mdet { display: grid; gap: 14px; }
+.em-mdet-h { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.em-mdet-h b { display: block; font-size: 15px; }
+.em-mdet-h small { color: var(--muted); font-size: 12.5px; word-break: break-all; }
+.em-mdet-m { display: grid; justify-items: end; gap: 4px; }
+.em-mdet-m small { color: var(--faint); font-size: 12px; white-space: nowrap; }
 .pill { font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
 .pill.p-alta { color: #C2412D; background: #FCEDEA; } .pill.p-media { color: var(--accent); background: var(--accent-soft); } .pill.p-baixa { color: var(--muted); }
-.mbox { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
-.mbox span { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
-.mbox p { margin: 4px 0 0; font-size: 14px; line-height: 1.5; white-space: pre-line; }
-.mbox.why { background: var(--accent-soft); } .mbox.why span { color: var(--accent); }
-.mdet textarea { font: inherit; font-size: 14px; line-height: 1.5; }
-.mdet .f > span em { font-style: normal; font-weight: 500; margin-left: 6px; font-size: 12px; }
-.mdet-b { display: flex; gap: 8px; flex-wrap: wrap; }
-.mdet-b .btn .ic { width: 16px; height: 16px; }
+.em-mbox { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+.em-mbox span { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
+.em-mbox p { margin: 4px 0 0; font-size: 14px; line-height: 1.5; white-space: pre-line; }
+.em-mbox.why { background: var(--accent-soft); } .em-mbox.why span { color: var(--accent); }
+.em-mdet textarea { font: inherit; font-size: 14px; line-height: 1.5; }
+.em-mdet .f > span em { font-style: normal; font-weight: 500; margin-left: 6px; font-size: 12px; }
+.em-mdet-b { display: flex; gap: 8px; flex-wrap: wrap; }
+.em-mdet-b .btn .ic { width: 16px; height: 16px; }
 .seg-tabs { display: inline-flex; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 11px; padding: 3px; flex-wrap: wrap; }
 .seg-tabs button { border: 0; background: none; padding: 7px 12px; border-radius: 8px; font-weight: 600; font-size: 13.5px; color: var(--muted); cursor: pointer; }
 .seg-tabs button b { margin-left: 4px; font-size: 12px; color: var(--faint); }
@@ -645,28 +645,28 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
   .nav a { font-size: 10px; }
   .nbadge { position: absolute; top: 0; right: calc(50% - 22px); min-width: 16px; height: 16px; font-size: 9.5px; padding: 0 4px; margin: 0; }
 }
-@media (max-width: 520px) { .mdet-h { grid-template-columns: 44px minmax(0, 1fr); } .mdet-m { grid-column: 1 / -1; justify-items: start; grid-auto-flow: column; justify-content: start; align-items: center; } }
+@media (max-width: 520px) { .em-mdet-h { grid-template-columns: 44px minmax(0, 1fr); } .em-mdet-m { grid-column: 1 / -1; justify-items: start; grid-auto-flow: column; justify-content: start; align-items: center; } }
 
 /* ---------- E-mails: convites e fila do Claude ---------- */
-.mtags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
-.mtags:empty { display: none; }
-.mconv, .mfila, .mconf, .mdraft { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-.mconv { color: var(--accent); background: var(--accent-soft); }
-.mconf { color: #9A5B00; background: #FFF4DE; }
-.mdraft { color: var(--muted); background: var(--surface-2); }
-.mfila { color: #6E3FF0; background: #F1ECFF; border: 1px dashed #B9A4F5; }
-.mfila.ok { color: #2F855A; background: #E8F5EE; border-color: transparent; }
-.mfila.erro { color: #C2412D; background: #FCEDEA; border-color: transparent; white-space: normal; }
-.mconv .ic, .mfila .ic { width: 13px; height: 13px; flex: none; }
-.mbtn { border: 1px solid var(--accent); background: var(--surface); color: var(--accent); font-weight: 700; font-size: 12.5px; border-radius: 8px; padding: 5px 10px; cursor: pointer; }
-.mbtn:hover { background: var(--accent); color: #fff; }
-.mfila-box { display: grid; gap: 4px; }
-.mfila-box small { color: var(--muted); font-size: 12px; }
-.mbox.ev { background: #F4F0FF; border: 1px solid #DCD0FF; }
-.mbox.ev span { color: var(--accent); }
-.mconf-t { color: #9A5B00 !important; font-weight: 600; display: flex; gap: 6px; align-items: center; }
-.mconf-t .ic { width: 15px; height: 15px; }
-.mok-t { color: #2F855A !important; font-size: 13px !important; }
+.em-mtags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.em-mtags:empty { display: none; }
+.em-mconv, .em-mfila, .em-mconf, .em-mdraft { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.em-mconv { color: var(--accent); background: var(--accent-soft); }
+.em-mconf { color: #9A5B00; background: #FFF4DE; }
+.em-mdraft { color: var(--muted); background: var(--surface-2); }
+.em-mfila { color: #6E3FF0; background: #F1ECFF; border: 1px dashed #B9A4F5; }
+.em-mfila.ok { color: #2F855A; background: #E8F5EE; border-color: transparent; }
+.em-mfila.erro { color: #C2412D; background: #FCEDEA; border-color: transparent; white-space: normal; }
+.em-mconv .ic, .em-mfila .ic { width: 13px; height: 13px; flex: none; }
+.em-mbtn { border: 1px solid var(--accent); background: var(--surface); color: var(--accent); font-weight: 700; font-size: 12.5px; border-radius: 8px; padding: 5px 10px; cursor: pointer; }
+.em-mbtn:hover { background: var(--accent); color: #fff; }
+.em-mfila-box { display: grid; gap: 4px; }
+.em-mfila-box small { color: var(--muted); font-size: 12px; }
+.em-mbox.ev { background: #F4F0FF; border: 1px solid #DCD0FF; }
+.em-mbox.ev span { color: var(--accent); }
+.em-mconf-t { color: #9A5B00 !important; font-weight: 600; display: flex; gap: 6px; align-items: center; }
+.em-mconf-t .ic { width: 15px; height: 15px; }
+.em-mok-t { color: #2F855A !important; font-size: 13px !important; }
 
 </style>
 
@@ -3512,12 +3512,12 @@ window.HORUS_CONFIG = {
   E.cancelar = id => Store.update('emails', id, { acao: null });
   const fila = e => {
     const a = e.acao; if (!a) return '';
-    if (a.status === 'pendente') return `<span class="mfila">${UI.icon('adiar')}Na fila do Claude: ${ACAO[a.tipo] || a.tipo}</span>`;
-    if (a.status === 'erro') return `<span class="mfila erro" title="${U.esc(a.erro || '')}">Não deu para ${ACAO[a.tipo] || a.tipo}${a.erro ? ': ' + U.esc(a.erro) : ''}</span>`;
-    if (a.status === 'feito') return `<span class="mfila ok">${UI.icon('check')}${ACAO_FEITA[a.tipo] || 'Feito'} pelo Claude</span>`;
+    if (a.status === 'pendente') return `<span class="em-mfila">${UI.icon('adiar')}Na fila do Claude: ${ACAO[a.tipo] || a.tipo}</span>`;
+    if (a.status === 'erro') return `<span class="em-mfila erro" title="${U.esc(a.erro || '')}">Não deu para ${ACAO[a.tipo] || a.tipo}${a.erro ? ': ' + U.esc(a.erro) : ''}</span>`;
+    if (a.status === 'feito') return `<span class="em-mfila ok">${UI.icon('check')}${ACAO_FEITA[a.tipo] || 'Feito'} pelo Claude</span>`;
     return '';
   };
-  const convite = e => e.tipo === 'convite' ? `<span class="mconv">${UI.icon('calendario')}Convite${e.evento ? ' · ' + U.esc(E.quandoEvento(e.evento)) : ''}</span>${e.conflito ? `<span class="mconf" title="${U.esc(e.conflito)}">Conflita: ${U.esc(e.conflito)}</span>` : ''}` : '';
+  const convite = e => e.tipo === 'convite' ? `<span class="em-mconv">${UI.icon('calendario')}Convite${e.evento ? ' · ' + U.esc(E.quandoEvento(e.evento)) : ''}</span>${e.conflito ? `<span class="em-mconf" title="${U.esc(e.conflito)}">Conflita: ${U.esc(e.conflito)}</span>` : ''}` : '';
   E.ordem = (a, b) => (PESO[b.prioridade] || 2) - (PESO[a.prioridade] || 2) || (b.recebidoEm || '').localeCompare(a.recebidoEm || '');
   E.ultimaLeitura = () => E.todos().reduce((m, e) => (e.triadoEm || '') > m ? e.triadoEm : m, '');
   /* Só abre links https (Outlook na web) */
@@ -3548,26 +3548,26 @@ window.HORUS_CONFIG = {
   };
 
   /* Linha de e-mail (compacta no Painel, completa na tela E-mails) */
-  E.item = (e, compacto) => `<li class="mrow mp-${e.prioridade || 'media'}${(e.status || 'novo') !== 'novo' ? ' is-done' : ''}" data-eid="${e.id}">
-      <span class="mav" aria-hidden="true">${U.esc(ini(e.remetente))}</span>
-      <div class="mmain" data-ea="abrir">
-        <div class="mtop"><b>${U.esc(e.remetente || e.remetenteEmail || 'Remetente')}</b><span class="mwhen">${E.quando(e.recebidoEm)}</span></div>
-        <div class="msub">${U.esc(e.assunto || '(sem assunto)')}</div>
-        <p class="mresumo">${U.esc(e.resumo || '')}</p>
-        ${!compacto && e.motivo ? `<p class="mwhy">${UI.icon('seta')}${U.esc(e.motivo)}</p>` : ''}
-        <div class="mtags">${convite(e)}${fila(e)}${e.rascunhoLink && !E.pendente(e) && (e.status || 'novo') === 'novo' ? '<span class="mdraft">rascunho pronto no Outlook</span>' : ''}${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<span class="lig">virou atividade</span>` : ''}</div>
+  E.item = (e, compacto) => `<li class="em-mrow em-mp-${e.prioridade || 'media'}${(e.status || 'novo') !== 'novo' ? ' is-done' : ''}" data-eid="${e.id}">
+      <span class="em-mav" aria-hidden="true">${U.esc(ini(e.remetente))}</span>
+      <div class="em-mmain" data-ea="abrir">
+        <div class="em-mtop"><b>${U.esc(e.remetente || e.remetenteEmail || 'Remetente')}</b><span class="em-mwhen">${E.quando(e.recebidoEm)}</span></div>
+        <div class="em-msub">${U.esc(e.assunto || '(sem assunto)')}</div>
+        <p class="em-mresumo">${U.esc(e.resumo || '')}</p>
+        ${!compacto && e.motivo ? `<p class="em-mwhy">${UI.icon('seta')}${U.esc(e.motivo)}</p>` : ''}
+        <div class="em-mtags">${convite(e)}${fila(e)}${e.rascunhoLink && !E.pendente(e) && (e.status || 'novo') === 'novo' ? '<span class="em-mdraft">rascunho pronto no Outlook</span>' : ''}${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<span class="lig">virou atividade</span>` : ''}</div>
       </div>
-      <div class="mact">
+      <div class="em-mact">
         <a class="icon-btn" href="${U.esc(E.linkAbrir(e))}" target="_blank" rel="noopener" title="Abrir no Outlook" aria-label="Abrir no Outlook">${UI.icon('externo')}</a>
         ${(e.status || 'novo') === 'novo'
           ? (E.pendente(e) ? `<button class="icon-btn" data-ea="cancelar" title="Cancelar pedido" aria-label="Cancelar pedido">${UI.icon('x')}</button>`
-            : e.tipo === 'convite' && e.eventoId ? `<button class="mbtn" data-ea="aceitar" title="Pedir ao Claude para aceitar">Aceitar</button>`
+            : e.tipo === 'convite' && e.eventoId ? `<button class="em-mbtn" data-ea="aceitar" title="Pedir ao Claude para aceitar">Aceitar</button>`
             : `<button class="icon-btn" data-ea="ok" title="Já respondi" aria-label="Já respondi">${UI.icon('check')}</button>`)
             + (compacto ? '' : `<button class="icon-btn" data-ea="arq" title="Não precisa de resposta" aria-label="Não precisa de resposta">${UI.icon('arquivo')}</button>`)
           : `<button class="icon-btn" data-ea="volta" title="Voltar para responder" aria-label="Voltar para responder">${UI.icon('voltar')}</button>`}
       </div></li>`;
 
-  E.ligar = root => root.querySelectorAll('.mrow').forEach(li => li.addEventListener('click', ev => {
+  E.ligar = root => root.querySelectorAll('.em-mrow').forEach(li => li.addEventListener('click', ev => {
     const b = ev.target.closest('[data-ea]'); if (!b) return; const id = li.dataset.eid;
     if (b.dataset.ea === 'abrir') E.detalhe(id);
     if (b.dataset.ea === 'ok') E.marcar(id, 'respondido', 'Marcado como respondido');
@@ -3582,9 +3582,9 @@ window.HORUS_CONFIG = {
     const ns = E.novos(), ult = E.ultimaLeitura(), falta = E.paraResponder().length;
     return `<section class="card mail-card" aria-label="E-mails para responder">
       <div class="card-h"><h2>${UI.icon('email')}E-mails para responder</h2>${falta ? `<span class="count">${falta}</span>` : ''}</div>
-      ${ns.length ? `<ul class="mlist">${ns.slice(0, 5).map(e => E.item(e, true)).join('')}</ul>`
+      ${ns.length ? `<ul class="em-mlist">${ns.slice(0, 5).map(e => E.item(e, true)).join('')}</ul>`
         : `<div class="empty sm"><b>Caixa em dia.</b><p>Nenhum e-mail pedindo resposta${ult ? '' : ' ainda'}. No chat, peça: “olha meus e-mails”.</p></div>`}
-      <div class="mfoot"><span class="muted small">${ult ? 'Lidos pelo Claude ' + E.quando(ult) : 'Aguardando a primeira leitura'}</span><a class="link" href="#emails" data-go="emails">${ns.length > 5 ? 'Ver todos (' + ns.length + ')' : 'Abrir e-mails'}</a></div>
+      <div class="em-mfoot"><span class="muted small">${ult ? 'Lidos pelo Claude ' + E.quando(ult) : 'Aguardando a primeira leitura'}</span><a class="link" href="#emails" data-go="emails">${ns.length > 5 ? 'Ver todos (' + ns.length + ')' : 'Abrir e-mails'}</a></div>
     </section>`;
   };
 
@@ -3595,18 +3595,18 @@ window.HORUS_CONFIG = {
     const ev = e.evento || {};
     UI.modal({
       title: e.assunto || '(sem assunto)', size: 'md',
-      body: `<div class="mdet">
-        <div class="mdet-h"><span class="mav lg">${U.esc(ini(e.remetente))}</span><div><b>${U.esc(e.remetente || '')}</b>${e.remetenteEmail ? `<small>${U.esc(e.remetenteEmail)}</small>` : ''}</div>
-          <div class="mdet-m"><span class="pill p-${e.prioridade || 'media'}">${PRIO[e.prioridade] || 'Média'}</span><small>${E.quando(e.recebidoEm)}</small></div></div>
-        ${e.resumo ? `<div class="mbox"><span>Resumo</span><p>${U.esc(e.resumo)}</p></div>` : ''}
-        ${e.motivo ? `<div class="mbox why"><span>Por que precisa de você</span><p>${U.esc(e.motivo)}</p></div>` : ''}
-        ${fila(e) ? `<div class="mfila-box">${fila(e)}${pend ? '<small>O Claude executa na próxima leitura (até 1 h). Com pressa? Diga “executa” num chat.</small>' : ''}</div>` : ''}
-        ${conv ? `<div class="mbox ev"><span>Convite de reunião</span>
+      body: `<div class="em-mdet">
+        <div class="em-mdet-h"><span class="em-mav lg">${U.esc(ini(e.remetente))}</span><div><b>${U.esc(e.remetente || '')}</b>${e.remetenteEmail ? `<small>${U.esc(e.remetenteEmail)}</small>` : ''}</div>
+          <div class="em-mdet-m"><span class="pill p-${e.prioridade || 'media'}">${PRIO[e.prioridade] || 'Média'}</span><small>${E.quando(e.recebidoEm)}</small></div></div>
+        ${e.resumo ? `<div class="em-mbox"><span>Resumo</span><p>${U.esc(e.resumo)}</p></div>` : ''}
+        ${e.motivo ? `<div class="em-mbox why"><span>Por que precisa de você</span><p>${U.esc(e.motivo)}</p></div>` : ''}
+        ${fila(e) ? `<div class="em-mfila-box">${fila(e)}${pend ? '<small>O Claude executa na próxima leitura (até 1 h). Com pressa? Diga “executa” num chat.</small>' : ''}</div>` : ''}
+        ${conv ? `<div class="em-mbox ev"><span>Convite de reunião</span>
             <p><b>${U.esc(E.quandoEvento(ev))}</b>${ev.local ? '<br>' + U.esc(ev.local) : ''}${ev.organizador ? '<br>Organizador: ' + U.esc(ev.organizador) : ''}</p>
-            ${e.conflito ? `<p class="mconf-t">${UI.icon('adiar')}Conflita com: ${U.esc(e.conflito)}</p>` : '<p class="mok-t">Sem conflito na sua agenda.</p>'}</div>
+            ${e.conflito ? `<p class="em-mconf-t">${UI.icon('adiar')}Conflita com: ${U.esc(e.conflito)}</p>` : '<p class="em-mok-t">Sem conflito na sua agenda.</p>'}</div>
           <label class="f full"><span>Comentário para o organizador <em class="muted">opcional</em></span><input id="mCom" maxlength="300" placeholder="Ex.: Confirmado, levo a proposta impressa." value="${U.esc((e.acao && e.acao.comentario) || '')}"></label>`
         : `<label class="f full"><span>Resposta <em class="muted">${e.rascunhoLink ? 'o rascunho já está no Outlook; se editar aqui, o Claude atualiza antes de enviar' : 'edite à vontade'}</em></span><textarea id="mSug" rows="7">${U.esc((e.acao && e.acao.texto) || e.sugestao || '')}</textarea></label>`}
-        <div class="mdet-b">${conv ? '' : `<button class="btn ghost sm" id="mCopy">${UI.icon('copiar')}Copiar resposta</button>`}${e.rascunhoLink && novo ? `<a class="btn ghost sm" href="${U.esc(e.rascunhoLink)}" target="_blank" rel="noopener">${UI.icon('editar')}Abrir rascunho no Outlook</a>` : ''}<a class="btn ghost sm" href="${U.esc(E.link(e))}" target="_blank" rel="noopener">${UI.icon('externo')}Abrir no Outlook</a>
+        <div class="em-mdet-b">${conv ? '' : `<button class="btn ghost sm" id="mCopy">${UI.icon('copiar')}Copiar resposta</button>`}${e.rascunhoLink && novo ? `<a class="btn ghost sm" href="${U.esc(e.rascunhoLink)}" target="_blank" rel="noopener">${UI.icon('editar')}Abrir rascunho no Outlook</a>` : ''}<a class="btn ghost sm" href="${U.esc(E.link(e))}" target="_blank" rel="noopener">${UI.icon('externo')}Abrir no Outlook</a>
           ${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<button class="btn ghost sm" id="mAt">${UI.icon('seta')}Ver atividade</button>` : `<button class="btn ghost sm" id="mAt">${UI.icon('mais')}Virar atividade</button>`}</div>
       </div>`,
       footer: !novo ? `<button class="btn ghost" data-a="volta">${UI.icon('voltar')}Voltar para responder</button><button class="btn primary" data-close>Fechar</button>`
@@ -3666,7 +3666,7 @@ window.HORUS_CONFIG = {
         <label class="search">${UI.icon('busca')}<input id="mBusca" placeholder="Buscar remetente, assunto ou cliente" value="${U.esc(busca)}"></label>
       </div>
       <section class="card">
-        ${lista.length ? `<ul class="mlist full">${lista.map(e => E.item(e, false)).join('')}</ul>`
+        ${lista.length ? `<ul class="em-mlist full">${lista.map(e => E.item(e, false)).join('')}</ul>`
           : `<div class="empty"><b>${aba === 'novo' ? 'Nenhum e-mail pedindo resposta.' : 'Nada por aqui.'}</b><p>${aba === 'novo' ? 'Quando o Claude ler sua caixa, o que precisar de você aparece aqui. No chat, peça: “olha meus e-mails”.' : ''}</p></div>`}
       </section>`;
     el.querySelectorAll('[data-aba]').forEach(b => b.onclick = () => { aba = b.dataset.aba; V.render(el); });
