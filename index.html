@@ -755,6 +755,11 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 @media (max-width: 520px) { .ct-grid { grid-template-columns: minmax(0, 1fr); } }
 .cli-fixo { display: flex; gap: 10px; align-items: center; padding: 8px 10px; background: var(--surface-2); border-radius: 10px; }
 
+.grp-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.grp { display: grid; gap: 1px; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; font: inherit; color: var(--ink); }
+.grp b { font-family: var(--display); font-size: 14px; } .grp span { font-weight: 700; color: var(--accent); } .grp small { color: var(--muted); font-size: 12px; }
+.grp:hover, .grp.on { border-color: var(--accent); background: var(--accent-soft); }
+
 </style>
 
 <div class="app">
@@ -1652,10 +1657,11 @@ window.HORUS_CONFIG = {
       { k: 'operadora', l: 'Operadora', t: 'texto', lista: true }, { k: 'plano', l: 'Plano', t: 'texto', lista: true },
       { k: 'vidas', l: 'Vidas', t: 'num', lista: true }, { k: 'mensalidade', l: 'Mensalidade', t: 'brl', lista: true },
       { k: 'inicio', l: 'Início', t: 'data' }, { k: 'reajuste', l: 'Mês de reajuste', t: 'mes', lista: true }] },
-    { id: 'eqseed', nome: 'Eqseed', sub: 'Investimento em startups', cor: '#6E3FF0', principal: 'valor', campos: [
-      { k: 'startup', l: 'Startup', t: 'texto', lista: true }, { k: 'rodada', l: 'Rodada', t: 'texto' },
-      { k: 'valor', l: 'Valor investido', t: 'brl', lista: true }, { k: 'data', l: 'Data', t: 'data', lista: true },
-      { k: 'situacao', l: 'Situação', t: 'opcoes', op: ['Em captação', 'Investido', 'Saída', 'Perda'], lista: true }] },
+    { id: 'eqseed', nome: 'Eqseed', sub: 'Investimento em startups', cor: '#6E3FF0', principal: 'valor', agrupar: 'startup', campos: [
+      { k: 'startup', l: 'Startup', t: 'texto', lista: true }, { k: 'valor', l: 'Valor investido', t: 'brl', lista: true },
+      { k: 'data', l: 'Data de emissão', t: 'data', lista: true }, { k: 'liquidacao', l: 'Liquidação', t: 'data' },
+      { k: 'situacao', l: 'Situação', t: 'opcoes', op: ['Em captação', 'Concluído', 'Saída', 'Perda'], lista: true },
+      { k: 'idInvestimento', l: 'Nº do investimento', t: 'texto' }, { k: 'rodada', l: 'Rodada', t: 'texto' }] },
     /* ITA: plano de aporte anual da Investors Trust (ex.: SPX20-X, S&P 500, 20 anos, USD). Pode antecipar até 3 aportes. */
     { id: 'ita', nome: 'ITA', sub: 'Investors Trust · diversificação internacional', cor: '#2B5A8C', venc: 'pagoAte', campos: [
       { k: 'plano', l: 'Plano', t: 'texto', lista: true, padrao: 'SPX20-X · S&P 500 · 20 anos · USD Series III' },
@@ -1798,7 +1804,7 @@ window.HORUS_CONFIG = {
       const mes = cts.reduce((a, c) => a + (+c.premio || 0) / (c.periodicidade === 'Anual' ? 12 : 1), 0); if (mes) linhas.push('≈ ' + U.brl(mes) + '/mês em prêmios'); }
     if (pid === 'rc') linhas.push(U.plural(cts.length, 'apólice', 'apólices'));
     if (pid === 'saude') linhas.push(U.plural(cts.reduce((s, c) => s + (+c.vidas || 0), 0), 'vida', 'vidas'));
-    if (pid === 'eqseed') linhas.push(U.plural(cts.length, 'investimento', 'investimentos'));
+    if (pid === 'eqseed') linhas.push(U.plural(cts.length, 'investimento', 'investimentos'), U.plural(new Set(cts.map(c => c.startup).filter(Boolean)).size, 'startup', 'startups'));
     if (pid === 'ita') linhas.push('US$ ' + cts.reduce((s, c) => s + (+c.valorConta || 0), 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + ' em conta', 'US$ ' + cts.reduce((s, c) => s + (+c.contribuicao || 0), 0).toLocaleString('pt-BR') + '/ano de aportes');
     const avisos = C.vencimentos(30).filter(v => v.ct && v.ct.produto === pid).length;
     return { n: clis.size, valor: soma, linhas, avisos };
@@ -4161,6 +4167,8 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.innerHTML = `${voltar('Clientes', {})}
       <div class="page-h"><div><h1><i class="pdot" style="background:${p.cor}"></i>${U.esc(p.nome)}</h1><p class="muted">${U.esc(p.sub || '')}${p.sub ? ' · ' : ''}${U.plural(r.n, 'cliente', 'clientes')}${r.valor ? ' · ' + U.brl(r.valor) : ''}${r.linhas.length ? ' · ' + r.linhas.map(U.esc).join(' · ') : ''}</p></div>
         <div class="page-act"><button class="btn primary" data-novo-ct="${p.id}">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button></div></div>
+      ${p.agrupar ? (() => { const g = {}; todos.filter(c => (c.status || 'ativo') === 'ativo').forEach(c => { const k = c[p.agrupar] || 'Sem nome'; g[k] = g[k] || { n: 0, v: 0, cl: new Set() }; g[k].n++; g[k].v += +c[p.principal] || 0; g[k].cl.add(c.clienteId); });
+        const arr = Object.entries(g).sort((a, b) => b[1].v - a[1].v); return arr.length ? `<div class="grp-strip">${arr.map(([k, x]) => `<button class="grp${Cli.norm(busca) === Cli.norm(k) ? ' on' : ''}" data-grp="${U.esc(k)}"><b>${U.esc(k)}</b><span>${U.brl(x.v)}</span><small>${U.plural(x.cl.size, 'cliente', 'clientes')}</small></button>`).join('')}</div>` : ''; })() : ''}
       <div class="toolbar"><div class="seg-tabs">${[['ativo', 'Ativos'], ['encerrado', 'Encerrados'], ['todos', 'Todos']].map(([k, l]) => `<button class="${filtro === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}</div>
         <label class="search">${UI.icon('busca')}<input id="clBusca" placeholder="Buscar cliente, ${U.esc((cols[0] || { l: '' }).l.toLowerCase())}…" value="${U.esc(busca)}"></label></div>
       <section class="card">${lista.length ? `<ul class="ct-list">${lista.map(({ ct, cli }) => { const d = Cli.proxData(ct);
@@ -4170,6 +4178,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
             <button class="icon-btn" data-stop data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`; }).join('')}</ul>`
         : `<div class="empty"><b>${todos.length ? 'Nada com esse filtro.' : 'Nenhum cliente com ' + U.esc(p.nome) + ' ainda.'}</b><p>${todos.length ? '' : 'Use “Adicionar” para cadastrar. Se tiver planilha, mande no chat que eu importo.'}</p></div>`}</section>`;
     el.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filtro = b.dataset.f; produto(el); });
+    el.querySelectorAll('[data-grp]').forEach(b => b.onclick = () => { busca = Cli.norm(busca) === Cli.norm(b.dataset.grp) ? '' : b.dataset.grp; produto(el); });
     el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => App.Forms.contrato(b.dataset.ed));
     const inp = el.querySelector('#clBusca');
     inp.oninput = () => { busca = inp.value; const pos = inp.selectionStart; produto(el); const n = el.querySelector('#clBusca'); n.focus(); n.setSelectionRange(pos, pos); };
