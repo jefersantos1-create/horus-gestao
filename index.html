@@ -825,6 +825,67 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 .pblock.ghost:hover { background: color-mix(in srgb, var(--pc) 5%, #fff); }
 .pd-list { display: grid; gap: 10px; }
 
+/* ---------- Indicações ---------- */
+.sit { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; color: var(--sc); background: color-mix(in srgb, var(--sc) 12%, #fff); white-space: nowrap; }
+.sit-leg { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.ind-teaser { margin-bottom: 0; margin-top: 16px; }
+.ind-top { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.ind-top button { display: grid; grid-template-columns: auto 1fr; gap: 0 8px; align-items: center; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font: inherit; color: var(--ink); cursor: pointer; }
+.ind-top button:hover { border-color: var(--accent); }
+.ind-top small { grid-column: 2; color: var(--muted); font-size: 12px; }
+.rk-pos { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 800; background: var(--accent-soft); color: var(--accent); font-family: var(--display); grid-row: span 2; }
+.ind-top button:first-child .rk-pos, .rk-list li:first-child .rk-pos { background: var(--grad-btn); color: #fff; }
+.rk-head, .rk-list li { display: grid; grid-template-columns: 28px minmax(0, 1fr) 70px 54px 70px; gap: 10px; align-items: center; }
+.rk-head { padding: 0 6px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--faint); font-weight: 700; }
+.rk-head span:first-child { grid-column: 1 / 3; }
+.rk-list { list-style: none; margin: 0; padding: 0; }
+.rk-list li { padding: 10px 6px; border-top: 1px solid var(--line); cursor: pointer; border-radius: 8px; }
+.rk-list li:hover { background: var(--surface-2); }
+.rk-list li > span { display: grid; font-weight: 700; font-size: 14px; } .rk-list li > span small { font-weight: 500; font-size: 11px; color: var(--muted); }
+.rk-list li .rk-pos { grid-row: auto; }
+.rk-n { display: grid; gap: 3px; min-width: 0; } .rk-n small { color: var(--muted); font-size: 12px; }
+.rk-n .pbar { height: 6px; }
+@media (max-width: 520px) { .rk-head, .rk-list li { grid-template-columns: 24px minmax(0, 1fr) 46px 40px 50px; gap: 6px; } }
+.gen-list { display: grid; gap: 8px; }
+.gen-list > div { display: grid; grid-template-columns: 36px 90px minmax(0, 1fr) 70px; gap: 8px; align-items: center; font-size: 13px; }
+.gen-list b { font-family: var(--display); color: var(--accent); }
+.gen-list small { color: var(--muted); text-align: right; }
+.ind-grid { margin-bottom: 16px; }
+.tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+.tree { display: grid; gap: 6px; }
+.tree ul { margin-left: 18px; padding-left: 14px; border-left: 2px solid var(--line); display: grid; gap: 4px; padding-top: 4px; }
+.tree summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.tree summary::-webkit-details-marker { display: none; }
+.tree summary::before { content: "▸"; color: var(--faint); font-size: 12px; transition: transform .15s; }
+.tree details[open] > summary::before { transform: rotate(90deg); }
+.tree li > .tn { margin-left: 18px; }
+.tn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--sc) 35%, var(--line)); background: color-mix(in srgb, var(--sc) 7%, #fff); cursor: pointer; font-size: 13.5px; }
+.tn:hover { border-color: var(--sc); }
+.tn i { width: 8px; height: 8px; border-radius: 50%; background: var(--sc); }
+.tn em { font-style: normal; font-size: 11px; font-weight: 800; color: #fff; background: var(--accent); border-radius: 999px; padding: 0 6px; }
+.ind-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; padding: 16px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); margin-bottom: 14px; }
+@media (max-width: 760px) { .ind-card { grid-template-columns: minmax(0, 1fr); } }
+.ind-card small { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); font-weight: 700; }
+.ind-card p { margin: 6px 0; font-size: 14px; }
+.ind-de, .ind-para { display: grid; align-content: start; gap: 2px; min-width: 0; }
+.ind-para .btn { justify-self: start; margin-top: 6px; }
+.chain { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 6px; }
+.chain button { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 3px 10px; font: inherit; font-size: 13px; cursor: pointer; color: var(--ink); }
+.chain button:hover { border-color: var(--accent); color: var(--accent); }
+.chain span { color: var(--faint); }
+.chain b { padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 13px; }
+.ind-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.ind-chips button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 8px 4px 12px; font: inherit; font-size: 13px; cursor: pointer; color: var(--ink); }
+.ind-chips button:hover { border-color: var(--accent); }
+.ind-chips em { font-style: normal; font-size: 11px; font-weight: 800; color: var(--accent); }
+
+.pc-ind { background: linear-gradient(150deg, #FBF8FF 0%, #F1EAFF 100%); }
+.pes { display: grid; gap: 12px; }
+.pes > p { margin: 0; display: flex; gap: 6px; flex-wrap: wrap; }
+.pes-b { display: grid; gap: 4px; }
+.pes-b small { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); font-weight: 700; }
+.pes-b p { margin: 0; }
+
 </style>
 
 <div class="app">
@@ -1754,7 +1815,7 @@ window.HORUS_CONFIG = {
   };
 
   /* ---------- clientes ---------- */
-  C.clientes = () => Store.all('clientes').slice().sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  C.clientes = (todos) => Store.all('clientes').filter(c => todos || C.ehCliente(c)).slice().sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
   C.cliente = id => Store.get('clientes', id);
   C.contratos = (filtro = {}) => Store.all('contratos').filter(c => (!filtro.produto || c.produto === filtro.produto) && (!filtro.clienteId || c.clienteId === filtro.clienteId) && (filtro.todos || (c.status || 'ativo') === 'ativo'));
   C.apelido = c => c.apelido || (c.nome || '').split(' ')[0];
@@ -1873,6 +1934,36 @@ window.HORUS_CONFIG = {
     if (pid === 'ita') linhas.push('US$ ' + cts.reduce((s, c) => s + (+c.valorConta || 0), 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + ' em conta', 'US$ ' + cts.reduce((s, c) => s + (+c.contribuicao || 0), 0).toLocaleString('pt-BR') + '/ano de aportes');
     const avisos = C.vencimentos(30).filter(v => v.ct && v.ct.produto === pid).length;
     return { n: clis.size, valor: soma, linhas, avisos };
+  };
+
+
+  /* ---------- Indicações ----------
+     No cliente: indicadoPor (id de quem indicou), situacao ('sim' rodou | 'parcial' | 'nao' não rodou | 'conversa'),
+     relacao ('cliente' | 'prospect': indicado que ainda não é cliente), dataIndicacao, geracao (só quando o indicador é desconhecido). */
+  C.SITUACOES = [{ id: 'sim', label: 'Rodou', cor: '#23864F' }, { id: 'parcial', label: 'Rodou em parte', cor: '#7FA83A' }, { id: 'conversa', label: 'Em conversa', cor: '#6E3FF0' }, { id: 'nao', label: 'Não rodou', cor: '#C2611A' }];
+  C.situacao = id => C.SITUACOES.find(s => s.id === id) || null;
+  C.ehCliente = c => c.relacao !== 'prospect';
+  C.indicador = c => c && c.indicadoPor ? C.cliente(c.indicadoPor) : null;
+  C.filhosDe = id => Store.all('clientes').filter(x => x.indicadoPor === id).sort((a, b) => (a.dataIndicacao || a.criadoEm || '').localeCompare(b.dataIndicacao || b.criadoEm || '') || a.nome.localeCompare(b.nome, 'pt-BR'));
+  /* Cadeia até a raiz: [quem indicou, quem indicou quem indicou, ...] */
+  C.cadeia = c => { const out = [], vis = new Set([c.id]); let x = C.indicador(c); while (x && !vis.has(x.id)) { out.push(x); vis.add(x.id); x = C.indicador(x); } return out; };
+  C.geracao = c => c.geracao && !c.indicadoPor ? +c.geracao : C.cadeia(c).length + 1;
+  /* Todos os descendentes (filhos, netos...) */
+  C.rede = c => { const out = [], fila = [c.id], vis = new Set([c.id]); while (fila.length) { const id = fila.shift(); C.filhosDe(id).forEach(f => { if (!vis.has(f.id)) { vis.add(f.id); out.push(f); fila.push(f.id); } }); } return out; };
+  C.converteu = c => c.situacao === 'sim' || c.situacao === 'parcial' || (!c.situacao && C.ehCliente(c));
+  /* Patrimônio com você (R$): MB + Eqseed ativos */
+  C.patrimonio = c => { const m = C.mbDoCliente(c); const eq = C.contratos({ clienteId: c.id, produto: 'eqseed' }).reduce((s, x) => s + (+x.valor || 0), 0); return (m ? +m.pl : 0) + eq; };
+  C.rankingIndicacoes = () => Store.all('clientes').map(c => {
+    const dir = C.filhosDe(c.id); if (!dir.length) return null;
+    const rede = C.rede(c), conv = rede.filter(C.converteu);
+    return { c, diretas: dir.length, diretasConv: dir.filter(C.converteu).length, rede: rede.length, redeConv: conv.length, patrimonio: conv.reduce((s, x) => s + C.patrimonio(x), 0), geracoes: Math.max(...rede.map(x => C.geracao(x) - C.geracao(c))) };
+  }).filter(Boolean).sort((a, b) => b.rede - a.rede || b.redeConv - a.redeConv || b.diretas - a.diretas);
+  /* Salva uma indicação: cria a pessoa (se não existir) ligada a quem indicou */
+  C.registrarIndicacao = ({ nome, indicadorId, situacao, data, observacoes, existenteId }) => {
+    const rel = situacao === 'sim' || situacao === 'parcial' ? 'cliente' : 'prospect';
+    if (existenteId) { const x = C.cliente(existenteId), temProduto = C.contratos({ clienteId: existenteId, todos: true }).length > 0;
+      Store.update('clientes', existenteId, { indicadoPor: indicadorId || null, situacao, dataIndicacao: data || x.dataIndicacao || null, relacao: temProduto ? 'cliente' : rel, observacoes: observacoes || x.observacoes || null }); return C.cliente(existenteId); }
+    return Store.insert('clientes', { nome: nome.trim(), indicadoPor: indicadorId || null, situacao, relacao: rel, dataIndicacao: data || U.today(), observacoes: observacoes || null });
   };
 
   App.Cli = C;
@@ -3183,9 +3274,46 @@ window.HORUS_CONFIG = {
           const n = Cli.contratos({ clienteId: c.id, todos: true }).length;
           if (!await UI.confirm({ title: 'Excluir cliente?', text: `<b>${U.esc(c.nome)}</b>${n ? ` e ${U.plural(n, 'produto cadastrado', 'produtos cadastrados')}` : ''} serão apagados. Atividades e receitas não são apagadas.`, ok: 'Excluir' })) return;
           Store.removeWhere('contratos', x => x.clienteId === c.id, { silent: true });
+          Store.all('clientes').filter(x => x.indicadoPor === c.id).forEach(x => Store.update('clientes', x.id, { indicadoPor: c.indicadoPor || null }, { silent: true }));
           Store.remove('clientes', c.id);
           api.close(); UI.toast('Cliente excluído');
           App.go('clientes');
+        };
+      }
+    });
+  };
+
+
+  /* ---------- Indicação: quem indicou quem ---------- */
+  F.indicacao = (preset = {}) => {
+    const ex = preset.existenteId ? Cli.cliente(preset.existenteId) : null;
+    const ind = preset.indicadorId ? Cli.cliente(preset.indicadorId) : ex ? Cli.indicador(ex) : null;
+    const nomes = Cli.clientes(true).map(c => `<option value="${U.esc(c.nome)}">`).join('');
+    UI.modal({
+      title: ex ? 'Quem indicou ' + Cli.apelido(ex) + '?' : ind ? 'Indicação de ' + Cli.apelido(ind) : 'Registrar indicação', size: 'sm',
+      body: `<form class="form" id="fInd" novalidate><datalist id="dlPes">${nomes}</datalist>
+        ${ex ? `<div class="cli-fixo"><b>${U.esc(ex.nome)}</b></div>` : `<label class="f full"><span>Pessoa indicada</span><input name="nome" list="dlPes" required placeholder="Nome de quem foi indicado" autocomplete="off" autofocus><small class="muted">Se já estiver na sua base, escolha da lista.</small></label>`}
+        <label class="f full"><span>Indicado por</span><input name="indicador" list="dlPes" value="${U.esc(ind ? ind.nome : '')}" placeholder="Quem indicou" autocomplete="off"${ex ? ' autofocus' : ''}></label>
+        <div class="f full"><span>Situação</span>${UI.segmented('situacao', Cli.SITUACOES.map(s => ({ id: s.id, label: s.label })), (ex && ex.situacao) || 'conversa')}</div>
+        ${ex ? `<label class="chk"><input type="checkbox" name="_saiu"${ex.saiu ? ' checked' : ''}><span>Foi cliente, mas saiu (ex-cliente)</span></label>` : ''}
+        <label class="f full"><span>Data da indicação</span><input type="date" name="data" value="${(ex && ex.dataIndicacao) || U.today()}"></label>
+        <label class="f full"><span>Observações</span><input name="observacoes" placeholder="Ex.: amiga de faculdade, quer falar de previdência"></label>
+        <p class="ferr" id="errInd" hidden></p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fInd" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fInd');
+        f.onsubmit = e => {
+          e.preventDefault();
+          const d = UI.formData(f), er = el.querySelector('#errInd'), erro = m => { er.textContent = m; er.hidden = false; };
+          const indicador = d.indicador ? Cli.porNome(d.indicador) : null;
+          if (d.indicador && !indicador) return erro('Não encontrei "' + d.indicador + '" na sua base. Escolha um nome da lista.');
+          let alvo = ex;
+          if (!alvo) { if (!d.nome) return erro('Escreva o nome de quem foi indicado.'); alvo = Cli.porNome(d.nome); }
+          if (alvo && indicador && alvo.id === indicador.id) return erro('A pessoa não pode indicar ela mesma.');
+          if (alvo && indicador && Cli.cadeia(indicador).some(x => x.id === alvo.id)) return erro('Isso criaria um ciclo na rede (um indicou o outro).');
+          if (ex) Store.update('clientes', ex.id, { saiu: !!f.querySelector('[name=_saiu]') && f.querySelector('[name=_saiu]').checked }, { silent: true });
+          const r = Cli.registrarIndicacao({ nome: d.nome, indicadorId: indicador ? indicador.id : null, situacao: d.situacao, data: d.data, observacoes: d.observacoes, existenteId: alvo ? alvo.id : null });
+          api.close(); UI.toast(indicador ? `${Cli.apelido(r)} registrado(a) como indicação de ${Cli.apelido(indicador)}` : 'Indicação registrada');
         };
       }
     });
@@ -4177,13 +4305,14 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
 
   V.render = el => {
     if (P.cliente) return ficha(el);
+    if (P.indicacoes) return indicacoes(el);
     if (P.produto === 'mb') return mb(el);
     if (P.produto) return produto(el);
     return inicio(el);
   };
   const ligarComum = el => {
     el.querySelectorAll('[data-cl-volta]').forEach(b => b.onclick = () => ir(JSON.parse(b.dataset.clVolta)));
-    el.querySelectorAll('[data-cli]').forEach(b => b.addEventListener('click', e => { if (e.target.closest('[data-stop]')) return; ir({ cliente: b.dataset.cli, de: P.produto || null }); }));
+    el.querySelectorAll('[data-cli]').forEach(b => b.addEventListener('click', e => { if (e.target.closest('[data-stop]')) return; ir({ cliente: b.dataset.cli, de: P.produto || null, deInd: P.indicacoes || null }); }));
     el.querySelectorAll('[data-prod]').forEach(b => b.onclick = () => ir({ produto: b.dataset.prod }));
     el.querySelectorAll('[data-novo-cli]').forEach(b => b.onclick = () => App.Forms.cliente(null, {}, c => ir({ cliente: c.id })));
     el.querySelectorAll('[data-novo-ct]').forEach(b => b.onclick = () => App.Forms.contrato(null, { produto: b.dataset.novoCt || P.produto || undefined, clienteId: b.dataset.cid || undefined }));
@@ -4200,7 +4329,10 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.innerHTML = `
       <div class="page-h"><div><h1>Clientes</h1><p class="muted">Seus clientes por produto. Clique num card para ver a lista, ou num cliente para ver tudo o que ele tem com você.</p></div>
         <div class="page-act"><button class="btn ghost" data-novo-cli>${UI.icon('mais')}Novo cliente</button><button class="btn primary" data-novo-ct>${UI.icon('mais')}Adicionar produto</button></div></div>
-      <div class="pcards">${Cli.PRODUTOS.filter(p => !p.oculto || Cli.contratos({ produto: p.id, todos: true }).length).map(p => { const r = Cli.resumo(p.id);
+      <div class="pcards">${(() => { const ind = Store.all('clientes').filter(c => c.indicadoPor || c.geracao > 1), rk = Cli.rankingIndicacoes();
+        return `<button class="pcard pc-ind" id="clInd" style="--pc:#C98CFF"><span class="pc-top"><b>Indicações</b></span><small class="pc-sub">Árvore de quem indicou quem</small>
+          <span class="pc-n"><b>${ind.length}</b> ${ind.length === 1 ? 'pessoa indicada' : 'pessoas indicadas'}</span>
+          <span class="pc-l">${ind.filter(Cli.converteu).length} rodaram${rk.length ? ' · maior rede: ' + U.esc(nomeCurto(rk[0].c)) + ' (' + rk[0].rede + ')' : ''}</span></button>`; })()}${Cli.PRODUTOS.filter(p => !p.oculto || Cli.contratos({ produto: p.id, todos: true }).length).map(p => { const r = Cli.resumo(p.id);
         return `<button class="pcard" data-prod="${p.id}" style="--pc:${p.cor}">
           <span class="pc-top"><b>${U.esc(p.nome)}</b>${r.avisos ? `<span class="pc-av">${r.avisos} aviso${r.avisos > 1 ? 's' : ''}</span>` : ''}</span>
           ${p.sub ? `<small class="pc-sub">${U.esc(p.sub)}</small>` : ''}
@@ -4216,6 +4348,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
             return `<li data-cli="${c.id}">${av(c)}<div><b>${U.esc(c.nome)}</b><span class="cl-chips">${[...new Set(cts.map(x => x.produto))].map(pid => `<i style="--pc:${Cli.produto(pid).cor}">${U.esc(Cli.produto(pid).nome)}</i>`).join('') || '<small class="muted">sem produto cadastrado</small>'}</span></div></li>`; }).join('')}</ul>`
             : `<div class="empty sm"><b>${busca ? 'Nenhum cliente encontrado.' : 'Nenhum cliente ainda.'}</b><p>${busca ? '' : 'Cadastre um cliente ou importe o mês do MB.'}</p></div>`}</section>
       </div>`;
+    el.querySelector('#clInd').onclick = () => ir({ indicacoes: true });
     const inp = el.querySelector('#clBusca');
     inp.oninput = () => { busca = inp.value; const pos = inp.selectionStart; inicio(el); const n = el.querySelector('#clBusca'); n.focus(); n.setSelectionRange(pos, pos); };
     ligarComum(el);
@@ -4289,6 +4422,75 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         } catch (e) {}
         ajusta(); try { new ResizeObserver(ajusta).observe(fr.contentDocument.body); fr.contentDocument.addEventListener('click', () => setTimeout(ajusta, 60)); } catch (e) { setInterval(ajusta, 800); } };
     }
+    ligarComum(el);
+  }
+
+  /* ---------- Rede de indicações ---------- */
+  const sitChip = c => { if (c.saiu) return '<span class="sit" style="--sc:#8F88A6">Ex-cliente</span>'; const s = Cli.situacao(c.situacao) || (Cli.ehCliente(c) ? { label: 'Cliente', cor: '#23864F' } : { label: 'Indicação', cor: '#8F88A6' }); return `<span class="sit" style="--sc:${s.cor}">${U.esc(s.label)}</span>`; };
+  V.sitChip = sitChip;
+  /* "Ana Paula de Souza" -> "Ana Paula"; nomes com parênteses ficam inteiros */
+  const PART = ['de', 'da', 'do', 'das', 'dos', 'e'];
+  const nomeCurto = c => { const n = c.nome || ''; if (n.includes('(')) return n; const p = n.split(' ').filter(w => !PART.includes(w.toLowerCase())); return p.slice(0, 2).join(' '); };
+  const rodaram = n => n + (n === 1 ? ' rodou' : ' rodaram');
+  function noArvore(c, vis) {
+    if (vis.has(c.id)) return ''; vis.add(c.id);
+    const f = Cli.filhosDe(c.id), s = Cli.situacao(c.situacao), cor = c.saiu ? '#8F88A6' : s ? s.cor : (Cli.ehCliente(c) ? '#23864F' : '#8F88A6');
+    const no = `<span class="tn" data-pes="${c.id}" style="--sc:${cor}"><i></i><b>${U.esc(nomeCurto(c))}</b>${f.length ? `<em>${f.length}</em>` : ''}</span>`;
+    return f.length ? `<li><details open><summary>${no}</summary><ul>${f.map(x => noArvore(x, vis)).join('')}</ul></details></li>` : `<li>${no}</li>`;
+  }
+
+  /* Resumo de uma pessoa na rede (cliente ou não) */
+  function pessoa(id) {
+    const c = Cli.cliente(id); if (!c) return;
+    const cad = Cli.cadeia(c), filhos = Cli.filhosDe(c.id), rede = Cli.rede(c), temFicha = Cli.ehCliente(c);
+    UI.modal({
+      title: c.nome, size: 'sm',
+      body: `<div class="pes">
+        <p>${sitChip(c)} ${temFicha ? '<span class="sit" style="--sc:#6E3FF0">Na base de clientes</span>' : ''}</p>
+        <div class="pes-b"><small>Como chegou</small>${cad.length ? `<div class="chain">${cad.slice().reverse().map(x => `<button data-pes2="${x.id}">${U.esc(nomeCurto(x))}</button>`).join('<span>›</span>')}<span>›</span><b>${U.esc(nomeCurto(c))}</b></div><p class="muted small">${Cli.geracao(c)}ª geração</p>` : c.geracao > 1 ? `<p class="muted">Indicador não informado (${c.geracao}ª geração)</p>` : '<p class="muted">Contato direto, sem indicação.</p>'}</div>
+        <div class="pes-b"><small>Indicou</small>${filhos.length ? `<p><b>${U.plural(filhos.length, 'pessoa', 'pessoas')}</b>${rede.length > filhos.length ? ' · ' + rede.length + ' na rede toda' : ''} · ${rodaram(rede.filter(Cli.converteu).length)}</p><div class="ind-chips">${filhos.map(f => `<button data-pes2="${f.id}">${U.esc(nomeCurto(f))} ${sitChip(f)}</button>`).join('')}</div>` : '<p class="muted">Ainda não indicou ninguém.</p>'}</div>
+        ${c.observacoes ? `<p class="muted small">${U.esc(c.observacoes)}</p>` : ''}</div>`,
+      footer: `<button class="btn ghost" id="pesEd">${UI.icon('editar')}Editar</button><button class="btn ghost" id="pesAdd">${UI.icon('mais')}Indicação de ${U.esc(Cli.apelido(c))}</button>${temFicha ? `<button class="btn primary" id="pesFicha">Abrir ficha</button>` : ''}`,
+      onMount(el, api) {
+        el.querySelectorAll('[data-pes2]').forEach(b => b.onclick = () => { api.close(); setTimeout(() => pessoa(b.dataset.pes2), 30); });
+        el.querySelector('#pesEd').onclick = () => { api.close(); App.Forms.indicacao({ existenteId: c.id }); };
+        el.querySelector('#pesAdd').onclick = () => { api.close(); App.Forms.indicacao({ indicadorId: c.id }); };
+        const fi = el.querySelector('#pesFicha'); if (fi) fi.onclick = () => { api.close(); ir({ cliente: c.id, deInd: true }); };
+      }
+    });
+  }
+  function indicacoes(el) {
+    const todos = Store.all('clientes');
+    const indicados = todos.filter(c => c.indicadoPor || (c.geracao && +c.geracao > 1));
+    const conv = indicados.filter(Cli.converteu);
+    const rk = Cli.rankingIndicacoes();
+    const raizes = todos.filter(c => !c.indicadoPor && !(c.geracao > 1) && Cli.filhosDe(c.id).length).sort((a, b) => Cli.rede(b).length - Cli.rede(a).length);
+    const semInd = todos.filter(c => !c.indicadoPor && c.geracao > 1);
+    const ger = {}; indicados.forEach(c => { const g = Cli.geracao(c); ger[g] = ger[g] || { n: 0, c: 0 }; ger[g].n++; if (Cli.converteu(c)) ger[g].c++; });
+    const max = rk.length ? rk[0].rede : 1;
+    el.innerHTML = `${voltar('Clientes', {})}
+      <div class="page-h"><div><h1>Rede de indicações</h1><p class="muted">Quem trouxe quem. O cliente vale pelo patrimônio e também pelo relacionamento que ele abre.</p></div>
+        <div class="page-act"><button class="btn primary" id="indNova">${UI.icon('mais')}Registrar indicação</button></div></div>
+      <div class="kpis k4">
+        <div class="kpi"><span>Pessoas indicadas</span><b>${indicados.length}</b></div>
+        <div class="kpi"><span>Rodaram</span><b>${conv.length}</b><em>${indicados.length ? Math.round(conv.length / indicados.length * 100) + '% de conversão' : ''}</em></div>
+        <div class="kpi"><span>Pessoas que indicam</span><b>${rk.length}</b></div>
+        <div class="kpi k-brand"><span>Maior rede</span><b>${rk.length ? U.esc(nomeCurto(rk[0].c)) : '—'}</b><em>${rk.length ? U.plural(rk[0].rede, 'pessoa', 'pessoas') + ' na rede' : ''}</em></div></div>
+      <div class="grid-2 ind-grid">
+        <section class="card"><div class="card-h"><h2>Quem mais traz relacionamento</h2></div>
+          ${rk.length ? `<div class="rk-head"><span>Quem indicou</span><span>Diretas</span><span>Rede</span><span>Rodaram</span></div><ul class="rk-list">${rk.map((r, i) => `<li data-pes="${r.c.id}"><span class="rk-pos">${i + 1}</span><div class="rk-n"><b>${U.esc(nomeCurto(r.c))}</b><div class="pbar"><i style="width:${r.rede / max * 100}%"></i></div><small>${r.patrimonio ? 'Rede trouxe ' + U.brlShort(r.patrimonio) + ' · ' : ''}${r.geracoes > 1 ? r.geracoes + ' gerações' : '1 geração'}</small></div><span>${r.diretas}<small>${rodaram(r.diretasConv)}</small></span><span><b>${r.rede}</b></span><span>${r.redeConv}<small>${r.rede ? Math.round(r.redeConv / r.rede * 100) + '%' : ''}</small></span></li>`).join('')}</ul>`
+            : '<div class="empty sm"><b>Nenhuma indicação registrada ainda.</b><p>Use “Registrar indicação” ou conte no chat: “a Ana me indicou a Carla, rodou”.</p></div>'}</section>
+        <div class="stack">
+          <section class="card"><div class="card-h"><h2>Por geração</h2></div>
+            ${Object.keys(ger).length ? `<div class="gen-list">${Object.keys(ger).sort((a, b) => a - b).map(g => `<div><b>${g}ª</b><span>${U.plural(ger[g].n, 'pessoa', 'pessoas')}</span><div class="pbar"><i style="width:${ger[g].c / ger[g].n * 100}%;background:#23864F"></i></div><small>${rodaram(ger[g].c)}</small></div>`).join('')}</div>` : '<p class="muted small">Sem dados ainda.</p>'}
+            <div class="sit-leg">${Cli.SITUACOES.map(s => `<span class="sit" style="--sc:${s.cor}">${s.label}</span>`).join('')}</div></section>
+        </div></div>
+      <section class="card"><div class="card-h"><h2>Árvore de indicações</h2><span class="muted small">clique num nome para ver os detalhes</span></div>
+        ${raizes.length ? `<ul class="tree">${(() => { const vis = new Set(); return raizes.map(r => noArvore(r, vis)).join(''); })()}</ul>` : '<p class="muted small">A árvore aparece quando houver indicações.</p>'}
+        ${semInd.length ? `<p class="muted small" style="margin-top:12px">Indicador não informado: ${semInd.map(c => `<a href="#" data-pes="${c.id}">${U.esc(nomeCurto(c))}</a>`).join(', ')}</p>` : ''}</section>`;
+    el.querySelector('#indNova').onclick = () => App.Forms.indicacao();
+    el.querySelectorAll('[data-pes]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); pessoa(b.dataset.pes); }));
+    el.querySelectorAll('.tree summary').forEach(sm => sm.addEventListener('click', e => { if (e.target.closest('.tn')) e.preventDefault(); }));
     ligarComum(el);
   }
 
@@ -4383,8 +4585,8 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const brl = (m ? +m.pl : 0) + eq;
     const itaUsd = (porProd.ita || []).reduce((s, x) => s + (+x.valorConta || 0), 0);
     const falta = ORDEM.filter(pid => pid !== 'mb' && !porProd[pid] && !Cli.produto(pid).oculto);
-    const de = P.de ? { produto: P.de } : {};
-    el.innerHTML = `${voltar(P.de ? Cli.produto(P.de).nome : 'Clientes', de)}
+    const de = P.deInd ? { indicacoes: true } : P.de ? { produto: P.de } : {};
+    el.innerHTML = `${voltar(P.deInd ? 'Indicações' : P.de ? Cli.produto(P.de).nome : 'Clientes', de)}
       <section class="cl-hero">
         <div class="cl-hero-id"><span class="cl-av lg">${U.esc((Cli.apelido(c) || '?').slice(0, 2).toUpperCase())}</span><div><h1>${U.esc(c.nome)}</h1>
           <p>${[c.telefone, c.email, c.nascimento && 'Aniversário ' + U.fmtDate(c.nascimento).replace(/ \d{4}$/, '')].filter(Boolean).map(U.esc).join(' · ') || 'Sem contato cadastrado'}</p>
