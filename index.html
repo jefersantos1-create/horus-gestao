@@ -1637,7 +1637,7 @@ window.HORUS_CONFIG = {
       { k: 'capital', l: 'Capital segurado', t: 'brl', lista: true }, { k: 'premio', l: 'Prêmio mensal', t: 'brl', lista: true },
       { k: 'inicio', l: 'Início', t: 'data' }, { k: 'renovacao', l: 'Renovação', t: 'data', lista: true }] },
     { id: 're', nome: 'Ramos elementares', sub: 'RC, plano de saúde, vida em grupo', cor: '#A0466B', venc: 'fimVigencia', campos: [
-      { k: 'tipo', l: 'Tipo', t: 'opcoes', op: ['RC pessoal', 'RC profissional', 'Plano de saúde', 'Seguro de vida em grupo'], lista: true },
+      { k: 'tipo', l: 'Tipo', t: 'opcoes', op: ['RC pessoal', 'RC profissional', 'Residencial', 'Plano de saúde', 'Seguro de vida em grupo'], lista: true },
       { k: 'seguradora', l: 'Seguradora / operadora', t: 'texto', lista: true }, { k: 'apolice', l: 'Apólice / contrato', t: 'texto' },
       { k: 'cobertura', l: 'Cobertura / capital', t: 'brl', lista: true }, { k: 'vidas', l: 'Vidas', t: 'num', lista: true },
       { k: 'premio', l: 'Prêmio / mensalidade', t: 'brl', lista: true }, { k: 'periodicidade', l: 'Pagamento', t: 'opcoes', op: ['Mensal', 'Anual'] },
@@ -1656,10 +1656,13 @@ window.HORUS_CONFIG = {
       { k: 'startup', l: 'Startup', t: 'texto', lista: true }, { k: 'rodada', l: 'Rodada', t: 'texto' },
       { k: 'valor', l: 'Valor investido', t: 'brl', lista: true }, { k: 'data', l: 'Data', t: 'data', lista: true },
       { k: 'situacao', l: 'Situação', t: 'opcoes', op: ['Em captação', 'Investido', 'Saída', 'Perda'], lista: true }] },
-    { id: 'ita', nome: 'ITA', sub: 'Diversificação internacional', cor: '#2B5A8C', principal: 'valorBrl', campos: [
-      { k: 'plataforma', l: 'Plataforma', t: 'texto', lista: true, padrao: 'Dolarize.me' },
-      { k: 'valorUsd', l: 'Posição (US$)', t: 'usd', lista: true }, { k: 'valorBrl', l: 'Posição (R$)', t: 'brl', lista: true },
-      { k: 'dataPosicao', l: 'Data da posição', t: 'data', lista: true }] }
+    /* ITA: plano de aporte anual da Investors Trust (ex.: SPX20-X, S&P 500, 20 anos, USD). Pode antecipar até 3 aportes. */
+    { id: 'ita', nome: 'ITA', sub: 'Investors Trust · diversificação internacional', cor: '#2B5A8C', venc: 'pagoAte', campos: [
+      { k: 'plano', l: 'Plano', t: 'texto', lista: true, padrao: 'SPX20-X · S&P 500 · 20 anos · USD Series III' },
+      { k: 'prazoAnos', l: 'Prazo do plano (anos)', t: 'num' }, { k: 'contribuicao', l: 'Contribuição anual', t: 'usd', lista: true },
+      { k: 'efetividade', l: 'Data de efetividade', t: 'data' }, { k: 'pagoAte', l: 'Pago até', t: 'data', lista: true },
+      { k: 'valorConta', l: 'Valor de conta', t: 'usd', lista: true }, { k: 'dataPosicao', l: 'Posição em', t: 'data' },
+      { k: 'plataforma', l: 'Plataforma', t: 'texto', padrao: 'Investors Trust' }] }
   ];
   C.produto = id => C.PRODUTOS.find(p => p.id === id) || { id, nome: id, cor: '#5A6474', campos: [] };
   const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -1670,7 +1673,7 @@ window.HORUS_CONFIG = {
     if (v == null || v === '') return '';
     switch (campo.t) {
       case 'brl': return U.brl(v);
-      case 'usd': return 'US$ ' + (+v).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+      case 'usd': return 'US$ ' + (+v).toLocaleString('pt-BR', { minimumFractionDigits: +v % 1 ? 2 : 0, maximumFractionDigits: 2 });
       case 'num': return U.num(v);
       case 'data': return U.fmtDate(v);
       case 'sim': return v ? 'Sim' : 'Não';
@@ -1708,7 +1711,11 @@ window.HORUS_CONFIG = {
     if (venc === 'reajuste') { const hoje = new Date(), m = +v - 1; let y = hoje.getFullYear(); if (m < hoje.getMonth()) y++; return U.iso(new Date(y, m, 1)); }
     return v;
   };
+  /* ITA: aportes pagos = anos entre a efetividade e o "pago até" */
+  C.aportesITA = ct => { if (!ct.efetividade || !ct.pagoAte) return null; const a = U.parse(ct.efetividade), b = U.parse(ct.pagoAte); return Math.max(0, Math.round((b - a) / (365.25 * 864e5))); };
+  C.extras = ct => { if (ct.produto !== 'ita') return []; const n = C.aportesITA(ct); return n == null ? [] : [['Aportes pagos', n + (ct.prazoAnos ? ' de ' + ct.prazoAnos : '') + (ct.contribuicao ? ' · US$ ' + (+ct.contribuicao * n).toLocaleString('pt-BR') + ' aportados' : '')]]; };
   C.rotuloVenc = ct => {
+    if (ct.produto === 'ita') return 'Próximo aporte anual do plano' + (ct.contribuicao ? ' · US$ ' + (+ct.contribuicao).toLocaleString('pt-BR') : '');
     if (ct.produto === 're') return (ct.tipo || 'Ramos elementares') + (!ct.fimVigencia && ct.reajuste ? ' · reajuste' : ' · renovação');
     return ({ renovacao: 'Renovação do seguro de vida', fimVigencia: 'Fim da vigência do seguro RC', reajuste: 'Reajuste do plano de saúde' }[C.produto(ct.produto).venc] || 'Vencimento');
   };
@@ -1792,7 +1799,7 @@ window.HORUS_CONFIG = {
     if (pid === 'rc') linhas.push(U.plural(cts.length, 'apólice', 'apólices'));
     if (pid === 'saude') linhas.push(U.plural(cts.reduce((s, c) => s + (+c.vidas || 0), 0), 'vida', 'vidas'));
     if (pid === 'eqseed') linhas.push(U.plural(cts.length, 'investimento', 'investimentos'));
-    if (pid === 'ita') linhas.push('US$ ' + cts.reduce((s, c) => s + (+c.valorUsd || 0), 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 }));
+    if (pid === 'ita') linhas.push('US$ ' + cts.reduce((s, c) => s + (+c.valorConta || 0), 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + ' em conta', 'US$ ' + cts.reduce((s, c) => s + (+c.contribuicao || 0), 0).toLocaleString('pt-BR') + '/ano de aportes');
     const avisos = C.vencimentos(30).filter(v => v.ct && v.ct.produto === pid).length;
     return { n: clis.size, valor: soma, linhas, avisos };
   };
@@ -4158,7 +4165,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         <label class="search">${UI.icon('busca')}<input id="clBusca" placeholder="Buscar cliente, ${U.esc((cols[0] || { l: '' }).l.toLowerCase())}…" value="${U.esc(busca)}"></label></div>
       <section class="card">${lista.length ? `<ul class="ct-list">${lista.map(({ ct, cli }) => { const d = Cli.proxData(ct);
           return `<li data-cli="${cli.id}">${av(cli)}<div class="ct-main"><b>${U.esc(cli.nome)}</b>
-            <span class="ct-f">${cols.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}</span></div>
+            <span class="ct-f">${cols.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</span></div>
             <div class="ct-side">${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}${d && U.diff(d, U.today()) <= 30 ? `<span class="tag t-warn">${U.esc(U.relDue(d))}</span>` : ''}
             <button class="icon-btn" data-stop data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`; }).join('')}</ul>`
         : `<div class="empty"><b>${todos.length ? 'Nada com esse filtro.' : 'Nenhum cliente com ' + U.esc(p.nome) + ' ainda.'}</b><p>${todos.length ? '' : 'Use “Adicionar” para cadastrar. Se tiver planilha, mande no chat que eu importo.'}</p></div>`}</section>`;
@@ -4230,7 +4237,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
             <span><small>12 meses</small>${pct(m.r12)} <em>${m.r12_cdi != null ? U.num(m.r12_cdi) + '% do CDI' : ''}</em></span><span><small>Alocação</small>${Object.entries(m.cats || {}).map(([k, v]) => ({ rf: 'RF', usd: 'USD', caixa: 'Caixa', cripto: 'Cripto', rv: 'RV' }[k] || k) + ' ' + Math.round(v / m.pl * 100) + '%').join(' · ')}</span></div></div>` : ''}
           ${cts.map(ct => { const p = Cli.produto(ct.produto);
             return `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(p.nome)}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
-              <div class="ct-kv">${p.campos.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`; }).join('')}
+              <div class="ct-kv">${p.campos.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`; }).join('')}
           ${!m && !cts.length ? '<div class="empty sm"><b>Nenhum produto cadastrado.</b><p>Use “Produto” para registrar consórcio, seguro, plano de saúde, Eqseed ou ITA.</p></div>' : ''}
           ${cts.length || m ? '' : ''}<p class="cl-oport">${oportunidades(c, cts, m)}</p></section>
         <div class="stack">
