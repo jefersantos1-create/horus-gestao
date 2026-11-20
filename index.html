@@ -760,6 +760,71 @@ button.mb { border: 0; background: none; padding: 0; cursor: pointer; }
 .grp b { font-family: var(--display); font-size: 14px; } .grp span { font-weight: 700; color: var(--accent); } .grp small { color: var(--muted); font-size: 12px; }
 .grp:hover, .grp.on { border-color: var(--accent); background: var(--accent-soft); }
 
+/* ---------- Ficha do cliente (blocos por produto) ---------- */
+.cl-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; padding: 22px; border-radius: 18px; background: linear-gradient(150deg, #1D1438 0%, #0B0A10 100%); color: #fff; margin: 6px 0 16px; overflow: hidden; }
+.cl-hero::after { content: ""; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(143,107,255,.35), transparent 70%); pointer-events: none; }
+.cl-hero-id { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.cl-av.lg { width: 56px; height: 56px; font-size: 19px; background: var(--grad); color: #fff; }
+.cl-hero h1 { margin: 0; font-size: 24px; color: #fff; }
+.cl-hero p { margin: 2px 0 6px; color: #B7AED6; font-size: 13.5px; }
+.cl-hero-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.cl-hero-tags span { font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid color-mix(in srgb, var(--pc) 60%, transparent); color: #fff; }
+.cl-hero-act { display: flex; gap: 8px; align-items: flex-start; position: relative; z-index: 1; }
+.btn.ghost-d { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.18); }
+.btn.ghost-d:hover { background: rgba(255,255,255,.14); }
+.cl-hero-kpis { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; position: relative; z-index: 1; }
+.cl-hero-kpis > * { display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); text-align: left; color: #fff; font: inherit; }
+.cl-hero-kpis small { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #B7AED6; font-weight: 700; }
+.cl-hero-kpis b { font-family: var(--display); font-size: 21px; }
+.cl-hero-kpis > :first-child b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cl-hero-kpis em { font-style: normal; font-size: 12px; color: #9890B2; }
+.kp-btn { cursor: pointer; transition: background .15s, border-color .15s; }
+.kp-btn:hover { background: rgba(143,107,255,.18); border-color: rgba(201,140,255,.5); }
+.kp-btn em { color: #C9BEF0 !important; }
+@media (max-width: 760px) { .cl-hero { grid-template-columns: minmax(0, 1fr); padding: 18px; } .cl-hero-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cl-hero-act { order: 2; } }
+.pblocks { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+@media (max-width: 520px) { .pblocks { grid-template-columns: minmax(0, 1fr); } }
+.pblock { position: relative; display: grid; gap: 12px; align-content: start; padding: 16px 18px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; min-width: 0; }
+.pblock::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--pc); }
+.pblock header { display: flex; gap: 10px; align-items: center; }
+.pblock header > div { flex: 1; min-width: 0; display: grid; }
+.pblock header b { font-family: var(--display); font-size: 16px; }
+.pblock header small { color: var(--faint); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pb-dot { width: 34px; height: 34px; border-radius: 10px; flex: none; background: color-mix(in srgb, var(--pc) 14%, #fff); position: relative; }
+.pb-dot::after { content: ""; position: absolute; inset: 11px; border-radius: 50%; background: var(--pc); }
+.pb-go { display: inline-flex; align-items: center; gap: 4px; border: 1px solid color-mix(in srgb, var(--pc) 35%, var(--line)); background: color-mix(in srgb, var(--pc) 7%, #fff); color: var(--pc); font: inherit; font-weight: 700; font-size: 12.5px; padding: 6px 10px 6px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.pb-go .ic { width: 14px; height: 14px; }
+.pb-go:hover { background: var(--pc); color: #fff; }
+.pb-val { display: grid; }
+.pb-val small { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); font-weight: 700; }
+.pb-val b { font-family: var(--display); font-size: 26px; color: var(--ink); line-height: 1.15; }
+.pb-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pb-stats span { display: grid; gap: 1px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); min-width: 0; }
+.pb-stats small { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--faint); font-weight: 700; }
+.pb-stats b { font-size: 13.5px; overflow-wrap: anywhere; }
+.pb-stats em { font-style: normal; font-size: 11.5px; color: var(--muted); }
+.pb-aloc { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--track); }
+.pb-aloc i { display: block; height: 100%; }
+.pb-leg { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--muted); margin-top: -4px; }
+.pb-leg i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; }
+.pb-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pb-tags span { display: inline-flex; gap: 6px; align-items: baseline; padding: 5px 10px; border-radius: 999px; background: color-mix(in srgb, var(--pc) 9%, #fff); border: 1px solid color-mix(in srgb, var(--pc) 22%, transparent); font-size: 12.5px; color: var(--muted); }
+.pb-tags b { color: var(--ink); font-size: 13px; }
+.pb-prog { display: grid; gap: 5px; }
+.pb-prog small { font-size: 12px; color: var(--muted); }
+.pb-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pb-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 8px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); }
+.pb-list b { font-size: 13.5px; } .pb-list span { grid-column: 1; font-size: 12.5px; color: var(--muted); }
+.pb-list em { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-style: normal; font-size: 11.5px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.pb-list em.warn { color: var(--warn); } .pb-list em.ok { color: var(--ok); }
+.pblock.ghost { box-shadow: none; border: 1.5px dashed color-mix(in srgb, var(--pc) 35%, var(--line)); background: transparent; cursor: pointer; place-content: center; justify-items: center; text-align: center; min-height: 150px; gap: 4px; font: inherit; color: var(--ink); }
+.pblock.ghost::before { display: none; }
+.pblock.ghost > span { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--pc) 12%, #fff); color: var(--pc); }
+.pblock.ghost > span .ic { width: 18px; height: 18px; }
+.pblock.ghost small { color: var(--muted); font-size: 12.5px; }
+.pblock.ghost:hover { background: color-mix(in srgb, var(--pc) 5%, #fff); }
+.pd-list { display: grid; gap: 10px; }
+
 </style>
 
 <div class="app">
@@ -4189,14 +4254,16 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   function mb(el) {
     const meses = Cli.mbMeses();
     const atual = meses.find(m => m.id === mesMB) || meses[0];
-    el.innerHTML = `${voltar('Clientes', {})}
-      <div class="page-h"><div><h1><i class="pdot" style="background:#1E7A86"></i>MB · Mercado Bitcoin</h1><p class="muted">${atual ? `Posição de ${U.esc(atual.ref)} · importado ${U.fmtDateTime(atual.importadoEm)}` : 'Ainda sem nenhum mês importado.'}</p></div>
-        <div class="page-act">${meses.length > 1 ? `<select id="mbMes" class="sel">${meses.map(m => `<option value="${m.id}"${m.id === (atual && atual.id) ? ' selected' : ''}>${U.esc(m.ref)}</option>`).join('')}</select>` : ''}
+    const doCli = P.deCliente ? Cli.cliente(P.deCliente) : null;
+    el.innerHTML = `${doCli ? voltar('Voltar para ' + doCli.nome, { cliente: doCli.id }) : voltar('Clientes', {})}
+      <div class="page-h"><div><h1><i class="pdot" style="background:#1E7A86"></i>MB · ${doCli ? U.esc(Cli.apelido(doCli)) : 'Mercado Bitcoin'}</h1><p class="muted">${atual ? `Posição de ${U.esc(atual.ref)} · importado ${U.fmtDateTime(atual.importadoEm)}` : 'Ainda sem nenhum mês importado.'}</p></div>
+        <div class="page-act">${P.foco ? `<button class="btn ghost" id="mbTudo">Ver carteira completa</button>` : ''}${meses.length > 1 ? `<select id="mbMes" class="sel">${meses.map(m => `<option value="${m.id}"${m.id === (atual && atual.id) ? ' selected' : ''}>${U.esc(m.ref)}</option>`).join('')}</select>` : ''}
           <label class="btn primary">${UI.icon('arquivo')}Importar mês<input type="file" id="mbArq" accept=".html,.htm,.json" hidden></label></div></div>
       ${atual ? `<div class="mb-frame"><iframe id="mbIf" title="Carteira MB ${U.esc(atual.ref)}" loading="eager"></iframe></div>`
         : `<section class="card empty"><b>Importe o primeiro mês da carteira.</b><p>Escolha o arquivo do dashboard do MB (o .html que você já tem) ou o arquivo do mês que o Claude gerar a partir dos relatórios. Os clientes do MB entram na sua base automaticamente.</p></section>`}
       <p class="muted small mb-dica">Todo mês, por volta do dia 9: baixe os relatórios do MB, mande no chat e importe aqui o arquivo que o Claude devolver. Cada mês fica guardado, e o histórico vai se formando.</p>`;
     const sel = el.querySelector('#mbMes'); if (sel) sel.onchange = () => { mesMB = sel.value; mb(el); };
+    const tudo = el.querySelector('#mbTudo'); if (tudo) tudo.onclick = () => ir({ produto: 'mb' });
     el.querySelector('#mbArq').onchange = async ev => {
       const fl = ev.target.files[0]; if (!fl) return;
       try {
@@ -4212,63 +4279,136 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       const json = JSON.stringify({ ref: atual.ref, cdi: atual.cdi, ipca: atual.ipca ?? null, clients: atual.clients, positions: atual.positions || [] }).replace(/</g, '\\u003c');
       fr.srcdoc = App.MB_TEMPLATE.replace('__DADOS__', () => json);
       const ajusta = () => { try { const d = fr.contentDocument; if (d && d.body) fr.style.height = Math.max(600, d.documentElement.scrollHeight) + 'px'; } catch (e) {} };
-      fr.onload = () => { ajusta(); try { new ResizeObserver(ajusta).observe(fr.contentDocument.body); fr.contentDocument.addEventListener('click', () => setTimeout(ajusta, 60)); } catch (e) { setInterval(ajusta, 800); } };
+      fr.onload = () => {
+        /* Vindo da ficha: abre direto a carteira do cliente (função openClient do dashboard) */
+        if (P.foco) try {
+          const w = fr.contentWindow, d = fr.contentDocument;
+          if (typeof w.openClient === 'function') { w.openClient(String(P.foco)); w.scrollTo(0, 0); }
+          /* O "Voltar" da carteira do cliente volta para a ficha dele */
+          if (P.deCliente) d.addEventListener('click', ev => { const b = ev.target.closest('button'); if (b && /^\s*voltar\s*$/i.test(b.textContent)) { ev.stopPropagation(); ev.preventDefault(); ir({ cliente: P.deCliente }); } }, true);
+        } catch (e) {}
+        ajusta(); try { new ResizeObserver(ajusta).observe(fr.contentDocument.body); fr.contentDocument.addEventListener('click', () => setTimeout(ajusta, 60)); } catch (e) { setInterval(ajusta, 800); } };
     }
     ligarComum(el);
   }
 
-  /* ---------- Ficha do cliente ---------- */
+  /* ---------- Ficha do cliente: um bloco por plataforma/produto ---------- */
+  const usd = v => 'US$ ' + (+v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+  const CAT = { rf: ['Renda fixa', '#6E3FF0'], usd: ['Dólar', '#2B8AA6'], caixa: ['Caixa', '#A49CB8'], cripto: ['Cripto', '#D98A1E'], rv: ['Renda variável', '#2F855A'], cestas: ['Cestas', '#A0466B'] };
+  const ORDEM = ['mb', 'eqseed', 'ita', 'vida', 're', 'consorcio'];
+
+  /* Conteúdo de cada bloco: { titulo, sub, valor, rotuloValor, linhas[], extra (html), acao } */
+  function bloco(pid, cts, cli, m) {
+    const p = Cli.produto(pid), at = cts.filter(x => (x.status || 'ativo') === 'ativo');
+    const b = { p, n: cts.length, acao: 'Ver carteira' };
+    if (pid === 'mb') {
+      const tot = Object.values(m.cats || {}).reduce((s, v) => s + v, 0) || m.pl;
+      Object.assign(b, { valor: U.brl(m.pl), rotuloValor: 'Patrimônio · ' + (Cli.mbAtual() || {}).ref,
+        stats: [['No mês', U.num(m.rm) + '%', m.rm_cdi != null ? U.num(m.rm_cdi) + '% do CDI' : ''], ['12 meses', U.num(m.r12) + '%', m.r12_cdi != null ? U.num(m.r12_cdi) + '% do CDI' : ''], ['Resultado 12m', U.brl((m.res || [])[2] || 0), '']],
+        extra: `<div class="pb-aloc">${Object.entries(m.cats || {}).map(([k, v]) => `<i style="width:${v / tot * 100}%;background:${(CAT[k] || [k, '#999'])[1]}" title="${(CAT[k] || [k])[0]} ${Math.round(v / tot * 100)}%"></i>`).join('')}</div>
+          <div class="pb-leg">${Object.entries(m.cats || {}).map(([k, v]) => `<span><i style="background:${(CAT[k] || [k, '#999'])[1]}"></i>${(CAT[k] || [k])[0]} ${Math.round(v / tot * 100)}%</span>`).join('')}</div>` });
+    } else if (pid === 'eqseed') {
+      const g = {}; at.forEach(c => { g[c.startup || '—'] = (g[c.startup || '—'] || 0) + (+c.valor || 0); });
+      Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.valor || 0), 0)), rotuloValor: 'Total investido',
+        stats: [['Startups', Object.keys(g).length, ''], ['Investimentos', at.length, ''], ['Primeiro', U.fmtDate(at.map(c => c.data).filter(Boolean).sort()[0] || ''), '']],
+        extra: `<div class="pb-tags">${Object.entries(g).sort((a, c) => c[1] - a[1]).map(([k, v]) => `<span><b>${U.esc(k)}</b>${U.brlShort(v)}</span>`).join('')}</div>` });
+    } else if (pid === 'ita') {
+      const c = at[0] || cts[0], n = Cli.aportesITA(c), pz = +c.prazoAnos || null;
+      Object.assign(b, { valor: c.valorConta != null ? 'US$ ' + (+c.valorConta).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—', rotuloValor: 'Valor de conta' + (c.dataPosicao ? ' · ' + U.fmtDate(c.dataPosicao) : ''),
+        stats: [['Plano', (c.plano || '').split('·').slice(0, 3).join('·').trim() || '—', ''], ['Aporte anual', c.contribuicao ? usd(c.contribuicao) : '—', ''], ['Pago até', c.pagoAte ? U.fmtDate(c.pagoAte) : '—', '']],
+        extra: n != null && pz ? `<div class="pb-prog"><div class="pbar"><i style="width:${Math.min(100, n / pz * 100)}%;background:${p.cor}"></i></div><small>${n} de ${pz} aportes pagos${c.contribuicao ? ' · ' + usd(c.contribuicao * n) + ' aportados' : ''}</small></div>` : '' });
+      if (at.length > 1) b.extra += `<p class="muted small">+ ${at.length - 1} outro(s) plano(s)</p>`;
+    } else if (pid === 'vida') {
+      Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.capital || 0), 0)), rotuloValor: 'Capital segurado',
+        stats: [['Prêmio', U.brl(at.reduce((s, c) => s + (+c.premio || 0), 0)) + '/mês', ''], ['Seguradora', [...new Set(at.map(c => c.seguradora).filter(Boolean))].join(', ') || '—', ''], ['Renovação', U.fmtDate(at.map(c => c.renovacao).filter(Boolean).sort()[0] || '') || '—', '']] });
+    } else if (pid === 're') {
+      Object.assign(b, { valor: U.plural(at.length, 'apólice', 'apólices'), rotuloValor: 'Ramos elementares',
+        lista: at.map(c => { const d = Cli.proxData(c); return `<li><b>${U.esc(c.tipo || 'Apólice')}</b><span>${U.esc(c.seguradora || '')}${c.cobertura ? ' · ' + U.brlShort(c.cobertura) : ''}</span>${d ? `<em class="${U.diff(d, U.today()) <= 30 ? 'warn' : ''}">${U.diff(d, U.today()) < 0 ? 'venceu ' : 'vence '}${U.fmtDate(d)}</em>` : ''}</li>`; }).join('') });
+    } else if (pid === 'consorcio') {
+      Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.carta || 0), 0)), rotuloValor: 'Em cartas',
+        lista: at.map(c => `<li><b>${U.esc(c.administradora || 'Consórcio')}${c.grupo ? ' · ' + U.esc(c.grupo) + (c.cota ? '/' + U.esc(c.cota) : '') : ''}</b><span>${c.carta ? U.brlShort(c.carta) : ''}${c.prazo ? ' · ' + (c.pagas || 0) + '/' + c.prazo + ' parcelas' : ''}</span>${c.contemplado ? '<em class="ok">contemplado</em>' : ''}</li>`).join('') });
+    } else {
+      Object.assign(b, { valor: U.plural(at.length, 'registro', 'registros'), rotuloValor: p.nome });
+    }
+    return b;
+  }
+  const blocoHTML = (b, pid) => `<article class="pblock" style="--pc:${b.p.cor}" data-pb="${pid}">
+      <header><span class="pb-dot"></span><div><b>${U.esc(b.p.nome)}</b>${b.p.sub ? `<small>${U.esc(b.p.sub)}</small>` : ''}</div><button class="pb-go" data-pb-go="${pid}">${U.esc(b.acao)}${UI.icon('seta')}</button></header>
+      <div class="pb-val"><small>${U.esc(b.rotuloValor || '')}</small><b>${b.valor}</b></div>
+      ${b.stats ? `<div class="pb-stats">${b.stats.map(([l, v, s]) => `<span><small>${U.esc(l)}</small><b>${U.esc(String(v))}</b>${s ? `<em>${U.esc(s)}</em>` : ''}</span>`).join('')}</div>` : ''}
+      ${b.lista ? `<ul class="pb-list">${b.lista}</ul>` : ''}
+      ${b.extra || ''}</article>`;
+
+  /* Detalhe de um produto do cliente (todas as linhas, com editar) */
+  function detalheProduto(cli, pid) {
+    const p = Cli.produto(pid), cts = Cli.contratos({ clienteId: cli.id, produto: pid, todos: true })
+      .sort((a, b) => ((a.status || 'ativo') === 'ativo' ? 0 : 1) - ((b.status || 'ativo') === 'ativo' ? 0 : 1) || String(b.data || b.inicio || '').localeCompare(String(a.data || a.inicio || '')));
+    UI.modal({
+      title: p.nome + ' · ' + Cli.apelido(cli), size: 'md',
+      body: `<div class="pd-list">${cts.map(ct => `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(pid === 'eqseed' ? (ct.startup || 'Investimento') : pid === 're' ? (ct.tipo || 'Apólice') : pid === 'consorcio' ? (ct.administradora || 'Cota') : p.nome)}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
+          <div class="ct-kv">${p.campos.filter(cp => !(pid === 'eqseed' && cp.k === 'startup') && !(pid === 're' && cp.k === 'tipo')).map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`).join('')}</div>`,
+      footer: `<button class="btn ghost" data-close>Fechar</button><button class="btn primary" id="pdAdd">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button>`,
+      onMount(el, api) {
+        el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => { api.close(); App.Forms.contrato(b.dataset.ed); });
+        el.querySelector('#pdAdd').onclick = () => { api.close(); App.Forms.contrato(null, { clienteId: cli.id, produto: pid }); };
+      }
+    });
+  }
+
+  /* Atividades e negócios do cliente (abre pelo indicador do topo) */
+  function atividadesModal(cli, ats) {
+    UI.modal({
+      title: 'Atividades · ' + Cli.apelido(cli), size: 'md',
+      body: ats.length ? `<ul class="cl-ats">${ats.slice(0, 30).map(a => `<li data-at="${a.id}" class="${M.aberta(a) ? '' : 'feita'}"><span class="dot-st ${M.aberta(a) ? (M.atrasada(a) ? 'late' : 'open') : 'done'}"></span><div><b>${U.esc(a.titulo)}</b><small>${M.aberta(a) ? U.esc(U.relDue(a.prazo)) : 'Concluída ' + U.esc(U.fmtDate((a.concluidaEm || '').slice(0, 10)))}${M.ehNegocio(a) ? ' · ' + M.negociosDa(a).map(n => U.esc(M.tipoNeg(n.tipo).label)).join(', ') : ''}</small></div></li>`).join('')}</ul>`
+        : '<div class="empty sm"><b>Nenhuma atividade com este cliente.</b><p>Atividades aparecem aqui quando o campo Cliente tem o nome ou o apelido dele.</p></div>',
+      footer: `<button class="btn ghost" data-close>Fechar</button><button class="btn primary" id="atNova">${UI.icon('mais')}Nova atividade</button>`,
+      onMount(el, api) {
+        el.querySelectorAll('[data-at]').forEach(li => li.onclick = () => { api.close(); App.Forms.detalhes(li.dataset.at); });
+        el.querySelector('#atNova').onclick = () => { api.close(); App.Forms.atividade(null, { cliente: Cli.apelido(cli) }); };
+      }
+    });
+  }
+
   function ficha(el) {
     const c = Cli.cliente(P.cliente);
     if (!c) { el.innerHTML = `${voltar('Clientes', {})}<div class="empty card"><b>Cliente não encontrado.</b></div>`; return ligarComum(el); }
     const cts = Cli.contratos({ clienteId: c.id, todos: true }).filter(x => x.produto !== 'mb');
-    const m = Cli.mbDoCliente(c), mbRef = Cli.mbAtual();
+    const m = Cli.mbDoCliente(c);
+    const porProd = {}; cts.forEach(x => { (porProd[x.produto] = porProd[x.produto] || []).push(x); });
+    const pids = ORDEM.filter(pid => pid === 'mb' ? !!m : porProd[pid]).concat(Object.keys(porProd).filter(k => !ORDEM.includes(k)));
     const ats = Cli.atividadesDo(c).sort((a, b) => (M.aberta(b) - M.aberta(a)) || (b.prazo || '').localeCompare(a.prazo || ''));
-    const abertas = ats.filter(M.aberta), negs = ats.filter(a => M.ehNegocio(a) && M.aberta(a));
-    const mails = Cli.emailsDo(c).sort((a, b) => (b.recebidoEm || '').localeCompare(a.recebidoEm || ''));
+    const abertas = ats.filter(M.aberta);
     const receita = Cli.receitaDo(c);
+    const eq = (porProd.eqseed || []).filter(x => (x.status || 'ativo') === 'ativo').reduce((s, x) => s + (+x.valor || 0), 0);
+    const brl = (m ? +m.pl : 0) + eq;
+    const itaUsd = (porProd.ita || []).reduce((s, x) => s + (+x.valorConta || 0), 0);
+    const falta = ORDEM.filter(pid => pid !== 'mb' && !porProd[pid] && !Cli.produto(pid).oculto);
     const de = P.de ? { produto: P.de } : {};
-    const pct = v => v == null ? '—' : U.num(v) + '%';
     el.innerHTML = `${voltar(P.de ? Cli.produto(P.de).nome : 'Clientes', de)}
-      <div class="cl-head">${av(c)}<div><h1>${U.esc(c.nome)}</h1>
-        <p class="muted">${[c.apelido && 'Chamado de ' + c.apelido, c.telefone, c.email, c.nascimento && 'Aniversário ' + U.fmtDate(c.nascimento).replace(/ \d{4}$/, '')].filter(Boolean).map(U.esc).join(' · ') || 'Sem contato cadastrado'}</p></div>
-        <div class="page-act"><button class="btn ghost" id="clEd">${UI.icon('editar')}Editar</button><button class="btn ghost" id="clAt">${UI.icon('mais')}Atividade</button><button class="btn primary" data-novo-ct data-cid="${c.id}">${UI.icon('mais')}Produto</button></div></div>
+      <section class="cl-hero">
+        <div class="cl-hero-id"><span class="cl-av lg">${U.esc((Cli.apelido(c) || '?').slice(0, 2).toUpperCase())}</span><div><h1>${U.esc(c.nome)}</h1>
+          <p>${[c.telefone, c.email, c.nascimento && 'Aniversário ' + U.fmtDate(c.nascimento).replace(/ \d{4}$/, '')].filter(Boolean).map(U.esc).join(' · ') || 'Sem contato cadastrado'}</p>
+          <div class="cl-hero-tags">${pids.map(pid => `<span style="--pc:${Cli.produto(pid).cor}">${U.esc(Cli.produto(pid).nome)}</span>`).join('')}</div></div></div>
+        <div class="cl-hero-act"><button class="btn ghost-d" id="clEd">${UI.icon('editar')}Editar</button><button class="btn primary" data-novo-ct data-cid="${c.id}">${UI.icon('mais')}Produto</button></div>
+        <div class="cl-hero-kpis">
+          <div><small>Investido com você</small><b>${brl ? U.brl(brl) : '—'}</b>${itaUsd ? `<em>+ ${usd(itaUsd)} no exterior</em>` : '<em>MB + Eqseed</em>'}</div>
+          <div><small>Produtos</small><b>${pids.length}</b><em>${U.plural(cts.filter(x => (x.status || 'ativo') === 'ativo').length + (m ? 1 : 0), 'contrato ativo', 'contratos ativos')}</em></div>
+          <button class="kp-btn" id="clAts"><small>Atividades em aberto</small><b>${abertas.length}</b><em>${ats.length ? 'Ver ' + U.plural(ats.length, 'atividade', 'atividades') : 'Criar atividade'} ›</em></button>
+          <div><small>Receita gerada</small><b>${receita ? U.brl(receita) : '—'}</b><em>nas suas produções</em></div>
+        </div>
+      </section>
       ${c.observacoes ? `<p class="cl-obs">${U.esc(c.observacoes)}</p>` : ''}
-      <div class="kpis k4">
-        <div class="kpi"><span>Produtos</span><b>${cts.filter(x => (x.status || 'ativo') === 'ativo').length + (m ? 1 : 0)}</b></div>
-        <div class="kpi"><span>${m ? 'PL no MB' : 'Negócios abertos'}</span><b>${m ? U.brlShort(m.pl) : negs.length}</b></div>
-        <div class="kpi"><span>Atividades abertas</span><b>${abertas.length}</b></div>
-        <div class="kpi"><span>Receita gerada</span><b>${receita ? U.brlShort(receita) : '—'}</b></div></div>
-      <div class="grid-2">
-        <section class="card"><div class="card-h"><h2>Produtos</h2></div>
-          ${m ? `<div class="ct-card" style="--pc:#1E7A86"><div class="ct-h"><b>MB · Mercado Bitcoin</b><button class="link" data-prod="mb">Ver carteira</button></div>
-            <div class="ct-kv"><span><small>Patrimônio (${U.esc(mbRef.ref)})</small>${U.brl(m.pl)}</span><span><small>Rentab. no mês</small>${pct(m.rm)} <em>${m.rm_cdi != null ? U.num(m.rm_cdi) + '% do CDI' : ''}</em></span>
-            <span><small>12 meses</small>${pct(m.r12)} <em>${m.r12_cdi != null ? U.num(m.r12_cdi) + '% do CDI' : ''}</em></span><span><small>Alocação</small>${Object.entries(m.cats || {}).map(([k, v]) => ({ rf: 'RF', usd: 'USD', caixa: 'Caixa', cripto: 'Cripto', rv: 'RV' }[k] || k) + ' ' + Math.round(v / m.pl * 100) + '%').join(' · ')}</span></div></div>` : ''}
-          ${cts.map(ct => { const p = Cli.produto(ct.produto);
-            return `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(p.nome)}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
-              <div class="ct-kv">${p.campos.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`; }).join('')}
-          ${!m && !cts.length ? '<div class="empty sm"><b>Nenhum produto cadastrado.</b><p>Use “Produto” para registrar consórcio, seguro, plano de saúde, Eqseed ou ITA.</p></div>' : ''}
-          ${cts.length || m ? '' : ''}<p class="cl-oport">${oportunidades(c, cts, m)}</p></section>
-        <div class="stack">
-          <section class="card"><div class="card-h"><h2>Atividades e negócios</h2>${ats.length ? `<span class="count">${ats.length}</span>` : ''}</div>
-            ${ats.length ? `<ul class="cl-ats">${ats.slice(0, 8).map(a => `<li data-at="${a.id}" class="${M.aberta(a) ? '' : 'feita'}"><span class="dot-st ${M.aberta(a) ? (M.atrasada(a) ? 'late' : 'open') : 'done'}"></span><div><b>${U.esc(a.titulo)}</b><small>${M.aberta(a) ? U.esc(U.relDue(a.prazo)) : 'Concluída ' + U.esc(U.fmtDate((a.concluidaEm || '').slice(0, 10)))}${M.ehNegocio(a) ? ' · ' + M.negociosDa(a).map(n => U.esc(M.tipoNeg(n.tipo).label)).join(', ') : ''}</small></div></li>`).join('')}</ul>`
-              : '<p class="muted small">Nenhuma atividade com este cliente. As atividades aparecem aqui quando o campo Cliente tem o nome ou o apelido dele.</p>'}</section>
-          <section class="card"><div class="card-h"><h2>E-mails</h2></div>
-            ${mails.length ? `<ul class="cl-ats">${mails.slice(0, 5).map(e => `<li data-em="${e.id}"><span class="dot-st ${(e.status || 'novo') === 'novo' ? 'open' : 'done'}"></span><div><b>${U.esc(e.assunto || '')}</b><small>${U.esc(e.remetente || '')} · ${App.Emails ? App.Emails.quando(e.recebidoEm) : ''}</small></div></li>`).join('')}</ul>` : '<p class="muted small">Nenhum e-mail ligado a este cliente.</p>'}</section>
-        </div></div>`;
+      <div class="pblocks">${pids.map(pid => blocoHTML(bloco(pid, porProd[pid] || [], c, m), pid)).join('')}
+        ${falta.map(pid => `<button class="pblock ghost" style="--pc:${Cli.produto(pid).cor}" data-novo-ct="${pid}" data-cid="${c.id}"><span>${UI.icon('mais')}</span><b>${U.esc(Cli.produto(pid).nome)}</b><small>Ainda não tem · adicionar</small></button>`).join('')}
+      </div>`;
     el.querySelector('#clEd').onclick = () => App.Forms.cliente(c.id);
-    el.querySelector('#clAt').onclick = () => App.Forms.atividade(null, { cliente: Cli.apelido(c), titulo: '' });
-    el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => App.Forms.contrato(b.dataset.ed));
-    el.querySelectorAll('[data-at]').forEach(li => li.onclick = () => App.Forms.detalhes(li.dataset.at));
-    el.querySelectorAll('[data-em]').forEach(li => li.onclick = () => App.Emails && App.Emails.detalhe(li.dataset.em));
+    el.querySelector('#clAts').onclick = () => atividadesModal(c, ats);
+    el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
+      const pid = b.dataset.pbGo;
+      if (pid === 'mb') { const ct = Store.all('contratos').find(x => x.produto === 'mb' && x.clienteId === c.id); ir({ produto: 'mb', foco: ct ? ct.mbId : null, cliente: null, deCliente: c.id }); }
+      else detalheProduto(c, pid);
+    });
     ligarComum(el);
-  }
-  /* Produtos que o cliente ainda não tem: ideia de conversa */
-  function oportunidades(c, cts, m) {
-    const tem = new Set(cts.filter(x => (x.status || 'ativo') === 'ativo').map(x => x.produto)); if (m) tem.add('mb');
-    if (!tem.size) return '';
-    const falta = ['vida', 'consorcio', 're', 'ita'].filter(p => !tem.has(p)).map(p => Cli.produto(p).nome);
-    return falta.length ? `${UI.icon('seta')}Ainda não tem: ${falta.map(U.esc).join(', ')}.` : '';
   }
 
   App.Views = App.Views || {};
