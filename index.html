@@ -958,6 +958,56 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .mf-act { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
 @media (max-width: 520px) { .mfilter { width: 100%; } .mf-btn { width: 100%; max-width: none; } .mf-pop { left: 0; right: 0; width: auto; } }
 
+/* Parte 1 · produtos, Mapa 360, potenciais */
+.doc-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700; color: var(--accent); text-decoration: none; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); margin-left: auto; }
+.doc-link .ic { width: 13px; height: 13px; }
+.pc-pot { display: inline-block; margin-top: 6px; font-size: 11.5px; font-weight: 700; color: #C2611A; background: color-mix(in srgb, #C2611A 11%, #fff); border-radius: 999px; padding: 1px 8px; }
+.m360b { margin-bottom: 16px; }
+.m360b-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; }
+.m360b-a { display: grid; gap: 6px; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font: inherit; color: var(--ink); cursor: pointer; }
+.m360b-a:hover { border-color: var(--accent); }
+.m360b-a b { font-size: 13.5px; }
+.m360b-a small { font-size: 11.5px; color: var(--muted); line-height: 1.35; } .m360b-a small em { font-style: normal; font-weight: 700; }
+.m360-bar { display: flex; height: 7px; border-radius: 999px; overflow: hidden; background: var(--surface-2); gap: 1px; }
+.m360-bar i { display: block; height: 100%; }
+.m360 { margin-bottom: 16px; }
+.m360-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.m360-a { display: grid; gap: 3px; align-content: start; text-align: left; padding: 10px 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--sc) 30%, var(--line)); border-left: 4px solid var(--sc); background: color-mix(in srgb, var(--sc) 5%, var(--surface)); font: inherit; color: var(--ink); cursor: pointer; min-height: 64px; }
+.m360-a:hover { border-color: var(--sc); }
+.m360-a.s-sem { border-style: dashed; border-left-style: solid; background: var(--surface); }
+.m360-a.perto { box-shadow: 0 0 0 2px color-mix(in srgb, #C2611A 45%, transparent); }
+.m360-n { font-size: 13px; font-weight: 700; }
+.m360-s { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--sc); }
+.m360-s i { width: 7px; height: 7px; border-radius: 50%; background: var(--sc); }
+.m360-a.s-sem .m360-s { color: var(--muted); }
+.m360-a small { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pot { margin-bottom: 14px; }
+.pot .card-h { gap: 8px; justify-content: flex-start; flex-wrap: wrap; }
+.pot-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pot-list li { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
+.pot-list li:hover { border-color: var(--accent); }
+.pot-list li > div:first-child { flex: 1; min-width: 0; display: grid; } .pot-list b { font-size: 14px; } .pot-list small { font-size: 12px; color: var(--muted); }
+.pot-et { display: flex; gap: 4px; flex: none; }
+.pot-et button { font: inherit; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; }
+.pot-et button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (max-width: 560px) { .pot-list li { flex-wrap: wrap; } .pot-et { width: 100%; } .pot-et button { flex: 1; } .m360-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .m360b-grid { grid-template-columns: minmax(0, 1fr); } }
+.aj-prod, .aj-seg { margin-bottom: 16px; }
+.aj-tg { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 6px; }
+.aj-t { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
+.aj-t input { position: absolute; opacity: 0; pointer-events: none; }
+.aj-t .tg { width: 34px; height: 20px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); position: relative; flex: none; transition: background .15s; }
+.aj-t .tg i { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--faint); transition: transform .15s, background .15s; }
+.aj-t input:checked + .tg { background: var(--accent); border-color: var(--accent); } .aj-t input:checked + .tg i { transform: translateX(14px); background: #fff; }
+.aj-t input:focus-visible + .tg { outline: 2px solid var(--accent); outline-offset: 2px; }
+.aj-t .pdot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.aj-t > span:last-child { display: grid; } .aj-t b { font-size: 13.5px; } .aj-t small { font-size: 11.5px; color: var(--muted); }
+.seg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.seg-chips span { display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px 4px 12px; border-radius: 999px; background: var(--surface-2); font-size: 13px; }
+.seg-chips button { border: 0; background: none; padding: 2px; border-radius: 50%; cursor: pointer; color: var(--muted); display: grid; } .seg-chips button:hover { color: var(--late); }
+.seg-chips .ic { width: 13px; height: 13px; }
+.seg-add { display: flex; gap: 8px; max-width: 420px; } .seg-add input { flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--surface); }
+.ct-grid .f.full { grid-column: 1 / -1; }
+
 </style>
 
 <div class="app">
@@ -1844,12 +1894,12 @@ window.HORUS_CONFIG = {
       { k: 'prazo', l: 'Prazo (meses)', t: 'num' }, { k: 'pagas', l: 'Parcelas pagas', t: 'num', lista: true },
       { k: 'contemplado', l: 'Contemplado', t: 'sim', lista: true }, { k: 'adesao', l: 'Data de adesão', t: 'data' }] },
     { id: 'vida', nome: 'Seguro de vida', cor: '#C2412D', principal: 'capital', venc: 'renovacao', campos: [
-      { k: 'seguradora', l: 'Seguradora', t: 'texto', lista: true }, { k: 'apolice', l: 'Apólice', t: 'texto' },
+      { k: 'seguradora', l: 'Seguradora', t: 'seg', lista: true }, { k: 'apolice', l: 'Apólice', t: 'texto' },
       { k: 'capital', l: 'Capital segurado', t: 'brl', lista: true }, { k: 'premio', l: 'Prêmio mensal', t: 'brl', lista: true },
       { k: 'inicio', l: 'Início', t: 'data' }, { k: 'renovacao', l: 'Renovação', t: 'data', lista: true }] },
     { id: 're', nome: 'Ramos elementares', sub: 'RC, plano de saúde, vida em grupo', cor: '#A0466B', venc: 'fimVigencia', campos: [
       { k: 'tipo', l: 'Tipo', t: 'opcoes', op: ['RC pessoal', 'RC profissional', 'Residencial', 'Plano de saúde', 'Seguro de vida em grupo'], lista: true },
-      { k: 'seguradora', l: 'Seguradora / operadora', t: 'texto', lista: true }, { k: 'apolice', l: 'Apólice / contrato', t: 'texto' },
+      { k: 'seguradora', l: 'Seguradora / operadora', t: 'seg', lista: true }, { k: 'apolice', l: 'Apólice / contrato', t: 'texto' },
       { k: 'cobertura', l: 'Cobertura / capital', t: 'brl', lista: true }, { k: 'vidas', l: 'Vidas', t: 'num', lista: true },
       { k: 'premio', l: 'Prêmio / mensalidade', t: 'brl', lista: true }, { k: 'periodicidade', l: 'Pagamento', t: 'opcoes', op: ['Mensal', 'Anual'] },
       { k: 'inicio', l: 'Início da vigência', t: 'data' }, { k: 'fimVigencia', l: 'Fim da vigência / renovação', t: 'data', lista: true },
@@ -1868,6 +1918,31 @@ window.HORUS_CONFIG = {
       { k: 'data', l: 'Data de emissão', t: 'data', lista: true }, { k: 'liquidacao', l: 'Liquidação', t: 'data' },
       { k: 'situacao', l: 'Situação', t: 'opcoes', op: ['Em captação', 'Concluído', 'Saída', 'Perda'], lista: true },
       { k: 'idInvestimento', l: 'Nº do investimento', t: 'texto' }, { k: 'rodada', l: 'Rodada', t: 'texto' }] },
+    { id: 'previdencia', nome: 'Previdência', sub: 'PGBL e VGBL', cor: '#2F7D62', principal: 'saldo', campos: [
+      { k: 'seguradora', l: 'Seguradora / gestora', t: 'seg', lista: true }, { k: 'tipo', l: 'Tipo', t: 'opcoes', op: ['PGBL', 'VGBL'], lista: true },
+      { k: 'contribuicao', l: 'Contribuição mensal', t: 'brl', lista: true }, { k: 'saldo', l: 'Saldo acumulado', t: 'brl', lista: true },
+      { k: 'inicio', l: 'Início', t: 'data' }] },
+    { id: 'auto', nome: 'Seguro auto', cor: '#D0622F', principal: 'premio', venc: 'fimVigencia', campos: [
+      { k: 'seguradora', l: 'Seguradora', t: 'seg', lista: true }, { k: 'veiculo', l: 'Veículo', t: 'texto', lista: true },
+      { k: 'premio', l: 'Prêmio anual', t: 'brl', lista: true }, { k: 'inicio', l: 'Início da vigência', t: 'data' },
+      { k: 'fimVigencia', l: 'Fim da vigência / renovação', t: 'data', lista: true }] },
+    { id: 'zentis', nome: 'Zentis', cor: '#4F46C8', principal: 'valor', campos: [
+      { k: 'produto', l: 'Produto / operação', t: 'texto', lista: true }, { k: 'valor', l: 'Valor', t: 'brl', lista: true },
+      { k: 'data', l: 'Data', t: 'data', lista: true }, { k: 'vencimento', l: 'Vencimento', t: 'data' }] },
+    { id: 'stonex', nome: 'StoneX', sub: 'Conta internacional', cor: '#1F6F8B', campos: [
+      { k: 'valor', l: 'Valor em conta', t: 'usd', lista: true }, { k: 'dataPosicao', l: 'Posição em', t: 'data', lista: true },
+      { k: 'abertura', l: 'Abertura da conta', t: 'data' }] },
+    { id: 'dominion', nome: 'Dominion', sub: 'Plano internacional', cor: '#8A6A2F', campos: [
+      { k: 'plano', l: 'Plano', t: 'texto', lista: true }, { k: 'contribuicao', l: 'Contribuição anual', t: 'usd', lista: true },
+      { k: 'valorConta', l: 'Valor de conta', t: 'usd', lista: true }, { k: 'efetividade', l: 'Data de efetividade', t: 'data' },
+      { k: 'dataPosicao', l: 'Posição em', t: 'data' }] },
+    { id: 'cambio', nome: 'Câmbio', cor: '#2B8AA6', principal: 'valor', campos: [
+      { k: 'tipo', l: 'Tipo', t: 'opcoes', op: ['Remessa', 'Conta global', 'Compra / venda de moeda', 'Proteção (hedge)'], lista: true },
+      { k: 'moeda', l: 'Moeda', t: 'texto', lista: true }, { k: 'valor', l: 'Valor (R$)', t: 'brl', lista: true }, { k: 'data', l: 'Data', t: 'data', lista: true }] },
+    { id: 'credito', nome: 'Crédito', cor: '#B5485D', principal: 'valor', campos: [
+      { k: 'tipo', l: 'Tipo', t: 'opcoes', op: ['Home equity', 'Garantia de investimentos', 'Consignado', 'Financiamento', 'Capital de giro', 'Outro'], lista: true },
+      { k: 'instituicao', l: 'Instituição', t: 'texto', lista: true }, { k: 'valor', l: 'Valor', t: 'brl', lista: true },
+      { k: 'taxa', l: 'Taxa', t: 'texto' }, { k: 'data', l: 'Contratação', t: 'data', lista: true }] },
     /* ITA: plano de aporte anual da Investors Trust (ex.: SPX20-X, S&P 500, 20 anos, USD). Pode antecipar até 3 aportes. */
     { id: 'ita', nome: 'ITA', sub: 'Investors Trust · diversificação internacional', cor: '#2B5A8C', venc: 'pagoAte', campos: [
       { k: 'plano', l: 'Plano', t: 'texto', lista: true, padrao: 'SPX20-X · S&P 500 · 20 anos · USD Series III' },
@@ -1876,7 +1951,74 @@ window.HORUS_CONFIG = {
       { k: 'valorConta', l: 'Valor de conta', t: 'usd', lista: true }, { k: 'dataPosicao', l: 'Posição em', t: 'data' },
       { k: 'plataforma', l: 'Plataforma', t: 'texto', padrao: 'Investors Trust' }] }
   ];
+  /* Ordem dos cards: investimentos, internacionais, proteção, outros */
+  const ORDEM_P = ['mb', 'eqseed', 'zentis', 'previdencia', 'ita', 'stonex', 'dominion', 'vida', 're', 'auto', 'consorcio', 'cambio', 'credito'];
+  C.PRODUTOS.sort((a, b) => (ORDEM_P.indexOf(a.id) + 1 || 99) - (ORDEM_P.indexOf(b.id) + 1 || 99));
   C.produto = id => C.PRODUTOS.find(p => p.id === id) || { id, nome: id, cor: '#5A6474', campos: [] };
+  /* Todo produto (menos MB) tem o link do documento: a apólice/contrato fica no OneDrive, o painel guarda só o endereço */
+  C.CAMPO_LINK = { k: 'link', l: 'Link da apólice / contrato (OneDrive)', t: 'url' };
+  C.PRODUTOS.forEach(p => { if (!p.especial && !p.campos.some(c => c.k === 'link')) p.campos.push(C.CAMPO_LINK); });
+
+  /* ---------- Produtos visíveis (Ajustes) e seguradoras ---------- */
+  const OCULTOS_PADRAO = ['cambio', 'credito'];
+  C.ocultos = () => { const o = Store.config('produtosOcultos'); return Array.isArray(o) ? o : OCULTOS_PADRAO; };
+  C.visivel = pid => { const p = C.produto(pid); return !p.oculto && !C.ocultos().includes(pid); };
+  C.alternarVisivel = (pid, on) => { const o = C.ocultos().filter(x => x !== pid); if (!on) o.push(pid); Store.config('produtosOcultos', o); };
+  C.SEGURADORAS_PADRAO = ['Porto', 'Prudential', 'MAG', 'MetLife', 'Icatu', 'Azos', 'Omint', 'SulAmérica', 'Bradesco Seguros', 'Allianz', 'Tokio Marine', 'HDI', 'Mapfre', 'Zurich', 'Amil', 'Unimed', 'Brasilprev'];
+  C.seguradoras = () => { const l = Store.config('seguradoras'); return Array.isArray(l) ? l : C.SEGURADORAS_PADRAO; };
+  C.salvarSeguradoras = l => Store.config('seguradoras', [...new Set(l.map(x => String(x).trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR')));
+
+  /* ---------- Mapa 360: o que o cliente tem em cada área ----------
+     Situação por área: 'comigo' (vem sozinha quando há contrato ativo, ou marcada à mão) · 'mapeado' (tem com outro corretor/banco)
+     · 'nao' (não tem = oportunidade) · 'na' (não se aplica) · sem registro = 'sem' (ainda não perguntado).
+     Fica no cliente: mapa = { [area]: { sit, onde, venc, valor, etapa, obs, em } }. etapa (para 'nao' e 'mapeado'): a_abordar · abordado · proposta. */
+  C.AREAS = [
+    { id: 'vida', nome: 'Seguro de vida', prods: ['vida'], seguro: true },
+    { id: 'saude', nome: 'Plano de saúde', prods: ['re:Plano de saúde', 'saude'], seguro: true },
+    { id: 'auto', nome: 'Seguro auto', prods: ['auto'], seguro: true },
+    { id: 'residencial', nome: 'Residencial', prods: ['re:Residencial'], seguro: true },
+    { id: 'rc', nome: 'RC', prods: ['re:RC pessoal', 're:RC profissional', 'rc'], seguro: true },
+    { id: 'vidagrupo', nome: 'Vida em grupo', prods: ['re:Seguro de vida em grupo'], seguro: true },
+    { id: 'previdencia', nome: 'Previdência', prods: ['previdencia'] },
+    { id: 'consorcio', nome: 'Consórcio', prods: ['consorcio'] },
+    { id: 'internacional', nome: 'Internacional', prods: ['ita', 'stonex', 'dominion'] },
+    { id: 'cripto', nome: 'Cripto (MB)', prods: ['mb'] },
+    { id: 'startups', nome: 'Startups (Eqseed)', prods: ['eqseed'] },
+    { id: 'zentis', nome: 'Zentis', prods: ['zentis'] },
+    { id: 'cambio', nome: 'Câmbio', prods: ['cambio'] },
+    { id: 'credito', nome: 'Crédito', prods: ['credito'] }
+  ];
+  C.SITS = { comigo: { label: 'Comigo', cor: '#23864F' }, mapeado: { label: 'Mapeado', cor: '#2B6CB0' }, nao: { label: 'Não tem', cor: '#C2611A' }, na: { label: 'Não se aplica', cor: '#8F88A6' }, sem: { label: 'Sem informação', cor: '#B9B3CC' } };
+  C.ETAPAS = [{ id: 'a_abordar', label: 'A abordar' }, { id: 'abordado', label: 'Abordado' }, { id: 'proposta', label: 'Em proposta' }];
+  C.area = id => C.AREAS.find(a => a.id === id);
+  const prodDe = ref => ref.split(':')[0];
+  C.areaVisivel = a => a.prods.some(r => C.visivel(prodDe(r)));
+  C.areasVisiveis = () => C.AREAS.filter(C.areaVisivel);
+  C.areasDoProduto = pid => C.AREAS.filter(a => a.prods.some(r => prodDe(r) === pid));
+  /* Contratos ativos do cliente que contam para a área */
+  C.contratosDaArea = (cli, a) => Store.all('contratos').filter(ct => ct.clienteId === cli.id && (ct.status || 'ativo') === 'ativo' && a.prods.some(r => { const [pid, tipo] = r.split(':'); return ct.produto === pid && (!tipo || ct.tipo === tipo); }));
+  C.mapa = (cli, aid) => {
+    const a = C.area(aid), cts = C.contratosDaArea(cli, a), reg = (cli.mapa || {})[aid] || null;
+    if (cts.length) return { sit: 'comigo', auto: true, cts, reg };
+    return reg && reg.sit ? { ...reg, auto: false, cts: [] } : { sit: 'sem', auto: false, cts: [] };
+  };
+  C.salvarMapa = (cliId, aid, dados) => {
+    const c = C.cliente(cliId); if (!c) return;
+    const mapa = { ...(c.mapa || {}) };
+    if (!dados || !dados.sit || dados.sit === 'sem') delete mapa[aid];
+    else mapa[aid] = { ...dados, em: U.today() };
+    Store.update('clientes', cliId, { mapa });
+  };
+  /* Base para o Mapa 360: clientes de verdade (sem prospects e ex-clientes) */
+  C.base360 = () => C.clientes().filter(c => !c.saiu);
+  C.resumoArea = aid => { const r = { comigo: 0, mapeado: 0, nao: 0, na: 0, sem: 0 }; C.base360().forEach(c => r[C.mapa(c, aid).sit]++); return r; };
+  /* Potenciais de um produto: quem não tem ou tem com outro, nas áreas desse produto (inclui prospects) */
+  C.potenciais = pid => {
+    const areas = C.areasDoProduto(pid), out = [];
+    Store.all('clientes').filter(c => !c.saiu).forEach(c => areas.forEach(a => { const m = C.mapa(c, a.id); if (m.sit === 'nao' || m.sit === 'mapeado') out.push({ cli: c, area: a, m }); }));
+    const peso = x => ({ proposta: 0, abordado: 1, a_abordar: 2 }[x.m.etapa] ?? 3);
+    return out.sort((a, b) => peso(a) - peso(b) || String(a.m.venc || '9').localeCompare(String(b.m.venc || '9')) || a.cli.nome.localeCompare(b.cli.nome, 'pt-BR'));
+  };
   const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
   C.MESES = MESES;
 
@@ -1929,6 +2071,7 @@ window.HORUS_CONFIG = {
   C.rotuloVenc = ct => {
     if (ct.produto === 'ita') return 'Próximo aporte anual do plano' + (ct.contribuicao ? ' · US$ ' + (+ct.contribuicao).toLocaleString('pt-BR') : '');
     if (ct.produto === 're') return (ct.tipo || 'Ramos elementares') + (!ct.fimVigencia && ct.reajuste ? ' · reajuste' : ' · renovação');
+    if (ct.produto === 'auto') return 'Renovação do seguro auto' + (ct.veiculo ? ' · ' + ct.veiculo : '');
     return ({ renovacao: 'Renovação do seguro de vida', fimVigencia: 'Fim da vigência do seguro RC', reajuste: 'Reajuste do plano de saúde' }[C.produto(ct.produto).venc] || 'Vencimento');
   };
   C.vencimentos = (dias = 60) => {
@@ -1944,6 +2087,11 @@ window.HORUS_CONFIG = {
       const cli = C.porMbId(ps.cid);
       out.push({ mb: true, data: d, cli, nomeMB: cl.nome, rotulo: `${ps.ativo} vence no MB · ${U.brl(ps.saldo)}` });
     });
+    /* Mapa 360: o que o cliente tem com outro corretor e vence (oportunidade de trazer) */
+    Store.all('clientes').forEach(cli => Object.entries(cli.mapa || {}).forEach(([aid, r]) => {
+      if (r.sit !== 'mapeado' || !r.venc || r.venc < U.addDays(hoje, -7) || r.venc > lim) return; const a = C.area(aid); if (!a) return;
+      out.push({ mapa: true, data: r.venc, cli, rotulo: `${a.nome} com ${r.onde || 'outro corretor'} · mapeado, oportunidade` });
+    }));
     /* Consórcio na última parcela */
     Store.all('contratos').filter(c => c.produto === 'consorcio' && (c.status || 'ativo') === 'ativo' && c.prazo && c.pagas != null && +c.prazo - +c.pagas <= 1 && +c.prazo - +c.pagas >= 0)
       .forEach(ct => out.push({ ct, data: hoje, cli: C.cliente(ct.clienteId), rotulo: 'Consórcio na última parcela' }));
@@ -3461,6 +3609,8 @@ window.HORUS_CONFIG = {
     if (cp.t === 'sim') return `<label class="f"><span>${cp.l}</span><select name="${cp.k}"><option value="">Não</option><option value="1"${v[cp.k] ? ' selected' : ''}>Sim</option></select></label>`;
     if (cp.t === 'mes') return `<label class="f"><span>${cp.l}</span><select name="${cp.k}"><option value="">—</option>${Cli.MESES.map((m, i) => `<option value="${i + 1}"${+val === i + 1 ? ' selected' : ''}>${m}</option>`).join('')}</select></label>`;
     if (cp.t === 'opcoes') return `<label class="f"><span>${cp.l}</span><select name="${cp.k}"><option value="">—</option>${cp.op.map(o => `<option${val === o ? ' selected' : ''}>${U.esc(o)}</option>`).join('')}</select></label>`;
+    if (cp.t === 'seg') return `<label class="f"><span>${cp.l}</span><input name="${cp.k}" list="dlSeg" maxlength="60" value="${U.esc(val)}" placeholder="Escolha ou digite" autocomplete="off"></label>`;
+    if (cp.t === 'url') return `<label class="f full"><span>${cp.l}</span><input type="url" name="${cp.k}" value="${U.esc(val)}" placeholder="Cole aqui o link do arquivo no OneDrive / SharePoint"></label>`;
     if (cp.t === 'data') return `<label class="f"><span>${cp.l}</span><input type="date" name="${cp.k}" value="${val || ''}"></label>`;
     if (['brl', 'num', 'usd'].includes(cp.t)) return `<label class="f"><span>${cp.l}</span><input name="${cp.k}" data-num inputmode="decimal" value="${num(v[cp.k])}" placeholder="${cp.t === 'brl' ? 'R$' : cp.t === 'usd' ? 'US$' : ''}"></label>`;
     return `<label class="f"><span>${cp.l}</span><input name="${cp.k}" maxlength="80" value="${U.esc(val)}"></label>`;
@@ -3470,7 +3620,7 @@ window.HORUS_CONFIG = {
     const ct = id ? Store.get('contratos', id) : null;
     const v = ct || { status: 'ativo', ...preset };
     const fixoCli = ct ? Cli.cliente(ct.clienteId) : preset.clienteId ? Cli.cliente(preset.clienteId) : null;
-    const prods = Cli.PRODUTOS.filter(p => !p.especial && !p.oculto);
+    const prods = Cli.PRODUTOS.filter(p => !p.especial && (Cli.visivel(p.id) || p.id === v.produto || p.id === preset.produto));
     let pid = v.produto && v.produto !== 'mb' ? v.produto : (preset.produto || 'consorcio');
     UI.modal({
       title: ct ? 'Editar produto do cliente' : 'Adicionar produto', size: 'md',
@@ -3485,7 +3635,7 @@ window.HORUS_CONFIG = {
       footer: `${ct ? `<button class="btn ghost danger" data-del>${UI.icon('lixo')}Excluir</button><span class="grow"></span>` : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCt" type="submit">${ct ? 'Salvar' : 'Adicionar'}</button>`,
       onMount(el, api) {
         const f = el.querySelector('#fCt');
-        const desenhar = () => { const p = Cli.produto(pid); el.querySelector('#ctCampos').innerHTML = `<div class="ct-grid">${p.campos.map(cp => campoHTML(cp, v)).join('')}</div>`; };
+        const desenhar = () => { const p = Cli.produto(pid); el.querySelector('#ctCampos').innerHTML = `<div class="ct-grid">${p.campos.map(cp => campoHTML(cp, v)).join('')}</div><datalist id="dlSeg">${Cli.seguradoras().map(x => `<option value="${U.esc(x)}">`).join('')}</datalist>`; };
         el.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { pid = b.dataset.p; el.querySelectorAll('[data-p]').forEach(x => x.classList.toggle('on', x === b)); desenhar(); });
         desenhar();
         f.onsubmit = e => {
@@ -3498,7 +3648,10 @@ window.HORUS_CONFIG = {
             cli = Cli.porNome(nome) || Cli.criar({ nome }, { silent: true });
           }
           delete d._cliente;
-          Cli.produto(pid).campos.forEach(cp => { if (cp.t === 'sim') d[cp.k] = !!d[cp.k]; if (cp.t === 'mes' && d[cp.k]) d[cp.k] = +d[cp.k]; });
+          Cli.produto(pid).campos.forEach(cp => { if (cp.t === 'sim') d[cp.k] = !!d[cp.k]; if (cp.t === 'mes' && d[cp.k]) d[cp.k] = +d[cp.k]; if (cp.t === 'url' && d[cp.k] && !/^https?:\/\//i.test(d[cp.k])) d[cp.k] = 'https://' + d[cp.k]; });
+          /* Seguradora nova digitada entra na lista de Ajustes */
+          const segs = Cli.produto(pid).campos.filter(cp => cp.t === 'seg').map(cp => (d[cp.k] || '').trim()).filter(x => x && !Cli.seguradoras().some(y => Cli.norm(y) === Cli.norm(x)));
+          if (segs.length) Cli.salvarSeguradoras(Cli.seguradoras().concat(segs));
           if (ct) { Store.update('contratos', ct.id, d); UI.toast('Produto atualizado'); }
           else { Store.insert('contratos', { ...d, clienteId: cli.id, produto: pid, status: 'ativo' }); UI.toast(Cli.produto(pid).nome + ' adicionado para ' + Cli.apelido(cli)); }
           api.close();
@@ -4170,6 +4323,14 @@ window.HORUS_CONFIG = {
           <a class="aj" href="#emails" data-go="emails"><b>E-mails</b><small>Para responder, respondidos e descartados</small></a>
           <a class="aj" href="#faturamento" data-go="faturamento" data-q="aba=linhas"><b>Linhas e produtos</b><small>Regras de pagamento e % que fica com você</small></a>
         </div></section>
+      ${(() => { const Cli = App.Cli; if (!Cli) return '';
+        const prods = Cli.PRODUTOS.filter(x => !x.oculto);
+        return `<section class="card aj-prod"><div class="card-h"><h2>Produtos que aparecem</h2><span class="muted small">desligar só esconde o card e a área no Mapa 360; nada é apagado</span></div>
+          <div class="aj-tg">${prods.map(x => { const on = Cli.visivel(x.id), n = Cli.contratos({ produto: x.id, todos: true }).length;
+            return `<label class="aj-t"><input type="checkbox" data-pv="${x.id}" ${on ? 'checked' : ''}><span class="tg"><i></i></span><i class="pdot" style="background:${x.cor}"></i><span><b>${U.esc(x.nome)}</b><small>${n ? U.plural(n, 'registro', 'registros') : 'nenhum cliente ainda'}</small></span></label>`; }).join('')}</div></section>
+        <section class="card aj-seg"><div class="card-h"><h2>Seguradoras</h2><span class="muted small">aparecem como sugestão nos formulários e no Mapa 360</span></div>
+          <div class="seg-chips">${Cli.seguradoras().map(x => `<span>${U.esc(x)}<button data-segdel="${U.esc(x)}" aria-label="Tirar ${U.esc(x)}">${UI.icon('x')}</button></span>`).join('')}</div>
+          <form class="seg-add" id="segAdd"><input name="nome" placeholder="Adicionar seguradora" maxlength="40" autocomplete="off"><button class="btn ghost sm" type="submit">${UI.icon('mais')}Adicionar</button></form></section>`; })()}
       <div class="dgrid">
         <section class="card">
           <div class="card-h"><h2>Backup</h2></div>
@@ -4204,6 +4365,9 @@ window.HORUS_CONFIG = {
         </section>
       </div>`;
 
+    el.querySelectorAll('[data-pv]').forEach(i => i.onchange = () => { App.Cli.alternarVisivel(i.dataset.pv, i.checked); UI.toast(App.Cli.produto(i.dataset.pv).nome + (i.checked ? ' aparece' : ' escondido')); });
+    el.querySelectorAll('[data-segdel]').forEach(b => b.onclick = () => { App.Cli.salvarSeguradoras(App.Cli.seguradoras().filter(x => x !== b.dataset.segdel)); V.render(el); });
+    const sa = el.querySelector('#segAdd'); if (sa) sa.onsubmit = e => { e.preventDefault(); const v = sa.nome.value.trim(); if (!v) return; App.Cli.salvarSeguradoras(App.Cli.seguradoras().concat(v)); V.render(el); setTimeout(() => { const n = el.querySelector('#segAdd input'); if (n) n.focus(); }); };
     el.querySelector('#exp').onclick = async () => { const ok = await Backup.exportar(); UI.toast(ok ? 'Backup baixado' : 'O download não foi concluído', ok ? 'ok' : 'aviso'); if (ok) V.render(el); };
     el.querySelector('#imp').onchange = async e => {
       const file = e.target.files[0]; e.target.value = ''; if (!file) return;
@@ -4485,13 +4649,14 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       <div class="pcards">${(() => { const ind = Store.all('clientes').filter(c => c.indicadoPor || c.geracao > 1), rk = Cli.rankingIndicacoes();
         return `<button class="pcard pc-ind" id="clInd" style="--pc:#C98CFF"><span class="pc-top"><b>Indicações</b></span><small class="pc-sub">Árvore de quem indicou quem</small>
           <span class="pc-n"><b>${ind.length}</b> ${ind.length === 1 ? 'pessoa indicada' : 'pessoas indicadas'}</span>
-          <span class="pc-l">${ind.filter(Cli.converteu).length} rodaram${rk.length ? ' · maior rede: ' + U.esc(nomeCurto(rk[0].c)) + ' (' + rk[0].rede + ')' : ''}</span></button>`; })()}${Cli.PRODUTOS.filter(p => !p.oculto || Cli.contratos({ produto: p.id, todos: true }).length).map(p => { const r = Cli.resumo(p.id);
+          <span class="pc-l">${ind.filter(Cli.converteu).length} rodaram${rk.length ? ' · maior rede: ' + U.esc(nomeCurto(rk[0].c)) + ' (' + rk[0].rede + ')' : ''}</span></button>`; })()}${Cli.PRODUTOS.filter(p => Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)).map(p => { const r = Cli.resumo(p.id);
         return `<button class="pcard" data-prod="${p.id}" style="--pc:${p.cor}">
           <span class="pc-top"><b>${U.esc(p.nome)}</b>${r.avisos ? `<span class="pc-av">${r.avisos} aviso${r.avisos > 1 ? 's' : ''}</span>` : ''}</span>
           ${p.sub ? `<small class="pc-sub">${U.esc(p.sub)}</small>` : ''}
           <span class="pc-n"><b>${r.n}</b> ${r.n === 1 ? 'cliente' : 'clientes'}</span>
           ${r.valor ? `<span class="pc-v">${U.brlShort(r.valor)}</span>` : ''}
-          <span class="pc-l">${r.linhas.filter(Boolean).map(l => U.esc(l)).join(' · ')}</span></button>`; }).join('')}</div>
+          <span class="pc-l">${r.linhas.filter(Boolean).map(l => U.esc(l)).join(' · ')}</span>${(() => { const n = Cli.potenciais(p.id).length; return n ? `<span class="pc-pot">${n} potencia${n === 1 ? 'l' : 'is'}</span>` : ''; })()}</button>`; }).join('')}</div>
+      ${mapaBase()}
       <div class="grid-2">
         <section class="card"><div class="card-h"><h2>Próximos vencimentos</h2><span class="muted small">60 dias</span></div>
           ${venc.length ? `<ul class="cl-vlist">${venc.slice(0, 12).map(vencItem).join('')}</ul>` : '<div class="empty sm"><b>Nada vencendo.</b><p>Renovações de seguro, reajustes de plano e vencimentos do MB aparecem aqui.</p></div>'}</section>
@@ -4502,10 +4667,93 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
             : `<div class="empty sm"><b>${busca ? 'Nenhum cliente encontrado.' : 'Nenhum cliente ainda.'}</b><p>${busca ? '' : 'Cadastre um cliente ou importe o mês do MB.'}</p></div>`}</section>
       </div>`;
     el.querySelector('#clInd').onclick = () => ir({ indicacoes: true });
+    el.querySelectorAll('[data-area]').forEach(b => b.onclick = () => areaModal(b.dataset.area));
     const inp = el.querySelector('#clBusca');
     inp.oninput = () => { busca = inp.value; const pos = inp.selectionStart; inicio(el); const n = el.querySelector('#clBusca'); n.focus(); n.setSelectionRange(pos, pos); };
     ligarComum(el);
   }
+
+  /* ---------- Mapa 360 ---------- */
+  const sitPill = (sit, extra = '') => `<span class="sit" style="--sc:${Cli.SITS[sit].cor}">${Cli.SITS[sit].label}${extra}</span>`;
+  const etapaRot = id => (Cli.ETAPAS.find(e => e.id === id) || {}).label || '';
+  const ORD_SIT = ['comigo', 'mapeado', 'nao', 'na', 'sem'];
+  /* Visão da base: por área, quantos têm com você, com outro, não têm, e de quantos falta saber */
+  function mapaBase() {
+    const base = Cli.base360(); if (!base.length) return '';
+    return `<section class="card m360b"><div class="card-h"><h2>Mapa 360 da base</h2><span class="muted small">${U.plural(base.length, 'cliente', 'clientes')} · clique numa área para ver os nomes</span></div>
+      <div class="m360b-grid">${Cli.areasVisiveis().map(a => { const r = Cli.resumoArea(a.id), t = base.length;
+        return `<button class="m360b-a" data-area="${a.id}"><b>${U.esc(a.nome)}</b><span class="m360-bar">${ORD_SIT.map(k => r[k] ? `<i style="width:${r[k] / t * 100}%;background:${Cli.SITS[k].cor}" title="${Cli.SITS[k].label}: ${r[k]}"></i>` : '').join('')}</span>
+          <small>${[r.comigo && `<em style="color:${Cli.SITS.comigo.cor}">${r.comigo} comigo</em>`, r.mapeado && `<em style="color:${Cli.SITS.mapeado.cor}">${r.mapeado} mapeado${r.mapeado > 1 ? 's' : ''}</em>`, r.nao && `<em style="color:${Cli.SITS.nao.cor}">${r.nao} não ${r.nao > 1 ? 'têm' : 'tem'}</em>`, r.sem && `<em>${r.sem} sem info</em>`].filter(Boolean).join(' · ')}</small></button>`; }).join('')}</div>
+      <div class="sit-leg">${ORD_SIT.map(k => sitPill(k)).join('')}</div></section>`;
+  }
+  function areaModal(aid) {
+    const a = Cli.area(aid), grupos = {}; Cli.base360().forEach(c => { const m = Cli.mapa(c, aid); (grupos[m.sit] = grupos[m.sit] || []).push({ c, m }); });
+    const det = (c, m) => m.sit === 'comigo' && m.auto ? m.cts.map(ct => ct.seguradora || ct.administradora || ct.instituicao || ct.startup || ct.plano || ct.tipo || Cli.produto(ct.produto).nome).filter(Boolean).join(', ')
+      : [m.onde, m.venc && 'vence ' + U.fmtDate(m.venc), m.etapa && etapaRot(m.etapa)].filter(Boolean).join(' · ');
+    UI.modal({
+      title: a.nome + ' na base', size: 'md',
+      body: ORD_SIT.filter(k => grupos[k]).map(k => `<h3 class="nr-h">${Cli.SITS[k].label} · ${grupos[k].length}</h3><div class="nr-list">${grupos[k].sort((x, y) => x.c.nome.localeCompare(y.c.nome, 'pt-BR')).map(({ c, m }) =>
+        `<button class="nr-row" data-cli2="${c.id}"><b>${U.esc(c.nome)}</b><small>${U.esc(det(c, m)) || '&nbsp;'}</small>${sitPill(k)}</button>`).join('')}</div>`).join('') || '<p class="muted">Sem clientes na base.</p>',
+      onMount(el, api) { el.querySelectorAll('[data-cli2]').forEach(b => b.onclick = () => { api.close(); ir({ cliente: b.dataset.cli2 }); }); }
+    });
+  }
+  /* Mapa 360 na ficha: um cartão por área */
+  function mapaFicha(c) {
+    return `<section class="card m360"><div class="card-h"><h2>Mapa 360</h2><span class="muted small">o que ${U.esc(Cli.apelido(c))} tem em cada área · clique para marcar</span></div>
+      <div class="m360-grid">${Cli.areasVisiveis().map(a => { const m = Cli.mapa(c, a.id);
+        const sub = m.sit === 'comigo' && m.auto ? m.cts.map(ct => ct.seguradora || ct.administradora || ct.instituicao || ct.startup || ct.plano || ct.tipo || Cli.produto(ct.produto).nome).filter(Boolean).slice(0, 2).join(', ')
+          : [m.onde, m.venc && (U.diff(m.venc, U.today()) < 0 ? 'venceu ' : 'vence ') + U.fmtDate(m.venc), (m.sit === 'nao' || m.sit === 'mapeado') && m.etapa && etapaRot(m.etapa)].filter(Boolean).join(' · ');
+        const perto = m.sit === 'mapeado' && m.venc && U.diff(m.venc, U.today()) <= 30;
+        return `<button class="m360-a s-${m.sit}${perto ? ' perto' : ''}" data-m360="${a.id}" style="--sc:${Cli.SITS[m.sit].cor}"><span class="m360-n">${U.esc(a.nome)}</span><span class="m360-s"><i></i>${Cli.SITS[m.sit].label}</span>${sub ? `<small>${U.esc(sub)}</small>` : ''}</button>`; }).join('')}</div></section>`;
+  }
+  function editarArea(c, aid) {
+    const a = Cli.area(aid), m = Cli.mapa(c, aid), r = m.reg || (m.auto ? {} : m);
+    if (m.auto) {
+      UI.modal({ title: a.nome + ' · ' + Cli.apelido(c), size: 'sm',
+        body: `<p>${sitPill('comigo')} ${U.esc(Cli.apelido(c))} já tem ${U.esc(a.nome.toLowerCase())} com você:</p><ul class="pb-list">${m.cts.map(ct => { const d = Cli.proxData(ct);
+          return `<li><b>${U.esc(Cli.produto(ct.produto).nome)}${ct.tipo ? ' · ' + U.esc(ct.tipo) : ''}</b><span>${U.esc([ct.seguradora || ct.administradora || ct.instituicao || ct.plano, ct.capital && U.brlShort(ct.capital), ct.cobertura && U.brlShort(ct.cobertura), ct.carta && U.brlShort(ct.carta)].filter(Boolean).join(' · '))}</span>${d ? `<em>${U.diff(d, U.today()) < 0 ? 'venceu' : 'vence'} ${U.fmtDate(d)}</em>` : ''}</li>`; }).join('')}</ul>
+          <p class="muted small">Isso vem dos produtos cadastrados. Para mudar, edite o produto na ficha.</p>`,
+        footer: `<button class="btn primary" data-close>Ok</button>` });
+      return;
+    }
+    const segs = a.seguro ? Cli.seguradoras() : [];
+    UI.modal({
+      title: a.nome + ' · ' + Cli.apelido(c), size: 'sm',
+      body: `<form class="form" id="fM360">
+        <div class="f full"><span>Situação</span>${UI.segmented('sit', [{ id: 'mapeado', label: 'Tem com outro' }, { id: 'nao', label: 'Não tem' }, { id: 'na', label: 'Não se aplica' }, { id: 'comigo', label: 'Comigo' }], r.sit && r.sit !== 'sem' ? r.sit : 'mapeado')}</div>
+        <div class="row2" data-sh="mapeado">
+          <label class="f"><span>${a.seguro ? 'Seguradora' : 'Onde tem (banco, corretora…)'}</span><input name="onde" list="dlSeg2" value="${U.esc(r.onde || '')}" autocomplete="off"><datalist id="dlSeg2">${segs.map(x => `<option value="${U.esc(x)}">`).join('')}</datalist></label>
+          <label class="f"><span>${a.seguro ? 'Vencimento / renovação' : 'Vencimento (se houver)'}</span><input type="date" name="venc" value="${r.venc || ''}"></label>
+        </div>
+        <label class="f full" data-sh="mapeado"><span>Valor <em>prêmio, cobertura ou saldo · opcional</em></span><input name="valor" data-num inputmode="decimal" value="${r.valor != null ? U.num(r.valor) : ''}" placeholder="R$"></label>
+        <div class="f full" data-sh="mapeado nao"><span>Abordagem</span>${UI.segmented('etapa', Cli.ETAPAS, r.etapa || 'a_abordar')}</div>
+        <label class="f full"><span>Observação</span><input name="obs" value="${U.esc(r.obs || '')}" placeholder="Ex.: renova com o gerente do banco; quer cotar em março"></label>
+      </form>`,
+      footer: `${r.sit && r.sit !== 'sem' ? '<button class="btn ghost danger" id="m360Limpa">Limpar</button><span class="grow"></span>' : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fM360" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fM360');
+        const mostrar = () => { const s = (f.querySelector('[name=sit]:checked') || {}).value; el.querySelectorAll('[data-sh]').forEach(x => x.hidden = !x.dataset.sh.split(' ').includes(s)); };
+        f.querySelectorAll('[name=sit]').forEach(i => i.addEventListener('change', mostrar)); mostrar();
+        f.onsubmit = e => { e.preventDefault(); const d = UI.formData(f), sit = d.sit;
+          const reg = { sit, obs: d.obs || null };
+          if (sit === 'mapeado') Object.assign(reg, { onde: d.onde || null, venc: d.venc || null, valor: U.parseNum(d.valor) });
+          if (sit === 'mapeado' || sit === 'nao') reg.etapa = d.etapa || 'a_abordar';
+          if (sit === 'mapeado' && reg.onde && a.seguro && !Cli.seguradoras().some(y => Cli.norm(y) === Cli.norm(reg.onde))) Cli.salvarSeguradoras(Cli.seguradoras().concat(reg.onde));
+          Cli.salvarMapa(c.id, aid, reg); api.close(); UI.toast(a.nome + ': ' + Cli.SITS[sit].label); };
+        const lp = el.querySelector('#m360Limpa'); if (lp) lp.onclick = () => { Cli.salvarMapa(c.id, aid, null); api.close(); UI.toast(a.nome + ': sem informação'); };
+      }
+    });
+  }
+  /* Potenciais dentro de um produto: quem não tem ou tem com outro, com a etapa da abordagem */
+  function potenciaisHTML(pid) {
+    const l = Cli.potenciais(pid); if (!Cli.areasDoProduto(pid).length) return '';
+    return `<section class="card pot"><div class="card-h"><h2>Potenciais</h2><span class="count">${l.length}</span><span class="muted small">não têm ou têm com outro · marque no Mapa 360 da ficha</span></div>
+      ${l.length ? `<ul class="pot-list">${l.map(({ cli, area, m }) => `<li data-cli="${cli.id}"><div><b>${U.esc(cli.nome)}</b><small>${[Cli.areasDoProduto(pid).length > 1 && area.nome, m.sit === 'mapeado' ? 'tem com ' + (m.onde || 'outro') : 'não tem', m.venc && (U.diff(m.venc, U.today()) < 0 ? 'venceu ' : 'vence ') + U.fmtDate(m.venc), m.obs].filter(Boolean).map(U.esc).join(' · ')}</small></div>
+          <div class="pot-et" data-stop>${Cli.ETAPAS.map(e => `<button class="${(m.etapa || 'a_abordar') === e.id ? 'on' : ''}" data-et="${e.id}" data-c="${cli.id}" data-a="${area.id}">${e.label}</button>`).join('')}</div></li>`).join('')}</ul>`
+        : `<div class="empty sm"><p>Ninguém marcado ainda. Na ficha do cliente, no Mapa 360, marque “Não tem” ou “Tem com outro” e ele aparece aqui.</p></div>`}</section>`;
+  }
+  const ligarPot = (el, rerender) => el.querySelectorAll('[data-et]').forEach(b => b.onclick = e => { e.stopPropagation(); const c = Cli.cliente(b.dataset.c), r = (c.mapa || {})[b.dataset.a];
+    if (r) Cli.salvarMapa(c.id, b.dataset.a, { ...r, etapa: b.dataset.et }); });
 
   /* ---------- Lista de um produto ---------- */
   function produto(el) {
@@ -4520,6 +4768,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         <div class="page-act"><button class="btn primary" data-novo-ct="${p.id}">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button></div></div>
       ${p.agrupar ? (() => { const g = {}; todos.filter(c => (c.status || 'ativo') === 'ativo').forEach(c => { const k = c[p.agrupar] || 'Sem nome'; g[k] = g[k] || { n: 0, v: 0, cl: new Set() }; g[k].n++; g[k].v += +c[p.principal] || 0; g[k].cl.add(c.clienteId); });
         const arr = Object.entries(g).sort((a, b) => b[1].v - a[1].v); return arr.length ? `<div class="grp-strip">${arr.map(([k, x]) => `<button class="grp${Cli.norm(busca) === Cli.norm(k) ? ' on' : ''}" data-grp="${U.esc(k)}"><b>${U.esc(k)}</b><span>${U.brl(x.v)}</span><small>${U.plural(x.cl.size, 'cliente', 'clientes')}</small></button>`).join('')}</div>` : ''; })() : ''}
+      ${potenciaisHTML(p.id)}
       <div class="toolbar"><div class="seg-tabs">${[['ativo', 'Ativos'], ['encerrado', 'Encerrados'], ['todos', 'Todos']].map(([k, l]) => `<button class="${filtro === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}</div>
         <label class="search">${UI.icon('busca')}<input id="clBusca" placeholder="Buscar cliente, ${U.esc((cols[0] || { l: '' }).l.toLowerCase())}…" value="${U.esc(busca)}"></label></div>
       <section class="card">${lista.length ? `<ul class="ct-list">${lista.map(({ ct, cli }) => { const d = Cli.proxData(ct);
@@ -4531,6 +4780,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filtro = b.dataset.f; produto(el); });
     el.querySelectorAll('[data-grp]').forEach(b => b.onclick = () => { busca = Cli.norm(busca) === Cli.norm(b.dataset.grp) ? '' : b.dataset.grp; produto(el); });
     el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => App.Forms.contrato(b.dataset.ed));
+    ligarPot(el);
     const inp = el.querySelector('#clBusca');
     inp.oninput = () => { busca = inp.value; const pos = inp.selectionStart; produto(el); const n = el.querySelector('#clBusca'); n.focus(); n.setSelectionRange(pos, pos); };
     ligarComum(el);
@@ -4689,7 +4939,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   /* ---------- Ficha do cliente: um bloco por plataforma/produto ---------- */
   const usd = v => 'US$ ' + (+v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
   const CAT = { rf: ['Renda fixa', '#6E3FF0'], usd: ['Dólar', '#2B8AA6'], caixa: ['Caixa', '#A49CB8'], cripto: ['Cripto', '#D98A1E'], rv: ['Renda variável', '#2F855A'], cestas: ['Cestas', '#A0466B'] };
-  const ORDEM = ['mb', 'eqseed', 'ita', 'vida', 're', 'consorcio'];
+  const ORDEM = ['mb', 'eqseed', 'ita', 'stonex', 'dominion', 'zentis', 'previdencia', 'vida', 're', 'auto', 'consorcio', 'cambio', 'credito'];
 
   /* Conteúdo de cada bloco: { titulo, sub, valor, rotuloValor, linhas[], extra (html), acao } */
   function bloco(pid, cts, cli, m) {
@@ -4722,7 +4972,12 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.carta || 0), 0)), rotuloValor: 'Em cartas',
         lista: at.map(c => `<li><b>${U.esc(c.administradora || 'Consórcio')}${c.grupo ? ' · ' + U.esc(c.grupo) + (c.cota ? '/' + U.esc(c.cota) : '') : ''}</b><span>${c.carta ? U.brlShort(c.carta) : ''}${c.prazo ? ' · ' + (c.pagas || 0) + '/' + c.prazo + ' parcelas' : ''}</span>${c.contemplado ? '<em class="ok">contemplado</em>' : ''}</li>`).join('') });
     } else {
-      Object.assign(b, { valor: U.plural(at.length, 'registro', 'registros'), rotuloValor: p.nome });
+      /* Produtos sem bloco próprio: soma do valor principal e uma linha por contrato com os campos da lista */
+      const cp = p.campos.find(x => x.k === p.principal), cols = p.campos.filter(x => x.lista && x.k !== p.principal);
+      const usdK = p.campos.find(x => x.t === 'usd' && /valor/i.test(x.k));
+      Object.assign(b, { valor: cp ? Cli.fmt(cp, at.reduce((s, c) => s + (+c[cp.k] || 0), 0)) : usdK ? Cli.fmt(usdK, at.reduce((s, c) => s + (+c[usdK.k] || 0), 0)) : U.plural(at.length, 'registro', 'registros'),
+        rotuloValor: cp ? cp.l : usdK ? usdK.l : p.nome,
+        lista: at.map(c => { const d = Cli.proxData(c); return `<li><b>${U.esc(Cli.fmt(cols[0] || {}, c[(cols[0] || {}).k]) || p.nome)}</b><span>${cols.slice(1, 3).map(x => Cli.fmt(x, c[x.k])).filter(Boolean).map(U.esc).join(' · ')}</span>${d ? `<em class="${U.diff(d, U.today()) <= 30 ? 'warn' : ''}">${U.diff(d, U.today()) < 0 ? 'venceu ' : 'vence '}${U.fmtDate(d)}</em>` : ''}</li>`; }).join('') });
     }
     return b;
   }
@@ -4739,8 +4994,8 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       .sort((a, b) => ((a.status || 'ativo') === 'ativo' ? 0 : 1) - ((b.status || 'ativo') === 'ativo' ? 0 : 1) || String(b.data || b.inicio || '').localeCompare(String(a.data || a.inicio || '')));
     UI.modal({
       title: p.nome + ' · ' + Cli.apelido(cli), size: 'md',
-      body: `<div class="pd-list">${cts.map(ct => `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(pid === 'eqseed' ? (ct.startup || 'Investimento') : pid === 're' ? (ct.tipo || 'Apólice') : pid === 'consorcio' ? (ct.administradora || 'Cota') : p.nome)}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
-          <div class="ct-kv">${p.campos.filter(cp => !(pid === 'eqseed' && cp.k === 'startup') && !(pid === 're' && cp.k === 'tipo')).map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`).join('')}</div>`,
+      body: `<div class="pd-list">${cts.map(ct => `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(pid === 'eqseed' ? (ct.startup || 'Investimento') : pid === 're' ? (ct.tipo || 'Apólice') : pid === 'consorcio' ? (ct.administradora || 'Cota') : p.nome)}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}${ct.link ? `<a class="doc-link" href="${U.esc(ct.link)}" target="_blank" rel="noopener">${UI.icon('arquivo')}Documento</a>` : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
+          <div class="ct-kv">${p.campos.filter(cp => cp.t !== 'url' && !(pid === 'eqseed' && cp.k === 'startup') && !(pid === 're' && cp.k === 'tipo')).map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`).join('')}</div>`,
       footer: `<button class="btn ghost" data-close>Fechar</button><button class="btn primary" id="pdAdd">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button>`,
       onMount(el, api) {
         el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => { api.close(); App.Forms.contrato(b.dataset.ed); });
@@ -4776,7 +5031,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const eq = (porProd.eqseed || []).filter(x => (x.status || 'ativo') === 'ativo').reduce((s, x) => s + (+x.valor || 0), 0);
     const brl = (m ? +m.pl : 0) + eq;
     const itaUsd = (porProd.ita || []).reduce((s, x) => s + (+x.valorConta || 0), 0);
-    const falta = ORDEM.filter(pid => pid !== 'mb' && !porProd[pid] && !Cli.produto(pid).oculto);
+    const falta = [];
     const de = P.deInd ? { indicacoes: true } : P.de ? { produto: P.de } : {};
     el.innerHTML = `${voltar(P.deInd ? 'Indicações' : P.de ? Cli.produto(P.de).nome : 'Clientes', de)}
       <section class="cl-hero">
@@ -4792,11 +5047,13 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         </div>
       </section>
       ${c.observacoes ? `<p class="cl-obs">${U.esc(c.observacoes)}</p>` : ''}
+      ${mapaFicha(c)}
       <div class="pblocks">${pids.map(pid => blocoHTML(bloco(pid, porProd[pid] || [], c, m), pid)).join('')}
         ${falta.map(pid => `<button class="pblock ghost" style="--pc:${Cli.produto(pid).cor}" data-novo-ct="${pid}" data-cid="${c.id}"><span>${UI.icon('mais')}</span><b>${U.esc(Cli.produto(pid).nome)}</b><small>Ainda não tem · adicionar</small></button>`).join('')}
       </div>`;
     el.querySelector('#clEd').onclick = () => App.Forms.cliente(c.id);
     el.querySelector('#clAts').onclick = () => atividadesModal(c, ats);
+    el.querySelectorAll('[data-m360]').forEach(b => b.onclick = () => editarArea(c, b.dataset.m360));
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
       const pid = b.dataset.pbGo;
       if (pid === 'mb') { const ct = Store.all('contratos').find(x => x.produto === 'mb' && x.clienteId === c.id); ir({ produto: 'mb', foco: ct ? ct.mbId : null, cliente: null, deCliente: c.id }); }
