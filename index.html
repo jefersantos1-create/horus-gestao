@@ -1068,6 +1068,51 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .ren-atv-op { width: 100%; text-align: left; display: grid; gap: 4px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
 .ren-atv-op:hover, .ren-atv-op:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
 .ren-atv-op small { color: var(--muted); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+/* Parte 3 · Funil de oportunidades */
+.fu-mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.fu-mc { display: grid; gap: 2px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); text-decoration: none; color: var(--ink); }
+.fu-mc span { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+.fu-mc b { font-family: var(--display); font-size: 20px; line-height: 1.1; }
+.fu-mc small { font-size: 11.5px; color: var(--muted); }
+.fu-mc.vazio b { color: var(--muted); }
+.fu-mc:hover { background: var(--accent-soft); }
+.fu-res { margin: 10px 0 0; font-size: 13px; color: var(--muted); } .fu-res b { color: var(--ink); }
+.fu-tabs { display: none; }
+.fu-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: start; margin-top: 12px; }
+.fu-col { background: var(--surface-2); border-radius: 14px; padding: 10px; min-height: 120px; }
+.fu-ch { display: flex; align-items: center; gap: 8px; padding: 2px 4px 10px; }
+.fu-ch b { font-size: 14px; } .fu-ch small { color: var(--muted); font-size: 12px; font-weight: 700; }
+.fu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.fu-vazio { margin: 0; padding: 14px 6px; text-align: center; font-size: 12.5px; color: var(--muted); }
+.fu-it { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.fu-it.is-late { box-shadow: inset 3px 0 0 var(--late); }
+.fu-main { display: grid; gap: 4px; width: 100%; text-align: left; padding: 10px 12px 8px; background: none; border: 0; font: inherit; color: var(--ink); cursor: pointer; }
+.fu-main:hover b { color: var(--accent); }
+.fu-main > b { font-size: 14px; line-height: 1.25; }
+.fu-prod { font-size: 13px; font-weight: 600; }
+.fu-org { justify-self: start; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+.fu-org.o-negocio { background: var(--accent-soft); color: var(--accent); }
+.fu-org.o-renovacao { background: var(--warn-soft); color: var(--warn); }
+.fu-org.o-indicacao { background: var(--ok-soft); color: var(--ok); }
+.fu-org.o-mapa { background: #E6EEF8; color: #2B6CB0; }
+.fu-val { font-size: 13.5px; font-weight: 700; display: grid; } .fu-val small { font-size: 12px; font-weight: 500; color: var(--muted); }
+.fu-prox { font-size: 12.5px; color: var(--muted); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.fu-prox em { font-style: normal; font-weight: 700; color: var(--ink); } .fu-prox em.late { color: var(--late); }
+.fu-acts { display: flex; gap: 6px; align-items: center; padding: 8px 10px; border-top: 1px solid var(--line); background: var(--surface-2); }
+.fu-acts select { flex: 1; min-width: 0; font: inherit; font-size: 12.5px; padding: 5px 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.fu-acts button { display: inline-flex; align-items: center; gap: 3px; font: inherit; font-size: 12px; font-weight: 700; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; white-space: nowrap; }
+.fu-acts .ic { width: 13px; height: 13px; }
+.fu-ok { color: var(--ok); } .fu-ok:hover { background: var(--ok-soft); border-color: var(--ok); }
+.fu-no { color: var(--muted); } .fu-no:hover { color: var(--late); border-color: var(--late); }
+@media (max-width: 1100px) { .fu-board { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .fu-tabs { display: flex; gap: 6px; overflow-x: auto; margin-top: 12px; }
+  .fu-tabs button { flex: 1 0 auto; display: flex; gap: 6px; align-items: center; justify-content: center; font: inherit; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); }
+  .fu-tabs button b { font-size: 12px; background: var(--surface-2); border-radius: 999px; padding: 0 7px; }
+  .fu-tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; } .fu-tabs button[aria-selected="true"] b { background: rgba(255,255,255,.25); }
+  .fu-board { grid-template-columns: 1fr; margin-top: 10px; }
+  .fu-col { display: none; } .fu-col.on { display: block; }
+}
 
 </style>
 
@@ -2062,7 +2107,8 @@ window.HORUS_CONFIG = {
     { id: 'credito', nome: 'Crédito', prods: ['credito'] }
   ];
   C.SITS = { comigo: { label: 'Comigo', cor: '#23864F' }, mapeado: { label: 'Mapeado', cor: '#2B6CB0' }, nao: { label: 'Não tem', cor: '#C2611A' }, na: { label: 'Não se aplica', cor: '#8F88A6' }, sem: { label: 'Sem informação', cor: '#B9B3CC' } };
-  C.ETAPAS = [{ id: 'a_abordar', label: 'A abordar' }, { id: 'abordado', label: 'Abordado' }, { id: 'proposta', label: 'Em proposta' }];
+  /* Mesmas etapas do funil (Parte 3): a_abordar = Lead, abordado = Contato, reuniao, proposta; perdido = "Não quis agora" (sai do funil, volta quando mudar) */
+  C.ETAPAS = [{ id: 'a_abordar', label: 'A abordar' }, { id: 'abordado', label: 'Abordado' }, { id: 'reuniao', label: 'Reunião' }, { id: 'proposta', label: 'Em proposta' }, { id: 'perdido', label: 'Não quis agora' }];
   C.area = id => C.AREAS.find(a => a.id === id);
   const prodDe = ref => ref.split(':')[0];
   C.areaVisivel = a => a.prods.some(r => C.visivel(prodDe(r)));
@@ -2089,7 +2135,7 @@ window.HORUS_CONFIG = {
   C.potenciais = pid => {
     const areas = C.areasDoProduto(pid), out = [];
     Store.all('clientes').filter(c => !c.saiu).forEach(c => areas.forEach(a => { const m = C.mapa(c, a.id); if (m.sit === 'nao' || m.sit === 'mapeado') out.push({ cli: c, area: a, m }); }));
-    const peso = x => ({ proposta: 0, abordado: 1, a_abordar: 2 }[x.m.etapa] ?? 3);
+    const peso = x => ({ proposta: 0, reuniao: 1, abordado: 2, a_abordar: 3, perdido: 5 }[x.m.etapa] ?? 4);
     return out.sort((a, b) => peso(a) - peso(b) || String(a.m.venc || '9').localeCompare(String(b.m.venc || '9')) || a.cli.nome.localeCompare(b.cli.nome, 'pt-BR'));
   };
   const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -4210,6 +4256,7 @@ window.HORUS_CONFIG = {
         </section>
 
         <aside class="side-col">
+          ${App.Funil ? App.Funil.card(filtroResp) : ''}
           ${App.Emails ? App.Emails.quadro() : ''}
           ${App.Ren && App.Views.clientes ? App.Ren.card({ max: 5, extras: App.Cli.avisosConsorcio() }) : ''}
           <section class="card exec">
@@ -4480,6 +4527,177 @@ window.HORUS_CONFIG = {
 
   App.Views = App.Views || {};
   App.Views.negocios = V;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/views/funil.js */
+/* Parte 3 · Funil de oportunidades (24/11/2026).
+   Não tem cadastro próprio: junta o que já existe e, ao mudar de etapa, grava na origem.
+   - Negócios em aberto das atividades  → etapa em extras.negocios[i].etapa (padrão: reunião; renovação: proposta)
+   - Mapa 360 "Não tem" / "Mapeado"     → mapa[area].etapa (a_abordar=lead, abordado=contato, reuniao, proposta; perdido sai do funil)
+   - Indicações "Em conversa"           → clientes.dados.funilEtapa (padrão: contato)
+   Fechou/Perdeu: negócio → fluxo normal de concluir (receita); mapa → "Comigo" (+ cadastrar contrato) ou "Não quis agora";
+   indicação → "Rodou" ou "Não rodou". */
+(function (App) {
+  const { U, M, UI, Store } = App;
+  const Fu = {};
+  const C = () => App.Cli;
+
+  Fu.ETAPAS = [{ id: 'lead', label: 'Lead' }, { id: 'contato', label: 'Contato' }, { id: 'reuniao', label: 'Reunião' }, { id: 'proposta', label: 'Proposta' }];
+  const DO_MAPA = { a_abordar: 'lead', abordado: 'contato', reuniao: 'reuniao', proposta: 'proposta' };
+  const PARA_MAPA = { lead: 'a_abordar', contato: 'abordado', reuniao: 'reuniao', proposta: 'proposta' };
+  Fu.ORIGENS = [{ id: 'negocio', label: 'Negócios' }, { id: 'renovacao', label: 'Renovações' }, { id: 'indicacao', label: 'Indicações' }, { id: 'mapa', label: 'Mapa 360' }];
+
+  const assessoria = () => App.Ren ? App.Ren.respRenovacao() : (M.respAtivas()[0] || {});
+  const nomeCurto = c => c ? (c.apelido || String(c.nome || '').split(' ')[0]) : '';
+
+  /* ---------- Itens do funil ---------- */
+  Fu.itens = () => {
+    const Cl = C(), out = [], comNegocio = new Set(), areaComNeg = new Set();
+    M.negItensAbertos().forEach(({ a, n }) => {
+      const cli = a.clienteId ? Cl.cliente(a.clienteId) : null;
+      const ren = n.renId && App.Ren ? Store.get('renovacoes', n.renId) : null;
+      if (cli) comNegocio.add(cli.id);
+      if (ren && ren.origem === 'mapa') areaComNeg.add(ren.clienteId + '|' + ren.area);
+      if (cli) Cl.AREAS.forEach(ar => { const k = Cl.norm(M.tipoNeg(n.tipo).label), an = Cl.norm(ar.nome); if (k.startsWith(an) || an.startsWith(k)) areaComNeg.add(cli.id + '|' + ar.id); });
+      const ind = cli && cli.indicadoPor ? Cl.indicador(cli) : null;
+      const lq = M.liqNeg(n), x12 = n.mensal ? 12 : 1;
+      out.push({
+        key: 'n:' + a.id + ':' + n.id, fonte: 'negocio', origem: ren ? 'renovacao' : 'negocio',
+        etapa: n.etapa || (ren ? 'proposta' : 'reuniao'), nome: a.cliente || a.titulo, clienteId: cli ? cli.id : null,
+        produto: M.tipoNeg(n.tipo).label, valor: n.valor != null ? +n.valor * x12 : null, mensal: !!n.mensal, valorMes: n.mensal ? n.valor : null,
+        liq: lq != null ? lq * x12 : null, prox: a.titulo, prazo: a.prazo, atrasada: M.atrasada(a),
+        origemTxt: ren ? 'Renovação' : ind ? 'Indicação de ' + nomeCurto(ind) : 'Negócio', a, n, resp: a
+      });
+    });
+    Store.all('clientes').filter(c => c.situacao === 'conversa' && !comNegocio.has(c.id)).forEach(c => {
+      const i = Cl.indicador(c);
+      out.push({ key: 'i:' + c.id, fonte: 'indicacao', origem: 'indicacao', etapa: c.funilEtapa || 'contato', nome: c.nome, clienteId: c.id,
+        produto: 'Abertura de relacionamento', valor: null, liq: null, prox: c.observacoes || '', prazo: null,
+        origemTxt: i ? 'Indicação de ' + nomeCurto(i) : 'Indicação', c });
+    });
+    Store.all('clientes').filter(c => !c.saiu).forEach(c => Object.entries(c.mapa || {}).forEach(([aid, reg]) => {
+      if (!reg || (reg.sit !== 'nao' && reg.sit !== 'mapeado') || reg.etapa === 'perdido') return;
+      const ar = Cl.area(aid); if (!ar || !Cl.areaVisivel(ar) || areaComNeg.has(c.id + '|' + aid)) return;
+      if (Cl.mapa(c, aid).sit !== reg.sit) return; /* já tem contrato ativo na área */
+      out.push({ key: 'm:' + c.id + ':' + aid, fonte: 'mapa', origem: 'mapa', etapa: DO_MAPA[reg.etapa] || 'lead', nome: c.nome, clienteId: c.id,
+        produto: ar.nome, valor: reg.valor != null && reg.valor !== '' ? +reg.valor : null, liq: null,
+        prox: [reg.sit === 'mapeado' ? 'Tem com ' + (reg.onde || 'outro') : 'Não tem', reg.venc && 'vence ' + U.fmtDate(reg.venc), reg.obs].filter(Boolean).join(' · '),
+        prazo: reg.venc || null, origemTxt: reg.sit === 'mapeado' ? 'Mapa 360 · mapeado' : 'Mapa 360 · cross-sell', c, area: aid, reg });
+    }));
+    return out;
+  };
+  Fu.ordem = (a, b) => (a.prazo || '9999').localeCompare(b.prazo || '9999') || (b.valor || 0) - (a.valor || 0) || String(a.nome).localeCompare(String(b.nome), 'pt-BR');
+  Fu.etapaRot = id => (Fu.ETAPAS.find(e => e.id === id) || {}).label || id;
+
+  /* ---------- Ações (gravam na origem) ---------- */
+  Fu.mover = (it, etapa) => {
+    if (it.etapa === etapa) return;
+    if (it.fonte === 'negocio') {
+      const a = Store.get('atividades', it.a.id); if (!a) return;
+      Store.update('atividades', a.id, M.espelhoNeg(M.negociosDa(a).map(n => n.id === it.n.id ? { ...n, etapa } : n)), { silent: true });
+      M.log(a.id, 'editada', 'Funil: ' + M.tipoNeg(it.n.tipo).label + ' de ' + Fu.etapaRot(it.etapa) + ' para ' + Fu.etapaRot(etapa));
+      Store.commit();
+    }
+    if (it.fonte === 'mapa') C().salvarMapa(it.c.id, it.area, { ...it.reg, etapa: PARA_MAPA[etapa] });
+    if (it.fonte === 'indicacao') Store.update('clientes', it.c.id, { funilEtapa: etapa, funilEm: U.today() });
+    UI.toast(it.nome.split(' ')[0] + ' · ' + Fu.etapaRot(etapa));
+  };
+  Fu.fechar = async (it, ganhou) => {
+    const Cl = C();
+    if (it.fonte === 'negocio') {
+      if (ganhou) return App.Forms.concluirNegocio(it.a.id);
+      const ok = await UI.confirm({ title: 'Não fechou?', text: `<b>${U.esc(it.produto)}</b> · ${U.esc(it.nome)} sai do funil como negócio que não fechou.`, ok: 'Não fechou', danger: false });
+      if (!ok) return;
+      const a = Store.get('atividades', it.a.id), negs = M.negociosDa(a).map(n => n.id === it.n.id ? { ...n, resultado: 'perdido' } : n);
+      Store.update('atividades', a.id, M.espelhoNeg(negs), { silent: true });
+      if (negs.every(n => n.resultado)) { if (App.Ren && a.renovacaoId) App.Ren.segurar(a.id); M.concluir(a.id, { nota: M.tipoNeg(it.n.tipo).label + ': não fechou (funil)' }); if (App.Ren && a.renovacaoId) App.Ren.aoConcluir(a.id); }
+      else { M.log(a.id, 'editada', M.tipoNeg(it.n.tipo).label + ': não fechou (funil)'); Store.commit(); }
+      UI.toast('Negócio encerrado');
+      return;
+    }
+    if (it.fonte === 'indicacao') {
+      Cl.registrarIndicacao({ indicadorId: it.c.indicadoPor, situacao: ganhou ? 'sim' : 'nao', data: it.c.dataIndicacao, observacoes: it.c.observacoes, existenteId: it.c.id });
+      UI.toast(ganhou ? nomeCurto(it.c) + ' rodou! Agora conta como cliente.' : nomeCurto(it.c) + ' foi para "Não rodaram".');
+      return;
+    }
+    if (it.fonte === 'mapa') {
+      if (!ganhou) { Cl.salvarMapa(it.c.id, it.area, { ...it.reg, etapa: 'perdido' }); UI.toast('Mapa 360: "Não quis agora"'); return; }
+      const mp = { ...it.reg, sit: 'comigo' }; delete mp.etapa; Cl.salvarMapa(it.c.id, it.area, mp);
+      const ok = await UI.confirm({ title: 'Fechou!', text: `No Mapa 360, ${U.esc(nomeCurto(it.c))} passou a ter ${U.esc(it.produto.toLowerCase())} com você. Cadastrar o contrato agora?`, ok: 'Cadastrar contrato', danger: false });
+      if (ok) { const ar = Cl.area(it.area), pid = (ar.prods[0] || '').split(':')[0], tipo = (ar.prods[0] || '').split(':')[1]; App.Forms.contrato(null, { produto: pid !== 'mb' ? pid : undefined, clienteId: it.c.id, ...(tipo ? { tipo } : {}) }); }
+    }
+  };
+  Fu.abrir = it => {
+    if (it.fonte === 'negocio') return App.Forms.detalhes(it.a.id);
+    if (it.fonte === 'indicacao' && !C().ehCliente(it.c)) return App.Forms.indicacao({ existenteId: it.c.id });
+    App.go('clientes', { cliente: it.clienteId }, { origem: true });
+  };
+  Fu.nova = () => App.Forms.atividade(null, { categoria: 'Negócios', prioridade: 'alta', responsabilidadeId: assessoria().id, respIds: [], _neg: true });
+
+  /* ---------- Card do Painel ---------- */
+  Fu.card = (filtroResp = []) => {
+    const ass = assessoria().id, soNeg = filtroResp.length && !filtroResp.includes(ass);
+    const l = Fu.itens().filter(it => it.fonte === 'negocio' ? M.noFiltro(it.a, filtroResp) : !soNeg);
+    const tot = l.reduce((s, x) => s + (x.valor || 0), 0), liq = l.reduce((s, x) => s + (x.liq || 0), 0);
+    return `<section class="card fu-card"><div class="card-h"><h2>Oportunidades</h2><span class="grow"></span>${l.length ? `<span class="count">${l.length}</span>` : ''}<a class="link" href="#funil" data-go="funil">Abrir funil</a></div>
+      ${l.length ? `<div class="fu-mini">${Fu.ETAPAS.map(e => { const xs = l.filter(x => x.etapa === e.id), v = xs.reduce((s, x) => s + (x.valor || 0), 0);
+        return `<a href="#funil" data-go="funil" data-q="etapa=${e.id}" class="fu-mc${xs.length ? '' : ' vazio'}"><span>${e.label}</span><b>${xs.length}</b><small>${v ? U.brlShort(v) : '—'}</small></a>`; }).join('')}</div>
+      <p class="fu-res">${tot ? `<b>${U.brlShort(tot)}</b> em aberto` : 'Sem valores estimados'}${liq ? ` · ≈ ${U.brlShort(liq)} ficam com você` : ''}</p>`
+      : `<div class="empty sm"><p>Nenhuma oportunidade aberta. Negócios das atividades, indicações em conversa e o Mapa 360 aparecem aqui.</p></div>`}</section>`;
+  };
+
+  /* ---------- Tela ---------- */
+  const V = { titulo: 'Funil de oportunidades' };
+  let fOrig = '', fEtapaMob = null;
+  V.setParams = p => { if (p && p.etapa) fEtapaMob = p.etapa; };
+  const cartao = it => `<li class="fu-it${it.atrasada ? ' is-late' : ''}" data-k="${U.esc(it.key)}">
+      <button class="fu-main" data-fa="abrir"><b>${U.esc(it.nome)}</b><span class="fu-prod">${U.esc(it.produto)}</span>
+        <span class="fu-org o-${it.origem}">${U.esc(it.origemTxt)}</span>
+        ${it.valor != null ? `<span class="fu-val">${U.brl(it.valor)}${it.mensal ? ` <small>(${U.brl(it.valorMes)}/mês × 12)</small>` : ''}${it.liq != null ? `<small>fica ≈ ${U.brlC(it.liq)}</small>` : ''}</span>` : ''}
+        ${it.prox || it.prazo ? `<span class="fu-prox">${it.prazo && it.fonte === 'negocio' ? `<em class="${it.atrasada ? 'late' : ''}">${U.relDue(it.prazo)}</em> ` : ''}${U.esc(it.prox || '')}</span>` : ''}</button>
+      <div class="fu-acts"><select data-fa="etapa" aria-label="Etapa">${Fu.ETAPAS.map(e => `<option value="${e.id}"${e.id === it.etapa ? ' selected' : ''}>${e.label}</option>`).join('')}</select>
+        <button class="fu-ok" data-fa="ganhou" title="Fechou">${UI.icon('check')}Fechou</button><button class="fu-no" data-fa="perdeu" title="Perdeu">Perdeu</button></div></li>`;
+
+  V.render = el => {
+    const todos = Fu.itens(), lista = todos.filter(it => !fOrig || it.origem === fOrig);
+    const cont = o => todos.filter(it => it.origem === o).length;
+    const tot = lista.reduce((s, x) => s + (x.valor || 0), 0), liq = lista.reduce((s, x) => s + (x.liq || 0), 0);
+    const mesIni = U.today().slice(0, 8) + '01';
+    const ganhosMes = Store.all('atividades').filter(a => a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10) >= mesIni).flatMap(a => M.negociosDa(a).filter(n => n.resultado === 'ganho'));
+    if (!fEtapaMob || !Fu.ETAPAS.some(e => e.id === fEtapaMob)) fEtapaMob = (Fu.ETAPAS.find(e => lista.some(x => x.etapa === e.id)) || Fu.ETAPAS[0]).id;
+    el.innerHTML = `
+      <div class="page-h"><div><h1>Funil de oportunidades</h1><p class="muted">Negócios das atividades, indicações em conversa e o Mapa 360 num lugar só. Mudar a etapa aqui atualiza a origem.</p></div>
+        <button class="btn primary" id="fuNova">${UI.icon('mais')}Nova oportunidade</button></div>
+      <section class="kpis k4">
+        <div class="kpi"><span>Em aberto</span><b>${lista.length}</b></div>
+        <div class="kpi"><span>Valor estimado</span><b>${U.brlShort(tot)}</b>${liq ? `<em>≈ ${U.brlShort(liq)} ficam com você</em>` : ''}</div>
+        <div class="kpi"><span>Em proposta</span><b>${lista.filter(x => x.etapa === 'proposta').length}</b></div>
+        <a class="kpi" href="#negocios" data-go="negocios"><span>Fechados no mês</span><b>${ganhosMes.length}</b><em>${ganhosMes.length ? U.brlShort(ganhosMes.reduce((s, n) => s + (+n.valor || 0), 0)) : 'negócios ganhos'}</em></a>
+      </section>
+      <div class="tchips"><button class="tchip${!fOrig ? ' on' : ''}" data-o="">Todas <b>${todos.length}</b></button>${Fu.ORIGENS.filter(o => cont(o.id)).map(o => `<button class="tchip${fOrig === o.id ? ' on' : ''}" data-o="${o.id}">${o.label} <b>${cont(o.id)}</b></button>`).join('')}</div>
+      <div class="fu-tabs" role="tablist">${Fu.ETAPAS.map(e => `<button role="tab" data-et="${e.id}" aria-selected="${e.id === fEtapaMob}">${e.label}<b>${lista.filter(x => x.etapa === e.id).length}</b></button>`).join('')}</div>
+      <div class="fu-board">${Fu.ETAPAS.map(e => { const xs = lista.filter(x => x.etapa === e.id).sort(Fu.ordem), v = xs.reduce((s, x) => s + (x.valor || 0), 0);
+        return `<section class="fu-col${e.id === fEtapaMob ? ' on' : ''}" data-col="${e.id}"><div class="fu-ch"><b>${e.label}</b><span class="count">${xs.length}</span><span class="grow"></span><small>${v ? U.brlShort(v) : ''}</small></div>
+          ${xs.length ? `<ul class="fu-list">${xs.map(cartao).join('')}</ul>` : '<p class="fu-vazio">Nada nesta etapa.</p>'}</section>`; }).join('')}</div>
+      ${!todos.length ? `<div class="empty card"><b>Nenhuma oportunidade aberta.</b><p>Crie um negócio, registre uma indicação em conversa ou marque "Não tem" / "Mapeado" no Mapa 360 de um cliente.</p></div>` : ''}`;
+    el.querySelector('#fuNova').onclick = Fu.nova;
+    el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => { fOrig = b.dataset.o; V.render(el); });
+    el.querySelectorAll('[data-et]').forEach(b => b.onclick = () => { fEtapaMob = b.dataset.et; el.querySelectorAll('[data-et]').forEach(x => x.setAttribute('aria-selected', x === b)); el.querySelectorAll('.fu-col').forEach(c => c.classList.toggle('on', c.dataset.col === fEtapaMob)); });
+    const porKey = Object.fromEntries(lista.map(x => [x.key, x]));
+    el.querySelectorAll('.fu-it').forEach(li => {
+      const it = porKey[li.dataset.k];
+      li.querySelector('[data-fa="abrir"]').onclick = () => Fu.abrir(it);
+      li.querySelector('[data-fa="etapa"]').onchange = e => { fEtapaMob = e.target.value; Fu.mover(it, e.target.value); };
+      li.querySelector('[data-fa="ganhou"]').onclick = () => Fu.fechar(it, true);
+      li.querySelector('[data-fa="perdeu"]').onclick = () => Fu.fechar(it, false);
+    });
+  };
+
+  App.Funil = Fu;
+  App.Views = App.Views || {};
+  App.Views.funil = V;
 })(window.App = window.App || {});
 
 </script>
@@ -5571,7 +5789,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
 /* Inicialização, navegação entre telas e botão "+ Nova atividade". */
 (function (App) {
   const { Store, UI, Demo } = App;
-  const ROTAS = ['painel', 'clientes', 'atividades', 'negocios', 'emails', 'metas', 'faturamento', 'responsabilidades', 'dados'];
+  const ROTAS = ['painel', 'clientes', 'atividades', 'negocios', 'funil', 'emails', 'metas', 'faturamento', 'responsabilidades', 'dados'];
   let atual = 'painel';
   const main = () => document.getElementById('view');
 
