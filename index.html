@@ -863,6 +863,19 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .nr-row:hover { border-color: var(--accent); }
 .nr-row small { grid-column: 1; color: var(--muted); font-size: 12px; } .nr-row .sit { grid-column: 2; grid-row: 1 / span 2; }
 .nr-h { font-size: 13px; margin: 16px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.ec-card .card-h { gap: 8px; justify-content: flex-start; } .ec-card .card-h .btn { margin-left: auto; }
+.ec-n { font-size: 12px; font-weight: 800; color: #6E3FF0; background: color-mix(in srgb, #6E3FF0 12%, #fff); border-radius: 999px; padding: 1px 9px; }
+.ec-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ec-list li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, #6E3FF0 22%, var(--line)); border-left: 4px solid #6E3FF0; background: var(--surface); }
+.ec-nome { flex: 1; min-width: 0; display: grid; gap: 1px; text-align: left; border: 0; background: none; padding: 0; font: inherit; color: var(--ink); cursor: pointer; }
+.ec-nome b { font-size: 14px; } .ec-nome:hover b { color: var(--accent); }
+.ec-nome small { font-size: 12px; color: var(--muted); }
+.ec-nome em { font-style: normal; font-size: 12px; color: var(--ink); opacity: .75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ec-acts { display: flex; gap: 6px; flex: none; }
+.ec-acts button { font: inherit; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; cursor: pointer; border: 1px solid; background: var(--surface); }
+.ec-sim { color: #23864F; border-color: color-mix(in srgb, #23864F 40%, var(--line)) !important; } .ec-sim:hover { background: color-mix(in srgb, #23864F 10%, #fff) !important; }
+.ec-nao { color: #C2611A; border-color: color-mix(in srgb, #C2611A 35%, var(--line)) !important; } .ec-nao:hover { background: color-mix(in srgb, #C2611A 10%, #fff) !important; }
+@media (max-width: 520px) { .ec-list li { flex-wrap: wrap; } .ec-acts { width: 100%; } .ec-acts button { flex: 1; } }
 /* Árvore (organograma da esquerda para a direita) */
 .ot-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; scrollbar-width: thin; }
 .ot-tabs button { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font: inherit; font-size: 13px; color: var(--ink); cursor: pointer; }
@@ -914,6 +927,19 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .pes-b { display: grid; gap: 4px; }
 .pes-b small { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); font-weight: 700; }
 .pes-b p { margin: 0; }
+
+/* Busca de cliente e responsabilidades na atividade */
+.f > span em { font-style: normal; font-weight: 500; color: var(--faint); font-size: 12px; margin-left: 4px; }
+.rpicks { display: flex; flex-wrap: wrap; gap: 6px; }
+.rpicks .mpick small { color: var(--accent); font-weight: 700; font-size: 11px; }
+.clipick { position: relative; }
+.clipick input[name=cliente] { width: 100%; }
+.clipick-l { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30; list-style: none; margin: 0; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 32px rgba(30, 20, 60, .16); max-height: 260px; overflow-y: auto; }
+.clipick-l li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+.clipick-l li small { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+.clipick-l li.on, .clipick-l li:hover { background: var(--accent-soft); }
+.clipick-l li.novo b { color: var(--accent); font-weight: 600; }
+.clipick-l li.vazio { color: var(--muted); cursor: default; }
 
 </style>
 
@@ -1289,6 +1315,9 @@ window.HORUS_CONFIG = {
 
   /* ---------- Responsabilidades ---------- */
   M.resp = id => Store.get('responsabilidades', id);
+  /* Atividade pode ter várias responsabilidades: responsabilidadeId é a principal (cor, filtros), respIds guarda as outras */
+  M.respsDe = a => [...new Set([a.responsabilidadeId, ...(Array.isArray(a.respIds) ? a.respIds : [])].filter(Boolean))];
+  M.temResp = (a, id) => a.responsabilidadeId === id || (Array.isArray(a.respIds) && a.respIds.includes(id));
   M.respAtivas = () => Store.all('responsabilidades').filter(r => r.status !== 'arquivada');
   M.respNome = id => (M.resp(id) || {}).nome || 'Sem responsabilidade';
   M.respCor = id => (M.resp(id) || {}).cor || '#8A93A3';
@@ -1328,7 +1357,7 @@ window.HORUS_CONFIG = {
   M.origem = a => a && a.origemId ? Store.get('atividades', a.origemId) : null;
   M.filhos = id => Store.where('atividades', x => x.origemId === id).sort((a, b) => (a.criadoEm || '').localeCompare(b.criadoEm || ''));
   /* O que o próximo passo herda da atividade de origem */
-  M.herdar = pai => ({ origemId: pai.id, responsabilidadeId: pai.responsabilidadeId, cliente: pai.cliente || null, categoria: pai.categoria || null, prioridade: pai.prioridade || 'media' });
+  M.herdar = pai => ({ origemId: pai.id, responsabilidadeId: pai.responsabilidadeId, respIds: pai.respIds || [], cliente: pai.cliente || null, clienteId: pai.clienteId || null, categoria: pai.categoria || null, prioridade: pai.prioridade || 'media' });
   /* itens: [{ titulo, prazo, metaIds }] */
   M.criarProximos = (paiId, itens) => {
     const pai = Store.get('atividades', paiId); if (!pai || !itens.length) return [];
@@ -1457,6 +1486,9 @@ window.HORUS_CONFIG = {
 
   /* Exclui a responsabilidade e o que está ligado a ela */
   M.excluirResp = id => {
+    /* Atividades que também têm outra responsabilidade não são apagadas: só perdem esta */
+    Store.where('atividades', a => M.temResp(a, id) && M.respsDe(a).length > 1).forEach(a => { const resto = M.respsDe(a).filter(r => r !== id);
+      Store.update('atividades', a.id, { responsabilidadeId: resto[0], respIds: resto.slice(1) }, { silent: true }); });
     const ats = Store.where('atividades', a => a.responsabilidadeId === id).map(a => a.id);
     const mts = Store.where('metas', m => m.responsabilidadeId === id).map(m => m.id);
     Store.removeWhere('atividades', a => ats.includes(a.id), { silent: true });
@@ -1470,7 +1502,7 @@ window.HORUS_CONFIG = {
 
   /* ---------- Números do painel ---------- */
   M.resumo = (filtroResp) => {
-    const at = Store.all('atividades').filter(a => !filtroResp || a.responsabilidadeId === filtroResp);
+    const at = Store.all('atividades').filter(a => !filtroResp || M.temResp(a, filtroResp));
     const concl = at.filter(a => a.status === 'concluida');
     /* Execução: das atividades com prazo nos últimos 7 dias (até hoje), quantas foram concluídas */
     const ini = U.addDays(U.today(), -6);
@@ -1859,7 +1891,7 @@ window.HORUS_CONFIG = {
     if (n.startsWith(t + ' ') && t.length >= 3) return Store.all('clientes').filter(o => norm(o.nome).startsWith(t + ' ') || norm(C.apelido(o)) === t).length === 1;
     return false;
   };
-  C.atividadesDo = cli => Store.all('atividades').filter(a => a.cliente && C.casa(cli, a.cliente));
+  C.atividadesDo = cli => Store.all('atividades').filter(a => a.clienteId ? a.clienteId === cli.id : a.cliente && C.casa(cli, a.cliente));
   C.emailsDo = cli => Store.all('emails').filter(e => (e.cliente && C.casa(cli, e.cliente)) || (cli.email && norm(e.remetenteEmail) === norm(cli.email)));
   C.receitaDo = cli => Store.all('producoes').filter(p => p.cliente && C.casa(cli, p.cliente)).reduce((s, p) => s + (+p.liquido || +p.bruto || 0), 0);
 
@@ -2395,6 +2427,7 @@ window.HORUS_CONFIG = {
 
   /* ---------- Etiquetas ---------- */
   UI.respChip = id => `<span class="rchip"><i style="background:${M.respCor(id)}"></i>${U.esc(M.respNome(id))}</span>`;
+  UI.respChips = a => App.M.respsDe(a).map(UI.respChip).join('') || UI.respChip(a.responsabilidadeId);
   UI.prioPill = id => `<span class="prio p-${id}">${M.prio(id).label}</span>`;
   UI.statusPill = id => `<span class="st s-${id}">${M.status(id).label}</span>`;
   UI.due = a => {
@@ -2405,12 +2438,55 @@ window.HORUS_CONFIG = {
   /* Etiqueta de negócio: tipo, cliente e valor */
   UI.negChip = a => { const ns = M.negociosDa(a); if (!ns.length) return '';
     return ns.map(n => `<span class="neg${n.resultado === 'perdido' ? ' perdido' : ''}">${UI.icon('negocio')}${U.esc(M.tipoNeg(n.tipo).label)}${n.valor ? ' · ' + U.brlShort(n.valor) : ''}</span>`).join('') + (a.cliente ? `<span class="cli">${U.esc(a.cliente)}</span>` : ''); };
+  /* Cliente de uma atividade que não é negócio (o negócio já mostra junto) */
+  UI.cliChip = a => a.cliente && !M.negociosDa(a).length ? `<span class="cli">${U.esc(a.cliente)}</span>` : '';
   UI.bar = (pct, cor) => `<div class="pbar"><i style="width:${Math.min(100, Math.round(pct * 100))}%;${cor ? 'background:' + cor : ''}"></i></div>`;
 
   /* ---------- Formulários ---------- */
   UI.options = (list, sel, { vazio } = {}) => (vazio ? `<option value="">${U.esc(vazio)}</option>` : '') +
     list.map(o => `<option value="${U.esc(o.id)}"${o.id === sel ? ' selected' : ''}>${U.esc(o.label || o.nome)}</option>`).join('');
   UI.respOptions = (sel, vazio) => UI.options(App.Store.all('responsabilidades').filter(r => r.status !== 'arquivada' || r.id === sel), sel, { vazio });
+  /* Campo de cliente com busca na base (clientes e prospects) e nos nomes já usados em atividades.
+     Guarda o nome em name="cliente" e o id (quando escolhido da base) em name="clienteId". Aceita nome novo. */
+  UI.clientePicker = (nome, id) => `<div class="clipick"><input name="cliente" value="${U.esc(nome || '')}" placeholder="Buscar na base ou digitar um nome" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list"><input type="hidden" name="clienteId" value="${U.esc(id || '')}"><ul class="clipick-l" role="listbox" hidden></ul></div>`;
+  UI.ligarClientePicker = root => {
+    const Store = App.Store;
+    const box = root.querySelector('.clipick'); if (!box) return;
+    const inp = box.querySelector('[name=cliente]'), hid = box.querySelector('[name=clienteId]'), ul = box.querySelector('.clipick-l');
+    const Cli = App.Cli, norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const base = () => { const cl = Store.all('clientes').map(c => ({ id: c.id, nome: c.nome, tag: c.saiu ? 'Ex-cliente' : Cli && !Cli.ehCliente(c) ? 'Prospect' : 'Cliente' }));
+      const nomes = new Set(cl.map(c => norm(c.nome)));
+      const soAtiv = [...new Set(Store.all('atividades').map(a => a.cliente).filter(Boolean))].filter(n => !nomes.has(norm(n))).map(n => ({ id: '', nome: n, tag: 'Só em atividades' }));
+      return cl.concat(soAtiv); };
+    let itens = [], ativo = -1;
+    const fechar = () => { ul.hidden = true; inp.setAttribute('aria-expanded', 'false'); ativo = -1; };
+    const escolher = it => { inp.value = it.nome; hid.value = it.id || ''; fechar(); };
+    const marcar = () => ul.querySelectorAll('li').forEach((li, i) => li.classList.toggle('on', i === ativo));
+    const abrir = () => {
+      const q = norm(inp.value), partes = q.split(/\s+/).filter(Boolean);
+      itens = base().filter(c => partes.every(p => norm(c.nome).includes(p)))
+        .sort((a, b) => (norm(a.nome).startsWith(q) ? 0 : 1) - (norm(b.nome).startsWith(q) ? 0 : 1) || a.nome.localeCompare(b.nome, 'pt-BR')).slice(0, 8);
+      const exato = itens.some(c => norm(c.nome) === q);
+      ul.innerHTML = itens.map((c, i) => `<li role="option" data-i="${i}"><b>${U.esc(c.nome)}</b><small>${c.tag}</small></li>`).join('')
+        + (q && !exato ? `<li class="novo" data-novo="1"><b>Usar “${U.esc(inp.value.trim())}”</b><small>nome fora da base</small></li>` : '')
+        + (!itens.length && !q ? '<li class="vazio">Nenhum cliente na base ainda</li>' : '');
+      ul.hidden = !ul.children.length; inp.setAttribute('aria-expanded', String(!ul.hidden)); ativo = itens.length ? 0 : -1; marcar();
+    };
+    inp.addEventListener('input', () => { hid.value = ''; abrir(); });
+    inp.addEventListener('focus', abrir);
+    inp.addEventListener('keydown', e => {
+      if (ul.hidden) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); ativo = Math.min(itens.length - 1, ativo + 1); marcar(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); ativo = Math.max(0, ativo - 1); marcar(); }
+      else if (e.key === 'Enter' && ativo >= 0 && itens[ativo]) { e.preventDefault(); e.stopPropagation(); escolher(itens[ativo]); }
+      else if (e.key === 'Escape') { e.stopPropagation(); fechar(); }
+    });
+    ul.addEventListener('mousedown', e => { e.preventDefault(); const li = e.target.closest('li'); if (!li) return;
+      if (li.dataset.novo) { hid.value = ''; fechar(); } else if (li.dataset.i != null) escolher(itens[+li.dataset.i]); });
+    inp.addEventListener('blur', () => { setTimeout(fechar, 120);
+      /* Digitou o nome exato de alguém da base: liga ao cadastro */
+      if (!hid.value && inp.value.trim()) { const m = Store.all('clientes').find(c => norm(c.nome) === norm(inp.value)); if (m) hid.value = m.id; } });
+  };
   UI.formData = form => {
     const o = {};
     form.querySelectorAll('[name]').forEach(el => {
@@ -2471,9 +2547,9 @@ window.HORUS_CONFIG = {
   /* ---------- Metas da atividade (pode ser mais de uma) ---------- */
   const metaAtiva = m => !(m.fim && m.fim < U.today());
   /* Metas para escolher: as da responsabilidade primeiro, depois as outras */
-  const metasEscolha = (respId, sel) => {
-    const ms = Store.all('metas').filter(m => metaAtiva(m) || sel.has(m.id));
-    const da = ms.filter(m => m.responsabilidadeId === respId), outras = ms.filter(m => m.responsabilidadeId !== respId);
+  const metasEscolha = (respIds, sel) => {
+    const ms = Store.all('metas').filter(m => metaAtiva(m) || sel.has(m.id)), rs = [].concat(respIds);
+    const da = ms.filter(m => rs.includes(m.responsabilidadeId)), outras = ms.filter(m => !rs.includes(m.responsabilidadeId));
     const ord = arr => arr.sort((a, b) => a.nome.localeCompare(b.nome));
     return { da: ord(da), outras: ord(outras) };
   };
@@ -2593,8 +2669,9 @@ window.HORUS_CONFIG = {
       body: `<form class="form" id="fAt" novalidate>
         ${M.origem(v) ? `<div class="orig-banner">${UI.icon('seta')}<span>Próximo passo de <b>${U.esc(M.origem(v).titulo)}</b></span></div>` : ''}
         <label class="f full"><span>Título</span><input name="titulo" required maxlength="140" value="${U.esc(v.titulo || '')}" placeholder="O que precisa ser feito?" autofocus></label>
+        <div class="f full"><span>Responsabilidade <em>pode marcar mais de uma · a primeira é a principal</em></span><div class="rpicks" id="rpicks"></div><input type="hidden" name="responsabilidadeId" value="${U.esc(v.responsabilidadeId || '')}"></div>
         <div class="row2">
-          <label class="f"><span>Responsabilidade</span><select name="responsabilidadeId">${UI.respOptions(v.responsabilidadeId)}</select></label>
+          <label class="f"><span>Cliente <em>opcional</em></span>${UI.clientePicker(v.cliente, v.clienteId)}</label>
           <label class="f"><span>Prazo de conclusão</span><input type="date" name="prazo" value="${v.prazo || ''}"></label>
         </div>
         <div class="quick-dates">${datasRapidas().map(([l, d]) => `<button type="button" class="qd" data-d="${d}">${l}</button>`).join('')}</div>
@@ -2607,7 +2684,6 @@ window.HORUS_CONFIG = {
         <div class="negbox${ehNeg ? ' on' : ''}">
           <label class="neg-toggle"><input type="checkbox" id="chkNeg" ${ehNeg ? 'checked' : ''}><span class="tg"><i></i></span><span><b>É um negócio</b><small>Aparece em Negócios em andamento. Escreva o tipo do jeito que você usa.</small></span></label>
           <div class="neg-fields" ${ehNeg ? '' : 'hidden'}>
-            <label class="f full"><span>Cliente</span><input name="cliente" list="dlCli" value="${U.esc(v.cliente || '')}" placeholder="Nome do cliente"><datalist id="dlCli">${[...new Set(Store.all('atividades').map(x => x.cliente).filter(Boolean))].sort().map(c => `<option value="${U.esc(c)}">`).join('')}</datalist></label>
             <datalist id="dlTipo">${M.tiposSugestoes().map(t => `<option value="${U.esc(t)}">`).join('')}</datalist>
             <div class="negs-h"><span>Negócios deste card</span><small>Uma reunião pode tratar de vários: cada um tem valor e % próprios.</small></div>
             <div class="negs" id="negs"></div>
@@ -2643,7 +2719,7 @@ window.HORUS_CONFIG = {
         const guardar = () => { el.querySelectorAll('[data-esp]').forEach(i => { esp[i.dataset.esp] = U.parseNum(i.value); }); el.querySelectorAll('[data-res]').forEach(i => { res[i.dataset.res] = U.parseNum(i.value); }); };
         const desenharMetas = () => {
           guardar();
-          const { da, outras } = metasEscolha(form.responsabilidadeId.value, sel);
+          const { da, outras } = metasEscolha(rsel, sel);
           const box = el.querySelector('#mpicks');
           box.innerHTML = (da.length || outras.length)
             ? da.map(x => chipMeta(x, sel.has(x.id))).join('') + (outras.length ? `<span class="mp-sep">Outras responsabilidades</span>` + outras.map(x => chipMeta(x, sel.has(x.id))).join('') : '')
@@ -2655,8 +2731,17 @@ window.HORUS_CONFIG = {
             <input data-res="${x.id}" data-num inputmode="decimal" value="${numTxt(res[x.id])}" placeholder="Alcançado" aria-label="Alcançado em ${U.esc(x.nome)}"></div>`).join('') : '';
           el.querySelector('#resGen').hidden = ms.length > 0;
         };
-        form.responsabilidadeId.onchange = desenharMetas;
+        /* Responsabilidades: várias; a ordem de marcação define a principal */
+        const rsel = M.respsDe(v).filter(id => M.resp(id));
+        const desenharResps = () => {
+          const lista = Store.all('responsabilidades').filter(r => r.status !== 'arquivada' || rsel.includes(r.id));
+          el.querySelector('#rpicks').innerHTML = lista.map(r => { const i = rsel.indexOf(r.id), on = i >= 0;
+            return `<button type="button" class="mpick${on ? ' on' : ''}" data-rid="${r.id}" aria-pressed="${on}"><i style="background:${r.cor || '#8A93A3'}"></i>${U.esc(r.nome)}${i === 0 && rsel.length > 1 ? '<small>principal</small>' : ''}<svg class="ic ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`; }).join('');
+          el.querySelectorAll('[data-rid]').forEach(b => b.onclick = () => { const k = b.dataset.rid, i = rsel.indexOf(k); i >= 0 ? rsel.splice(i, 1) : rsel.push(k); form.responsabilidadeId.value = rsel[0] || ''; desenharResps(); desenharMetas(); });
+        };
+        desenharResps();
         desenharMetas();
+        UI.ligarClientePicker(el);
 
         /* Negócios (vários por card) */
         const chk = el.querySelector('#chkNeg'), box = el.querySelector('#negs');
@@ -2691,13 +2776,16 @@ window.HORUS_CONFIG = {
           if (t) { inp.value = t; inp.closest('.neg-r').querySelector('.nv').focus(); } else inp.focus();
           calcNeg();
         });
-        chk.onchange = () => { el.querySelector('.neg-fields').hidden = !chk.checked; el.querySelector('.negbox').classList.toggle('on', chk.checked); if (chk.checked) (box.querySelector('.nt').value ? form.cliente : box.querySelector('.nt')).focus(); };
+        chk.onchange = () => { el.querySelector('.neg-fields').hidden = !chk.checked; el.querySelector('.negbox').classList.toggle('on', chk.checked); if (chk.checked) box.querySelector('.nt').focus(); };
 
         form.onsubmit = e => {
           e.preventDefault();
           const d = UI.formData(form), er = el.querySelector('#errAt');
           const erro = (msg, campo) => { er.textContent = msg; er.hidden = false; if (campo) campo.focus(); };
           if (!d.titulo) return erro('Escreva um título para a atividade.', form.titulo);
+          if (!rsel.length) return erro('Marque pelo menos uma responsabilidade.', el.querySelector('#rpicks button'));
+          d.responsabilidadeId = rsel[0]; d.respIds = rsel.slice(1);
+          d.cliente = d.cliente ? d.cliente.trim() : null; d.clienteId = d.cliente && d.clienteId ? d.clienteId : null;
           if (chk.checked) {
             const negs = [];
             for (const r of box.querySelectorAll('.neg-r')) {
@@ -2708,7 +2796,7 @@ window.HORUS_CONFIG = {
             }
             if (!negs.length) return erro('Escreva o tipo de negócio (ex.: Zentis, Seguro de vida, Consórcio).', box.querySelector('.nt'));
             Object.assign(d, M.espelhoNeg(negs));
-          } else { Object.assign(d, M.espelhoNeg([])); d.negocios = []; d.cliente = null; }
+          } else { Object.assign(d, M.espelhoNeg([])); d.negocios = []; }
           guardar();
           const ids = [...sel].filter(i => Store.get('metas', i));
           d.metaIds = ids;
@@ -2792,13 +2880,13 @@ window.HORUS_CONFIG = {
     const hist = M.historico(id);
     const m = UI.modal({
       title: a.titulo, size: 'md',
-      body: `<div class="det-chips">${UI.respChip(a.responsabilidadeId)}${UI.statusPill(a.status)}${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
+      body: `<div class="det-chips">${UI.respChips(a)}${UI.statusPill(a.status)}${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
         <div class="kvs">
           ${lin('Descrição', U.esc(a.descricao))}
           ${lin('Categoria', U.esc(a.categoria))}
           ${lin('Prazo', a.prazo ? U.fmtDateLong(a.prazo) : 'Sem prazo')}
           ${lin('Início', a.inicio ? U.fmtDateLong(a.inicio) : '')}
-          ${lin('Cliente', M.ehNegocio(a) && a.cliente ? U.esc(a.cliente) : '')}
+          ${lin('Cliente', a.cliente ? U.esc(a.cliente) : '')}
           ${lin(M.negociosDa(a).length > 1 ? 'Negócios' : 'Negócio', M.negociosDa(a).map(n => { const lq = M.liqNeg(n);
             return `<div class="dneg"><b>${U.esc(M.tipoNeg(n.tipo).label)}</b>${n.valor != null ? ' · ' + U.brl(n.valor) : ''}${lq != null ? ` <span class="muted">· fica ${U.brlC(lq)} (${U.num(M.pctNeg(n))}%)</span>` : ''}${n.resultado ? ` <span class="tag ${n.resultado === 'ganho' ? 't-ok' : 't-erro'}">${n.resultado === 'ganho' ? 'Fechado' : 'Não fechou'}</span>` : ''}</div>`; }).join(''))}
           ${lin(metas.length > 1 ? 'Metas' : 'Meta', metas.map(m => { const r = M.resMeta(a, m.id), e = M.espMeta(a, m.id); return `<div class="dmeta"><i style="background:${M.respCor(m.responsabilidadeId)}"></i>${U.esc(m.nome)} <b>${r != null ? U.esc(M.fmtMeta(r, m, true)) : '—'}</b>${e != null ? ' de ' + U.esc(M.fmtMeta(e, m)) : (M.ehDinheiro(m) ? '' : ' ' + U.esc(m.unidade || ''))}</div>`; }).join(''))}
@@ -3417,19 +3505,19 @@ window.HORUS_CONFIG = {
 
   const itemAt = a => `<li class="pitem${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
       <button class="check" data-act="concluir" aria-label="Concluir ${U.esc(a.titulo)}">${UI.icon('check')}</button>
-      <div class="pmain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${M.ehNegocio(a) ? UI.negChip(a) : (a.categoria ? `<span class="cat">${U.esc(a.categoria)}</span>` : '')}</div></div>
+      <div class="pmain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChips(a)}${UI.cliChip(a)}${M.ehNegocio(a) ? UI.negChip(a) : (a.categoria ? `<span class="cat">${U.esc(a.categoria)}</span>` : '')}</div></div>
       <div class="pside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
       <button class="icon-btn" data-act="adiar" title="Adiar" aria-label="Adiar">${UI.icon('adiar')}</button></li>`;
 
   V.render = el => {
     const r = M.resumo(filtroResp);
-    const prior = M.prioridadesHoje().filter(a => !filtroResp || a.responsabilidadeId === filtroResp);
-    const prox = Store.all('atividades').filter(a => M.proximos(a, 7) && !prior.includes(a) && (!filtroResp || a.responsabilidadeId === filtroResp)).sort(M.ordemAtencao);
+    const prior = M.prioridadesHoje().filter(a => !filtroResp || M.temResp(a, filtroResp));
+    const prox = Store.all('atividades').filter(a => M.proximos(a, 7) && !prior.includes(a) && (!filtroResp || M.temResp(a, filtroResp))).sort(M.ordemAtencao);
     const metas = Store.all('metas').filter(m => (!filtroResp || m.responsabilidadeId === filtroResp) && !(m.fim && m.fim < U.addDays(U.today(), -30)));
     const resps = M.respAtivas().filter(x => !filtroResp || x.id === filtroResp);
     const exec = r.planejadas7 ? r.feitas7 / r.planejadas7 : null;
     const demo = App.Demo.count();
-    const negs = M.negItensAbertos().filter(x => !filtroResp || x.a.responsabilidadeId === filtroResp);
+    const negs = M.negItensAbertos().filter(x => !filtroResp || M.temResp(x.a, filtroResp));
 
     el.innerHTML = `
       ${demo.atividades + demo.metas ? `<div class="banner">Você está vendo <b>dados de demonstração</b>. Quando quiser começar com os seus, apague-os em <a href="#dados" data-go="dados">Backup e dados</a>.</div>` : ''}
@@ -3473,7 +3561,7 @@ window.HORUS_CONFIG = {
       <section class="card" aria-label="Desempenho por responsabilidade">
         <div class="card-h"><h2>Desempenho por responsabilidade</h2><a class="link" href="#responsabilidades" data-go="responsabilidades">Gerenciar</a></div>
         <div class="rgrid">${resps.map(x => {
-          const at = Store.where('atividades', a => a.responsabilidadeId === x.id), c = at.filter(a => a.status === 'concluida').length, l = at.filter(M.atrasada).length, h = at.filter(M.hoje).length;
+          const at = Store.where('atividades', a => M.temResp(a, x.id)), c = at.filter(a => a.status === 'concluida').length, l = at.filter(M.atrasada).length, h = at.filter(M.hoje).length;
           return `<a class="rcard" href="#atividades" data-go="atividades" data-q="resp=${x.id}" style="--c:${x.cor}"><div class="rh"><i></i><b>${U.esc(x.nome)}</b></div>
             ${UI.bar(at.length ? c / at.length : 0, x.cor)}
             <div class="rnums"><span><b>${c}</b>/${at.length} concluídas</span><span class="${l ? 'late' : ''}"><b>${l}</b> atrasada${l === 1 ? '' : 's'}</span><span><b>${h}</b> hoje</span></div></a>`;
@@ -3511,7 +3599,7 @@ window.HORUS_CONFIG = {
   V.setParams = q => { f = { ...PADRAO }; if (q) Object.assign(f, q); if (q && (q.prazo === 'atrasadas' || q.prazo === 'hoje' || q.prazo === '7dias')) f.status = 'abertas'; if (q && q.status === 'concluida') f.status = 'concluida'; };
 
   const passa = (a, semStatus) => {
-    if (f.resp && a.responsabilidadeId !== f.resp) return false;
+    if (f.resp && !M.temResp(a, f.resp)) return false;
     if (f.categoria && a.categoria !== f.categoria) return false;
     if (f.metaId && !M.metasDa(a).includes(f.metaId)) return false;
     if (!semStatus && f.status === 'abertas' && !M.aberta(a)) return false;
@@ -3557,14 +3645,14 @@ window.HORUS_CONFIG = {
 
   const linha = a => `<li class="arow${a.status === 'concluida' ? ' is-done' : ''}${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
     <button class="check${a.status === 'concluida' ? ' on' : ''}" data-act="${a.status === 'concluida' ? 'reabrir' : 'concluir'}" aria-label="${a.status === 'concluida' ? 'Reabrir' : 'Concluir'}">${UI.icon('check')}</button>
-    <div class="amain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${a.categoria && !a.tipoNegocio ? `<span class="cat">${U.esc(a.categoria)}</span>` : ''}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}${resultadoTxt(a)}${ligacao(a)}</div></div>
+    <div class="amain" data-act="abrir"><b>${U.esc(a.titulo)}</b><div class="pmeta">${UI.respChips(a)}${UI.cliChip(a)}${UI.negChip(a)}${a.categoria && !a.tipoNegocio ? `<span class="cat">${U.esc(a.categoria)}</span>` : ''}${a.status === 'andamento' || a.status === 'adiada' ? UI.statusPill(a.status) : ''}${resultadoTxt(a)}${ligacao(a)}</div></div>
     <div class="aside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
     <div class="aact">${a.status !== 'concluida' ? `<button class="icon-btn" data-act="adiar" title="Adiar" aria-label="Adiar">${UI.icon('adiar')}</button>` : ''}<button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button><button class="icon-btn" data-act="excluir" title="Excluir" aria-label="Excluir">${UI.icon('lixo')}</button></div></li>`;
 
   const cartao = a => `<article class="kcard${M.atrasada(a) ? ' is-late' : ''}" draggable="true" data-id="${a.id}" tabindex="0">
     <div class="kc-top">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
     <b>${U.esc(a.titulo)}</b>
-    <div class="pmeta">${UI.respChip(a.responsabilidadeId)}${UI.negChip(a)}${resultadoTxt(a)}${ligacao(a)}</div></article>`;
+    <div class="pmeta">${UI.respChips(a)}${UI.cliChip(a)}${UI.negChip(a)}${resultadoTxt(a)}${ligacao(a)}</div></article>`;
 
   V.render = el => {
     const todas = Store.all('atividades');
@@ -3986,7 +4074,7 @@ window.HORUS_CONFIG = {
         <button class="btn primary" id="novaResp">${UI.icon('mais')}Nova responsabilidade</button></div>
       <div class="filters"><div class="seg" role="group"><button data-arq="0" aria-pressed="${!verArq}">Ativas · ${ativas.length}</button><button data-arq="1" aria-pressed="${verArq}">Arquivadas · ${arq.length}</button></div></div>
       ${lista.length ? `<div class="respgrid">${lista.map(r => {
-        const at = Store.where('atividades', a => a.responsabilidadeId === r.id), ab = at.filter(M.aberta), l = at.filter(M.atrasada).length, c = at.length - ab.length;
+        const at = Store.where('atividades', a => M.temResp(a, r.id)), ab = at.filter(M.aberta), l = at.filter(M.atrasada).length, c = at.length - ab.length;
         const mts = Store.where('metas', m => m.responsabilidadeId === r.id);
         return `<article class="card resp" data-id="${r.id}" style="--c:${r.cor}">
           <div class="resp-h"><i class="dot"></i><h3>${U.esc(r.nome)}</h3>${r.status === 'arquivada' ? '<span class="tag t-neutro">Arquivada</span>' : ''}</div>
@@ -4014,7 +4102,7 @@ window.HORUS_CONFIG = {
         Store.update('responsabilidades', r.id, { status: arquivar ? 'arquivada' : 'ativa' }); UI.toast(arquivar ? 'Responsabilidade arquivada' : 'Responsabilidade reativada');
       }
       if (b.dataset.act === 'excluir') {
-        const na = Store.where('atividades', a => a.responsabilidadeId === r.id).length, nm = Store.where('metas', m => m.responsabilidadeId === r.id).length;
+        const na = Store.where('atividades', a => M.temResp(a, r.id)).length, nm = Store.where('metas', m => m.responsabilidadeId === r.id).length;
         const ok = await UI.confirm({ title: 'Excluir responsabilidade?', text: `"${U.esc(r.nome)}" será apagada${na || nm ? ` junto com <b>${U.plural(na, 'atividade', 'atividades')}</b> e <b>${U.plural(nm, 'meta', 'metas')}</b>` : ''}. Isso não pode ser desfeito. Se quiser só tirar do caminho, use Arquivar.`, ok: 'Excluir tudo' });
         if (ok) { M.excluirResp(r.id); UI.toast('Responsabilidade excluída'); }
       }
@@ -4519,6 +4607,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const semInd = todos.filter(c => !c.indicadoPor && c.geracao > 1);
     const ger = {}; indicados.forEach(c => { const g = Cli.geracao(c); ger[g] = ger[g] || { n: 0, c: 0 }; ger[g].n++; if (Cli.converteu(c)) ger[g].c++; });
     const max = rk.length ? rk[0].rede : 1, TOP = 5;
+    const emConv = todos.filter(c => c.situacao === 'conversa').sort((a, b) => (a.dataIndicacao || a.criadoEm || '').localeCompare(b.dataIndicacao || b.criadoEm || ''));
     const naoN = todos.filter(c => c.situacao === 'nao').length, convN = todos.filter(c => c.situacao === 'conversa').length;
     el.innerHTML = `${voltar('Clientes', {})}
       <div class="page-h"><div><h1>Rede de indicações</h1><p class="muted">Quem trouxe quem. O cliente vale pelo patrimônio e também pelo relacionamento que ele abre.</p></div>
@@ -4536,6 +4625,12 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
           <section class="card"><div class="card-h"><h2>Por geração</h2></div>
             ${Object.keys(ger).length ? `<div class="gen-list">${Object.keys(ger).sort((a, b) => a - b).map(g => `<div><b>${g}ª</b><span>${U.plural(ger[g].n, 'pessoa', 'pessoas')}</span><div class="pbar"><i style="width:${ger[g].c / ger[g].n * 100}%;background:#23864F"></i></div><small>${rodaram(ger[g].c)}</small></div>`).join('')}</div>` : '<p class="muted small">Sem dados ainda.</p>'}
             <div class="sit-leg">${Cli.SITUACOES.map(s => `<span class="sit" style="--sc:${s.cor}">${s.label}</span>`).join('')}</div></section>
+          <section class="card ec-card"><div class="card-h"><h2>Em conversa</h2><span class="ec-n">${emConv.length}</span><button class="btn ghost sm" id="ecNova">${UI.icon('mais')}Nova</button></div>
+            <p class="muted small" style="margin:-4px 0 10px">Quem está no processo para entrar na base. Quando decidir, marque aqui.</p>
+            ${emConv.length ? `<ul class="ec-list">${emConv.map(c => { const i = Cli.indicador(c), d = c.dataIndicacao ? U.diff(U.today(), c.dataIndicacao) : null;
+              return `<li><button class="ec-nome" data-pes="${c.id}"><b>${U.esc(c.nome)}</b><small>${i ? 'Indicação de ' + U.esc(nomeCurto(i)) : 'Sem indicador'}${d != null && d >= 0 ? ' · ' + (d === 0 ? 'desde hoje' : d === 1 ? 'há 1 dia' : 'há ' + d + ' dias') : ''}</small>${c.observacoes ? `<em>${U.esc(c.observacoes)}</em>` : ''}</button>
+                <div class="ec-acts"><button class="ec-sim" data-ecsit="sim" data-id="${c.id}" title="Virou cliente">Rodou</button><button class="ec-nao" data-ecsit="nao" data-id="${c.id}" title="Não vai rodar agora">Não rodou</button></div></li>`; }).join('')}</ul>`
+              : '<div class="empty sm"><b>Ninguém em conversa agora.</b><p>Registre uma indicação com a situação “Em conversa”.</p></div>'}</section>
         </div></div>
       <section class="card"><div class="card-h"><h2>Árvore de indicações</h2><span class="muted small">escolha a rede · clique num nome para ver os detalhes</span></div>
         ${raizes.length ? `<div class="ot-tabs" role="tablist">${raizes.map((r, i) => `<button role="tab" data-raiz="${r.id}" aria-selected="${i === 0}"><b>${U.esc(nomeCurto(r))}</b><em>${Cli.rede(r).length}</em></button>`).join('')}</div><div id="otBox"></div>
@@ -4544,6 +4639,10 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.querySelector('#indNova').onclick = () => App.Forms.indicacao();
     el.querySelectorAll('[data-pes]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); pessoa(b.dataset.pes); }));
     el.querySelector('#indNao').onclick = naoRodaram;
+    el.querySelector('#ecNova').onclick = () => App.Forms.indicacao();
+    el.querySelectorAll('[data-ecsit]').forEach(b => b.onclick = () => { const c = Cli.cliente(b.dataset.id), sim = b.dataset.ecsit === 'sim';
+      Cli.registrarIndicacao({ indicadorId: c.indicadoPor, situacao: b.dataset.ecsit, data: c.dataIndicacao, observacoes: c.observacoes, existenteId: c.id });
+      UI.toast(sim ? Cli.apelido(c) + ' rodou! Agora conta como cliente.' : Cli.apelido(c) + ' foi para "Não rodaram".'); });
     const tog = el.querySelector('#rkTog'); if (tog) tog.onclick = () => { const ab = tog.getAttribute('aria-expanded') !== 'true'; tog.setAttribute('aria-expanded', ab); el.querySelectorAll('.rk-mais').forEach(li => li.hidden = !ab); tog.querySelector('span').textContent = ab ? 'Mostrar só os 5 primeiros' : 'Ver mais ' + (rk.length - TOP); };
     const box = el.querySelector('#otBox');
     if (box) { const abre = id => { el.querySelectorAll('[data-raiz]').forEach(b => b.setAttribute('aria-selected', b.dataset.raiz === id)); desenhaArvore(box, Cli.cliente(id)); };
@@ -4623,7 +4722,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       footer: `<button class="btn ghost" data-close>Fechar</button><button class="btn primary" id="atNova">${UI.icon('mais')}Nova atividade</button>`,
       onMount(el, api) {
         el.querySelectorAll('[data-at]').forEach(li => li.onclick = () => { api.close(); App.Forms.detalhes(li.dataset.at); });
-        el.querySelector('#atNova').onclick = () => { api.close(); App.Forms.atividade(null, { cliente: Cli.apelido(cli) }); };
+        el.querySelector('#atNova').onclick = () => { api.close(); App.Forms.atividade(null, { cliente: cli.nome, clienteId: cli.id }); };
       }
     });
   }
