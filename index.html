@@ -1147,13 +1147,19 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 @media (max-width: 520px) { .xp-list input { width: 120px; } }
 
 /* ---------- Painel reorganizado (24/11): topo com indicadores + Oportunidades; prioridades de lado ---------- */
-.ptop { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 12px; align-items: stretch; }
-.ptop .kpis.kp3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* mesmas colunas e espaço do .grid-main: indicadores alinhados com Prioridades, Oportunidades com a coluna lateral */
+.ptop { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); gap: 20px; align-items: stretch; }
+.fu-top { background: linear-gradient(140deg, #F1EBFF, var(--surface) 75%); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.fu-top .card-h h2 { color: var(--accent); }
+.fu-top .fu-mc { background: rgba(255, 255, 255, .75); border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent); }
+.fu-top .fu-mc:hover { background: var(--surface); }
+.ptop .kpis.kp3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .ptop .kpi { display: flex; flex-direction: column; justify-content: center; }
 .ptop .kpi b { font-size: 34px; }
 .fu-top { padding: 12px 16px; }
 .fu-top .card-h { margin-bottom: 8px; }
-.fu-top .fu-mc { padding: 6px 10px; }
+.fu-top .fu-mc { padding: 6px 9px; min-width: 0; }
+.fu-top .fu-mc span, .fu-top .fu-mc small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fu-top .fu-mc b { font-size: 19px; }
 .fu-top .fu-res { margin-top: 8px; }
 .fu-top .empty.sm { padding: 6px 0; }
@@ -1180,6 +1186,18 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
   .prio-card .card-h .pv-nav { order: 5; width: 100%; justify-content: space-between; }
 }
 @media (prefers-reduced-motion: reduce) { .pv, .pv-track { transition: none !important; } }
+
+/* ---------- Painel: cabeçalho colorido por assunto (escolha do usuário em 24/11) ---------- */
+:root { --c-prio: #6E3FF0; --c-mail: #2F6FD6; --c-lig: #1E8A5A; --c-ren: #C2611A; --c-acomp: #8A84A3; }
+.prio-card { --sc: var(--c-prio); } .mail-card { --sc: var(--c-mail); } .rg-card { --sc: var(--c-lig); } .ren-card { --sc: var(--c-ren); }
+.exec, .metas-card, .desemp-card { --sc: var(--c-acomp); }
+.grid-main :is(.prio-card, .mail-card, .rg-card, .ren-card, .exec, .metas-card), .desemp-card { padding-top: 0 !important; overflow: hidden; }
+.grid-main :is(.prio-card, .mail-card, .rg-card, .ren-card, .exec, .metas-card) > .card-h, .desemp-card > .card-h {
+  margin: 0 -18px 14px; padding: 12px 18px; background: color-mix(in srgb, var(--sc) 10%, #fff); border-bottom: 1px solid color-mix(in srgb, var(--sc) 18%, #fff); }
+.grid-main :is(.prio-card, .mail-card, .rg-card, .ren-card) > .card-h h2 { color: var(--sc); background: none; -webkit-background-clip: initial; background-clip: initial; }
+.grid-main .mail-card .card-h h2 .ic { color: var(--sc); }
+.grid-main :is(.prio-card, .mail-card)::before { display: none; }
+.grid-main .prio-card .pv-nav { background: rgba(255, 255, 255, .7); }
 
 </style>
 
@@ -4421,7 +4439,7 @@ window.HORUS_CONFIG = {
     const negs = M.negItensAbertos().filter(x => ok(x.a));
 
     const negLink = negs.length ? ` · <a class="link" href="#negocios" data-go="negocios">${negs.length} negócio${negs.length === 1 ? '' : 's'} em andamento</a>` : '';
-    const cardMetas = `<section class="card">
+    const cardMetas = `<section class="card metas-card">
             <div class="card-h"><h2>Metas</h2><a class="link" href="#metas" data-go="metas">Ver todas</a></div>
             ${metas.length ? `<ul class="mlist">${metas.slice(0, 5).map(m => { const p = M.metaPct(m), s = M.metaSituacao(m); return `<li><div class="mrow"><span class="mname">${U.esc(m.nome)}</span><span class="tag t-${s.id}">${s.label}</span></div>${UI.bar(p, M.respCor(m.responsabilidadeId))}<div class="mrow small muted"><span>${U.num(M.metaAtual(m))} de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><span>${U.pct(p)}</span></div></li>`; }).join('')}</ul>`
               : `<div class="empty sm"><p>Nenhuma meta ativa.</p><a class="btn ghost" href="#metas" data-go="metas">Criar meta</a></div>`}
@@ -4483,7 +4501,7 @@ window.HORUS_CONFIG = {
         </aside>
       </div>
 
-      <section class="card" aria-label="Desempenho por responsabilidade">
+      <section class="card desemp-card" aria-label="Desempenho por responsabilidade">
         <div class="card-h"><h2>Desempenho por responsabilidade</h2><a class="link" href="#responsabilidades" data-go="responsabilidades">Gerenciar</a></div>
         <div class="rgrid">${resps.map(x => {
           const at = Store.where('atividades', a => M.temResp(a, x.id)), c = at.filter(a => a.status === 'concluida').length, l = at.filter(M.atrasada).length, h = at.filter(M.hoje).length;
