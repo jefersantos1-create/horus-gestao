@@ -941,6 +941,23 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .clipick-l li.novo b { color: var(--accent); font-weight: 600; }
 .clipick-l li.vazio { color: var(--muted); cursor: default; }
 
+/* Filtro do Painel com várias responsabilidades */
+.mfilter { position: relative; }
+.mf-btn { display: inline-flex; align-items: center; gap: 8px; min-width: 220px; max-width: 340px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; }
+.mf-btn:hover, .mf-btn[aria-expanded="true"] { border-color: var(--accent); }
+.mf-btn.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: var(--accent-soft); font-weight: 600; }
+.mf-btn .mf-l { flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mf-btn .ic { width: 14px; height: 14px; transform: rotate(90deg); color: var(--muted); flex: none; }
+.mf-dots { display: inline-flex; } .mf-dots i { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--surface); margin-left: -3px; } .mf-dots i:first-child { margin-left: 0; }
+.mf-pop { position: absolute; right: 0; top: calc(100% + 6px); z-index: 40; width: 280px; padding: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 16px 40px rgba(30, 20, 60, .18); }
+.mf-h { margin: 2px 4px 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
+.mf-op { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+.mf-op:hover { background: var(--surface-2); }
+.mf-op input { width: 17px; height: 17px; accent-color: var(--accent); margin: 0; flex: none; }
+.mf-op i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.mf-act { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+@media (max-width: 520px) { .mfilter { width: 100%; } .mf-btn { width: 100%; max-width: none; } .mf-pop { left: 0; right: 0; width: auto; } }
+
 </style>
 
 <div class="app">
@@ -1318,6 +1335,8 @@ window.HORUS_CONFIG = {
   /* Atividade pode ter várias responsabilidades: responsabilidadeId é a principal (cor, filtros), respIds guarda as outras */
   M.respsDe = a => [...new Set([a.responsabilidadeId, ...(Array.isArray(a.respIds) ? a.respIds : [])].filter(Boolean))];
   M.temResp = (a, id) => a.responsabilidadeId === id || (Array.isArray(a.respIds) && a.respIds.includes(id));
+  /* Filtro com várias responsabilidades (lista vazia = todas) */
+  M.noFiltro = (a, ids) => { const l = [].concat(ids || []).filter(Boolean); return !l.length || l.some(id => M.temResp(a, id)); };
   M.respAtivas = () => Store.all('responsabilidades').filter(r => r.status !== 'arquivada');
   M.respNome = id => (M.resp(id) || {}).nome || 'Sem responsabilidade';
   M.respCor = id => (M.resp(id) || {}).cor || '#8A93A3';
@@ -1502,7 +1521,7 @@ window.HORUS_CONFIG = {
 
   /* ---------- Números do painel ---------- */
   M.resumo = (filtroResp) => {
-    const at = Store.all('atividades').filter(a => !filtroResp || M.temResp(a, filtroResp));
+    const at = Store.all('atividades').filter(a => M.noFiltro(a, filtroResp));
     const concl = at.filter(a => a.status === 'concluida');
     /* Execução: das atividades com prazo nos últimos 7 dias (até hoje), quantas foram concluídas */
     const ini = U.addDays(U.today(), -6);
@@ -3501,7 +3520,12 @@ window.HORUS_CONFIG = {
 (function (App) {
   const { U, M, UI, Store, Charts } = App;
   const V = { titulo: 'Painel' };
-  let filtroResp = '';
+  /* Filtro do Painel: várias responsabilidades ao mesmo tempo, lembrado neste aparelho */
+  const CH = 'horus-painel-resps';
+  let filtroResp = (() => { try { return JSON.parse(localStorage.getItem(CH)) || []; } catch (e) { return []; } })();
+  const salvarFiltro = () => { try { localStorage.setItem(CH, JSON.stringify(filtroResp)); } catch (e) {} };
+  const rotuloFiltro = () => { const ns = filtroResp.map(id => M.resp(id)).filter(Boolean);
+    return !ns.length ? 'Todas as responsabilidades' : ns.length === 1 ? ns[0].nome : ns.length === 2 ? ns[0].nome + ' + ' + ns[1].nome : ns.length + ' responsabilidades'; };
 
   const itemAt = a => `<li class="pitem${M.atrasada(a) ? ' is-late' : ''}" data-id="${a.id}">
       <button class="check" data-act="concluir" aria-label="Concluir ${U.esc(a.titulo)}">${UI.icon('check')}</button>
@@ -3510,26 +3534,31 @@ window.HORUS_CONFIG = {
       <button class="icon-btn" data-act="adiar" title="Adiar" aria-label="Adiar">${UI.icon('adiar')}</button></li>`;
 
   V.render = el => {
+    filtroResp = filtroResp.filter(id => M.resp(id) && M.resp(id).status !== 'arquivada');
+    const ok = a => M.noFiltro(a, filtroResp), qr = filtroResp.length ? '&resp=' + filtroResp.join(',') : '';
     const r = M.resumo(filtroResp);
-    const prior = M.prioridadesHoje().filter(a => !filtroResp || M.temResp(a, filtroResp));
-    const prox = Store.all('atividades').filter(a => M.proximos(a, 7) && !prior.includes(a) && (!filtroResp || M.temResp(a, filtroResp))).sort(M.ordemAtencao);
-    const metas = Store.all('metas').filter(m => (!filtroResp || m.responsabilidadeId === filtroResp) && !(m.fim && m.fim < U.addDays(U.today(), -30)));
-    const resps = M.respAtivas().filter(x => !filtroResp || x.id === filtroResp);
+    const prior = M.prioridadesHoje().filter(ok);
+    const prox = Store.all('atividades').filter(a => M.proximos(a, 7) && !prior.includes(a) && ok(a)).sort(M.ordemAtencao);
+    const metas = Store.all('metas').filter(m => (!filtroResp.length || filtroResp.includes(m.responsabilidadeId)) && !(m.fim && m.fim < U.addDays(U.today(), -30)));
+    const resps = M.respAtivas().filter(x => !filtroResp.length || filtroResp.includes(x.id));
     const exec = r.planejadas7 ? r.feitas7 / r.planejadas7 : null;
     const demo = App.Demo.count();
-    const negs = M.negItensAbertos().filter(x => !filtroResp || M.temResp(x.a, filtroResp));
+    const negs = M.negItensAbertos().filter(x => ok(x.a));
 
     el.innerHTML = `
       ${demo.atividades + demo.metas ? `<div class="banner">Você está vendo <b>dados de demonstração</b>. Quando quiser começar com os seus, apague-os em <a href="#dados" data-go="dados">Backup e dados</a>.</div>` : ''}
       <div class="page-h"><div><h1>Bom dia</h1><p class="muted cap">${U.todayLong()}</p></div>
-        <label class="filter"><span class="sr">Filtrar por responsabilidade</span><select id="fResp">${UI.options(M.respAtivas().map(x => ({ id: x.id, label: x.nome })), filtroResp, { vazio: 'Todas as responsabilidades' })}</select></label></div>
+        <div class="mfilter"><button class="mf-btn${filtroResp.length ? ' on' : ''}" id="fResp" aria-haspopup="true" aria-expanded="false"><span class="mf-dots">${(filtroResp.length ? filtroResp.map(M.resp) : M.respAtivas()).slice(0, 4).map(x => `<i style="background:${x.cor || '#8A93A3'}"></i>`).join('')}</span><span class="mf-l">${U.esc(rotuloFiltro())}</span>${UI.icon('seta')}</button>
+          <div class="mf-pop" id="fRespPop" hidden><p class="mf-h">Ver no Painel</p>
+            ${M.respAtivas().map(x => `<label class="mf-op"><input type="checkbox" value="${x.id}" ${filtroResp.includes(x.id) ? 'checked' : ''}><i style="background:${x.cor || '#8A93A3'}"></i><span>${U.esc(x.nome)}</span></label>`).join('')}
+            <div class="mf-act"><button class="link" id="fRespTodas">Ver todas</button><button class="btn primary sm" id="fRespOk">Aplicar</button></div></div></div></div>
 
       <section class="kpis" aria-label="Indicadores">
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=hoje"><span>Para hoje</span><b>${r.hoje}</b></a>
-        <a class="kpi ${r.atrasadas ? 'k-late' : ''}" href="#atividades" data-go="atividades" data-q="prazo=atrasadas"><span>Atrasadas</span><b>${r.atrasadas}</b></a>
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=7dias"><span>Próximos 7 dias</span><b>${r.proximos7}</b></a>
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=abertas"><span>Pendentes</span><b>${r.pendentes}</b></a>
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=concluida"><span>Concluídas</span><b>${r.concluidas}</b></a>
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=hoje${qr}"><span>Para hoje</span><b>${r.hoje}</b></a>
+        <a class="kpi ${r.atrasadas ? 'k-late' : ''}" href="#atividades" data-go="atividades" data-q="prazo=atrasadas${qr}"><span>Atrasadas</span><b>${r.atrasadas}</b></a>
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=7dias${qr}"><span>Próximos 7 dias</span><b>${r.proximos7}</b></a>
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=abertas${qr}"><span>Pendentes</span><b>${r.pendentes}</b></a>
+        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=concluida${qr}"><span>Concluídas</span><b>${r.concluidas}</b></a>
         <a class="kpi k-neg" href="#negocios" data-go="negocios"><span>Negócios em andamento</span><b>${negs.length}</b><em>${negs.length ? U.brlShort(negs.reduce((s, x) => s + (+x.n.valor || 0), 0)) + ' em negociação' : 'Nenhum no momento'}</em></a>
       </section>
 
@@ -3570,7 +3599,14 @@ window.HORUS_CONFIG = {
 
     const h = new Date().getHours();
     el.querySelector('.page-h h1').textContent = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
-    el.querySelector('#fResp').onchange = e => { filtroResp = e.target.value; V.render(el); };
+    const fb = el.querySelector('#fResp'), pop = el.querySelector('#fRespPop');
+    const fecharPop = () => { pop.hidden = true; fb.setAttribute('aria-expanded', 'false'); document.removeEventListener('click', foraPop, true); };
+    const foraPop = e => { if (!e.target.closest('.mfilter')) fecharPop(); };
+    fb.onclick = () => { if (!pop.hidden) return fecharPop(); pop.hidden = false; fb.setAttribute('aria-expanded', 'true'); setTimeout(() => document.addEventListener('click', foraPop, true)); };
+    const aplicar = ids => { filtroResp = ids; salvarFiltro(); fecharPop(); V.render(el); };
+    el.querySelector('#fRespOk').onclick = () => aplicar([...pop.querySelectorAll('input:checked')].map(i => i.value));
+    el.querySelector('#fRespTodas').onclick = () => aplicar([]);
+    pop.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharPop(); fb.focus(); } });
     if (App.Emails) App.Emails.ligar(el.querySelector('.mail-card') || el);
     el.querySelectorAll('.cl-venc[data-cli]').forEach(li => li.onclick = () => App.go('clientes', { cliente: li.dataset.cli }, { origem: true }));
     el.querySelectorAll('.pitem').forEach(li => li.addEventListener('click', e => {
@@ -3599,7 +3635,7 @@ window.HORUS_CONFIG = {
   V.setParams = q => { f = { ...PADRAO }; if (q) Object.assign(f, q); if (q && (q.prazo === 'atrasadas' || q.prazo === 'hoje' || q.prazo === '7dias')) f.status = 'abertas'; if (q && q.status === 'concluida') f.status = 'concluida'; };
 
   const passa = (a, semStatus) => {
-    if (f.resp && !M.temResp(a, f.resp)) return false;
+    if (f.resp && !M.noFiltro(a, String(f.resp).split(','))) return false;
     if (f.categoria && a.categoria !== f.categoria) return false;
     if (f.metaId && !M.metasDa(a).includes(f.metaId)) return false;
     if (!semStatus && f.status === 'abertas' && !M.aberta(a)) return false;
@@ -3665,7 +3701,7 @@ window.HORUS_CONFIG = {
         <div class="seg" role="group" aria-label="Visualização"><button data-modo="lista" aria-pressed="${modo === 'lista'}">${UI.icon('lista')}Lista</button><button data-modo="kanban" aria-pressed="${modo === 'kanban'}">${UI.icon('kanban')}Kanban</button></div></div>
       <div class="filters">
         <label class="search">${UI.icon('busca')}<input id="fBusca" placeholder="Buscar" value="${U.esc(f.busca)}" aria-label="Buscar atividades"></label>
-        <select data-f="resp" aria-label="Responsabilidade">${UI.options(Store.all('responsabilidades').map(x => ({ id: x.id, label: x.nome })), f.resp, { vazio: 'Todas as responsabilidades' })}</select>
+        <select data-f="resp" aria-label="Responsabilidade">${f.resp && String(f.resp).includes(',') ? `<option value="${U.esc(f.resp)}" selected>${String(f.resp).split(',').map(i => M.respNome(i)).join(' + ')}</option>` : ''}${UI.options(Store.all('responsabilidades').map(x => ({ id: x.id, label: x.nome })), f.resp, { vazio: 'Todas as responsabilidades' })}</select>
         <select data-f="prazo" aria-label="Prazo">${UI.options([{ id: 'atrasadas', label: 'Atrasadas' }, { id: 'hoje', label: 'Para hoje' }, { id: '7dias', label: 'Até 7 dias' }, { id: 'semprazo', label: 'Sem prazo' }], f.prazo, { vazio: 'Qualquer prazo' })}</select>
         <select data-f="prioridade" aria-label="Prioridade">${UI.options(M.PRIORIDADES, f.prioridade, { vazio: 'Qualquer prioridade' })}</select>
         ${modo === 'lista' ? `<select data-f="status" aria-label="Status">${UI.options([{ id: 'abertas', label: 'Em aberto' }, ...M.STATUS], f.status, { vazio: 'Todos os status' })}</select>` : ''}
@@ -3694,7 +3730,7 @@ window.HORUS_CONFIG = {
     const busca = el.querySelector('#fBusca');
     busca.oninput = () => { f.busca = busca.value; const pos = busca.selectionStart; V.render(el); const nb = el.querySelector('#fBusca'); nb.focus(); nb.setSelectionRange(pos, pos); };
     const lim = el.querySelector('#limpar'); if (lim) lim.onclick = () => { f = { ...PADRAO }; V.render(el); };
-    const nova = el.querySelector('[data-nova]'); if (nova) nova.onclick = () => App.Forms.atividade(null, f.resp ? { responsabilidadeId: f.resp } : {});
+    const nova = el.querySelector('[data-nova]'); if (nova) nova.onclick = () => App.Forms.atividade(null, f.resp ? { responsabilidadeId: String(f.resp).split(',')[0], respIds: String(f.resp).split(',').slice(1) } : {});
     corpo.querySelectorAll('.arow').forEach(li => li.addEventListener('click', e => {
       const b = e.target.closest('[data-act]'); if (!b) return; const id = li.dataset.id, act = b.dataset.act;
       if (act === 'concluir') App.Forms.concluir(id);
