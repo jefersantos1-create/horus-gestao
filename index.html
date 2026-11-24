@@ -1411,7 +1411,9 @@ window.HORUS_CONFIG = {
     const ps = Store.all('produtos').filter(p => p.ativo !== false), k = M.tipoChave(tipo);
     const porNome = ps.find(p => M.norm(p.nome) === k); if (porNome) return porNome;
     const fixo = Fat.PRODUTO_DO_NEGOCIO[tipo]; if (fixo && Fat.produto(fixo)) return Fat.produto(fixo);
-    const porTipo = M.PRODUTO_POR_TIPO[k]; if (porTipo && Fat.produto(porTipo) && Fat.produto(porTipo).ativo !== false) return Fat.produto(porTipo);
+    /* Aceita complemento no fim: "RC profissional médico" → "rc profissional" (a chave mais longa que for início do texto) */
+    const chT = M.PRODUTO_POR_TIPO[k] ? k : Object.keys(M.PRODUTO_POR_TIPO).filter(x => k.startsWith(x + ' ')).sort((a, b) => b.length - a.length)[0];
+    const porTipo = chT && M.PRODUTO_POR_TIPO[chT]; if (porTipo && Fat.produto(porTipo) && Fat.produto(porTipo).ativo !== false) return Fat.produto(porTipo);
     const lin = Store.all('linhas').find(l => M.norm(l.nome) === k || M.norm(l.nome).split(' ')[0] === k);
     if (lin) { const p = ps.find(x => x.linhaId === lin.id); if (p) return p; }
     const parcial = ps.find(p => k.length > 3 && (M.norm(p.nome).includes(k) || k.includes(M.norm(p.nome))));
@@ -4028,7 +4030,7 @@ window.HORUS_CONFIG = {
       const n = R.negocioDe(r), tipo = M.tipoSalvar(n.tipo), ns = M.negociosDa(a);
       if (!ns.length) { Object.assign(patchA, M.espelhoNeg([{ id: M.novoNegId(), tipo, valor: n.valor, pct: M.pctPadrao(tipo), mensal: n.mensal, renId }])); M.log(atvId, 'editada', 'Negócio "' + n.tipo + '" adicionado pela renovação'); }
       else { const pr = M.produtoDoTipo(tipo), i = ns.findIndex(x => !x.resultado && M.produtoDoTipo(x.tipo) === pr); const j = i >= 0 ? i : ns.length === 1 ? 0 : -1;
-        if (j >= 0) Object.assign(patchA, M.espelhoNeg(ns.map((x, k) => k === j ? { ...x, renId, ...(x.mensal == null ? { mensal: n.mensal } : {}) } : x))); }
+        if (j >= 0) Object.assign(patchA, M.espelhoNeg(ns.map((x, k) => k === j ? { ...x, renId, ...(x.mensal == null ? { mensal: n.mensal } : {}), ...(x.valor == null && n.valor != null ? { valor: n.valor } : {}), ...(x.pct == null && M.pctPadrao(tipo) != null ? { pct: M.pctPadrao(tipo) } : {}) } : x))); }
       M.log(atvId, 'editada', 'Ligada à renovação: ' + r.rotulo);
     }
     Store.update('atividades', atvId, patchA, { silent: true });
