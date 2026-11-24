@@ -1113,6 +1113,30 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
   .fu-board { grid-template-columns: 1fr; margin-top: 10px; }
   .fu-col { display: none; } .fu-col.on { display: block; }
 }
+/* Parte 4 · Régua de contato */
+.rg-res { margin: -4px 0 8px; font-size: 13px; color: var(--muted); } .rg-res b { color: var(--ink); }
+.rg-list { list-style: none; margin: 0; padding: 0; }
+.rg-it { display: flex; align-items: center; gap: 10px; padding: 7px 4px; border-top: 1px solid var(--line); }
+.rg-list .rg-it:first-child { border-top: 0; }
+.rg-it.atras { box-shadow: inset 3px 0 0 var(--late); padding-left: 10px; }
+.rg-it.aniv { box-shadow: inset 3px 0 0 var(--ok); padding-left: 10px; background: color-mix(in srgb, var(--ok-soft) 60%, transparent); border-radius: 8px; margin-bottom: 4px; }
+.rg-n { flex: 1; min-width: 0; display: grid; text-align: left; background: none; border: 0; padding: 0; font: inherit; color: var(--ink); cursor: pointer; }
+.rg-n b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .rg-n:hover b { color: var(--accent); }
+.rg-n small { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rg-it.atras .rg-n small { color: var(--late); }
+.rg-f { flex: none; font: inherit; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--accent); cursor: pointer; white-space: nowrap; }
+.rg-f:hover { background: var(--accent-soft); border-color: var(--accent); }
+.rg-mais { margin-top: 6px; } .rg-mais summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--accent); padding: 6px 4px; }
+.rg-scroll { max-height: 280px; overflow-y: auto; }
+.rg-faixa { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 14px; margin: 14px 0; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+.rg-faixa.atras { border-color: color-mix(in srgb, var(--late) 40%, var(--line)); background: color-mix(in srgb, var(--late-soft) 50%, var(--surface)); }
+.rg-fx-t { flex: 1 1 260px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 13.5px; }
+.rg-fx-b { display: flex; gap: 8px; flex-wrap: wrap; }
+.rg-tag { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+.rg-tag.atras { background: var(--late-soft); color: var(--late); }
+.rg-hist { flex-basis: 100%; } .rg-hist summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--accent); }
+.rg-hist ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.rg-hist time { display: inline-block; min-width: 72px; color: var(--muted); font-weight: 700; }
 
 </style>
 
@@ -4200,6 +4224,120 @@ window.HORUS_CONFIG = {
 
 </script>
 <script>
+/* js/ui/regua.js */
+/* Parte 4 · Régua de contato (24/11/2026).
+   Último contato do cliente = o mais recente entre o "Falei hoje" (clientes.dados.ultimoContato / contatos[]) e as atividades
+   concluídas com ele. Frequência: 30 dias para todos por enquanto (Store.config('reguaDias'), sem tela).
+   Card "Quem ligar esta semana" no Painel e faixa de contato na ficha do cliente. */
+(function (App) {
+  const { U, Store } = App;
+  const Rg = {};
+  const C = () => App.Cli;
+
+  Rg.dias = () => { const v = +Store.config('reguaDias'); return v > 0 ? v : 30; };
+  /* { data, fonte: 'contato'|'atividade', nota } ou null */
+  Rg.ultimo = c => {
+    let best = c.ultimoContato ? { data: c.ultimoContato, fonte: 'contato', nota: ((c.contatos || [])[0] || {}).nota || null } : null;
+    C().atividadesDo(c).forEach(a => { const d = a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10);
+      if (d && (!best || d > best.data)) best = { data: d, fonte: 'atividade', nota: a.titulo }; });
+    return best;
+  };
+  /* Situação de um cliente na régua */
+  Rg.situacao = c => {
+    const u = Rg.ultimo(c), hoje = U.today();
+    if (!u) return { c, u, nunca: true, prox: null, faltam: null };
+    const prox = U.addDays(u.data, Rg.dias());
+    return { c, u, nunca: false, prox, faltam: U.diff(prox, hoje), desde: U.diff(hoje, u.data) };
+  };
+  /* Aniversário nos próximos n dias: devolve quantos dias faltam (0 = hoje) ou null */
+  Rg.aniversario = (c, n = 7) => {
+    if (!c.nascimento) return null; const h = U.parse(U.today());
+    for (let i = 0; i <= n; i++) { const d = new Date(h); d.setDate(h.getDate() + i); if (U.iso(d).slice(5) === c.nascimento.slice(5)) return i; }
+    return null;
+  };
+  Rg.lista = () => {
+    const base = C().base360();
+    const sits = base.map(Rg.situacao);
+    const ligar = sits.filter(s => !s.nunca && s.faltam <= 7).sort((a, b) => a.faltam - b.faltam || a.c.nome.localeCompare(b.c.nome, 'pt-BR'));
+    const nunca = sits.filter(s => s.nunca).sort((a, b) => a.c.nome.localeCompare(b.c.nome, 'pt-BR'));
+    const aniv = base.map(c => ({ c, d: Rg.aniversario(c) })).filter(x => x.d != null).sort((a, b) => a.d - b.d);
+    return { ligar, nunca, aniv, emDia: sits.length - ligar.length - nunca.length };
+  };
+
+  /* ---------- Registrar ---------- */
+  Rg.registrar = (cid, { nota, data } = {}) => {
+    const c = C().cliente(cid); if (!c) return;
+    const d = data || U.today(), contatos = [{ em: d, nota: nota || null }].concat(c.contatos || []).slice(0, 30);
+    const ult = contatos.map(x => x.em).sort().pop();
+    Store.update('clientes', cid, { ultimoContato: ult, contatos });
+  };
+  Rg.desfazer = (cid, antes) => Store.update('clientes', cid, { ultimoContato: antes.ultimoContato || null, contatos: antes.contatos || [] });
+  Rg.anotar = cid => {
+    const c = C().cliente(cid); if (!c) return; const UI = App.UI, ult = (c.contatos || [])[0];
+    UI.modal({
+      title: 'Contato com ' + C().apelido(c), size: 'sm',
+      body: `<form class="form" id="fCto"><div class="row2"><label class="f"><span>Data</span><input type="date" name="data" value="${ult ? ult.em : U.today()}"></label></div>
+        <label class="f full"><span>O que conversaram <em>opcional</em></span><input name="nota" maxlength="140" value="${U.esc(ult && ult.em === U.today() ? ult.nota || '' : '')}" placeholder="Ex.: enviei a movimentação da carteira"></label></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCto" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        el.querySelector('#fCto').onsubmit = e => {
+          e.preventDefault(); const d = UI.formData(e.target), atual = C().cliente(cid);
+          /* Se o "Falei hoje" acabou de ser registrado, completa ele em vez de criar outro */
+          const cs = (atual.contatos || []).slice();
+          if (cs[0] && cs[0].em === U.today() && !cs[0].nota) cs.shift();
+          const contatos = [{ em: d.data || U.today(), nota: d.nota || null }].concat(cs).slice(0, 30);
+          Store.update('clientes', cid, { ultimoContato: contatos.map(x => x.em).sort().pop(), contatos });
+          api.close(); UI.toast('Contato registrado');
+        };
+      }
+    });
+  };
+  Rg.falei = cid => {
+    const c = C().cliente(cid); if (!c) return;
+    const antes = { ultimoContato: c.ultimoContato, contatos: (c.contatos || []).slice() };
+    Rg.registrar(cid);
+    App.UI.toast('Contato com ' + C().apelido(c) + ' registrado', 'ok', [{ label: 'Anotar', fn: () => Rg.anotar(cid) }, { label: 'Desfazer', fn: () => Rg.desfazer(cid, antes) }]);
+  };
+
+  /* ---------- Textos ---------- */
+  const rel = s => s.nunca ? 'sem contato registrado' : s.faltam < 0 ? 'há ' + s.desde + ' dias sem contato' : s.faltam === 0 ? 'completa ' + Rg.dias() + ' dias hoje' : 'completa ' + Rg.dias() + ' dias em ' + s.faltam + (s.faltam === 1 ? ' dia' : ' dias');
+  const anivTxt = d => d === 0 ? 'Aniversário hoje' : d === 1 ? 'Aniversário amanhã' : 'Aniversário em ' + d + ' dias';
+  const linha = s => `<li class="rg-it${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><button class="rg-n" data-rg-cli="${s.c.id}"><b>${U.esc(s.c.nome)}</b><small>${U.esc(rel(s))}${s.u && !s.nunca ? ' · ' + U.esc(s.u.nota || 'último em ' + U.fmtDate(s.u.data)) : ''}</small></button><button class="rg-f" data-rg-falei="${s.c.id}">Falei hoje</button></li>`;
+
+  /* ---------- Card do Painel ---------- */
+  Rg.card = (filtroResp = []) => {
+    if (filtroResp.length && App.Ren && !filtroResp.includes(App.Ren.respRenovacao().id)) return '';
+    const { ligar, nunca, aniv, emDia } = Rg.lista(), MAX = 6;
+    const total = ligar.length + nunca.length;
+    return `<section class="card rg-card"><div class="card-h"><h2>Quem ligar esta semana</h2><span class="grow"></span>${ligar.length ? `<span class="count">${ligar.length}</span>` : ''}</div>
+      <p class="rg-res">Contato a cada ${Rg.dias()} dias · ${emDia} em dia${ligar.length ? ` · <b>${ligar.length} para ligar</b>` : ''}${nunca.length ? ` · ${nunca.length} sem registro` : ''}</p>
+      ${aniv.length ? `<ul class="rg-list">${aniv.map(x => `<li class="rg-it aniv"><button class="rg-n" data-rg-cli="${x.c.id}"><b>${U.esc(x.c.nome)}</b><small>${anivTxt(x.d)}</small></button><button class="rg-f" data-rg-falei="${x.c.id}">Falei hoje</button></li>`).join('')}</ul>` : ''}
+      ${ligar.length ? `<ul class="rg-list">${ligar.slice(0, MAX).map(linha).join('')}</ul>${ligar.length > MAX ? `<details class="rg-mais"><summary>Ver todos · ${ligar.length}</summary><ul class="rg-list">${ligar.slice(MAX).map(linha).join('')}</ul></details>` : ''}`
+        : total ? '' : '<p class="muted small" style="margin:4px 0 0">Todos os clientes estão em dia.</p>'}
+      ${nunca.length ? `<details class="rg-mais"${ligar.length ? '' : ' open'}><summary>Sem contato registrado · ${nunca.length}</summary><p class="muted small" style="margin:4px 0 6px">Use "Falei hoje" quando falar com cada um; a partir daí a régua de ${Rg.dias()} dias começa a contar.</p><ul class="rg-list rg-scroll">${nunca.map(linha).join('')}</ul></details>` : ''}</section>`;
+  };
+  Rg.ligar = root => {
+    root.querySelectorAll('[data-rg-falei]').forEach(b => b.onclick = e => { e.stopPropagation(); Rg.falei(b.dataset.rgFalei); });
+    root.querySelectorAll('[data-rg-cli]').forEach(b => b.onclick = () => App.go('clientes', { cliente: b.dataset.rgCli }, { origem: true }));
+    root.querySelectorAll('[data-rg-anotar]').forEach(b => b.onclick = () => Rg.anotar(b.dataset.rgAnotar));
+  };
+
+  /* ---------- Faixa na ficha do cliente ---------- */
+  Rg.faixa = c => {
+    if (!C().ehCliente(c) || c.saiu) return '';
+    const s = Rg.situacao(c), hist = (c.contatos || []).slice(0, 8);
+    const txt = s.nunca ? 'Nenhum contato registrado ainda' : `Último contato: <b>${U.fmtDate(s.u.data)}</b> (${s.desde === 0 ? 'hoje' : s.desde === 1 ? 'ontem' : 'há ' + s.desde + ' dias'})${s.u.nota ? ' · ' + U.esc(s.u.nota) : ''}`;
+    const st = s.nunca ? '' : s.faltam < 0 ? `<span class="rg-tag atras">Passou ${-s.faltam} ${-s.faltam === 1 ? 'dia' : 'dias'} da régua</span>` : `<span class="rg-tag">Próximo até ${U.fmtDate(s.prox)}</span>`;
+    return `<section class="rg-faixa${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><div class="rg-fx-t"><span>${txt}</span>${st}</div>
+      <div class="rg-fx-b"><button class="btn primary sm" data-rg-falei="${c.id}">Falei hoje</button><button class="btn ghost sm" data-rg-anotar="${c.id}">Anotar contato</button></div>
+      ${hist.length ? `<details class="rg-hist"><summary>Contatos · ${(c.contatos || []).length}</summary><ul>${hist.map(h => `<li><time>${U.fmtDate(h.em)}</time>${h.nota ? U.esc(h.nota) : '<span class="muted">sem anotação</span>'}</li>`).join('')}</ul></details>` : ''}</section>`;
+  };
+
+  App.Regua = Rg;
+})(window.App = window.App || {});
+
+</script>
+<script>
 /* js/views/painel.js */
 /* Tela: Painel (dashboard principal). Responde: hoje, atrasadas, próximas, metas e execução. */
 (function (App) {
@@ -4259,6 +4397,7 @@ window.HORUS_CONFIG = {
           ${App.Funil ? App.Funil.card(filtroResp) : ''}
           ${App.Emails ? App.Emails.quadro() : ''}
           ${App.Ren && App.Views.clientes ? App.Ren.card({ max: 5, extras: App.Cli.avisosConsorcio() }) : ''}
+          ${App.Regua ? App.Regua.card(filtroResp) : ''}
           <section class="card exec">
             <div class="card-h"><h2>Estou executando o que planejei?</h2></div>
             <div class="exec-b">${Charts.ring(r.pctConclusao, 92)}
@@ -4295,6 +4434,7 @@ window.HORUS_CONFIG = {
     pop.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharPop(); fb.focus(); } });
     if (App.Emails) App.Emails.ligar(el.querySelector('.mail-card') || el);
     if (App.Ren) App.Ren.ligar(el);
+    if (App.Regua) App.Regua.ligar(el);
     el.querySelectorAll('.cl-venc[data-cli]').forEach(li => li.onclick = () => App.go('clientes', { cliente: li.dataset.cli }, { origem: true }));
     el.querySelectorAll('.pitem').forEach(li => li.addEventListener('click', e => {
       const b = e.target.closest('[data-act]'); if (!b) return; const id = li.dataset.id;
@@ -5758,6 +5898,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
           <div><small>Receita gerada</small><b>${receita ? U.brl(receita) : '—'}</b><em>nas suas produções</em></div>
         </div>
       </section>
+      ${App.Regua ? App.Regua.faixa(c) : ''}
       ${c.observacoes ? `<p class="cl-obs">${U.esc(c.observacoes)}</p>` : ''}
       ${(() => { if (!App.Ren) return ''; App.Ren.sincronizar(); const rs = App.Ren.doCliente(c.id), ab = rs.filter(r => !App.Ren.final(r.status)), fe = rs.filter(r => App.Ren.final(r.status));
         return rs.length ? `<section class="card ren-ficha"><div class="card-h"><h2>Renovações</h2>${ab.length ? `<span class="count">${ab.length}</span>` : ''}</div>
@@ -5770,6 +5911,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.querySelector('#clEd').onclick = () => App.Forms.cliente(c.id);
     if (App.Ren) App.Ren.ligar(el);
     el.querySelector('#clAts').onclick = () => atividadesModal(c, ats);
+    if (App.Regua) App.Regua.ligar(el);
     el.querySelectorAll('[data-m360]').forEach(b => b.onclick = () => editarArea(c, b.dataset.m360));
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
       const pid = b.dataset.pbGo;
