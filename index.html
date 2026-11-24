@@ -1199,6 +1199,57 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .grid-main :is(.prio-card, .mail-card)::before { display: none; }
 .grid-main .prio-card .pv-nav { background: rgba(255, 255, 255, .7); }
 
+/* ---------- Parte 5b · Patrimônio e captação ---------- */
+.pc-pat { background: linear-gradient(150deg, #241A45 0%, #0F0C1A 100%); color: #fff; border-color: #2E2550; }
+.pc-pat .pc-top b, .pc-pat .pc-n b, .pc-pat .pc-v { color: #fff; }
+.pc-pat .pc-sub, .pc-pat .pc-n, .pc-pat .pc-l { color: #B7AED6; }
+.pc-pat .pc-v { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pc-pat .pt-pos { color: #6FD39B; } .pc-pat .pt-neg { color: #FF9C8A; }
+.pt-pos { color: var(--ok, #23864F); } .pt-neg { color: var(--late); }
+.pt-mes { display: flex; align-items: center; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.pt-mes select { border: 0; background: none; font: inherit; font-weight: 700; color: var(--ink); padding: 4px 6px; cursor: pointer; }
+.pt-g2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: start; }
+@media (max-width: 1080px) { .pt-g2 { grid-template-columns: minmax(0, 1fr); } }
+.pt-stack { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--track); margin-bottom: 8px; }
+.pt-stack span { display: block; height: 100%; }
+.pt-plats { list-style: none; margin: 0; padding: 0; }
+.pt-plats li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.pt-plats li:first-child { border-top: 0; }
+.pt-plats li > i { width: 10px; height: 10px; border-radius: 3px; }
+.pt-plats li div { display: grid; min-width: 0; } .pt-plats b { font-size: 14px; } .pt-plats small { font-size: 12.5px; color: var(--muted); }
+.pt-pc { font-size: 13px; color: var(--muted); min-width: 44px; text-align: right; }
+.pt-v { display: grid; text-align: right; font-family: var(--display); font-weight: 700; font-size: 15px; min-width: 96px; }
+.pt-v small { font-family: var(--body); font-weight: 600; font-size: 12px; }
+.pt-cot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.pt-cot label { font-size: 13px; font-weight: 600; }
+.pt-cot input { width: 92px; font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; text-align: right; background: var(--surface); color: var(--ink); }
+.pt-cot small { flex-basis: 100%; }
+.pt-svg { display: block; width: 100%; height: auto; }
+.pt-svg text { font-size: 11px; fill: var(--muted); font-family: var(--body); }
+.pt-leg { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 6px 0 0; }
+.pt-leg i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; }
+.pt-l { background: #6E3FF0; } .pt-b { background: #23864F; height: 10px !important; width: 8px !important; margin-left: 10px; }
+.pt-tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+.pt-tbl th { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); text-align: left; font-weight: 700; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; cursor: pointer; user-select: none; }
+.pt-tbl td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.pt-tbl .r { text-align: right; }
+.pt-tbl td small { display: block; font-size: 11.5px; color: var(--muted); }
+.pt-tbl tr.click { cursor: pointer; } .pt-tbl tr.click:hover td { background: var(--surface-2); }
+.pt-tbl tfoot td { font-weight: 700; background: var(--surface-2); border-bottom: 0; }
+.pt-rep, .pt-rep-k { font-style: italic; color: var(--muted); }
+.pt-nota { margin: 10px 2px 0; }
+.tscroll { overflow-x: auto; }
+@media (max-width: 760px) { .pt-tbl .hide-m { display: none; } .page-h .pt-mes { margin-top: 8px; } }
+.xp-head { display: flex; gap: 12px; padding: 0 4px 6px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.xp-head span:first-child { flex: 1; } .xp-head span:not(:first-child) { width: 160px; text-align: right; }
+.xp-list input.xp-cap { width: 140px; }
+.xp-head span:last-child { width: 140px; }
+@media (max-width: 520px) { .xp-list li { flex-wrap: wrap; } .xp-list li > div { flex-basis: 100%; } .xp-list input, .xp-list input.xp-cap { width: calc(50% - 6px); } .xp-head { display: none; } }
+
+.pt-kpis .kpi em { white-space: normal; }
+@media (max-width: 520px) { .pt-kpis .kpi b { font-size: 22px; } .pt-kpis .kpi { padding: 12px; } }
+.pt-kpis .kpi.k-neg em .pt-pos { color: var(--ok, #23864F); } .pt-kpis .kpi.k-neg em .pt-neg { color: var(--late); }
+
 </style>
 
 <div class="app">
@@ -2387,12 +2438,14 @@ window.HORUS_CONFIG = {
   C.rede = c => { const out = [], fila = [c.id], vis = new Set([c.id]); while (fila.length) { const id = fila.shift(); C.filhosDe(id).forEach(f => { if (!vis.has(f.id)) { vis.add(f.id); out.push(f); fila.push(f.id); } }); } return out; };
   C.converteu = c => c.situacao === 'sim' || c.situacao === 'parcial' || (!c.situacao && C.ehCliente(c));
   /* Patrimônio com você (R$): MB + Eqseed ativos */
-  /* XP (24/11): por compliance não entra carteira; só o PL total digitado pelo usuário. clientes.dados.xp = { pl, em }, xpHist = [{ ref: 'AAAA-MM', pl, em }] */
+  /* XP (24/11): por compliance não entra carteira; só o PL total digitado pelo usuário. clientes.dados.xp = { pl, em }, xpHist = [{ ref: 'AAAA-MM', pl, cap, em }] (cap = captação líquida do mês, Parte 5b) */
   C.plXp = c => c && c.xp && c.xp.pl != null && c.xp.pl !== '' ? +c.xp.pl : null;
-  C.salvarXp = (cid, pl, em, opts) => {
+  /* cap = captação líquida do mês na XP (opcional, Parte 5b); undefined mantém a já gravada no mesmo mês */
+  C.salvarXp = (cid, pl, em, opts, cap) => {
     const c = C.cliente(cid); if (!c) return; const data = em || U.today();
     if (pl == null || pl === '') { Store.update('clientes', cid, { xp: null }, opts); return; }
-    const hist = (c.xpHist || []).filter(h => h.ref !== data.slice(0, 7)).concat({ ref: data.slice(0, 7), pl: +pl, em: data }).sort((a, b) => b.ref.localeCompare(a.ref)).slice(0, 36);
+    const ja = (c.xpHist || []).find(h => h.ref === data.slice(0, 7)), capF = cap === undefined ? (ja ? ja.cap : undefined) : cap;
+    const hist = (c.xpHist || []).filter(h => h.ref !== data.slice(0, 7)).concat({ ref: data.slice(0, 7), pl: +pl, em: data, ...(capF != null && capF !== '' ? { cap: +capF } : {}) }).sort((a, b) => b.ref.localeCompare(a.ref)).slice(0, 36);
     Store.update('clientes', cid, { xp: { pl: +pl, em: data }, xpHist: hist }, opts);
   };
   /* Patrimônio com você (R$): MB + Eqseed ativos + PL da XP (manual) */
@@ -2411,6 +2464,183 @@ window.HORUS_CONFIG = {
   };
 
   App.Cli = C;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/patrimonio.js */
+/* Parte 5b · Patrimônio mês a mês e captação líquida, por cliente e plataforma.
+   Nada novo no banco: lê o que já existe.
+   - MB: retrato do mês importado (tabela mb, id 'AAAA-MM') ou o histórico de 12 meses que vem dentro do retrato mais recente
+         (cliente.hist = [['Out/26', saldo inicial, aportes, resgates, saldo final], ...]). Captação = aportes − resgates.
+   - XP: clientes.dados.xpHist = [{ ref, pl, cap, em }] digitado pelo usuário (cap = captação líquida do mês, opcional).
+   - Eqseed: valor investido (custo) dos investimentos com data até o fim do mês, sem "Saída"/"Perda". Captação = investido no mês.
+   - Exterior (ITA, StoneX, Dominion) em US$: contratos.dados.posHist = [{ ref, v }] (gravado ao salvar o produto) ou o valor atual
+     a partir do mês da "Posição em". Captação = aporte do ITA com baixa "Aporte pago" na renovação naquele mês (contribuição anual).
+     Conversão pela cotação do mês: Store.config('cotacaoUsd') = { 'AAAA-MM': 5.40 }.
+   Só contratos ativos (produto encerrado sai de todos os meses).
+   Mês sem dado novo repete a última posição conhecida (marcado como "repetido"), e nesse caso a captação não conta. */
+(function (App) {
+  const { U, Store } = App;
+  const P = {};
+  const C = () => App.Cli;
+  const MES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  P.INTL = ['ita', 'stonex', 'dominion'];
+  P.PLATS = [
+    { id: 'mb', nome: 'MB', cor: '#1E7A86' },
+    { id: 'xp', nome: 'XP', cor: '#2B5A8C' },
+    { id: 'eqseed', nome: 'Eqseed', cor: '#6E3FF0' },
+    { id: 'intl', nome: 'Exterior', sub: 'ITA · StoneX · Dominion', cor: '#C2611A' }
+  ];
+  P.rotulo = ref => { const [y, m] = ref.split('-'); return MES[+m - 1] + '/' + y.slice(2); };
+  P.refDoRotulo = s => { const m = /^([A-Za-zç]{3})\/(\d{2})$/.exec(String(s || '').trim()); if (!m) return null; const i = MES.findIndex(x => x.toLowerCase() === m[1].toLowerCase()); return i < 0 ? null : '20' + m[2] + '-' + String(i + 1).padStart(2, '0'); };
+  P.mesAnt = ref => { let [y, m] = ref.split('-').map(Number); m--; if (!m) { m = 12; y--; } return y + '-' + String(m).padStart(2, '0'); };
+  P.mesSeg = ref => { let [y, m] = ref.split('-').map(Number); m++; if (m > 12) { m = 1; y++; } return y + '-' + String(m).padStart(2, '0'); };
+  P.fimDoMes = ref => { const [y, m] = ref.split('-').map(Number); return U.iso(new Date(y, m, 0, 12)); };
+  P.nomeMes = ref => { const n = App.Fat ? App.Fat.nomeMes(ref, true) : ref; return n.charAt(0).toUpperCase() + n.slice(1); };
+
+  /* ---------- Cotação do dólar ---------- */
+  P.cotacoes = () => Store.config('cotacaoUsd') || {};
+  /* { v, ref, exata } · usa a do mês; se não houver, a última anterior; se não, a primeira posterior */
+  P.cotacao = ref => {
+    const c = P.cotacoes(); if (c[ref]) return { v: +c[ref], ref, exata: true };
+    const ks = Object.keys(c).filter(k => +c[k] > 0).sort();
+    const ant = ks.filter(k => k < ref).pop(), dep = ks.find(k => k > ref), k = ant || dep;
+    return k ? { v: +c[k], ref: k, exata: false } : null;
+  };
+  P.salvarCotacao = (ref, v) => { const c = { ...P.cotacoes() }; if (v == null || !(v > 0)) delete c[ref]; else c[ref] = +v; Store.config('cotacaoUsd', c); };
+
+  /* ---------- MB ---------- */
+  /* Mapa ref → { mbId → { pl, cap } }, montado a partir dos retratos importados e do histórico de 12 meses de cada um */
+  let cacheMB = null, cacheMBKey = '';
+  const serieMB = () => {
+    const recs = C().mbMeses(), key = recs.map(r => r.id + (r.importadoEm || '')).join('|');
+    if (cacheMB && key === cacheMBKey) return cacheMB;
+    const out = {};
+    /* do mais antigo para o mais recente: o retrato do próprio mês sempre vence o histórico */
+    recs.slice().reverse().forEach(r => (r.clients || []).forEach(c => (c.hist || []).forEach(h => {
+      const ref = P.refDoRotulo(h[0]); if (!ref || h[4] == null) return;
+      (out[ref] = out[ref] || {})[String(c.id)] = { pl: +h[4] || 0, cap: (+h[2] || 0) - (+h[3] || 0), fonte: 'hist' };
+    })));
+    recs.forEach(r => (r.clients || []).forEach(c => {
+      (out[r.id] = out[r.id] || {})[String(c.id)] = { pl: +c.pl || 0, cap: ((c.ap && +c.ap[0]) || 0) - ((c.rg && +c.rg[0]) || 0), fonte: 'mes' };
+    }));
+    cacheMB = out; cacheMBKey = key; return out;
+  };
+  const mbIdsDe = cli => Store.all('contratos').filter(ct => ct.produto === 'mb' && ct.clienteId === cli.id && ct.mbId != null).map(ct => String(ct.mbId));
+  const mbCli = (cli, ref) => {
+    const ids = mbIdsDe(cli); if (!ids.length) return null;
+    const s = serieMB(), refs = Object.keys(s).filter(k => k <= ref && ids.some(id => s[k][id])).sort(), r = refs.pop();
+    if (!r) return null;
+    const pl = ids.reduce((t, id) => t + ((s[r][id] || {}).pl || 0), 0), cap = ids.reduce((t, id) => t + ((s[r][id] || {}).cap || 0), 0);
+    return { pl, cap: r === ref ? cap : 0, ref: r, repetido: r !== ref };
+  };
+
+  /* ---------- XP ---------- */
+  const xpCli = (cli, ref) => {
+    const h = (cli.xpHist || []).filter(x => x.ref <= ref && x.pl != null).sort((a, b) => b.ref.localeCompare(a.ref))[0];
+    if (!h) return null;
+    const exato = h.ref === ref;
+    return { pl: +h.pl || 0, cap: exato && h.cap != null && h.cap !== '' ? +h.cap : 0, capInformada: exato && h.cap != null && h.cap !== '', ref: h.ref, repetido: !exato };
+  };
+
+  /* ---------- Eqseed (valor investido) ---------- */
+  const SAIU = ['Saída', 'Perda'];
+  const eqCli = (cli, ref) => {
+    const fim = P.fimDoMes(ref), ini = ref + '-01';
+    const cts = C().contratos({ clienteId: cli.id, produto: 'eqseed' }).filter(ct => !SAIU.includes(ct.situacao) && (!ct.data || ct.data <= fim));
+    if (!cts.length) return null;
+    return { pl: cts.reduce((s, x) => s + (+x.valor || 0), 0), cap: cts.filter(x => x.data && x.data >= ini).reduce((s, x) => s + (+x.valor || 0), 0), ref, repetido: false };
+  };
+
+  /* ---------- Exterior (US$) ---------- */
+  const campoUsd = pid => pid === 'stonex' ? 'valor' : 'valorConta';
+  /* posição do contrato no mês: posHist (última ≤ ref) ou valor atual a partir do mês da "Posição em" */
+  const posCt = (ct, ref) => {
+    const h = (ct.posHist || []).filter(x => x.ref <= ref && x.v != null).sort((a, b) => b.ref.localeCompare(a.ref))[0];
+    if (h) return { v: +h.v, ref: h.ref };
+    const v = ct[campoUsd(ct.produto)]; if (v == null || v === '') return null;
+    const desde = (ct.dataPosicao || ct.atualizadoEm || ct.criadoEm || U.today()).slice(0, 7);
+    if ((ct.posHist || []).length && (ct.posHist || []).every(x => x.ref > ref)) return null;
+    return desde <= ref ? { v: +v, ref: desde } : null;
+  };
+  /* Aportes do ITA no mês: baixa "Aporte pago" (status renovado) da renovação do contrato */
+  const aportesITA = (ct, ref) => Store.all('renovacoes').filter(r => r.ctId === ct.id && r.status === 'renovado' && (r.baixaEm || '').slice(0, 7) === ref).length * (+ct.contribuicao || 0);
+  const intlCli = (cli, ref) => {
+    const cts = P.INTL.flatMap(pid => C().contratos({ clienteId: cli.id, produto: pid }));
+    let usd = 0, cap = 0, achou = false, refPos = null;
+    cts.forEach(ct => { const p = posCt(ct, ref); if (p) { usd += p.v; achou = true; if (!refPos || p.ref > refPos) refPos = p.ref; } if (ct.produto === 'ita') cap += aportesITA(ct, ref); });
+    if (!achou && !cap) return null;
+    return { usd, capUsd: cap, ref: refPos || ref, repetido: refPos ? refPos !== ref : false };
+  };
+  /* Ao salvar um produto do exterior, guarda a posição do mês (para o retrato dos meses seguintes não perder o passado) */
+  P.posHistDe = (pid, antigo, d) => {
+    if (!P.INTL.includes(pid)) return {};
+    const k = campoUsd(pid), v = d[k] != null && d[k] !== '' ? +d[k] : null; if (v == null) return {};
+    const ref = (d.dataPosicao || (antigo && antigo.dataPosicao) || U.today()).slice(0, 7);
+    const hist = ((antigo && antigo.posHist) || []).filter(x => x.ref !== ref).concat({ ref, v }).sort((a, b) => b.ref.localeCompare(a.ref)).slice(0, 36);
+    return { posHist: hist };
+  };
+
+  /* ---------- Retrato do mês ---------- */
+  /* { ref, cot, linhas: [{ cli, mb, xp, eqseed, intl, total, cap }], plats: { id: { pl, cap, n, repetido } }, total, cap, xpSemCap } */
+  P.retrato = ref => {
+    const cot = P.cotacao(ref), usd2brl = v => cot ? v * cot.v : 0;
+    const plats = Object.fromEntries(P.PLATS.map(p => [p.id, { pl: 0, cap: 0, n: 0, repetido: 0, usd: 0, capUsd: 0 }]));
+    let xpSemCap = 0;
+    const linhas = Store.all('clientes').map(cli => {
+      const mb = mbCli(cli, ref), xp = xpCli(cli, ref), eq = eqCli(cli, ref), ix = intlCli(cli, ref);
+      if (!mb && !xp && !eq && !ix) return null;
+      const intl = ix ? { pl: usd2brl(ix.usd), cap: usd2brl(ix.capUsd), usd: ix.usd, capUsd: ix.capUsd, ref: ix.ref, repetido: ix.repetido } : null;
+      const l = { cli, mb, xp, eqseed: eq, intl };
+      l.total = [mb, xp, eq, intl].reduce((s, x) => s + (x ? x.pl : 0), 0);
+      l.cap = [mb, xp, eq, intl].reduce((s, x) => s + (x ? x.cap : 0), 0);
+      [['mb', mb], ['xp', xp], ['eqseed', eq], ['intl', intl]].forEach(([k, x]) => { if (!x) return; const p = plats[k]; p.pl += x.pl; p.cap += x.cap; p.n++; if (x.repetido) p.repetido++; if (k === 'intl') { p.usd += x.usd; p.capUsd += x.capUsd; } });
+      if (xp && !xp.repetido && !xp.capInformada) xpSemCap++;
+      return l;
+    }).filter(Boolean).sort((a, b) => b.total - a.total);
+    const total = linhas.reduce((s, l) => s + l.total, 0), cap = linhas.reduce((s, l) => s + l.cap, 0);
+    return { ref, cot, linhas, plats, total, cap, xpSemCap };
+  };
+
+  /* Meses com algum dado (do mais recente para o mais antigo), até o mês atual */
+  P.meses = () => {
+    const hoje = U.today().slice(0, 7), set = new Set(Object.keys(serieMB()));
+    Store.all('clientes').forEach(c => (c.xpHist || []).forEach(h => h.ref && set.add(h.ref)));
+    Store.all('contratos').forEach(ct => { if (ct.produto === 'eqseed' && ct.data) set.add(ct.data.slice(0, 7)); if (P.INTL.includes(ct.produto)) (ct.posHist || []).forEach(h => set.add(h.ref)); });
+    const ks = [...set].filter(k => /^\d{4}-\d{2}$/.test(k) && k <= hoje).sort();
+    if (!ks.length) return [hoje];
+    /* preenche os buracos entre o primeiro e o atual */
+    const out = []; for (let r = ks[0]; r <= hoje; r = P.mesSeg(r)) out.push(r);
+    return out.reverse();
+  };
+  /* Mês padrão: o mais recente com posição nova do MB ou da XP */
+  P.mesPadrao = () => {
+    const s = serieMB(), refs = Object.keys(s);
+    Store.all('clientes').forEach(c => (c.xpHist || []).forEach(h => h.ref && refs.push(h.ref)));
+    const hoje = U.today().slice(0, 7), r = refs.filter(k => k <= hoje).sort().pop();
+    return r || hoje;
+  };
+  /* Variação do patrimônio contra o mês anterior, cliente a cliente e plataforma a plataforma, só onde já havia posição
+     (a primeira posição de um cliente numa plataforma não é crescimento; quem saiu conta como queda). novas = posições novas */
+  P.variacao = (r, ant) => {
+    if (!ant.total) return null;
+    const K = ['mb', 'xp', 'eqseed', 'intl'], antPor = Object.fromEntries(ant.linhas.map(l => [l.cli.id, l]));
+    let v = 0, novas = 0;
+    const vistos = new Set();
+    r.linhas.forEach(l => { const a = antPor[l.cli.id]; vistos.add(l.cli.id);
+      K.forEach(k => { const pa = a && a[k] ? a[k].pl : 0, pb = l[k] ? l[k].pl : 0; if (pa > 0) v += pb - pa; else if (pb > 0) novas++; }); });
+    ant.linhas.forEach(a => { if (!vistos.has(a.cli.id)) v -= a.total; });
+    return { v, novas };
+  };
+  /* Captação no ano até o mês (soma dos meses de janeiro até ref) */
+  P.capAno = ref => { let s = 0; for (let r = ref.slice(0, 4) + '-01'; r <= ref; r = P.mesSeg(r)) s += P.retrato(r).cap; return s; };
+  /* Série para o gráfico: últimos n meses até ref */
+  P.serie = (ref, n = 12) => { const out = []; let r = ref; for (let i = 0; i < n; i++) { out.unshift(r); r = P.mesAnt(r); } return out.map(k => { const x = P.retrato(k); return { ref: k, total: x.total, cap: x.cap, plats: Object.fromEntries(Object.entries(x.plats).map(([id, v]) => [id, v.pl])) }; }); };
+  /* Patrimônio de um cliente no mês (para a ficha) */
+  P.doCliente = (cli, ref) => P.retrato(ref || P.mesPadrao()).linhas.find(l => l.cli.id === cli.id) || null;
+
+  App.Pat = P;
 })(window.App = window.App || {});
 
 </script>
@@ -3890,6 +4120,7 @@ window.HORUS_CONFIG = {
           /* Seguradora nova digitada entra na lista de Ajustes */
           const segs = Cli.produto(pid).campos.filter(cp => cp.t === 'seg').map(cp => (d[cp.k] || '').trim()).filter(x => x && !Cli.seguradoras().some(y => Cli.norm(y) === Cli.norm(x)));
           if (segs.length) Cli.salvarSeguradoras(Cli.seguradoras().concat(segs));
+          if (App.Pat) Object.assign(d, App.Pat.posHistDe(pid, ct, d));
           if (ct) { Store.update('contratos', ct.id, d); UI.toast('Produto atualizado'); }
           else { Store.insert('contratos', { ...d, clienteId: cli.id, produto: pid, status: 'ativo' }); UI.toast(Cli.produto(pid).nome + ' adicionado para ' + Cli.apelido(cli)); }
           api.close();
@@ -5568,6 +5799,119 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
 
 </script>
 <script>
+/* js/views/patrimonio.js */
+/* Parte 5b · Tela "Patrimônio e captação" (abre por Clientes, com Voltar). Cálculo em js/core/patrimonio.js (App.Pat). */
+(function (App) {
+  const { U, UI, Store } = App;
+  const PV = {};
+  let ordem = { k: 'total', d: -1 };
+  const usd = v => 'US$ ' + (+v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+  const sinal = v => (v > 0 ? '+' : v < 0 ? '−' : '') + U.brlShort(Math.abs(v)).replace('R$ ', 'R$ ');
+  const capCls = v => v > 0 ? 'pt-pos' : v < 0 ? 'pt-neg' : 'muted';
+
+  /* Card na tela Clientes */
+  PV.card = () => {
+    const P = App.Pat, ref = P.mesPadrao(), r = P.retrato(ref);
+    return `<button class="pcard pc-pat" id="clPat" style="--pc:#1D1438"><span class="pc-top"><b>Patrimônio e captação</b></span><small class="pc-sub">MB, XP, Eqseed e exterior · mês a mês</small>
+      <span class="pc-n"><b>${r.linhas.length}</b> ${r.linhas.length === 1 ? 'cliente' : 'clientes'}</span>${r.total ? `<span class="pc-v">${U.brlShort(r.total)}</span>` : ''}
+      <span class="pc-l">${P.rotulo(ref)} · captação <span class="${capCls(r.cap)}">${sinal(r.cap)}</span> ›</span></button>`;
+  };
+
+  /* Gráfico: patrimônio total (linha) + captação do mês (barras) */
+  const grafico = serie => {
+    const W = 640, H = 240, ml = 64, mr = 12, mt = 14, ih = 150, z = mt + ih + 34, bh = 20;
+    const iw = W - ml - mr, vs = serie.map(s => s.total).filter(v => v > 0);
+    const mx = Math.max(...vs, 1), mn = Math.min(...vs, mx), pad = (mx - mn) * .15 || mx * .1;
+    const lo = Math.max(0, mn - pad), hi = mx + pad;
+    const x = i => ml + iw * (i + .5) / serie.length, y = v => mt + ih - (v - lo) / (hi - lo || 1) * ih;
+    const maxC = Math.max(...serie.map(s => Math.abs(s.cap)), 1), bw = iw / serie.length * .5;
+    let g = '';
+    for (let i = 0; i <= 3; i++) { const v = lo + (hi - lo) * i / 3; g += `<line x1="${ml}" x2="${W - mr}" y1="${y(v)}" y2="${y(v)}" stroke="#ECE7F6"/><text x="${ml - 8}" y="${y(v) + 4}" text-anchor="end">${U.brlShort(v)}</text>`; }
+    g += `<line x1="${ml}" x2="${W - mr}" y1="${z}" y2="${z}" stroke="#E5E0F0" stroke-dasharray="3 3"/><text x="${ml - 8}" y="${z + 4}" text-anchor="end">captação</text>`;
+    serie.forEach((s, i) => {
+      const h = Math.max(Math.abs(s.cap) / maxC * bh, 1.5);
+      if (s.cap) g += `<rect x="${x(i) - bw / 2}" y="${s.cap > 0 ? z - h : z}" width="${bw}" height="${h}" rx="2" fill="${s.cap > 0 ? '#23864F' : '#C8402E'}" opacity=".75"><title>${App.Pat.rotulo(s.ref)}: captação ${U.brl(s.cap)}</title></rect>`;
+      g += `<text x="${x(i)}" y="${H - 4}" text-anchor="middle">${App.Pat.rotulo(s.ref).slice(0, 3)}</text>`;
+    });
+    const pts = serie.map((s, i) => s.total ? `${x(i)},${y(s.total)}` : null).filter(Boolean);
+    if (pts.length) {
+      g += `<polyline points="${pts.join(' ')}" fill="none" stroke="#6E3FF0" stroke-width="2.5" stroke-linejoin="round"/>`;
+      serie.forEach((s, i) => { if (s.total) g += `<circle cx="${x(i)}" cy="${y(s.total)}" r="${i === serie.length - 1 ? 4.5 : 3}" fill="${i === serie.length - 1 ? '#6E3FF0' : '#fff'}" stroke="#6E3FF0" stroke-width="2"><title>${App.Pat.rotulo(s.ref)}: ${U.brl(s.total)}</title></circle>`; });
+    }
+    return `<svg class="pt-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolução do patrimônio e captação mês a mês">${g}</svg>`;
+  };
+
+  const cel = (x, l) => {
+    if (!x) return '<td class="r muted hide-m">—</td>';
+    const t = x.repetido ? `posição de ${App.Pat.rotulo(x.ref)}` : '';
+    return `<td class="r hide-m${x.repetido ? ' pt-rep' : ''}"${t ? ` title="${t}"` : ''}>${U.brlShort(x.pl)}${l === 'intl' && x.usd ? `<small>${usd(x.usd)}</small>` : ''}</td>`;
+  };
+
+  PV.tela = (el, params, { voltar, ligarComum, ir }) => {
+    const P = App.Pat, meses = P.meses();
+    let ref = params.mes && meses.includes(params.mes) ? params.mes : P.mesPadrao();
+    if (!meses.includes(ref)) ref = meses[0];
+    const r = P.retrato(ref), ant = P.retrato(P.mesAnt(ref)), capAno = P.capAno(ref), serie = P.serie(ref, 12);
+    const vr = P.variacao(r, ant), varPl = vr ? vr.v : null;
+    const i = meses.indexOf(ref), prev = meses[i + 1], next = meses[i - 1];
+    const cot = r.cot, intl = r.plats.intl;
+    const linhas = r.linhas.slice().sort((a, b) => {
+      const v = l => ordem.k === 'nome' ? l.cli.nome : ordem.k === 'total' ? l.total : ordem.k === 'cap' ? l.cap : (l[ordem.k] ? l[ordem.k].pl : -1);
+      const A = v(a), B = v(b); return (typeof A === 'string' ? A.localeCompare(B, 'pt-BR') : A - B) * ordem.d;
+    });
+    const th = (k, t, cls = '') => `<th class="${cls}" data-ord="${k}" aria-sort="${ordem.k === k ? (ordem.d > 0 ? 'ascending' : 'descending') : 'none'}">${t}${ordem.k === k ? (ordem.d > 0 ? ' ↑' : ' ↓') : ''}</th>`;
+    const rep = Object.values(r.plats).some(p => p.repetido);
+
+    el.innerHTML = `${voltar('Clientes', {})}
+      <div class="page-h"><div><h1>Patrimônio e captação</h1><p class="muted">O que seus clientes têm com você em cada plataforma, mês a mês, e quanto entrou de dinheiro novo.</p></div>
+        <div class="pt-mes"><button class="pv-arr" data-mes="${prev || ''}" ${prev ? '' : 'disabled'} aria-label="Mês anterior">${UI.icon('voltar')}</button>
+          <select id="ptMes" aria-label="Mês">${meses.map(m => `<option value="${m}"${m === ref ? ' selected' : ''}>${U.esc(P.nomeMes(m))}</option>`).join('')}</select>
+          <button class="pv-arr" data-mes="${next || ''}" ${next ? '' : 'disabled'} aria-label="Próximo mês">${UI.icon('seta')}</button></div></div>
+
+      <section class="kpis k4 pt-kpis">
+        <div class="kpi k-neg"><span>Patrimônio com você</span><b>${U.brlShort(r.total)}</b><em>${varPl == null ? r.linhas.length + ' clientes' : `<span class="${capCls(varPl)}">${sinal(varPl)}</span> vs ${P.rotulo(P.mesAnt(ref))}${vr.novas ? ` · sem contar ${vr.novas === 1 ? '1 posição nova' : vr.novas + ' posições novas'}` : ''}`}</em></div>
+        <div class="kpi"><span>Captação líquida no mês</span><b class="${capCls(r.cap)}">${sinal(r.cap)}</b><em>${r.xpSemCap ? `XP sem captação em ${r.xpSemCap}` : 'aportes − resgates'}</em></div>
+        <div class="kpi"><span>Captação no ano</span><b class="${capCls(capAno)}">${sinal(capAno)}</b><em>jan a ${P.rotulo(ref).slice(0, 3).toLowerCase()}/${ref.slice(2, 4)}</em></div>
+        <div class="kpi"><span>Clientes</span><b>${r.linhas.length}</b><em>com patrimônio no mês</em></div>
+      </section>
+
+      <div class="grid-2 pt-g2">
+        <section class="card"><div class="card-h"><h2>Por plataforma</h2><span class="muted small">${U.esc(P.nomeMes(ref))}</span></div>
+          <div class="pt-stack">${P.PLATS.map(p => r.total && r.plats[p.id].pl ? `<span style="width:${r.plats[p.id].pl / r.total * 100}%;background:${p.cor}" title="${p.nome}"></span>` : '').join('')}</div>
+          <ul class="pt-plats">${P.PLATS.map(p => { const x = r.plats[p.id];
+            return `<li><i style="background:${p.cor}"></i><div><b>${p.nome}</b><small>${p.id === 'intl' ? (x.usd ? usd(x.usd) + (cot ? ' × ' + cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ' · sem cotação') : p.sub) : U.plural(x.n, 'cliente', 'clientes')}${x.repetido ? ` · ${x.repetido} com posição anterior` : ''}</small></div>
+              <span class="pt-pc">${r.total ? U.pct(x.pl / r.total) : '—'}</span><span class="pt-v">${U.brlShort(x.pl)}<small class="${capCls(x.cap)}">${x.cap ? sinal(x.cap) : 'sem captação'}</small></span></li>`; }).join('')}</ul>
+          <form class="pt-cot" id="ptCot"><label for="ptCotV">Dólar de ${U.esc(P.nomeMes(ref))}</label><input id="ptCotV" data-num inputmode="decimal" placeholder="Ex.: 5,40" value="${cot && cot.exata ? cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) : ''}"><button class="btn ghost sm" type="submit">Salvar</button>
+            <small class="muted">${cot ? (cot.exata ? 'Converte o exterior para R$.' : `Usando a de ${P.rotulo(cot.ref)} (${cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}). Informe a deste mês.`) : intl.usd ? 'Sem cotação: o exterior ainda não entra no total.' : 'Para converter o exterior para R$.'}</small></form>
+        </section>
+        <section class="card"><div class="card-h"><h2>Evolução</h2><span class="muted small">12 meses</span></div>
+          ${grafico(serie)}
+          <p class="muted small pt-leg"><i class="pt-l"></i>Patrimônio total <i class="pt-b"></i>Captação do mês (verde entrou, vermelho saiu)</p>${(() => { const inicio = P.PLATS.map(p => { const k = serie.findIndex(s => s.plats[p.id] > 0); return k > 0 ? `${p.nome} a partir de ${P.rotulo(serie[k].ref).toLowerCase()}` : null; }).filter(Boolean); return inicio.length ? `<p class="muted small pt-nota">Antes disso não há posição: ${inicio.join(' · ')}. Os saltos nesses meses são a plataforma entrando no total, não crescimento.</p>` : ''; })()}</section>
+      </div>
+
+      <section class="card"><div class="card-h"><h2>Por cliente</h2><span class="count">${linhas.length}</span><span class="grow"></span>${r.xpSemCap ? `<button class="link" id="ptXp">Informar captação da XP</button>` : ''}</div>
+        ${linhas.length ? `<div class="tscroll"><table class="tbl pt-tbl"><thead><tr>${th('nome', 'Cliente')}${th('mb', 'MB', 'r hide-m')}${th('xp', 'XP', 'r hide-m')}${th('eqseed', 'Eqseed', 'r hide-m')}${th('intl', 'Exterior', 'r hide-m')}${th('total', 'Total', 'r')}${th('cap', 'Captação', 'r')}</tr></thead>
+          <tbody>${linhas.map(l => `<tr class="click" data-cli="${l.cli.id}"><td><b>${U.esc(l.cli.nome)}</b>${l.cli.saiu ? ' <small class="muted">ex-cliente</small>' : ''}</td>${cel(l.mb)}${cel(l.xp)}${cel(l.eqseed)}${cel(l.intl, 'intl')}<td class="r"><b>${U.brlShort(l.total)}</b></td><td class="r ${capCls(l.cap)}">${l.cap ? sinal(l.cap) : '—'}</td></tr>`).join('')}</tbody>
+          <tfoot><tr><td>Total</td>${['mb', 'xp', 'eqseed', 'intl'].map(k => `<td class="r hide-m">${U.brlShort(r.plats[k].pl)}</td>`).join('')}<td class="r">${U.brlShort(r.total)}</td><td class="r ${capCls(r.cap)}">${sinal(r.cap)}</td></tr></tfoot></table></div>`
+          : `<div class="empty sm"><b>Nenhum patrimônio neste mês.</b><p>Importe o mês do MB, atualize o PL da XP ou cadastre os produtos da Eqseed e do exterior.</p></div>`}
+        ${rep ? '<p class="muted small pt-nota"><span class="pt-rep-k">Valor em itálico</span> = a plataforma não tem posição deste mês; repete a última conhecida (passe o mouse para ver de quando) e não conta captação.</p>' : ''}
+      </section>
+      <p class="muted small pt-nota">Fontes: MB pelo relatório mensal importado (captação = aportes − resgates). XP pelo PL e pela captação que você digita (sem carteira, por compliance). Eqseed pelo valor investido, não pelo valor de mercado; a captação é o que foi investido no mês. Exterior pela posição em US$ de cada produto, convertida pela cotação do mês; a captação do ITA é o aporte anual com baixa "Aporte pago" na renovação.</p>`;
+
+    const irMes = m => { if (m) ir({ patrimonio: true, mes: m }); };
+    el.querySelectorAll('[data-mes]').forEach(b => b.onclick = () => irMes(b.dataset.mes));
+    el.querySelector('#ptMes').onchange = e => irMes(e.target.value);
+    el.querySelectorAll('[data-ord]').forEach(t => t.onclick = () => { const k = t.dataset.ord; ordem = { k, d: ordem.k === k ? -ordem.d : (k === 'nome' ? 1 : -1) }; PV.tela(el, { mes: ref }, { voltar, ligarComum, ir }); });
+    el.querySelector('#ptCot').onsubmit = e => { e.preventDefault(); const v = U.parseNum(el.querySelector('#ptCotV').value); P.salvarCotacao(ref, v); UI.toast(v ? 'Cotação de ' + P.nomeMes(ref) + ' salva' : 'Cotação removida'); };
+    const bx = el.querySelector('#ptXp'); if (bx) bx.onclick = () => ir({ xp: true, mes: ref });
+    ligarComum(el);
+  };
+
+  App.PatView = PV;
+})(window.App = window.App || {});
+
+</script>
+<script>
 /* js/views/clientes.js */
 /* Tela Clientes: cards por produto → lista do produto → ficha do cliente. O MB abre o dashboard do mês. */
 (function (App) {
@@ -5583,6 +5927,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     if (P.cliente) return ficha(el);
     if (P.indicacoes) return indicacoes(el);
     if (P.xp) return xpBase(el);
+    if (P.patrimonio && App.PatView) return App.PatView.tela(el, P, { voltar, ligarComum, ir });
     if (P.produto === 'mb') return mb(el);
     if (P.produto) return produto(el);
     return inicio(el);
@@ -5614,7 +5959,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
           <span class="pc-l">${ind.filter(Cli.converteu).length} rodaram${rk.length ? ' · maior rede: ' + U.esc(nomeCurto(rk[0].c)) + ' (' + rk[0].rede + ')' : ''}</span></button>`; })()}${(() => { const xs = Cli.clientes().filter(c => !c.saiu && Cli.plXp(c) != null), tot = xs.reduce((s, c) => s + Cli.plXp(c), 0), ult = xs.map(c => c.xp.em).sort().pop();
         return `<button class="pcard pc-xp" id="clXpBase" style="--pc:#2B5A8C"><span class="pc-top"><b>XP</b></span><small class="pc-sub">PL total digitado por você</small>
           <span class="pc-n"><b>${xs.length}</b> ${xs.length === 1 ? 'cliente' : 'clientes'}</span>${tot ? `<span class="pc-v">${U.brlShort(tot)}</span>` : ''}
-          <span class="pc-l">${ult ? 'Atualizado até ' + U.fmtDate(ult) + ' · ' : ''}Atualizar PL ›</span></button>`; })()}${Cli.PRODUTOS.filter(p => Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)).map(p => { const r = Cli.resumo(p.id);
+          <span class="pc-l">${ult ? 'Atualizado até ' + U.fmtDate(ult) + ' · ' : ''}Atualizar PL ›</span></button>`; })()}${App.PatView ? App.PatView.card() : ''}${Cli.PRODUTOS.filter(p => Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)).map(p => { const r = Cli.resumo(p.id);
         return `<button class="pcard" data-prod="${p.id}" style="--pc:${p.cor}">
           <span class="pc-top"><b>${U.esc(p.nome)}</b>${r.avisos ? `<span class="pc-av">${r.avisos} aviso${r.avisos > 1 ? 's' : ''}</span>` : ''}</span>
           ${p.sub ? `<small class="pc-sub">${U.esc(p.sub)}</small>` : ''}
@@ -5634,6 +5979,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       </div>`;
     el.querySelector('#clInd').onclick = () => ir({ indicacoes: true });
     el.querySelector('#clXpBase').onclick = () => ir({ xp: true });
+    const bPat = el.querySelector('#clPat'); if (bPat) bPat.onclick = () => ir({ patrimonio: true });
     if (App.Ren) App.Ren.ligar(el);
     el.querySelectorAll('[data-area]').forEach(b => b.onclick = () => areaModal(b.dataset.area));
     const inp = el.querySelector('#clBusca');
@@ -5994,10 +6340,11 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       body: `<form class="form" id="fXp"><p class="muted small" style="margin:0">Só o total, sem discriminar a carteira (compliance).</p>
         <div class="row2"><label class="f"><span>PL total na XP</span><input name="pl" data-num inputmode="decimal" value="${pl != null ? U.num(pl) : ''}" placeholder="R$" autofocus></label>
         <label class="f"><span>Posição em</span><input type="date" name="em" value="${U.today()}"></label></div>
-        ${h.length ? `<details class="rg-hist" open><summary>Histórico · ${(c.xpHist || []).length}</summary><ul>${h.map(x => `<li><time>${App.Fat ? App.Fat.nomeMes(x.ref) : x.ref}</time>${U.brl(x.pl)}</li>`).join('')}</ul></details>` : ''}</form>`,
+        <label class="f"><span>Captação líquida no mês <em class="muted">opcional · aportes − resgates na XP</em></span><input name="cap" data-num inputmode="decimal" value="${(() => { const j = (c.xpHist || []).find(x => x.ref === U.today().slice(0, 7)); return j && j.cap != null ? U.num(j.cap) : ''; })()}" placeholder="R$ (negativo se saiu)"></label>
+        ${h.length ? `<details class="rg-hist" open><summary>Histórico · ${(c.xpHist || []).length}</summary><ul>${h.map(x => `<li><time>${App.Fat ? App.Fat.nomeMes(x.ref) : x.ref}</time>${U.brl(x.pl)}${x.cap != null ? ` <small class="muted">· captação ${U.brl(x.cap)}</small>` : ''}</li>`).join('')}</ul></details>` : ''}</form>`,
       footer: `${pl != null ? '<button class="btn ghost danger-text" data-xp-del>Limpar</button><span class="grow"></span>' : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fXp" type="submit">Salvar</button>`,
       onMount(el, api) {
-        el.querySelector('#fXp').onsubmit = e => { e.preventDefault(); const d = UI.formData(e.target); if (d.pl == null) return; Cli.salvarXp(c.id, d.pl, d.em); api.close(); UI.toast('PL da XP atualizado'); };
+        el.querySelector('#fXp').onsubmit = e => { e.preventDefault(); const d = UI.formData(e.target); if (d.pl == null) return; Cli.salvarXp(c.id, d.pl, d.em, undefined, d.cap == null ? null : d.cap); api.close(); UI.toast('PL da XP atualizado'); };
         const del = el.querySelector('[data-xp-del]'); if (del) del.onclick = () => { Cli.salvarXp(c.id, null); api.close(); UI.toast('PL da XP removido'); };
       }
     });
@@ -6005,14 +6352,33 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   /* ---------- XP: atualizar o PL de todos de uma vez (rotina mensal) ---------- */
   function xpBase(el) {
     const clis = Cli.clientes().filter(c => !c.saiu), tot = clis.reduce((s, c) => s + (Cli.plXp(c) || 0), 0), com = clis.filter(c => Cli.plXp(c) != null);
-    el.innerHTML = `${voltar('Clientes', {})}
-      <div class="page-h"><div><h1>PL na XP</h1><p class="muted">Só o total de cada cliente, digitado por você (a carteira da XP fica fora do painel por compliance). Preencha os que mudaram e salve.</p></div></div>
+    /* Vindo de "Patrimônio e captação" de um mês passado: a posição já vem no último dia daquele mês */
+    const hoje = U.today(), emIni = P.mes && P.mes < hoje.slice(0, 7) && App.Pat ? App.Pat.fimDoMes(P.mes) : hoje;
+    const doMes = (c, ref) => (c.xpHist || []).find(h => h.ref === ref);
+    const linha = (c, ref) => { const pl = Cli.plXp(c), h = doMes(c, ref), cap = h && h.cap != null ? U.num(h.cap) : '';
+      const plv = h ? U.num(h.pl) : pl != null ? U.num(pl) : '';
+      return `<li><div><b>${U.esc(c.nome)}</b><small>${pl != null ? 'Atual ' + U.brl(pl) + ' · ' + U.fmtDate(c.xp.em) : 'sem PL cadastrado'}</small></div>
+        <input data-xp="${c.id}" data-num inputmode="decimal" value="${plv}" data-orig="${plv}" placeholder="PL R$" aria-label="PL de ${U.esc(c.nome)}">
+        <input class="xp-cap" data-xpcap="${c.id}" data-num inputmode="decimal" value="${cap}" data-orig="${cap}" placeholder="Captação" aria-label="Captação líquida no mês de ${U.esc(c.nome)}"></li>`; };
+    el.innerHTML = `${voltar(P.mes ? 'Patrimônio e captação' : 'Clientes', P.mes ? { patrimonio: true, mes: P.mes } : {})}
+      <div class="page-h"><div><h1>PL na XP</h1><p class="muted">Só o total de cada cliente, digitado por você (a carteira da XP fica fora do painel por compliance). Preencha os que mudaram e salve. A captação líquida do mês (aportes − resgates) é opcional e alimenta a captação em Patrimônio.</p></div></div>
       <section class="kpis k4"><div class="kpi"><span>PL total na XP</span><b>${U.brlShort(tot)}</b></div><div class="kpi"><span>Clientes com PL</span><b>${com.length}</b><em>de ${clis.length}</em></div></section>
-      <section class="card"><form id="fXpB"><div class="xp-top"><label class="f"><span>Posição em</span><input type="date" name="em" value="${U.today()}"></label><span class="grow"></span><button class="btn primary" type="submit">Salvar alterados</button></div>
-        <ul class="xp-list">${clis.map(c => { const pl = Cli.plXp(c); return `<li><div><b>${U.esc(c.nome)}</b><small>${pl != null ? 'Atual ' + U.brl(pl) + ' · ' + U.fmtDate(c.xp.em) : 'sem PL cadastrado'}</small></div><input data-xp="${c.id}" data-num inputmode="decimal" value="${pl != null ? U.num(pl) : ''}" data-orig="${pl != null ? U.num(pl) : ''}" placeholder="R$" aria-label="PL de ${U.esc(c.nome)}"></li>`; }).join('')}</ul></form></section>`;
-    el.querySelector('#fXpB').onsubmit = e => {
-      e.preventDefault(); const em = e.target.em.value || U.today(); let n = 0;
-      el.querySelectorAll('[data-xp]').forEach(i => { if (i.value.trim() === i.dataset.orig) return; const v = U.parseNum(i.value); Cli.salvarXp(i.dataset.xp, v, em, { silent: true }); n++; });
+      <section class="card"><form id="fXpB"><div class="xp-top"><label class="f"><span>Posição em</span><input type="date" name="em" value="${emIni}"></label><span class="grow"></span><button class="btn primary" type="submit">Salvar alterados</button></div>
+        <div class="xp-head"><span>Cliente</span><span>PL total</span><span>Captação no mês</span></div>
+        <ul class="xp-list" id="xpL">${clis.map(c => linha(c, emIni.slice(0, 7))).join('')}</ul></form></section>`;
+    const form = el.querySelector('#fXpB');
+    /* trocar a data para outro mês recarrega os valores daquele mês */
+    form.em.onchange = () => { const ref = (form.em.value || hoje).slice(0, 7); el.querySelector('#xpL').innerHTML = clis.map(c => linha(c, ref)).join(''); };
+    form.onsubmit = e => {
+      e.preventDefault(); const em = form.em.value || hoje; let n = 0;
+      clis.forEach(c => {
+        const ip = el.querySelector(`[data-xp="${c.id}"]`), ic = el.querySelector(`[data-xpcap="${c.id}"]`);
+        const mudouPl = ip.value.trim() !== ip.dataset.orig, mudouCap = ic.value.trim() !== ic.dataset.orig;
+        if (!mudouPl && !mudouCap) return;
+        const pl = U.parseNum(ip.value), cap = U.parseNum(ic.value);
+        if (pl == null && !mudouPl) return; /* captação sem PL não grava */
+        Cli.salvarXp(c.id, pl, em, { silent: true }, mudouCap ? cap : undefined); n++;
+      });
       if (!n) return UI.toast('Nada mudou.', 'aviso');
       Store.commit(); UI.toast(U.plural(n, 'cliente atualizado', 'clientes atualizados'));
     };
