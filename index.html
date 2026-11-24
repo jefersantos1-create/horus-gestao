@@ -1146,6 +1146,41 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .xp-list input { width: 160px; flex: none; font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); text-align: right; }
 @media (max-width: 520px) { .xp-list input { width: 120px; } }
 
+/* ---------- Painel reorganizado (24/11): topo com indicadores + Oportunidades; prioridades de lado ---------- */
+.ptop { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 12px; align-items: stretch; }
+.ptop .kpis.kp3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ptop .kpi { display: flex; flex-direction: column; justify-content: center; }
+.ptop .kpi b { font-size: 34px; }
+.fu-top { padding: 12px 16px; }
+.fu-top .card-h { margin-bottom: 8px; }
+.fu-top .fu-mc { padding: 6px 10px; }
+.fu-top .fu-mc b { font-size: 19px; }
+.fu-top .fu-res { margin-top: 8px; }
+.fu-top .empty.sm { padding: 6px 0; }
+@media (max-width: 1080px) { .ptop { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .ptop .kpis.kp3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .ptop .kpi { padding: 10px 12px; } .ptop .kpi b { font-size: 26px; } .fu-top .fu-mini { gap: 4px; } .fu-top .fu-mc { padding: 6px 7px; } }
+.main-col { display: grid; gap: 20px; min-width: 0; }
+
+.pv-nav { display: flex; align-items: center; gap: 2px; background: var(--surface-2); border-radius: 999px; padding: 3px; }
+.pv-tab { border: 0; background: none; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--muted); padding: 5px 10px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.pv-tab b { font-variant-numeric: tabular-nums; margin-left: 3px; }
+.pv-tab[aria-selected="true"] { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
+.pv-arr { border: 0; background: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); cursor: pointer; padding: 0; }
+.pv-arr .ic { width: 16px; height: 16px; }
+.pv-arr:hover:not(:disabled) { background: var(--accent-soft); }
+.pv-arr:disabled { color: var(--line); cursor: default; }
+.pv { overflow: hidden; transition: height .28s ease; }
+.pv-track { display: flex; align-items: flex-start; transition: transform .3s ease; }
+.pv-pane { flex: 0 0 100%; min-width: 0; }
+.pv-mais { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--accent); cursor: pointer; padding: 4px 0; }
+.pv-mais .ic { width: 15px; height: 15px; }
+.pv-rod { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+@media (max-width: 600px) {
+  .prio-card .card-h { flex-wrap: wrap; row-gap: 8px; }
+  .prio-card .card-h .pv-nav { order: 5; width: 100%; justify-content: space-between; }
+}
+@media (prefers-reduced-motion: reduce) { .pv, .pv-track { transition: none !important; } }
+
 </style>
 
 <div class="app">
@@ -4385,6 +4420,12 @@ window.HORUS_CONFIG = {
     const demo = App.Demo.count();
     const negs = M.negItensAbertos().filter(x => ok(x.a));
 
+    const negLink = negs.length ? ` · <a class="link" href="#negocios" data-go="negocios">${negs.length} negócio${negs.length === 1 ? '' : 's'} em andamento</a>` : '';
+    const cardMetas = `<section class="card">
+            <div class="card-h"><h2>Metas</h2><a class="link" href="#metas" data-go="metas">Ver todas</a></div>
+            ${metas.length ? `<ul class="mlist">${metas.slice(0, 5).map(m => { const p = M.metaPct(m), s = M.metaSituacao(m); return `<li><div class="mrow"><span class="mname">${U.esc(m.nome)}</span><span class="tag t-${s.id}">${s.label}</span></div>${UI.bar(p, M.respCor(m.responsabilidadeId))}<div class="mrow small muted"><span>${U.num(M.metaAtual(m))} de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><span>${U.pct(p)}</span></div></li>`; }).join('')}</ul>`
+              : `<div class="empty sm"><p>Nenhuma meta ativa.</p><a class="btn ghost" href="#metas" data-go="metas">Criar meta</a></div>`}
+          </section>`;
     el.innerHTML = `
       ${demo.atividades + demo.metas ? `<div class="banner">Você está vendo <b>dados de demonstração</b>. Quando quiser começar com os seus, apague-os em <a href="#dados" data-go="dados">Backup e dados</a>.</div>` : ''}
       <div class="page-h"><div><h1>Bom dia</h1><p class="muted cap">${U.todayLong()}</p></div>
@@ -4393,39 +4434,52 @@ window.HORUS_CONFIG = {
             ${M.respAtivas().map(x => `<label class="mf-op"><input type="checkbox" value="${x.id}" ${filtroResp.includes(x.id) ? 'checked' : ''}><i style="background:${x.cor || '#8A93A3'}"></i><span>${U.esc(x.nome)}</span></label>`).join('')}
             <div class="mf-act"><button class="link" id="fRespTodas">Ver todas</button><button class="btn primary sm" id="fRespOk">Aplicar</button></div></div></div></div>
 
-      <section class="kpis" aria-label="Indicadores">
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=hoje${qr}"><span>Para hoje</span><b>${r.hoje}</b></a>
-        <a class="kpi ${r.atrasadas ? 'k-late' : ''}" href="#atividades" data-go="atividades" data-q="prazo=atrasadas${qr}"><span>Atrasadas</span><b>${r.atrasadas}</b></a>
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=7dias${qr}"><span>Próximos 7 dias</span><b>${r.proximos7}</b></a>
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=abertas${qr}"><span>Pendentes</span><b>${r.pendentes}</b></a>
-        <a class="kpi" href="#atividades" data-go="atividades" data-q="status=concluida${qr}"><span>Concluídas</span><b>${r.concluidas}</b></a>
-        <a class="kpi k-neg" href="#negocios" data-go="negocios"><span>Negócios em andamento</span><b>${negs.length}</b><em>${negs.length ? U.brlShort(negs.reduce((s, x) => s + (+x.n.valor || 0), 0)) + ' em negociação' : 'Nenhum no momento'}</em></a>
-      </section>
+      <div class="ptop">
+        <section class="kpis kp3" aria-label="Indicadores">
+          <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=hoje${qr}"><span>Para hoje</span><b>${r.hoje}</b></a>
+          <a class="kpi ${r.atrasadas ? 'k-late' : ''}" href="#atividades" data-go="atividades" data-q="prazo=atrasadas${qr}"><span>Atrasadas</span><b>${r.atrasadas}</b></a>
+          <a class="kpi" href="#atividades" data-go="atividades" data-q="status=abertas${qr}"><span>Pendentes</span><b>${r.pendentes}</b></a>
+        </section>
+        ${App.Funil ? App.Funil.card(filtroResp, { topo: true, rodape: negLink }) : ''}
+      </div>
 
       <div class="grid-main">
-        <section class="card prio-card" aria-label="Minhas prioridades de hoje">
-          <div class="card-h"><h2>Minhas prioridades de hoje</h2><span class="grow"></span><span class="count">${prior.length}</span><a class="link" href="#atividades" data-go="atividades">Ver atividades</a></div>
-          ${prior.length ? `<ul class="plist" id="plist">${prior.map(itemAt).join('')}</ul>`
-            : `<div class="empty"><b>Nada urgente por aqui.</b><p>Nenhuma atividade atrasada ou para hoje. Aproveite para adiantar as próximas.</p></div>`}
-          ${prox.length ? `<details class="next"><summary>Próximos 7 dias · ${prox.length}</summary><ul class="plist">${prox.slice(0, 12).map(itemAt).join('')}</ul></details>` : ''}
-        </section>
+        <div class="main-col">
+          <section class="card prio-card" aria-label="Minhas prioridades">
+            <div class="card-h"><h2>Minhas prioridades</h2><span class="grow"></span>
+              <div class="pv-nav" role="tablist" aria-label="Período">
+                <button class="pv-arr" data-pv="0" aria-label="Hoje" title="Hoje">${UI.icon('voltar')}</button>
+                <button class="pv-tab" role="tab" data-pv="0" aria-selected="true">Hoje <b>${prior.length}</b></button>
+                <button class="pv-tab" role="tab" data-pv="1" aria-selected="false">Próximos 7 dias <b>${prox.length}</b></button>
+                <button class="pv-arr" data-pv="1" aria-label="Próximos 7 dias" title="Próximos 7 dias">${UI.icon('seta')}</button>
+              </div>
+              <a class="link" href="#atividades" data-go="atividades">Ver atividades</a></div>
+            <div class="pv" id="pv"><div class="pv-track">
+              <div class="pv-pane" data-pane="0">
+                ${prior.length ? `<ul class="plist">${prior.map(itemAt).join('')}</ul>`
+                  : `<div class="empty"><b>Nada urgente por aqui.</b><p>Nenhuma atividade atrasada ou para hoje. Aproveite para adiantar as próximas.</p></div>`}
+                ${prox.length ? `<button class="pv-mais" data-pv="1">Próximos 7 dias · ${prox.length} ${UI.icon('seta')}</button>` : ''}
+              </div>
+              <div class="pv-pane" data-pane="1" inert>
+                ${prox.length ? `<ul class="plist">${prox.slice(0, 12).map(itemAt).join('')}</ul>` : `<div class="empty sm"><p>Nada com prazo nos próximos 7 dias.</p></div>`}
+                <div class="pv-rod"><button class="pv-mais back" data-pv="0">${UI.icon('voltar')} Voltar para hoje</button>${prox.length > 12 ? `<a class="link" href="#atividades" data-go="atividades" data-q="prazo=7dias${qr}">Ver todas (${prox.length})</a>` : ''}</div>
+              </div>
+            </div></div>
+          </section>
+          ${App.Emails ? App.Emails.quadro() : ''}
+        </div>
 
         <aside class="side-col">
-          ${App.Funil ? App.Funil.card(filtroResp) : ''}
-          ${App.Emails ? App.Emails.quadro() : ''}
-          ${App.Ren && App.Views.clientes ? App.Ren.card({ max: 5, extras: App.Cli.avisosConsorcio() }) : ''}
           ${App.Regua ? App.Regua.card(filtroResp) : ''}
+          ${App.Ren && App.Views.clientes ? App.Ren.card({ max: 5, extras: App.Cli.avisosConsorcio() }) : ''}
           <section class="card exec">
             <div class="card-h"><h2>Estou executando o que planejei?</h2></div>
             <div class="exec-b">${Charts.ring(r.pctConclusao, 92)}
               <div><p class="big-l">${U.pct(r.pctConclusao)} <span class="muted">concluído no total</span></p>
-              <p class="muted small">${exec == null ? 'Nenhuma atividade venceu nos últimos 7 dias.' : `Últimos 7 dias: <b class="ink">${r.feitas7} de ${r.planejadas7}</b> atividades com prazo foram concluídas (${U.pct(exec)}).`}</p></div></div>
+              <p class="muted small">${exec == null ? 'Nenhuma atividade venceu nos últimos 7 dias.' : `Últimos 7 dias: <b class="ink">${r.feitas7} de ${r.planejadas7}</b> atividades com prazo foram concluídas (${U.pct(exec)}).`}</p>
+              <p class="small"><a class="link" href="#atividades" data-go="atividades" data-q="status=concluida${qr}">${r.concluidas} concluída${r.concluidas === 1 ? '' : 's'}</a></p></div></div>
           </section>
-          <section class="card">
-            <div class="card-h"><h2>Metas</h2><a class="link" href="#metas" data-go="metas">Ver todas</a></div>
-            ${metas.length ? `<ul class="mlist">${metas.slice(0, 5).map(m => { const p = M.metaPct(m), s = M.metaSituacao(m); return `<li><div class="mrow"><span class="mname">${U.esc(m.nome)}</span><span class="tag t-${s.id}">${s.label}</span></div>${UI.bar(p, M.respCor(m.responsabilidadeId))}<div class="mrow small muted"><span>${U.num(M.metaAtual(m))} de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><span>${U.pct(p)}</span></div></li>`; }).join('')}</ul>`
-              : `<div class="empty sm"><p>Nenhuma meta ativa.</p><a class="btn ghost" href="#metas" data-go="metas">Criar meta</a></div>`}
-          </section>
+          ${cardMetas}
         </aside>
       </div>
 
@@ -4449,6 +4503,27 @@ window.HORUS_CONFIG = {
     el.querySelector('#fRespOk').onclick = () => aplicar([...pop.querySelectorAll('input:checked')].map(i => i.value));
     el.querySelector('#fRespTodas').onclick = () => aplicar([]);
     pop.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharPop(); fb.focus(); } });
+    /* Prioridades: Hoje ⇄ Próximos 7 dias, de lado (não empurra os e-mails para baixo) */
+    const pv = el.querySelector('#pv');
+    if (pv) {
+      const track = pv.firstElementChild, panes = [...track.children];
+      let atual = 0;
+      const ir = (i, anim = true) => {
+        atual = Math.max(0, Math.min(panes.length - 1, i));
+        pv.style.transition = track.style.transition = anim ? '' : 'none';
+        track.style.transform = `translateX(-${atual * 100}%)`;
+        pv.style.height = panes[atual].offsetHeight + 'px';
+        panes.forEach((p, k) => { if (k === atual) p.removeAttribute('inert'); else p.setAttribute('inert', ''); });
+        el.querySelectorAll('.pv-tab').forEach(t => t.setAttribute('aria-selected', String(+t.dataset.pv === atual)));
+        el.querySelectorAll('.pv-arr').forEach(a => a.disabled = +a.dataset.pv === atual);
+      };
+      el.querySelectorAll('[data-pv]').forEach(b => b.onclick = () => ir(+b.dataset.pv));
+      let x0 = null;
+      pv.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+      pv.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) ir(atual + (dx < 0 ? 1 : -1)); });
+      ir(0, false);
+      if (window.ResizeObserver) new ResizeObserver(() => { pv.style.height = panes[atual].offsetHeight + 'px'; }).observe(panes[0]);
+    }
     if (App.Emails) App.Emails.ligar(el.querySelector('.mail-card') || el);
     if (App.Ren) App.Ren.ligar(el);
     if (App.Regua) App.Regua.ligar(el);
@@ -4794,15 +4869,16 @@ window.HORUS_CONFIG = {
   Fu.nova = () => App.Forms.atividade(null, { categoria: 'Negócios', prioridade: 'alta', responsabilidadeId: assessoria().id, respIds: [], _neg: true });
 
   /* ---------- Card do Painel ---------- */
-  Fu.card = (filtroResp = []) => {
+  /* opts.topo = versão compacta no topo do Painel (junto dos indicadores); opts.rodape = HTML extra no fim do resumo */
+  Fu.card = (filtroResp = [], opts = {}) => {
     const ass = assessoria().id, soNeg = filtroResp.length && !filtroResp.includes(ass);
     const l = Fu.itens().filter(it => it.fonte === 'negocio' ? M.noFiltro(it.a, filtroResp) : !soNeg);
     const tot = l.reduce((s, x) => s + (x.valor || 0), 0), liq = l.reduce((s, x) => s + (x.liq || 0), 0);
-    return `<section class="card fu-card"><div class="card-h"><h2>Oportunidades</h2><span class="grow"></span>${l.length ? `<span class="count">${l.length}</span>` : ''}<a class="link" href="#funil" data-go="funil">Abrir funil</a></div>
+    return `<section class="card fu-card${opts.topo ? ' fu-top' : ''}" aria-label="Oportunidades"><div class="card-h"><h2>Oportunidades</h2><span class="grow"></span>${l.length ? `<span class="count">${l.length}</span>` : ''}<a class="link" href="#funil" data-go="funil">Abrir funil</a></div>
       ${l.length ? `<div class="fu-mini">${Fu.ETAPAS.map(e => { const xs = l.filter(x => x.etapa === e.id), v = xs.reduce((s, x) => s + (x.valor || 0), 0);
         return `<a href="#funil" data-go="funil" data-q="etapa=${e.id}" class="fu-mc${xs.length ? '' : ' vazio'}"><span>${e.label}</span><b>${xs.length}</b><small>${v ? U.brlShort(v) : '—'}</small></a>`; }).join('')}</div>
-      <p class="fu-res">${tot ? `<b>${U.brlShort(tot)}</b> em aberto` : 'Sem valores estimados'}${liq ? ` · ≈ ${U.brlShort(liq)} ficam com você` : ''}</p>`
-      : `<div class="empty sm"><p>Nenhuma oportunidade aberta. Negócios das atividades, indicações em conversa e o Mapa 360 aparecem aqui.</p></div>`}</section>`;
+      <p class="fu-res">${tot ? `<b>${U.brlShort(tot)}</b> em aberto` : 'Sem valores estimados'}${liq ? ` · ≈ ${U.brlShort(liq)} ficam com você` : ''}${opts.rodape || ''}</p>`
+      : `<div class="empty sm"><p>Nenhuma oportunidade aberta. Negócios das atividades, indicações em conversa e o Mapa 360 aparecem aqui.</p>${opts.rodape ? `<p class="fu-res">${opts.rodape}</p>` : ''}</div>`}</section>`;
   };
 
   /* ---------- Tela ---------- */
