@@ -1137,6 +1137,14 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .rg-hist { flex-basis: 100%; } .rg-hist summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--accent); }
 .rg-hist ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
 .rg-hist time { display: inline-block; min-width: 72px; color: var(--muted); font-weight: 700; }
+/* XP · PL manual */
+.pc-xp { background: linear-gradient(150deg, #F7FAFF 0%, #E9F0FA 100%); }
+.xp-top { display: flex; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.xp-list { list-style: none; margin: 0; padding: 0; }
+.xp-list li { display: flex; align-items: center; gap: 12px; padding: 8px 4px; border-top: 1px solid var(--line); }
+.xp-list li > div { flex: 1; min-width: 0; display: grid; } .xp-list b { font-size: 14px; } .xp-list small { font-size: 12.5px; color: var(--muted); }
+.xp-list input { width: 160px; flex: none; font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); text-align: right; }
+@media (max-width: 520px) { .xp-list input { width: 120px; } }
 
 </style>
 
@@ -2326,7 +2334,16 @@ window.HORUS_CONFIG = {
   C.rede = c => { const out = [], fila = [c.id], vis = new Set([c.id]); while (fila.length) { const id = fila.shift(); C.filhosDe(id).forEach(f => { if (!vis.has(f.id)) { vis.add(f.id); out.push(f); fila.push(f.id); } }); } return out; };
   C.converteu = c => c.situacao === 'sim' || c.situacao === 'parcial' || (!c.situacao && C.ehCliente(c));
   /* Patrimônio com você (R$): MB + Eqseed ativos */
-  C.patrimonio = c => { const m = C.mbDoCliente(c); const eq = C.contratos({ clienteId: c.id, produto: 'eqseed' }).reduce((s, x) => s + (+x.valor || 0), 0); return (m ? +m.pl : 0) + eq; };
+  /* XP (24/11): por compliance não entra carteira; só o PL total digitado pelo usuário. clientes.dados.xp = { pl, em }, xpHist = [{ ref: 'AAAA-MM', pl, em }] */
+  C.plXp = c => c && c.xp && c.xp.pl != null && c.xp.pl !== '' ? +c.xp.pl : null;
+  C.salvarXp = (cid, pl, em, opts) => {
+    const c = C.cliente(cid); if (!c) return; const data = em || U.today();
+    if (pl == null || pl === '') { Store.update('clientes', cid, { xp: null }, opts); return; }
+    const hist = (c.xpHist || []).filter(h => h.ref !== data.slice(0, 7)).concat({ ref: data.slice(0, 7), pl: +pl, em: data }).sort((a, b) => b.ref.localeCompare(a.ref)).slice(0, 36);
+    Store.update('clientes', cid, { xp: { pl: +pl, em: data }, xpHist: hist }, opts);
+  };
+  /* Patrimônio com você (R$): MB + Eqseed ativos + PL da XP (manual) */
+  C.patrimonio = c => { const m = C.mbDoCliente(c); const eq = C.contratos({ clienteId: c.id, produto: 'eqseed' }).reduce((s, x) => s + (+x.valor || 0), 0); return (m ? +m.pl : 0) + eq + (C.plXp(c) || 0); };
   C.rankingIndicacoes = () => Store.all('clientes').map(c => {
     const dir = C.filhosDe(c.id); if (!dir.length) return null;
     const rede = C.rede(c), conv = rede.filter(C.converteu);
@@ -5471,6 +5488,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   V.render = el => {
     if (P.cliente) return ficha(el);
     if (P.indicacoes) return indicacoes(el);
+    if (P.xp) return xpBase(el);
     if (P.produto === 'mb') return mb(el);
     if (P.produto) return produto(el);
     return inicio(el);
@@ -5499,7 +5517,10 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       <div class="pcards">${(() => { const ind = Store.all('clientes').filter(c => c.indicadoPor || c.geracao > 1), rk = Cli.rankingIndicacoes();
         return `<button class="pcard pc-ind" id="clInd" style="--pc:#C98CFF"><span class="pc-top"><b>Indicações</b></span><small class="pc-sub">Árvore de quem indicou quem</small>
           <span class="pc-n"><b>${ind.length}</b> ${ind.length === 1 ? 'pessoa indicada' : 'pessoas indicadas'}</span>
-          <span class="pc-l">${ind.filter(Cli.converteu).length} rodaram${rk.length ? ' · maior rede: ' + U.esc(nomeCurto(rk[0].c)) + ' (' + rk[0].rede + ')' : ''}</span></button>`; })()}${Cli.PRODUTOS.filter(p => Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)).map(p => { const r = Cli.resumo(p.id);
+          <span class="pc-l">${ind.filter(Cli.converteu).length} rodaram${rk.length ? ' · maior rede: ' + U.esc(nomeCurto(rk[0].c)) + ' (' + rk[0].rede + ')' : ''}</span></button>`; })()}${(() => { const xs = Cli.clientes().filter(c => !c.saiu && Cli.plXp(c) != null), tot = xs.reduce((s, c) => s + Cli.plXp(c), 0), ult = xs.map(c => c.xp.em).sort().pop();
+        return `<button class="pcard pc-xp" id="clXpBase" style="--pc:#2B5A8C"><span class="pc-top"><b>XP</b></span><small class="pc-sub">PL total digitado por você</small>
+          <span class="pc-n"><b>${xs.length}</b> ${xs.length === 1 ? 'cliente' : 'clientes'}</span>${tot ? `<span class="pc-v">${U.brlShort(tot)}</span>` : ''}
+          <span class="pc-l">${ult ? 'Atualizado até ' + U.fmtDate(ult) + ' · ' : ''}Atualizar PL ›</span></button>`; })()}${Cli.PRODUTOS.filter(p => Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)).map(p => { const r = Cli.resumo(p.id);
         return `<button class="pcard" data-prod="${p.id}" style="--pc:${p.cor}">
           <span class="pc-top"><b>${U.esc(p.nome)}</b>${r.avisos ? `<span class="pc-av">${r.avisos} aviso${r.avisos > 1 ? 's' : ''}</span>` : ''}</span>
           ${p.sub ? `<small class="pc-sub">${U.esc(p.sub)}</small>` : ''}
@@ -5518,6 +5539,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
             : `<div class="empty sm"><b>${busca ? 'Nenhum cliente encontrado.' : 'Nenhum cliente ainda.'}</b><p>${busca ? '' : 'Cadastre um cliente ou importe o mês do MB.'}</p></div>`}</section>
       </div>`;
     el.querySelector('#clInd').onclick = () => ir({ indicacoes: true });
+    el.querySelector('#clXpBase').onclick = () => ir({ xp: true });
     if (App.Ren) App.Ren.ligar(el);
     el.querySelectorAll('[data-area]').forEach(b => b.onclick = () => areaModal(b.dataset.area));
     const inp = el.querySelector('#clBusca');
@@ -5870,6 +5892,39 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     });
   }
 
+  /* ---------- XP: PL total manual (um cliente) ---------- */
+  function xpModal(c) {
+    const h = (c.xpHist || []).slice(0, 6), pl = Cli.plXp(c);
+    UI.modal({
+      title: 'PL na XP · ' + Cli.apelido(c), size: 'sm',
+      body: `<form class="form" id="fXp"><p class="muted small" style="margin:0">Só o total, sem discriminar a carteira (compliance).</p>
+        <div class="row2"><label class="f"><span>PL total na XP</span><input name="pl" data-num inputmode="decimal" value="${pl != null ? U.num(pl) : ''}" placeholder="R$" autofocus></label>
+        <label class="f"><span>Posição em</span><input type="date" name="em" value="${U.today()}"></label></div>
+        ${h.length ? `<details class="rg-hist" open><summary>Histórico · ${(c.xpHist || []).length}</summary><ul>${h.map(x => `<li><time>${App.Fat ? App.Fat.nomeMes(x.ref) : x.ref}</time>${U.brl(x.pl)}</li>`).join('')}</ul></details>` : ''}</form>`,
+      footer: `${pl != null ? '<button class="btn ghost danger-text" data-xp-del>Limpar</button><span class="grow"></span>' : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fXp" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        el.querySelector('#fXp').onsubmit = e => { e.preventDefault(); const d = UI.formData(e.target); if (d.pl == null) return; Cli.salvarXp(c.id, d.pl, d.em); api.close(); UI.toast('PL da XP atualizado'); };
+        const del = el.querySelector('[data-xp-del]'); if (del) del.onclick = () => { Cli.salvarXp(c.id, null); api.close(); UI.toast('PL da XP removido'); };
+      }
+    });
+  }
+  /* ---------- XP: atualizar o PL de todos de uma vez (rotina mensal) ---------- */
+  function xpBase(el) {
+    const clis = Cli.clientes().filter(c => !c.saiu), tot = clis.reduce((s, c) => s + (Cli.plXp(c) || 0), 0), com = clis.filter(c => Cli.plXp(c) != null);
+    el.innerHTML = `${voltar('Clientes', {})}
+      <div class="page-h"><div><h1>PL na XP</h1><p class="muted">Só o total de cada cliente, digitado por você (a carteira da XP fica fora do painel por compliance). Preencha os que mudaram e salve.</p></div></div>
+      <section class="kpis k4"><div class="kpi"><span>PL total na XP</span><b>${U.brlShort(tot)}</b></div><div class="kpi"><span>Clientes com PL</span><b>${com.length}</b><em>de ${clis.length}</em></div></section>
+      <section class="card"><form id="fXpB"><div class="xp-top"><label class="f"><span>Posição em</span><input type="date" name="em" value="${U.today()}"></label><span class="grow"></span><button class="btn primary" type="submit">Salvar alterados</button></div>
+        <ul class="xp-list">${clis.map(c => { const pl = Cli.plXp(c); return `<li><div><b>${U.esc(c.nome)}</b><small>${pl != null ? 'Atual ' + U.brl(pl) + ' · ' + U.fmtDate(c.xp.em) : 'sem PL cadastrado'}</small></div><input data-xp="${c.id}" data-num inputmode="decimal" value="${pl != null ? U.num(pl) : ''}" data-orig="${pl != null ? U.num(pl) : ''}" placeholder="R$" aria-label="PL de ${U.esc(c.nome)}"></li>`; }).join('')}</ul></form></section>`;
+    el.querySelector('#fXpB').onsubmit = e => {
+      e.preventDefault(); const em = e.target.em.value || U.today(); let n = 0;
+      el.querySelectorAll('[data-xp]').forEach(i => { if (i.value.trim() === i.dataset.orig) return; const v = U.parseNum(i.value); Cli.salvarXp(i.dataset.xp, v, em, { silent: true }); n++; });
+      if (!n) return UI.toast('Nada mudou.', 'aviso');
+      Store.commit(); UI.toast(U.plural(n, 'cliente atualizado', 'clientes atualizados'));
+    };
+    ligarComum(el);
+  }
+
   function ficha(el) {
     const c = Cli.cliente(P.cliente);
     if (!c) { el.innerHTML = `${voltar('Clientes', {})}<div class="empty card"><b>Cliente não encontrado.</b></div>`; return ligarComum(el); }
@@ -5881,7 +5936,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const abertas = ats.filter(M.aberta);
     const receita = Cli.receitaDo(c);
     const eq = (porProd.eqseed || []).filter(x => (x.status || 'ativo') === 'ativo').reduce((s, x) => s + (+x.valor || 0), 0);
-    const brl = (m ? +m.pl : 0) + eq;
+    const plXp = Cli.plXp(c), brl = (m ? +m.pl : 0) + eq + (plXp || 0);
     const itaUsd = (porProd.ita || []).reduce((s, x) => s + (+x.valorConta || 0), 0);
     const falta = [];
     const de = P.deInd ? { indicacoes: true } : P.de ? { produto: P.de } : {};
@@ -5892,7 +5947,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
           <div class="cl-hero-tags">${pids.map(pid => `<span style="--pc:${Cli.produto(pid).cor}">${U.esc(Cli.produto(pid).nome)}</span>`).join('')}</div></div></div>
         <div class="cl-hero-act"><button class="btn ghost-d" id="clEd">${UI.icon('editar')}Editar</button><button class="btn primary" data-novo-ct data-cid="${c.id}">${UI.icon('mais')}Produto</button></div>
         <div class="cl-hero-kpis">
-          <div><small>Investido com você</small><b>${brl ? U.brl(brl) : '—'}</b>${itaUsd ? `<em>+ ${usd(itaUsd)} no exterior</em>` : '<em>MB + Eqseed</em>'}</div>
+          <button class="kp-btn" id="clXp" title="Atualizar o PL da XP"><small>Investido com você</small><b>${brl ? U.brl(brl) : '—'}</b><em>${plXp != null ? 'XP ' + U.brlShort(plXp) + ' em ' + U.fmtDate(c.xp.em) : 'MB + Eqseed · + PL da XP ›'}${itaUsd ? ' · + ' + usd(itaUsd) + ' no exterior' : ''}</em></button>
           <div><small>Produtos</small><b>${pids.length}</b><em>${U.plural(cts.filter(x => (x.status || 'ativo') === 'ativo').length + (m ? 1 : 0), 'contrato ativo', 'contratos ativos')}</em></div>
           <button class="kp-btn" id="clAts"><small>Atividades em aberto</small><b>${abertas.length}</b><em>${ats.length ? 'Ver ' + U.plural(ats.length, 'atividade', 'atividades') : 'Criar atividade'} ›</em></button>
           <div><small>Receita gerada</small><b>${receita ? U.brl(receita) : '—'}</b><em>nas suas produções</em></div>
@@ -5911,6 +5966,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.querySelector('#clEd').onclick = () => App.Forms.cliente(c.id);
     if (App.Ren) App.Ren.ligar(el);
     el.querySelector('#clAts').onclick = () => atividadesModal(c, ats);
+    el.querySelector('#clXp').onclick = () => xpModal(c);
     if (App.Regua) App.Regua.ligar(el);
     el.querySelectorAll('[data-m360]').forEach(b => b.onclick = () => editarArea(c, b.dataset.m360));
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
