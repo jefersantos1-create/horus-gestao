@@ -1053,6 +1053,21 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .ren-n small { color: var(--muted); }
 .ren-ficha { margin-bottom: 16px; }
 @media (max-width: 600px) { .ren-hist li { grid-template-columns: 1fr; gap: 0; } .ren-side em { font-size: 11.5px; } }
+/* Parte 2.1 · renovação → atividade */
+.ren-atv { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--accent); margin-top: 2px; }
+.ren-atv .ic { width: 13px; height: 13px; }
+.ren-res b.ren-jogo { color: var(--ink); }
+.ren-atvbox { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 14px; }
+.ren-atvbox.vazio { border-style: dashed; }
+.ren-atvbox > div { display: grid; gap: 2px; min-width: 0; flex: 1 1 220px; }
+.ren-atvbox small { color: var(--muted); font-size: 12.5px; }
+.ren-atvbox-l { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.ren-atvbox-b { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ren-atvbox .link { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 700; color: var(--accent); cursor: pointer; }
+.ren-atvs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ren-atv-op { width: 100%; text-align: left; display: grid; gap: 4px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
+.ren-atv-op:hover, .ren-atv-op:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.ren-atv-op small { color: var(--muted); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 
 </style>
 
@@ -1381,12 +1396,22 @@ window.HORUS_CONFIG = {
     if (App.Fat) { App.Fat.produtos().forEach(p => add(p.nome)); App.Fat.linhas().forEach(l => add(l.nome)); }
     return out;
   };
+  /* Tipos de seguro/plano -> produto em Receitas (Parte 2.1, confirmado em 24/11):
+     RC, Residencial, Seguro auto e Vida em grupo entram em RE; Plano de saúde em Saúde; Seguro de vida individual em "Seguro de vida (novo)";
+     ITA em Internacional (Dolarize.me); renda fixa do MB em Mercado Bitcoin. "Vida fixo" nunca é usado aqui. */
+  M.PRODUTO_POR_TIPO = {
+    'rc': 'p_re', 'rc pessoal': 'p_re', 'rc profissional': 'p_re', 'seguro rc': 'p_re', 'residencial': 'p_re', 'seguro residencial': 'p_re',
+    'seguro auto': 'p_re', 'auto': 'p_re', 'vida em grupo': 'p_re', 'seguro de vida em grupo': 'p_re',
+    'plano de saude': 'p_saude', 'saude': 'p_saude', 'seguro de vida': 'p_vida', 'vida': 'p_vida',
+    'ita': 'p_dol_inter', 'investors trust': 'p_dol_inter', 'renda fixa mb': 'p_mb'
+  };
   /* Produto do faturamento que corresponde ao tipo do negócio */
   M.produtoDoTipo = tipo => {
     const Fat = App.Fat; if (!Fat || !tipo) return null;
     const ps = Store.all('produtos').filter(p => p.ativo !== false), k = M.tipoChave(tipo);
     const porNome = ps.find(p => M.norm(p.nome) === k); if (porNome) return porNome;
     const fixo = Fat.PRODUTO_DO_NEGOCIO[tipo]; if (fixo && Fat.produto(fixo)) return Fat.produto(fixo);
+    const porTipo = M.PRODUTO_POR_TIPO[k]; if (porTipo && Fat.produto(porTipo) && Fat.produto(porTipo).ativo !== false) return Fat.produto(porTipo);
     const lin = Store.all('linhas').find(l => M.norm(l.nome) === k || M.norm(l.nome).split(' ')[0] === k);
     if (lin) { const p = ps.find(x => x.linhaId === lin.id); if (p) return p; }
     const parcial = ps.find(p => k.length > 3 && (M.norm(p.nome).includes(k) || k.includes(M.norm(p.nome))));
@@ -1682,12 +1707,12 @@ window.HORUS_CONFIG = {
 
     const C = 'Campanha de indicações 2027';
     const ats = [
-      { titulo: 'Reunião de indicações com Vitor', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(-6), prioridade: 'alta', status: 'concluida', metaId: 'm_indic', resultadoEsperado: 3, resultado: 3, resultadoTexto: '3 indicações: dois sócios e o irmão.' },
-      { titulo: 'Reunião de indicações com Lidy', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(-2), prioridade: 'alta', status: 'concluida', metaId: 'm_indic', resultadoEsperado: 3, resultado: 2 },
-      { titulo: 'Reunião de indicações com Gabriel', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: t, prioridade: 'alta', status: 'pendente', metaId: 'm_indic', resultadoEsperado: 3, descricao: 'Levar a lista dos clientes que ele já comentou.' },
-      { titulo: 'Reunião de indicações com Maísa', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(3), prioridade: 'alta', status: 'pendente', metaId: 'm_indic', resultadoEsperado: 3 },
-      { titulo: 'Ligar para as indicações do Vitor', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(1), prioridade: 'media', status: 'andamento', metaId: 'm_contatos' },
-      { titulo: 'Revisar carteira do cliente Carlos', responsabilidadeId: R('r_assessoria'), categoria: 'Carteira', prazo: d(-1), prioridade: 'urgente', status: 'pendente' },
+      { titulo: 'Reunião de indicações com cliente A', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(-6), prioridade: 'alta', status: 'concluida', metaId: 'm_indic', resultadoEsperado: 3, resultado: 3, resultadoTexto: '3 indicações: dois sócios e o irmão.' },
+      { titulo: 'Reunião de indicações com cliente B', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(-2), prioridade: 'alta', status: 'concluida', metaId: 'm_indic', resultadoEsperado: 3, resultado: 2 },
+      { titulo: 'Reunião de indicações com cliente C', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: t, prioridade: 'alta', status: 'pendente', metaId: 'm_indic', resultadoEsperado: 3, descricao: 'Levar a lista dos clientes que ele já comentou.' },
+      { titulo: 'Reunião de indicações com cliente D', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(3), prioridade: 'alta', status: 'pendente', metaId: 'm_indic', resultadoEsperado: 3 },
+      { titulo: 'Ligar para as indicações do cliente A', responsabilidadeId: R('r_assessoria'), categoria: C, prazo: d(1), prioridade: 'media', status: 'andamento', metaId: 'm_contatos' },
+      { titulo: 'Revisar carteira do cliente exemplo', responsabilidadeId: R('r_assessoria'), categoria: 'Carteira', prazo: d(-1), prioridade: 'urgente', status: 'pendente' },
       { titulo: 'Enviar relatório mensal aos clientes', responsabilidadeId: R('r_assessoria'), categoria: 'Relacionamento', prazo: d(5), prioridade: 'media', status: 'pendente' },
       { titulo: 'Reunião semanal com o time de Vida', responsabilidadeId: R('r_vida'), categoria: 'Gestão do time', prazo: t, prioridade: 'media', status: 'andamento' },
       { titulo: 'Treinamento de Whole Life para novos assessores', responsabilidadeId: R('r_vida'), categoria: 'Treinamento', prazo: d(4), prioridade: 'alta', status: 'pendente' },
@@ -1696,10 +1721,10 @@ window.HORUS_CONFIG = {
       { titulo: 'Feedback individual com a equipe', responsabilidadeId: R('r_xceed'), categoria: 'Gestão do time', prazo: d(-4), prioridade: 'media', status: 'concluida' },
       { titulo: 'Organizar finanças da casa', responsabilidadeId: R('r_pessoal'), categoria: 'Casa', prazo: d(-1), prioridade: 'media', status: 'pendente' },
       { titulo: 'Renovar CNH', responsabilidadeId: R('r_pessoal'), categoria: 'Documentos', prazo: d(12), prioridade: 'baixa', status: 'pendente' },
-      { titulo: 'Proposta de consórcio imobiliário', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(2), prioridade: 'alta', status: 'andamento', tipoNegocio: 'consorcio', cliente: 'Ricardo Alves', valorNegocio: 500000, descricao: 'Carta de crédito para o apartamento novo.' },
-      { titulo: 'Whole Life para a família Souza', responsabilidadeId: R('r_vida'), categoria: 'Negócios', prazo: d(5), prioridade: 'alta', status: 'pendente', tipoNegocio: 'seguro', cliente: 'Fernanda Souza', valorNegocio: 18000, observacoes: 'Valor = prêmio anual. Capital de R$ 1,5 mi.' },
-      { titulo: 'Câmbio para viagem de estudos', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(1), prioridade: 'media', status: 'pendente', tipoNegocio: 'cambio', cliente: 'Paulo Lima', valorNegocio: 80000 },
-      { titulo: 'Trazer carteira de investimentos de outro banco', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(8), prioridade: 'media', status: 'pendente', tipoNegocio: 'investimentos', cliente: 'Antônio Martins', valorNegocio: 2000000 }
+      { titulo: 'Proposta de consórcio imobiliário', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(2), prioridade: 'alta', status: 'andamento', tipoNegocio: 'consorcio', cliente: 'Cliente Exemplo 1', valorNegocio: 500000, descricao: 'Carta de crédito para o apartamento novo.' },
+      { titulo: 'Whole Life para a família Exemplo', responsabilidadeId: R('r_vida'), categoria: 'Negócios', prazo: d(5), prioridade: 'alta', status: 'pendente', tipoNegocio: 'seguro', cliente: 'Cliente Exemplo 2', valorNegocio: 18000, observacoes: 'Valor = prêmio anual. Capital de R$ 1,5 mi.' },
+      { titulo: 'Câmbio para viagem de estudos', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(1), prioridade: 'media', status: 'pendente', tipoNegocio: 'cambio', cliente: 'Cliente Exemplo 3', valorNegocio: 80000 },
+      { titulo: 'Trazer carteira de investimentos de outro banco', responsabilidadeId: R('r_assessoria'), categoria: 'Negócios', prazo: d(8), prioridade: 'media', status: 'pendente', tipoNegocio: 'investimentos', cliente: 'Cliente Exemplo 4', valorNegocio: 2000000 }
     ];
     ats.forEach((a, i) => {
       const criado = new Date(Date.now() - (10 - (i % 5)) * 864e5).toISOString();
@@ -1712,11 +1737,11 @@ window.HORUS_CONFIG = {
     App.Fat.garantir();
     const mes = (n, dia) => { const x = new Date(); x.setMonth(x.getMonth() - n, Math.min(dia, 28)); return U.iso(x); };
     [
-      { data: mes(0, 4), cliente: 'Carla Menezes', produtoId: 'p_vida', valor: 14400, comissaoPct: 50, bruto: 7200, liquido: 432, regra: 'mes_seguinte' },
-      { data: mes(0, 6), cliente: 'Ana Ribeiro', produtoId: 'p_rf', valor: 41000, comissaoPct: 0.64, bruto: 262.4, liquido: 83.97, regra: 'mes_seguinte' },
-      { data: mes(0, 9), cliente: 'Leandro Prado', produtoId: 'p_consorcio', valor: 200000, comissaoPct: 4, bruto: 8000, liquidoParcela: 213.33, liquidoUltima: 213.37, regra: 'parcelado', parcelas: 12, grupo: 'novo' },
-      { data: mes(1, 12), cliente: 'Grupo Vieira', produtoId: 'p_global', valor: 120000, comissaoPct: 1, bruto: 1200, liquido: 384, regra: 'mesmo_mes' },
-      { data: mes(1, 18), cliente: 'Marcos Prado', produtoId: 'p_eqseed', valor: 30000, comissaoPct: 6, bruto: 1800, liquido: 576, regra: 'mes_seguinte' }
+      { data: mes(0, 4), cliente: 'Cliente Exemplo 5', produtoId: 'p_vida', valor: 14400, comissaoPct: 50, bruto: 7200, liquido: 432, regra: 'mes_seguinte' },
+      { data: mes(0, 6), cliente: 'Cliente Exemplo 6', produtoId: 'p_rf', valor: 41000, comissaoPct: 0.64, bruto: 262.4, liquido: 83.97, regra: 'mes_seguinte' },
+      { data: mes(0, 9), cliente: 'Cliente Exemplo 7', produtoId: 'p_consorcio', valor: 200000, comissaoPct: 4, bruto: 8000, liquidoParcela: 213.33, liquidoUltima: 213.37, regra: 'parcelado', parcelas: 12, grupo: 'novo' },
+      { data: mes(1, 12), cliente: 'Empresa Exemplo', produtoId: 'p_global', valor: 120000, comissaoPct: 1, bruto: 1200, liquido: 384, regra: 'mesmo_mes' },
+      { data: mes(1, 18), cliente: 'Cliente Exemplo 8', produtoId: 'p_eqseed', valor: 30000, comissaoPct: 6, bruto: 1800, liquido: 576, regra: 'mes_seguinte' }
     ].forEach(p => { const pr = App.Fat.produto(p.produtoId) || {}; App.Fat.salvarProducao({ ...p, linhaId: pr.linhaId, demo: true }, null, { silent: true }); });
     Store.commit();
     Store.config('inicializado', true);
@@ -2892,6 +2917,7 @@ window.HORUS_CONFIG = {
     const m = UI.modal({
       title: a ? 'Editar atividade' : 'Nova atividade', size: 'md',
       body: `<form class="form" id="fAt" novalidate>
+        ${v.renovacaoId && App.Ren && Store.get('renovacoes', v.renovacaoId) ? `<div class="orig-banner ren-banner">${UI.icon('adiar')}<span>Renovação: <b>${U.esc(App.Ren.nome(Store.get('renovacoes', v.renovacaoId)))}</b> · ${U.esc(Store.get('renovacoes', v.renovacaoId).rotulo)}</span></div>` : ''}
         ${M.origem(v) ? `<div class="orig-banner">${UI.icon('seta')}<span>Próximo passo de <b>${U.esc(M.origem(v).titulo)}</b></span></div>` : ''}
         <label class="f full"><span>Título</span><input name="titulo" required maxlength="140" value="${U.esc(v.titulo || '')}" placeholder="O que precisa ser feito?" autofocus></label>
         <div class="f full"><span>Responsabilidade <em>pode marcar mais de uma · a primeira é a principal</em></span><div class="rpicks" id="rpicks"></div><input type="hidden" name="responsabilidadeId" value="${U.esc(v.responsabilidadeId || '')}"></div>
@@ -2972,8 +2998,9 @@ window.HORUS_CONFIG = {
         const chk = el.querySelector('#chkNeg'), box = el.querySelector('#negs');
         const linhaNeg = n => {
           const r = document.createElement('div'); r.className = 'neg-r'; r.dataset.nid = n.id || M.novoNegId(); r.dataset.res = n.resultado || '';
+          if (n.mensal != null) r.dataset.mensal = n.mensal ? '1' : '0'; if (n.renId) r.dataset.ren = n.renId;
           r.innerHTML = `<label class="f"><span>Tipo de negócio</span><input class="nt" list="dlTipo" maxlength="60" value="${U.esc(n.tipo ? M.tipoNeg(n.tipo).label : '')}" placeholder="Digite ou escolha" autocomplete="off"></label>
-            <label class="f"><span>Valor estimado</span><input class="nv" data-num inputmode="decimal" value="${numTxt(n.valor)}" placeholder="R$"></label>
+            <label class="f"><span>${n.mensal === true ? 'Prêmio mensal' : n.mensal === false ? 'Valor (anual)' : 'Valor estimado'}</span><input class="nv" data-num inputmode="decimal" value="${numTxt(n.valor)}" placeholder="R$"></label>
             <label class="f"><span>% que fica</span><input class="np" data-num inputmode="decimal" value="${numTxt(n.pct)}" placeholder="Ex.: 30"></label>
             <div class="f"><span>Fica com você</span><div class="liq-est">—</div></div>
             <button type="button" class="icon-btn nx" title="Tirar este negócio" aria-label="Tirar este negócio">${UI.icon('x')}</button>`;
@@ -3017,7 +3044,7 @@ window.HORUS_CONFIG = {
               const tipo = M.tipoSalvar(r.querySelector('.nt').value), valor = U.parseNum(r.querySelector('.nv').value), pct = U.parseNum(r.querySelector('.np').value);
               if (!tipo) { if (valor != null || pct != null) return erro('Escreva o tipo de cada negócio (ex.: Zentis, Seguro de vida).', r.querySelector('.nt')); continue; }
               if (pct != null && (pct < 0 || pct > 100)) return erro('O % que fica com você precisa estar entre 0 e 100.', r.querySelector('.np'));
-              negs.push({ id: r.dataset.nid, tipo, valor, pct, resultado: r.dataset.res || null });
+              negs.push({ id: r.dataset.nid, tipo, valor, pct, resultado: r.dataset.res || null, ...(r.dataset.mensal ? { mensal: r.dataset.mensal === '1' } : {}), ...(r.dataset.ren ? { renId: r.dataset.ren } : {}) });
             }
             if (!negs.length) return erro('Escreva o tipo de negócio (ex.: Zentis, Seguro de vida, Consórcio).', box.querySelector('.nt'));
             Object.assign(d, M.espelhoNeg(negs));
@@ -3030,8 +3057,9 @@ window.HORUS_CONFIG = {
           if (ids.length) Object.assign(d, M.espelho(ids, d.resultados, d.esperados));
           else d.metaId = null;
           if (!a && v.origemId) d.origemId = v.origemId;
+          if (!a && v.renovacaoId) d.renovacaoId = v.renovacaoId;
           if (a) { M.editarAtividade(a.id, d); UI.toast('Atividade atualizada'); }
-          else { const nova = M.criarAtividade(d); if (v._emailId && Store.get('emails', v._emailId)) Store.update('emails', v._emailId, { atividadeId: nova.id }); UI.toast('Atividade criada'); }
+          else { const nova = M.criarAtividade(d); if (v._emailId && Store.get('emails', v._emailId)) Store.update('emails', v._emailId, { atividadeId: nova.id }); if (d.renovacaoId && App.Ren) App.Ren.vincular(d.renovacaoId, nova.id, { criada: true }); UI.toast(d.renovacaoId ? 'Atividade criada e ligada à renovação' : 'Atividade criada'); }
           api.close();
         };
         form.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !['TEXTAREA', 'SUMMARY', 'SELECT'].includes(e.target.tagName) && !(e.target.list && e.target.value === '')) { e.preventDefault(); form.requestSubmit(); } });
@@ -3117,6 +3145,7 @@ window.HORUS_CONFIG = {
           ${lin(metas.length > 1 ? 'Metas' : 'Meta', metas.map(m => { const r = M.resMeta(a, m.id), e = M.espMeta(a, m.id); return `<div class="dmeta"><i style="background:${M.respCor(m.responsabilidadeId)}"></i>${U.esc(m.nome)} <b>${r != null ? U.esc(M.fmtMeta(r, m, true)) : '—'}</b>${e != null ? ' de ' + U.esc(M.fmtMeta(e, m)) : (M.ehDinheiro(m) ? '' : ' ' + U.esc(m.unidade || ''))}</div>`; }).join(''))}
           ${lin('Fica com você', M.negociosDa(a).length > 1 && M.liquidoEstimado(a) != null ? `<b>${U.brlC(M.liquidoEstimado(a))}</b> <span class="muted">somando os negócios</span>` : '')}
           ${lin('Resultado', !metas.length && (a.resultado != null || a.resultadoEsperado != null) ? `<b>${a.resultado != null ? U.num(a.resultado) : '—'}</b>${a.resultadoEsperado != null ? ' de ' + U.num(a.resultadoEsperado) + ' esperado(s)' : ''}${a.resultadoTexto ? '<br><span class="muted">' + U.esc(a.resultadoTexto) + '</span>' : ''}` : (a.resultadoTexto ? U.esc(a.resultadoTexto) : ''))}
+          ${lin('Renovação', a.renovacaoId && App.Ren && Store.get('renovacoes', a.renovacaoId) ? `<a href="#" class="dlink" data-ren-open="${U.esc(a.renovacaoId)}">${UI.icon('adiar')}${U.esc(Store.get('renovacoes', a.renovacaoId).rotulo)} · ${U.esc(App.Ren.rotStatus(Store.get('renovacoes', a.renovacaoId)))}</a>` : '')}
           ${lin('Veio de', M.origem(a) ? `<a href="#" class="dlink" data-open="${M.origem(a).id}">${UI.icon('seta')}${U.esc(M.origem(a).titulo)}</a>` : '')}
           ${lin('Gerou', M.filhos(a.id).map(x => `<a href="#" class="dlink" data-open="${x.id}">${U.esc(x.titulo)} ${UI.statusPill(x.status)}${x.prazo && x.status !== 'concluida' ? ' <small class="muted">' + U.fmtDate(x.prazo) + '</small>' : ''}</a>`).join(''))}
           ${lin('Observações', U.esc(a.observacoes))}
@@ -3133,6 +3162,7 @@ window.HORUS_CONFIG = {
         ${a.status !== 'concluida' ? `<button class="btn primary" data-a="ok">${UI.icon('check')}Concluir</button>` : `<button class="btn ghost" data-a="reabrir">Reabrir</button>`}`,
       onMount(el, api) {
         el.querySelectorAll('[data-open]').forEach(l => l.onclick = e => { e.preventDefault(); api.close(); F.detalhes(l.dataset.open); });
+        el.querySelectorAll('[data-ren-open]').forEach(l => l.onclick = e => { e.preventDefault(); api.close(); App.Ren.abrir(l.dataset.renOpen, { direto: true }); });
         el.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
           const act = b.dataset.a;
           if (act === 'del') { if (await F.excluirAtividade(id)) api.close(); return; }
@@ -3233,7 +3263,7 @@ window.HORUS_CONFIG = {
       title: 'Atualizar resultado', size: 'sm',
       body: `<form class="form" id="fUp"><p class="muted" style="margin:0">${U.esc(mt.nome)} · meta: <b>${U.num(mt.alvo)} ${U.esc(mt.unidade || '')}</b></p>
         <div class="stepper"><button type="button" class="btn ghost" data-s="-1">−1</button><input name="valor" data-num inputmode="decimal" value="${mt.atual || 0}" autofocus><button type="button" class="btn ghost" data-s="1">+1</button><button type="button" class="btn ghost" data-s="5">+5</button></div>
-        <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: 2 indicações na reunião com a Lidy"></label>
+        <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: 2 indicações na reunião de indicações"></label>
         ${regs.length ? `<h3 class="sub-h">Evolução</h3>${App.Charts.spark(regs.map(r => r.valor), mt.alvo)}<ol class="timeline compact">${regs.slice().reverse().slice(0, 6).map(r => `<li><b>${U.num(r.valor)} ${U.esc(mt.unidade || '')}</b>${r.nota ? ' · ' + U.esc(r.nota) : ''}<small>${U.fmtDateTime(r.em)}</small></li>`).join('')}</ol>` : ''}</form>`,
       footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fUp" type="submit">Registrar</button>`,
       onMount(el, api) {
@@ -3256,11 +3286,12 @@ window.HORUS_CONFIG = {
         <div class="cneg-h"><b>${UI.icon('negocio')}${U.esc(M.tipoNeg(n.tipo).label)}</b>${UI.segmented('res' + i, [{ id: 'ganho', label: 'Fechou' }, { id: 'perdido', label: 'Não fechou' }], n.resultado || 'ganho')}</div>
         <div class="cneg-b">
           <div class="row2">
-            <label class="f"><span>Valor do negócio</span><input data-v="${i}" data-num inputmode="decimal" value="${n.valor != null ? U.num(n.valor) : ''}" placeholder="R$"${i === 0 ? ' autofocus' : ''}></label>
+            <label class="f"><span>${n.mensal ? 'Prêmio mensal' : 'Valor do negócio'}</span><input data-v="${i}" data-num inputmode="decimal" value="${n.valor != null ? U.num(n.valor) : ''}" placeholder="R$"${i === 0 ? ' autofocus' : ''}></label>
             <label class="f"><span>% que fica com você</span><input data-p="${i}" data-num inputmode="decimal" value="${pct0 != null ? U.num(pct0) : ''}" placeholder="Ex.: 30"></label>
           </div>
           <div class="liq-box" data-l="${i}"></div>
           ${prod && prod.id !== 'p_outros' ? `<label class="chk" data-padbox="${i}" hidden><input type="checkbox" data-pad="${i}"><span></span></label>` : ''}
+          ${n.mensal != null ? `<label class="chk"><input type="checkbox" data-mens="${i}"${n.mensal ? ' checked' : ''}><span>Prêmio mensal: a comissão entra todo mês (12 recebimentos)</span></label>` : ''}
           <label class="chk"><input type="checkbox" data-lanc="${i}" checked><span>Lançar no faturamento${prod ? ' como <b>' + U.esc(prod.nome) + '</b>' : ''}</span></label>
         </div></div>`;
     };
@@ -3279,16 +3310,17 @@ window.HORUS_CONFIG = {
           const { prod, pad } = info[i];
           const val = U.parseNum(el.querySelector(`[data-v="${i}"]`).value), pct = U.parseNum(el.querySelector(`[data-p="${i}"]`).value);
           const ganho = el.querySelector(`[name="res${i}"]:checked`).value === 'ganho';
+          const mc = el.querySelector(`[data-mens="${i}"]`), mensal = !!(mc && mc.checked);
           const com = prod && prod.comissaoPct != null ? +prod.comissaoPct : null;
           const base = val != null ? (com != null ? val * com / 100 : val) : null;
           el.querySelector(`.cneg[data-i="${i}"] .cneg-b`).hidden = !ganho;
           el.querySelector(`.cneg[data-i="${i}"]`).classList.toggle('perdido', !ganho);
           el.querySelector(`[data-l="${i}"]`).innerHTML = base != null && pct != null
-            ? `<span>Fica com você</span><b>${U.brlC(base * pct / 100)}</b><small>${com != null ? `${U.brl(val)} × ${U.num(com)}% de comissão = ${U.brlC(base)} bruto, × ${U.num(pct)}%` : `${U.brlC(base)} × ${U.num(pct)}%`}</small>`
+            ? `<span>Fica com você${mensal ? ' por mês' : ''}</span><b>${U.brlC(base * pct / 100)}</b><small>${com != null ? `${U.brl(val)} × ${U.num(com)}% de comissão = ${U.brlC(base)} bruto, × ${U.num(pct)}%` : `${U.brlC(base)} × ${U.num(pct)}%`}${mensal ? ` · 12 meses ≈ ${U.brlC(base * pct / 100 * 12)}` : ''}</small>`
             : `<span>Fica com você</span><small>Informe o valor e o % para ver quanto fica com você.</small>`;
           const pb = el.querySelector(`[data-padbox="${i}"]`);
           if (pb) { pb.hidden = !(pct != null && pct !== pad); pb.querySelector('span').textContent = `Usar ${U.num(pct ?? 0)}% como padrão para "${prod.nome}"`; }
-          return { val, pct, base, ganho };
+          return { val, pct, base, ganho, mensal };
         };
         const tudo = () => info.forEach((_, i) => calc(i));
         f.addEventListener('input', tudo); f.addEventListener('change', tudo); tudo();
@@ -3302,27 +3334,33 @@ window.HORUS_CONFIG = {
           const fila = [], partes = [];
           const novos = negs.map((n, i) => {
             const v = vals[i], { prod } = info[i];
-            const nn = { ...n, resultado: v.ganho ? 'ganho' : 'perdido', valor: v.ganho && v.val != null ? v.val : n.valor ?? null, pct: v.ganho && v.pct != null ? v.pct : n.pct ?? null };
+            const nn = { ...n, resultado: v.ganho ? 'ganho' : 'perdido', valor: v.ganho && v.val != null ? v.val : n.valor ?? null, pct: v.ganho && v.pct != null ? v.pct : n.pct ?? null, ...(n.mensal != null ? { mensal: v.mensal } : {}) };
             const lab = M.tipoNeg(n.tipo).label;
             if (v.ganho) {
               partes.push(lab + ': fechado' + (v.base != null && v.pct != null ? ' (fica ' + U.brlC(v.base * v.pct / 100) + ')' : ''));
               const pd = el.querySelector(`[data-pad="${i}"]`);
               if (prod && pd && pd.checked && v.pct != null) Store.update('produtos', prod.id, { pctComigo: v.pct }, { silent: true });
-              if (el.querySelector(`[data-lanc="${i}"]`).checked) fila.push({ cliente: a.cliente || null, valor: v.val, bruto: prod && prod.comissaoPct != null ? undefined : v.val, pctComigo: v.pct, produtoId: prod ? prod.id : 'p_outros', linhaId: prod ? prod.linhaId : undefined, atividadeId: a.id, observacoes: a.titulo + (varios ? ' · ' + lab : '') });
+              /* Prêmio mensal = comissão mensal: 12 recebimentos com o valor do mês (grupo em andamento); anual = 1 recebimento */
+              const x12 = v.mensal && v.val != null ? v.val * 12 : v.val;
+              if (el.querySelector(`[data-lanc="${i}"]`).checked) fila.push({ cliente: a.cliente || null, valor: x12, bruto: prod && prod.comissaoPct != null ? undefined : x12, pctComigo: v.pct, produtoId: prod ? prod.id : 'p_outros', linhaId: prod ? prod.linhaId : undefined, atividadeId: a.id, observacoes: a.titulo + (varios ? ' · ' + lab : '') + (v.mensal ? ' · prêmio mensal, 12 recebimentos' : ''), ...(v.mensal ? { regra: 'parcelado', parcelas: 12, grupo: 'andamento' } : {}) });
             } else partes.push(lab + ': não fechou');
             return nn;
           });
           Store.update('atividades', id, M.espelhoNeg(novos), { silent: true });
+          const ren = a.renovacaoId && App.Ren ? App.Ren : null; if (ren) ren.segurar(id);
           M.concluir(id, { ...r, nota: (varios ? partes.join(' · ') : (novos[0].resultado === 'ganho' ? 'Negócio fechado' + (vals[0].base != null && vals[0].pct != null ? ' · fica com você ' + U.brlC(vals[0].base * vals[0].pct / 100) : '') : 'Negócio não fechou')) + (nota ? ' · ' + nota : '') });
           const criados = M.criarProximos(id, prox);
           api.close();
           const fechou = novos.some(n => n.resultado === 'ganho');
           const msg = varios ? `${novos.filter(n => n.resultado === 'ganho').length} de ${novos.length} negócios fechados` : (fechou ? 'Negócio fechado' : 'Negócio encerrado');
+          /* Renovação ligada: depois da receita, dá a baixa e pergunta o novo vencimento/prêmio */
+          const fim = () => { if (ren) ren.aoConcluir(id, () => avisarProximos(criados, msg)); else avisarProximos(criados, msg); };
           if (fila.length) {
-            const abrir = k => { if (k >= fila.length) { avisarProximos(criados, msg); return; } F.producao(null, fila[k], { etapa: fila.length > 1 ? (k + 1) + ' de ' + fila.length : '', aoFechar: () => setTimeout(() => abrir(k + 1), 80) }); };
+            const abrir = k => { if (k >= fila.length) { fim(); return; } F.producao(null, fila[k], { etapa: fila.length > 1 ? (k + 1) + ' de ' + fila.length : '', aoFechar: () => setTimeout(() => abrir(k + 1), 80) }); };
             setTimeout(() => abrir(0), 60);
             return;
           }
+          if (ren) { setTimeout(fim, 60); return; }
           if (avisarProximos(criados, msg)) return;
           UI.toast(msg, 'ok', { label: 'Desfazer', fn: () => { M.reabrir(id); Store.update('atividades', id, M.espelhoNeg(negs)); } });
         };
@@ -3732,7 +3770,9 @@ window.HORUS_CONFIG = {
    quando entra na antecedência do seu grupo, e só sai do Painel quando o usuário dá baixa.
    Tabela: renovacoes (jsonb). id determinístico 'ren_<chave>' para não duplicar entre aparelhos.
    dados: { chave, origem: 'contrato'|'mapa'|'mb', data, clienteId, nomeMB, ctId, produto, campo, area, mbCid, ativo,
-            grupo, rotulo, status, obs, baixaEm, historico: [{ em, status, obs }] } */
+            grupo, rotulo, status, obs, baixaEm, historico: [{ em, status, obs }], atividadeId, baixaAtv } 
+   Parte 2.1: a renovação não lança receita sozinha. Pelo botão "Criar atividade" (ou "Ligar a atividade existente") vira uma
+   atividade-negócio (extras.renovacaoId); a receita sai do fluxo normal de concluir negócio. Os status andam juntos. */
 (function (App) {
   const { U, Store } = App;
   const R = {};
@@ -3805,6 +3845,19 @@ window.HORUS_CONFIG = {
       Store.insert('renovacoes', { id, ...k, status: 'a_tratar', historico: [{ em: agora, status: 'a_tratar', obs: 'Entrou na antecedência de ' + R.antec(k.grupo) + ' dias' }] }, { silent: true });
       mudou = true;
     });
+    /* Atividade ligada: status andam juntos (a conclusão feita pelo painel passa por R.aoConcluir, que pergunta o resto) */
+    Store.all('renovacoes').forEach(r => {
+      if (!r.atividadeId) return;
+      const a = Store.get('atividades', r.atividadeId);
+      const hist = (st, obs) => (r.historico || []).concat({ em: agora, status: st, obs, auto: true });
+      if (!a) { Store.update('renovacoes', r.id, { atividadeId: null, historico: hist(r.status, 'A atividade ligada foi excluída') }, { silent: true }); mudou = true; return; }
+      if (segurando.has(a.id)) return;
+      const aberta = a.status !== 'concluida';
+      if (!R.final(r.status) && aberta && r.status === 'a_tratar') { Store.update('renovacoes', r.id, { status: 'cotacao', historico: hist('cotacao', 'Atividade ligada em andamento') }, { silent: true }); mudou = true; return; }
+      if (!R.final(r.status) && !aberta) { const res = R.resultadoAtv(a, r); if (res) { const st = R.stDoResultado(r, res); Store.update('renovacoes', r.id, { status: st, baixaEm: agora, baixaAtv: a.id, historico: hist(st, 'Atividade concluída: ' + (res === 'ganho' ? 'negócio fechado' : 'negócio não fechou')) }, { silent: true }); if (st === 'migrado') R.marcarComigo(r); mudou = true; } return; }
+      /* Atividade reaberta (ex.: "Desfazer") volta a renovação para "Em cotação" */
+      if (R.final(r.status) && aberta && r.baixaAtv === a.id) { if (r.status === 'migrado') R.voltarMapa(r); Store.update('renovacoes', r.id, { status: 'cotacao', baixaEm: null, baixaAtv: null, mapaAntes: null, historico: hist('cotacao', 'Atividade reaberta') }, { silent: true }); mudou = true; }
+    });
     /* Baixas automáticas, só quando a própria fonte mostra o desfecho */
     Store.all('renovacoes').forEach(r => {
       if (R.final(r.status)) return;
@@ -3821,6 +3874,8 @@ window.HORUS_CONFIG = {
     });
     if (mudou) gravarDepois();
   };
+  const segurando = new Set();
+  R.segurar = atvId => segurando.add(atvId);
   R.abertas = () => { R.sincronizar(); return Store.all('renovacoes').filter(r => !R.final(r.status)).sort((a, b) => a.data.localeCompare(b.data) || String(a.rotulo).localeCompare(String(b.rotulo))); };
   R.doCliente = id => Store.all('renovacoes').filter(r => r.clienteId === id).sort((a, b) => b.data.localeCompare(a.data));
   R.nome = r => { const c = r.clienteId && cli().cliente(r.clienteId); return c ? c.nome : r.nomeMB || 'Cliente'; };
@@ -3832,9 +3887,11 @@ window.HORUS_CONFIG = {
   const MES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
   R.item = (r, { semNome } = {}) => {
     const dd = U.diff(r.data, U.today()), venc = R.vencida(r), fin = R.final(r.status);
+    const atv = R.atividade(r), lq = atv && atv.status !== 'concluida' ? R.liqAtv(atv) : null;
+    const atvTxt = atv ? `<span class="ren-atv">${App.UI.icon('negocio')}${atv.status === 'concluida' ? 'atividade concluída' : 'atividade ligada'}${lq ? ' · fica ≈ ' + U.brlC(lq) : ''}</span>` : '';
     return `<li class="ren-it${venc ? ' is-venc' : ''}${fin ? ' is-fin' : ''}" data-ren="${U.esc(r.id)}" tabindex="0" role="button">
       <span class="cl-vd ${venc ? 'venc' : dd <= 7 ? 'perto' : ''}"><b>${+r.data.slice(8, 10)}</b>${MES[+r.data.slice(5, 7) - 1]}${r.data.slice(0, 4) !== U.today().slice(0, 4) ? `<i>${r.data.slice(2, 4)}</i>` : ''}</span>
-      <div><b>${U.esc(semNome ? r.rotulo : R.nome(r))}</b><small>${U.esc(semNome ? (fin && r.baixaEm ? 'baixa em ' + U.fmtDate(r.baixaEm.slice(0, 10)) : '') : r.rotulo)}</small></div>
+      <div><b>${U.esc(semNome ? r.rotulo : R.nome(r))}</b><small>${U.esc(semNome ? (fin && r.baixaEm ? 'baixa em ' + U.fmtDate(r.baixaEm.slice(0, 10)) : '') : r.rotulo)}</small>${atvTxt}</div>
       <span class="ren-side"><span class="ren-st rs-${r.status}">${U.esc(R.rotStatus(r))}</span>${fin ? '' : `<em class="${venc ? 'late' : ''}">${R.rel(r.data)}</em>`}</span></li>`;
   };
   R.ligar = root => root.querySelectorAll('[data-ren]').forEach(li => {
@@ -3844,9 +3901,10 @@ window.HORUS_CONFIG = {
   /* Card do Painel e de Clientes */
   R.card = ({ titulo = 'Renovações', max = 6, extras = [], link = true } = {}) => {
     const l = R.abertas(), venc = l.filter(R.vencida).length, cot = l.filter(r => r.status === 'cotacao').length, trat = l.length - cot;
+    const jogo = l.reduce((s, r) => { const a = R.atividade(r); return s + (a && a.status !== 'concluida' ? R.liqAtv(a) || 0 : 0); }, 0);
     if (!l.length && !extras.length) return '';
     return `<section class="card ren-card"><div class="card-h"><h2>${U.esc(titulo)}</h2><span class="grow"></span>${l.length ? `<span class="count">${l.length}</span>` : ''}${link ? '<a class="link" href="#clientes" data-go="clientes">Clientes</a>' : ''}</div>
-      ${l.length ? `<p class="ren-res">${[trat && `${trat} a tratar`, cot && `${cot} em cotação`, venc && `<b class="late">${venc === 1 ? '1 vencida' : venc + ' vencidas'} sem baixa</b>`].filter(Boolean).join(' · ')}</p>
+      ${l.length ? `<p class="ren-res">${[trat && `${trat} a tratar`, cot && `${cot} em cotação`, venc && `<b class="late">${venc === 1 ? '1 vencida' : venc + ' vencidas'} sem baixa</b>`, jogo > 0 && `<b class="ren-jogo" title="Soma do que fica com você nas atividades ligadas em aberto (prêmio mensal conta 12 meses)">${U.brlC(jogo)} em jogo</b>`].filter(Boolean).join(' · ')}</p>
       <ul class="cl-vlist ren-list">${l.slice(0, max).map(r => R.item(r)).join('')}</ul>
       ${l.length > max ? `<details class="ren-mais"><summary>Ver todas · ${l.length}</summary><ul class="cl-vlist ren-list">${l.slice(max).map(r => R.item(r)).join('')}</ul></details>` : ''}` : ''}
       ${extras.length ? `<ul class="cl-vlist">${extras.map(App.Views.clientes.vencItem).join('')}</ul>` : ''}</section>`;
@@ -3854,13 +3912,15 @@ window.HORUS_CONFIG = {
 
   /* ---------- Janela da renovação ---------- */
   const mais1ano = d => { const p = U.parse(d); p.setFullYear(p.getFullYear() + 1); return U.iso(p); };
-  R.abrir = id => {
+  R.abrir = (id, { direto } = {}) => {
     const r = Store.get('renovacoes', id); if (!r) return;
+    const atv0 = R.atividade(r);
+    if (atv0 && !direto) return App.Forms.detalhes(atv0.id);
     const C = cli(), UI = App.UI, c = r.clienteId && C.cliente(r.clienteId), ct = r.ctId && Store.get('contratos', r.ctId);
     const m = r.origem === 'mapa' && c ? ((c.mapa || {})[r.area] || {}) : null;
     const dd = U.diff(r.data, U.today());
     const info = [];
-    if (ct) { const p = C.produto(ct.produto); info.push(p.nome + (ct.tipo ? ' · ' + ct.tipo : ''), ct.seguradora || ct.operadora || ct.administradora, ct.premio && 'Prêmio ' + U.brl(ct.premio) + (ct.periodicidade === 'Anual' || ct.produto === 'auto' ? '/ano' : ct.produto === 'vida' ? '/mês' : ''), ct.capital && 'Capital ' + U.brlShort(ct.capital), ct.cobertura && 'Cobertura ' + U.brlShort(ct.cobertura), ct.contribuicao && 'US$ ' + (+ct.contribuicao).toLocaleString('pt-BR') + '/ano'); }
+    if (ct) { const p = C.produto(ct.produto); info.push(p.nome + (ct.tipo ? ' · ' + ct.tipo : ''), ct.seguradora || ct.operadora || ct.administradora, (ct.premio || ct.mensalidade) && 'Prêmio ' + U.brl(ct.premio || ct.mensalidade) + (R.mensalCt(ct) ? '/mês' : '/ano'), ct.capital && 'Capital ' + U.brlShort(ct.capital), ct.cobertura && 'Cobertura ' + U.brlShort(ct.cobertura), ct.contribuicao && 'US$ ' + (+ct.contribuicao).toLocaleString('pt-BR') + '/ano'); }
     if (m) info.push('Tem com ' + (m.onde || 'outro corretor'), m.valor && U.brl(m.valor), m.obs);
     const temNovaData = r.origem === 'contrato' && r.campo !== 'reajuste';
     UI.modal({
@@ -3869,6 +3929,7 @@ window.HORUS_CONFIG = {
           <div><b>${U.esc(R.nome(r))}</b><span>${U.esc(r.rotulo)}</span>${info.filter(Boolean).length ? `<small>${info.filter(Boolean).map(U.esc).join(' · ')}</small>` : ''}</div>
           <p class="ren-quando">${R.final(r.status) ? 'Venceu' : dd < 0 ? 'Venceu' : 'Vence'} em <b>${U.fmtDateLong(r.data)}</b>${R.final(r.status) ? '' : ` · <span class="${dd < 0 ? 'late' : ''}">${R.rel(r.data)}</span>`}</p>
           <p class="ren-links">${c ? `<button class="link" data-ficha>Abrir ficha</button>` : ''}${ct && ct.link ? `<a class="link" href="${U.esc(ct.link)}" target="_blank" rel="noopener">Documento</a>` : ''}${ct ? `<button class="link" data-ct>Editar contrato</button>` : ''}</p></div>
+        ${R.blocoAtividade(r)}
         <form class="form" id="fRen" novalidate>
           <div class="f full"><span>Situação</span>${UI.segmented('status', R.opcoes(r), r.status)}</div>
           <div class="ren-extra" id="renExtra"></div>
@@ -3890,6 +3951,7 @@ window.HORUS_CONFIG = {
         f.querySelectorAll('[name=status]').forEach(i => i.onchange = desenhar); desenhar();
         const fb = el.querySelector('[data-ficha]'); if (fb) fb.onclick = () => { api.close(); App.go('clientes', { cliente: c.id }, { origem: true }); };
         const cb = el.querySelector('[data-ct]'); if (cb) cb.onclick = () => App.Forms.contrato(ct.id);
+        R.ligarBlocoAtividade(el, r, api);
         f.onsubmit = e => {
           e.preventDefault();
           const d = UI.formData(f), st = d.status || r.status, agora = U.nowISO();
@@ -3906,11 +3968,183 @@ window.HORUS_CONFIG = {
           if (!R.final(st)) patch.baixaEm = null;
           Store.update('renovacoes', r.id, patch);
           api.close();
+          /* Baixa pela renovação com atividade aberta: pergunta se conclui a atividade junto */
+          const atvA = R.atividade(r);
+          if (R.final(st) && mudouSt && atvA && atvA.status !== 'concluida') setTimeout(() => R.perguntarConcluir(atvA.id, st), 120);
           UI.toast(R.final(st) ? 'Baixa dada: ' + (R.opcoes(r).find(o => o.id === st) || {}).label : mudouSt ? 'Situação: ' + (R.opcoes(r).find(o => o.id === st) || {}).label : 'Renovação salva');
           if (st === 'migrado' && d.cadastrar && c) { const pid = r.produto && r.produto !== 'mb' ? r.produto : undefined; setTimeout(() => App.Forms.contrato(null, { produto: pid, clienteId: c.id, ...(r.area === 'saude' ? { tipo: 'Plano de saúde' } : r.area === 'residencial' ? { tipo: 'Residencial' } : r.area === 'vidagrupo' ? { tipo: 'Seguro de vida em grupo' } : {}) }), 80); }
         };
       }
     });
+  };
+
+  /* ================= Parte 2.1 · renovação → atividade → receita ================= */
+  R.atividade = r => r && r.atividadeId ? Store.get('atividades', r.atividadeId) || null : null;
+  /* Prêmio mensal (comissão mensal) ou anual (uma vez) */
+  R.mensalCt = ct => !!ct && (ct.produto === 'vida' || ct.produto === 'saude' || (ct.produto === 're' && (ct.periodicidade ? ct.periodicidade === 'Mensal' : ['Plano de saúde', 'Seguro de vida em grupo'].includes(ct.tipo))));
+  const TIPO_RE = { 'RC pessoal': 'RC pessoal', 'RC profissional': 'RC profissional', 'Residencial': 'Residencial', 'Plano de saúde': 'Plano de saúde', 'Seguro de vida em grupo': 'Vida em grupo' };
+  const TIPO_CT = { vida: 'Seguro de vida', rc: 'RC', saude: 'Plano de saúde', auto: 'Seguro auto', ita: 'ITA', previdencia: 'Previdência', consorcio: 'Consórcio' };
+  const TIPO_AREA = { vida: 'Seguro de vida', saude: 'Plano de saúde', auto: 'Seguro auto', residencial: 'Residencial', rc: 'RC', vidagrupo: 'Vida em grupo', previdencia: 'Previdência', consorcio: 'Consórcio', internacional: 'Internacional', cripto: 'Mercado Bitcoin', startups: 'Eqseed', zentis: 'Zentis', cambio: 'Câmbio', credito: 'Crédito' };
+  /* O negócio que a renovação gera: tipo (decide o produto em Receitas), valor estimado e se o prêmio é mensal */
+  R.negocioDe = r => {
+    const C = cli();
+    if (r.origem === 'mb') { const mb = C.mbAtual(), ps = mb && (mb.positions || []).find(p => String(p.cid) === String(r.mbCid) && p.ativo === r.ativo); return { tipo: 'Renda fixa MB', valor: ps && ps.saldo != null ? +ps.saldo : null, mensal: false }; }
+    if (r.origem === 'mapa') { const c = C.cliente(r.clienteId), m = c && (c.mapa || {})[r.area] || {}; return { tipo: TIPO_AREA[r.area] || (C.area(r.area) || {}).nome || 'Seguro', valor: m.valor != null && m.valor !== '' ? +m.valor : null, mensal: ['saude', 'vida', 'vidagrupo'].includes(r.area) }; }
+    const ct = Store.get('contratos', r.ctId) || {};
+    const tipo = ct.produto === 're' ? (TIPO_RE[ct.tipo] || 'RE') : TIPO_CT[ct.produto] || (C.produto(ct.produto) || {}).nome || 'Seguro';
+    const v = ct.premio != null && ct.premio !== '' ? +ct.premio : ct.mensalidade != null && ct.mensalidade !== '' ? +ct.mensalidade : null;
+    return { tipo, valor: v, mensal: R.mensalCt(ct) };
+  };
+  /* Responsabilidade das renovações: Assessoria de Investimentos (Capitão Vida fica fora desta visão) */
+  R.respRenovacao = () => { const M = App.M, l = M.respAtivas(); return l.find(x => cli().norm(x.nome).includes('assessoria de invest')) || l.find(x => cli().norm(x.nome).includes('assessoria')) || l[0] || {}; };
+  /* O que fica com você numa atividade (negócios em aberto; prêmio mensal conta 12 meses) */
+  R.liqAtv = a => { const M = App.M; let t = 0, tem = false; M.negociosDa(a).filter(n => !n.resultado).forEach(n => { const l = M.liqNeg(n); if (l != null) { t += l * (n.mensal ? 12 : 1); tem = true; } }); return tem ? t : null; };
+  /* Resultado da atividade para esta renovação: o negócio marcado com a renovação, senão todos */
+  R.resultadoAtv = (a, r) => { const M = App.M, ns = M.negociosDa(a), meus = ns.filter(n => n.renId === (r && r.id)), l = meus.length ? meus : ns; if (!l.length) return null; if (l.some(n => n.resultado === 'ganho')) return 'ganho'; return l.every(n => n.resultado === 'perdido') ? 'perdido' : null; };
+  R.stDoResultado = (r, res) => res === 'ganho' ? (r.origem === 'mapa' ? 'migrado' : 'renovado') : 'perdido';
+  /* Guarda como a área estava, para o "Desfazer" (atividade reaberta) voltar o Mapa 360 */
+  R.marcarComigo = r => { const c = cli().cliente(r.clienteId); if (!c || !r.area) return; const mp = { ...(c.mapa || {}) }; const antes = mp[r.area] ? { ...mp[r.area] } : null; mp[r.area] = { ...(mp[r.area] || {}), sit: 'comigo', em: U.today() }; delete mp[r.area].etapa; Store.update('clientes', c.id, { mapa: mp }, { silent: true }); if (antes && antes.sit !== 'comigo') Store.update('renovacoes', r.id, { mapaAntes: antes }, { silent: true }); };
+  R.voltarMapa = r => { const c = cli().cliente(r.clienteId); if (!c || !r.area || !r.mapaAntes) return; const mp = { ...(c.mapa || {}) }; mp[r.area] = r.mapaAntes; Store.update('clientes', c.id, { mapa: mp }, { silent: true }); };
+
+  /* Formulário de atividade já preenchido (o usuário ajusta e salva) */
+  R.criarAtividade = id => {
+    const r = Store.get('renovacoes', id); if (!r) return;
+    const C = cli(), M = App.M, c = r.clienteId && C.cliente(r.clienteId), n = R.negocioDe(r), tipo = M.tipoSalvar(n.tipo), pct = M.pctPadrao(tipo), hoje = U.today();
+    const apel = c ? C.apelido(c) : String(r.nomeMB || '').split(' ')[0];
+    const negs = [{ id: M.novoNegId(), tipo, valor: n.valor, pct, mensal: n.mensal, renId: r.id }];
+    App.Forms.atividade(null, {
+      titulo: `Renovação ${n.tipo}${apel ? ' · ' + apel : ''}`, responsabilidadeId: R.respRenovacao().id, respIds: [],
+      cliente: c ? c.nome : r.nomeMB || null, clienteId: c ? c.id : null, categoria: 'Negócios',
+      prazo: r.data < hoje ? hoje : r.data, prioridade: R.vencida(r) || U.diff(r.data, hoje) <= 7 ? 'alta' : 'media',
+      descricao: r.rotulo, renovacaoId: r.id, ...M.espelhoNeg(negs)
+    });
+  };
+  /* Liga renovação e atividade. Atividade sem negócio ganha o negócio da renovação (é ele que leva a receita) */
+  R.vincular = (renId, atvId, { criada } = {}) => {
+    const r = Store.get('renovacoes', renId), a = Store.get('atividades', atvId), M = App.M; if (!r || !a) return;
+    const agora = U.nowISO(), patchA = { renovacaoId: renId };
+    if (r.atividadeId && r.atividadeId !== atvId) { const ant = Store.get('atividades', r.atividadeId); if (ant && ant.renovacaoId === renId) Store.update('atividades', ant.id, { renovacaoId: null }, { silent: true }); }
+    if (!criada) {
+      const n = R.negocioDe(r), tipo = M.tipoSalvar(n.tipo), ns = M.negociosDa(a);
+      if (!ns.length) { Object.assign(patchA, M.espelhoNeg([{ id: M.novoNegId(), tipo, valor: n.valor, pct: M.pctPadrao(tipo), mensal: n.mensal, renId }])); M.log(atvId, 'editada', 'Negócio "' + n.tipo + '" adicionado pela renovação'); }
+      else { const pr = M.produtoDoTipo(tipo), i = ns.findIndex(x => !x.resultado && M.produtoDoTipo(x.tipo) === pr); const j = i >= 0 ? i : ns.length === 1 ? 0 : -1;
+        if (j >= 0) Object.assign(patchA, M.espelhoNeg(ns.map((x, k) => k === j ? { ...x, renId, ...(x.mensal == null ? { mensal: n.mensal } : {}) } : x))); }
+      M.log(atvId, 'editada', 'Ligada à renovação: ' + r.rotulo);
+    }
+    Store.update('atividades', atvId, patchA, { silent: true });
+    const aberta = a.status !== 'concluida', st = !R.final(r.status) && aberta && r.status === 'a_tratar' ? 'cotacao' : r.status;
+    Store.update('renovacoes', renId, { atividadeId: atvId, status: st, historico: (r.historico || []).concat({ em: agora, status: st, obs: (criada ? 'Atividade criada: ' : 'Ligada à atividade: ') + a.titulo }) }, { silent: true });
+    Store.commit();
+  };
+  R.desligar = renId => {
+    const r = Store.get('renovacoes', renId); if (!r) return; const a = R.atividade(r);
+    if (a && a.renovacaoId === renId) { Store.update('atividades', a.id, { renovacaoId: null }, { silent: true }); App.M.log(a.id, 'editada', 'Desligada da renovação'); }
+    Store.update('renovacoes', renId, { atividadeId: null, historico: (r.historico || []).concat({ em: U.nowISO(), status: r.status, obs: 'Atividade desligada' + (a ? ': ' + a.titulo : '') }) }, { silent: true });
+    Store.commit();
+  };
+  /* Atividades abertas do cliente, para ligar */
+  R.atividadesDoCliente = r => {
+    const C = cli(), c = r.clienteId && C.cliente(r.clienteId);
+    const l = c ? C.atividadesDo(c) : r.nomeMB ? Store.all('atividades').filter(a => a.cliente && C.norm(a.cliente) === C.norm(r.nomeMB)) : [];
+    return l.filter(a => a.status !== 'concluida').sort((a, b) => (a.prazo || '9999').localeCompare(b.prazo || '9999'));
+  };
+  R.escolherAtividade = (id, depois) => {
+    const r = Store.get('renovacoes', id); if (!r) return;
+    const UI = App.UI, M = App.M, l = R.atividadesDoCliente(r);
+    UI.modal({
+      title: 'Ligar a atividade existente', size: 'sm',
+      body: l.length ? `<p class="muted" style="margin:0 0 8px">Atividades em aberto de <b>${U.esc(R.nome(r))}</b>:</p><ul class="ren-atvs">${l.map(a => `<li><button type="button" class="ren-atv-op" data-a="${U.esc(a.id)}"><b>${U.esc(a.titulo)}</b><small>${UI.respChips(a)}<span>${[a.prazo && 'prazo ' + U.fmtDate(a.prazo), M.ehNegocio(a) ? M.negociosDa(a).map(n => U.esc(M.tipoNeg(n.tipo).label)).join(', ') : 'sem negócio (o da renovação entra)', a.renovacaoId && a.renovacaoId !== id && 'já ligada a outra renovação'].filter(Boolean).join(' · ')}</span></small></button></li>`).join('')}</ul>`
+        : `<p class="muted">${U.esc(R.nome(r))} não tem atividade em aberto.</p>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button>${l.length ? '' : '<button class="btn primary" data-nova>Criar atividade</button>'}`,
+      onMount(el, api) {
+        el.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { R.vincular(id, b.dataset.a); api.close(); UI.toast('Renovação ligada à atividade'); if (depois) depois(); });
+        const nv = el.querySelector('[data-nova]'); if (nv) nv.onclick = () => { api.close(); R.criarAtividade(id); };
+      }
+    });
+  };
+  /* Bloco da atividade na janela da renovação */
+  R.blocoAtividade = r => {
+    const a = R.atividade(r), UI = App.UI;
+    if (a) { const lq = a.status !== 'concluida' ? R.liqAtv(a) : null;
+      return `<div class="ren-atvbox"><div><span class="ren-atvbox-l">Atividade ligada</span><b>${U.esc(a.titulo)}</b><small>${UI.statusPill(a.status)}${a.prazo && a.status !== 'concluida' ? ' · prazo ' + U.fmtDate(a.prazo) : ''}${lq ? ' · fica com você ≈ <b>' + U.brlC(lq) + '</b>' : ''}</small></div>
+        <span class="ren-atvbox-b"><button type="button" class="btn ghost sm" data-ratv="abrir">Abrir atividade</button><button type="button" class="link" data-ratv="desligar">Desligar</button></span></div>`; }
+    if (R.final(r.status)) return '';
+    return `<div class="ren-atvbox vazio"><div><span class="ren-atvbox-l">Vai dar trabalho?</span><small>Vira um negócio na Assessoria; a receita entra quando você concluir.</small></div>
+      <span class="ren-atvbox-b"><button type="button" class="btn primary sm" data-ratv="criar">${UI.icon('mais')}Criar atividade</button><button type="button" class="btn ghost sm" data-ratv="ligar">Ligar a existente</button></span></div>`;
+  };
+  R.ligarBlocoAtividade = (el, r, api) => el.querySelectorAll('[data-ratv]').forEach(b => b.onclick = async () => {
+    const k = b.dataset.ratv, a = R.atividade(r);
+    if (k === 'abrir' && a) { api.close(); App.Forms.detalhes(a.id); }
+    if (k === 'criar') { api.close(); R.criarAtividade(r.id); }
+    if (k === 'ligar') { api.close(); R.escolherAtividade(r.id, () => R.abrir(r.id, { direto: true })); }
+    if (k === 'desligar') { const ok = await App.UI.confirm({ title: 'Desligar a atividade?', text: 'A atividade continua existindo; só deixa de andar junto com esta renovação.', ok: 'Desligar', danger: false }); if (ok) { R.desligar(r.id); api.close(); R.abrir(r.id, { direto: true }); } }
+  });
+
+  /* Baixa dada pela renovação com atividade aberta: conclui a atividade junto? */
+  R.perguntarConcluir = async (atvId, st) => {
+    const a = Store.get('atividades', atvId), M = App.M, UI = App.UI; if (!a || a.status === 'concluida') return;
+    const ganho = st !== 'perdido';
+    const ok = await UI.confirm({ title: 'Concluir a atividade também?', text: `<b>${U.esc(a.titulo)}</b> ainda está aberta. ${ganho ? 'Ao concluir, você lança a receita como de costume.' : 'Ela será concluída como negócio que não fechou.'}`, ok: 'Concluir atividade', danger: false });
+    if (!ok) return;
+    if (ganho && M.ehNegocio(a)) return App.Forms.concluirNegocio(atvId);
+    if (M.ehNegocio(a)) Store.update('atividades', atvId, M.espelhoNeg(M.negociosDa(a).map(n => n.resultado ? n : { ...n, resultado: 'perdido' })), { silent: true });
+    M.concluir(atvId, { nota: ganho ? 'Concluída junto com a baixa da renovação' : 'Negócio não fechou (baixa da renovação)' });
+    UI.toast('Atividade concluída');
+  };
+
+  /* Depois de concluir a atividade ligada (e lançar a receita): dá a baixa e, se renovou, atualiza o contrato */
+  R.aoConcluir = (atvId, depois) => {
+    const seguir = () => { segurando.delete(atvId); Store.commit(); if (depois) depois(); };
+    const a = Store.get('atividades', atvId), r = a && a.renovacaoId && Store.get('renovacoes', a.renovacaoId);
+    if (!r || R.final(r.status)) return seguir();
+    const res = R.resultadoAtv(a, r); if (!res) return seguir();
+    const st = R.stDoResultado(r, res), agora = U.nowISO(), C = cli(), UI = App.UI;
+    const lab = (R.opcoes(r).find(o => o.id === st) || {}).label;
+    const baixa = obs => { const at = Store.get('renovacoes', r.id) || r; Store.update('renovacoes', r.id, { status: st, baixaEm: agora, baixaAtv: atvId, historico: (at.historico || []).concat({ em: agora, status: st, obs }) }, { silent: true }); };
+    baixa('Atividade concluída: ' + (res === 'ganho' ? 'negócio fechado' : 'negócio não fechou'));
+    const ct = r.ctId && Store.get('contratos', r.ctId);
+    if (st === 'migrado') R.marcarComigo(r);
+    segurando.delete(atvId); Store.commit();
+    if (st === 'renovado' && ct && r.origem === 'contrato' && r.campo !== 'reajuste') {
+      const kP = ct.premio != null || ct.mensalidade == null ? 'premio' : 'mensalidade', temP = C.produto(ct.produto).campos.some(x => x.k === kP);
+      const neg = App.M.negociosDa(a).find(n => n.renId === r.id && n.resultado === 'ganho');
+      let feito = false;
+      UI.modal({
+        title: 'Renovação · ' + lab, size: 'sm',
+        body: `<form class="form" id="fRenP"><p class="muted" style="margin:0">${U.esc(R.nome(r))} · ${U.esc(r.rotulo)}</p>
+          <div class="row2"><label class="f"><span>${r.produto === 'ita' ? 'Novo "pago até"' : 'Novo vencimento'}</span><input type="date" name="novaData" value="${mais1ano(r.data)}" required></label>
+          ${temP ? `<label class="f"><span>Novo prêmio${R.mensalCt(ct) ? ' (mensal)' : ''}</span><input name="premio" data-num inputmode="decimal" value="${(pv => pv != null && pv !== '' ? U.num(pv) : '')(neg && neg.valor != null ? neg.valor : ct[kP])}" placeholder="R$"></label>` : ''}</div>
+          <p class="ren-nota">Atualiza o contrato e o aviso do próximo ano já fica programado.</p></form>`,
+        footer: `<button class="btn ghost" data-close>Agora não</button><button class="btn primary" form="fRenP" type="submit">Atualizar contrato</button>`,
+        onClose: () => { if (!feito) { const at = Store.get('renovacoes', r.id); if (at) Store.update('renovacoes', r.id, { historico: (at.historico || []).concat({ em: U.nowISO(), status: st, obs: 'Contrato não atualizado (vencimento continua o antigo)' }) }); } setTimeout(() => depois && depois(), 60); },
+        onMount(el, api) {
+          el.querySelector('#fRenP').onsubmit = e => {
+            e.preventDefault(); const d = UI.formData(e.target); if (!d.novaData) return;
+            const patch = { [r.campo]: d.novaData }; if (C.produto(ct.produto).campos.some(x => x.k === 'inicio') && ct.produto !== 'ita') patch.inicio = r.data;
+            if (temP && d.premio != null) patch[kP] = d.premio;
+            Store.update('contratos', ct.id, patch, { silent: true });
+            const at = Store.get('renovacoes', r.id); Store.update('renovacoes', r.id, { historico: (at.historico || []).concat({ em: U.nowISO(), status: st, obs: 'Novo vencimento ' + U.fmtDate(d.novaData) + (temP && d.premio != null ? ' · prêmio ' + U.brl(d.premio) : '') }) }, { silent: true });
+            feito = true; Store.commit(); api.close(); UI.toast('Contrato atualizado · próximo aviso programado');
+          };
+        }
+      });
+      return;
+    }
+    if (st === 'migrado' && r.clienteId) {
+      UI.confirm({ title: 'Migrado para você', text: `No Mapa 360, ${U.esc(R.nome(r))} passou a ter ${U.esc(((C.area(r.area) || {}).nome || '').toLowerCase())} com você. Cadastrar o contrato agora?`, ok: 'Cadastrar contrato', danger: false }).then(ok => {
+        if (ok) { const pid = r.produto && r.produto !== 'mb' ? r.produto : undefined; App.Forms.contrato(null, { produto: pid, clienteId: r.clienteId, ...(r.area === 'saude' ? { tipo: 'Plano de saúde' } : r.area === 'residencial' ? { tipo: 'Residencial' } : r.area === 'vidagrupo' ? { tipo: 'Seguro de vida em grupo' } : r.area === 'rc' ? { tipo: 'RC pessoal' } : {}) }); }
+        else if (depois) depois();
+      });
+      return;
+    }
+    if (st === 'perdido' && ct && r.origem === 'contrato' && r.campo !== 'reajuste' && (ct.status || 'ativo') === 'ativo') {
+      UI.confirm({ title: 'Renovação: ' + lab, text: `Marcar o contrato de ${U.esc(R.nome(r))} como encerrado?`, ok: 'Encerrar contrato', danger: false }).then(ok => {
+        if (ok) { Store.update('contratos', ct.id, { status: 'encerrado' }); const at = Store.get('renovacoes', r.id); Store.update('renovacoes', r.id, { historico: (at.historico || []).concat({ em: U.nowISO(), status: st, obs: 'Contrato encerrado' }) }); }
+        if (depois) depois();
+      });
+      return;
+    }
+    UI.toast('Renovação: ' + lab); if (depois) setTimeout(depois, 1200);
   };
 
   App.Ren = R;
