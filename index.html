@@ -1283,6 +1283,23 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .pf-nota { margin: 12px 0 0; }
 @media (max-width: 900px) { .pf-top { grid-template-columns: minmax(0, 1fr); } .pf-cols { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
 
+/* ---------- Segurança e rotina (24/11) ---------- */
+.rotina { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+.rt-it { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+.rt-it > div { flex: 1; min-width: 0; display: grid; } .rt-it b { font-size: 13.5px; } .rt-it span { font-size: 12.5px; color: var(--muted); }
+.rt-it .btn { flex: none; white-space: nowrap; }
+.rt-warn { background: var(--warn-soft, #FDF2E2); border-color: color-mix(in srgb, var(--warn, #B0650F) 35%, var(--line)); } .rt-warn b { color: var(--warn, #B0650F); }
+.rt-late { background: var(--late-soft); border-color: color-mix(in srgb, var(--late) 40%, var(--line)); } .rt-late b { color: var(--late); }
+.rt-info { background: linear-gradient(140deg, #F1EBFF, var(--surface) 75%); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); } .rt-info b { color: var(--accent); }
+@media (max-width: 520px) { .rt-it { flex-wrap: wrap; } .rt-it .btn { width: 100%; justify-content: center; } }
+.mfa-box { display: grid; gap: 10px; }
+.mfa-passos { margin: 0; padding-left: 18px; font-size: 13.5px; display: grid; gap: 4px; }
+.mfa-qr { width: 190px; height: 190px; justify-self: center; background: #fff; padding: 8px; border-radius: 12px; border: 1px solid var(--line); }
+.mfa-sec summary { cursor: pointer; font-size: 13px; color: var(--accent); font-weight: 600; }
+.mfa-sec code { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); font-size: 13px; word-break: break-all; user-select: all; }
+.mfa-code { font: 700 24px var(--display) !important; letter-spacing: .3em; text-align: center; }
+.seg-card .tag { margin-left: auto; }
+
 </style>
 
 <div class="app">
@@ -2762,6 +2779,54 @@ window.HORUS_CONFIG = {
 
   B.restaurar = dados => { Store.replaceAll(dados); Store.config('inicializado', true); if (App.Fat) App.Fat.garantir(); };
 
+  /* ---------- Backup semanal numa pasta do computador (ex.: OneDrive), 24/11 ----------
+     A pasta é escolhida uma vez (Chrome/Edge: File System Access); o "endereço" dela fica guardado neste navegador (IndexedDB).
+     Cada backup vira um arquivo horus-backup-AAAA-MM-DD.json; ficam os 12 mais recentes. */
+  const IDB = 'horus-fs', ST = 'pastas', CH = 'backup';
+  const idb = () => new Promise((res, rej) => { const r = indexedDB.open(IDB, 1); r.onupgradeneeded = () => r.result.createObjectStore(ST); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+  const idbGet = async k => { const db = await idb(); return new Promise((res, rej) => { const t = db.transaction(ST).objectStore(ST).get(k); t.onsuccess = () => res(t.result || null); t.onerror = () => rej(t.error); }); };
+  const idbSet = async (k, v) => { const db = await idb(); return new Promise((res, rej) => { const t = db.transaction(ST, 'readwrite'); v == null ? t.objectStore(ST).delete(k) : t.objectStore(ST).put(v, k); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); };
+  const NOME_LS = 'horus-backup-pasta';
+  B.suportaPasta = () => typeof window.showDirectoryPicker === 'function' && typeof indexedDB !== 'undefined';
+  B.pastaNome = () => { try { return localStorage.getItem(NOME_LS) || ''; } catch (e) { return ''; } };
+  B.escolherPasta = async () => {
+    const h = await window.showDirectoryPicker({ id: 'horus-backup', mode: 'readwrite' });
+    await idbSet(CH, h); try { localStorage.setItem(NOME_LS, h.name); } catch (e) {}
+    return h.name;
+  };
+  B.esquecerPasta = async () => { await idbSet(CH, null); try { localStorage.removeItem(NOME_LS); } catch (e) {} };
+  const texto = () => JSON.stringify({ app: APP_ID, versao: 1, exportadoEm: U.nowISO(), dados: Store.snapshot() }, null, 2);
+  /* Precisa ser chamado num clique (o navegador pede para confirmar o acesso à pasta uma vez por sessão) */
+  B.salvarNaPasta = async () => {
+    const h = await idbGet(CH); if (!h) throw new Error('sem pasta');
+    let perm = await h.queryPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') perm = await h.requestPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') throw new Error('O navegador não liberou a pasta.');
+    const nome = 'horus-backup-' + U.today() + '.json';
+    const fh = await h.getFileHandle(nome, { create: true }), w = await fh.createWritable();
+    await w.write(new Blob([texto()], { type: 'application/json' })); await w.close();
+    /* mantém os 12 mais recentes (só os arquivos de backup do Horus) */
+    try { const nomes = []; for await (const [n, e] of h.entries()) if (e.kind === 'file' && /^horus-backup-\d{4}-\d{2}-\d{2}\.json$/.test(n)) nomes.push(n);
+      for (const n of nomes.sort().reverse().slice(12)) await h.removeEntry(n); } catch (e) {}
+    Store.config('ultimoBackup', U.nowISO());
+    return nome;
+  };
+  /* O botão "Backup da semana": salva na pasta; sem pasta, pede para escolher; sem suporte, baixa o arquivo. Devolve a mensagem para o aviso. */
+  B.semanal = async () => {
+    try {
+      if (B.suportaPasta()) {
+        if (!B.pastaNome()) { const n = await B.escolherPasta(); App.UI.toast('Pasta escolhida: ' + n); }
+        const arq = await B.salvarNaPasta();
+        return 'Backup salvo em ' + B.pastaNome() + ' (' + arq + ')';
+      }
+      const ok = await B.exportar(); return ok ? 'Backup baixado. Guarde na pasta do OneDrive.' : 'O download não foi concluído';
+    } catch (e) {
+      if (e && e.name === 'AbortError') return null;
+      if (e && e.message === 'sem pasta') { await B.esquecerPasta(); return 'A pasta não foi encontrada. Clique de novo para escolher.'; }
+      return 'Não foi possível salvar: ' + (e && e.message || e);
+    }
+  };
+
   App.Backup = B;
 })(window.App = window.App || {});
 
@@ -2904,6 +2969,7 @@ window.HORUS_CONFIG = {
   };
   C.sessao = async () => { const { data } = await sb.auth.getSession(); usuario = data.session ? data.session.user : null; return data.session; };
   C.usuario = () => usuario;
+  C.sb = () => sb;
 
   const traduz = e => {
     const m = (e && (e.message || e.error_description || String(e))) || '';
@@ -3019,12 +3085,150 @@ window.HORUS_CONFIG = {
 
   /* Atualiza ao voltar para a aba e a cada minuto, para ver o que foi feito em outro aparelho */
   C.vigiar = () => {
-    const tentar = () => { if (document.visibilityState === 'visible' && !document.querySelector('.modal-wrap')) Store.sincronizar().catch(() => {}); };
+    const tentar = async () => {
+      if (document.visibilityState !== 'visible' || document.querySelector('.modal-wrap') || document.querySelector('.mfa-tela')) return;
+      if (App.Seg && await App.Seg.precisaCodigo()) return App.Seg.telaCodigo(() => location.reload());
+      Store.sincronizar().catch(() => {});
+    };
     document.addEventListener('visibilitychange', tentar);
     setInterval(tentar, 60000);
   };
 
   App.Cloud = C;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/core/seguranca.js */
+/* Segurança e rotina (24/11):
+   - Verificação em duas etapas (TOTP do Supabase Auth: app autenticador no celular). Ativar/desativar em Ajustes; ao abrir o painel
+     numa sessão sem código (aal1) de quem tem fator verificado, pede o código antes de carregar os dados.
+     O banco também exige: política restritiva "exige_2_etapas" em todas as tabelas (aal2 quando o usuário tem fator verificado).
+     Perdeu o celular? O Claude remove o fator pelo conector: delete from auth.mfa_factors where user_id = ...
+   - Backup semanal com 1 clique: a pasta do OneDrive (sincronizada no computador) é escolhida uma vez (File System Access, Chrome/Edge)
+     e o painel grava o arquivo nela. Sem suporte, baixa o arquivo.
+   - Lembretes de rotina no Painel: backup da semana, fechamento do MB (a partir do dia 7) e ativar as 2 etapas. */
+(function (App) {
+  const { U, Store } = App;
+  const S = {};
+  const sb = () => App.Cloud && App.Cloud.sb && App.Cloud.sb();
+  S.nuvem = () => !!(App.Cloud && App.Cloud.configurado() && sb() && sb().auth && sb().auth.mfa);
+
+  /* ---------- Duas etapas ---------- */
+  S.nivel = async () => { if (!S.nuvem()) return null; const { data, error } = await sb().auth.mfa.getAuthenticatorAssuranceLevel(); if (error) throw error; return data; };
+  S.precisaCodigo = async () => { try { const n = await S.nivel(); return !!(n && n.nextLevel === 'aal2' && n.currentLevel !== 'aal2'); } catch (e) { return false; } };
+  S.fatores = async () => { if (!S.nuvem()) return []; const { data, error } = await sb().auth.mfa.listFactors(); if (error) throw error; return (data && data.totp || []).filter(f => f.status === 'verified'); };
+  let ativoCache = null;
+  S.ativo = () => ativoCache;
+  S.atualizar = async () => { try { ativoCache = (await S.fatores()).length > 0; } catch (e) { ativoCache = null; } return ativoCache; };
+
+  const traduz = e => { const m = (e && e.message) || String(e || ''); if (/invalid|expired|code/i.test(m)) return 'Código inválido ou vencido. Confira o app e digite o código atual (ele muda a cada 30 segundos).'; if (/rate|many/i.test(m)) return 'Muitas tentativas. Espere um minuto.'; return 'Não foi possível concluir: ' + m; };
+  const verificar = async (factorId, code) => {
+    const ch = await sb().auth.mfa.challenge({ factorId }); if (ch.error) throw ch.error;
+    const v = await sb().auth.mfa.verify({ factorId, challengeId: ch.data.id, code }); if (v.error) throw v.error;
+  };
+  const campoCodigo = '<input name="codigo" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" minlength="6" required placeholder="000000" class="mfa-code" autofocus>';
+
+  S.ativar = () => {
+    const UI = App.UI; let fator = null, ok = false;
+    UI.modal({
+      title: 'Ativar verificação em duas etapas', size: 'sm',
+      body: `<div class="mfa-box" id="mfaBox"><p class="muted small">Gerando o código...</p></div>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fMfa" type="submit" id="mfaOk" disabled>Ativar</button>`,
+      async onMount(el, api) {
+        const box = el.querySelector('#mfaBox');
+        /* fator não verificado de tentativa anterior atrapalha o novo cadastro */
+        try { const { data } = await sb().auth.mfa.listFactors(); for (const f of (data && data.all || []).filter(f => f.status !== 'verified')) await sb().auth.mfa.unenroll({ factorId: f.id }); } catch (e) {}
+        const r = await sb().auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Celular ' + U.today() });
+        if (r.error) { box.innerHTML = `<p class="ferr">${U.esc(traduz(r.error))}</p>`; return; }
+        fator = r.data;
+        box.innerHTML = `<form class="form" id="fMfa">
+          <ol class="mfa-passos"><li>No celular, abra um app autenticador (Microsoft Authenticator ou Google Authenticator) e toque em <b>adicionar conta</b>.</li>
+            <li>Leia este QR code com a câmera do app:</li></ol>
+          <img class="mfa-qr" src="${U.esc(fator.totp.qr_code)}" alt="QR code para o app autenticador">
+          <details class="mfa-sec"><summary>Não consegue ler? Digite a chave</summary><code>${U.esc(fator.totp.secret)}</code></details>
+          <label class="f full"><span>3. Digite o código de 6 números que aparece no app</span>${campoCodigo}</label>
+          <p class="ferr" id="mfaErr" hidden></p></form>`;
+        el.querySelector('#mfaOk').disabled = false;
+        el.querySelector('#fMfa').onsubmit = async e => {
+          e.preventDefault(); const bt = el.querySelector('#mfaOk'); bt.disabled = true;
+          try { await verificar(fator.id, e.target.codigo.value.trim()); ok = true; ativoCache = true; api.close(); UI.toast('Verificação em duas etapas ativada'); App.render && App.render(); }
+          catch (err) { const er = el.querySelector('#mfaErr'); er.textContent = traduz(err); er.hidden = false; bt.disabled = false; }
+        };
+      },
+      onClose() { if (!ok && fator) sb().auth.mfa.unenroll({ factorId: fator.id }).catch(() => {}); }
+    });
+  };
+
+  S.desativar = async () => {
+    const UI = App.UI;
+    const sim = await UI.confirm({ title: 'Desativar a verificação em duas etapas?', text: 'O login volta a pedir só a senha, e quem tiver a sua senha consegue ver os dados dos clientes. Para desativar, você digita o código do app agora.', ok: 'Continuar', danger: true });
+    if (!sim) return;
+    const fs = await S.fatores(); if (!fs.length) { ativoCache = false; return; }
+    UI.modal({
+      title: 'Confirme com o código', size: 'sm',
+      body: `<form class="form" id="fMfaD"><label class="f full"><span>Código do app autenticador</span>${campoCodigo}</label><p class="ferr" id="mfaDErr" hidden></p></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn danger" form="fMfaD" type="submit">Desativar</button>`,
+      onMount(el, api) {
+        el.querySelector('#fMfaD').onsubmit = async e => {
+          e.preventDefault();
+          try {
+            const n = await S.nivel(); if (!n || n.currentLevel !== 'aal2') await verificar(fs[0].id, e.target.codigo.value.trim());
+            for (const f of fs) { const r = await sb().auth.mfa.unenroll({ factorId: f.id }); if (r.error) throw r.error; }
+            ativoCache = false; api.close(); UI.toast('Verificação em duas etapas desativada', 'aviso'); App.render && App.render();
+          } catch (err) { const er = el.querySelector('#mfaDErr'); er.textContent = traduz(err); er.hidden = false; }
+        };
+      }
+    });
+  };
+
+  /* Tela cheia pedindo o código (depois da senha, ou ao voltar com uma sessão antiga) */
+  S.telaCodigo = aoOk => {
+    if (document.querySelector('.auth.mfa-tela')) return;
+    const el = document.createElement('div'); el.className = 'auth mfa-tela'; document.body.appendChild(el);
+    el.innerHTML = `<div class="auth-card"><b class="logo dark">Horus <span>Gestão</span></b><h1>Verificação em duas etapas</h1>
+      <p class="muted small">Abra o app autenticador no celular e digite o código de 6 números do Horus.</p>
+      <form class="form" id="fMfaL"><label class="f full"><span>Código</span>${campoCodigo}</label><p class="ferr" id="mfaLErr" hidden></p>
+        <button class="btn primary full" type="submit">Entrar</button></form>
+      <div class="auth-links"><button class="link" id="mfaSair">Sair</button><span class="muted small">Perdeu o celular? Peça ao Claude para remover o código.</span></div></div>`;
+    const f = el.querySelector('#fMfaL'); setTimeout(() => f.codigo.focus(), 30);
+    el.querySelector('#mfaSair').onclick = async () => { try { await sb().auth.signOut(); } catch (e) {} location.reload(); };
+    f.onsubmit = async e => {
+      e.preventDefault(); const bt = f.querySelector('button'); bt.disabled = true;
+      try { const fs = await S.fatores(); if (!fs.length) throw new Error('nenhum fator'); await verificar(fs[0].id, f.codigo.value.trim()); ativoCache = true; el.remove(); aoOk(); }
+      catch (err) { const er = el.querySelector('#mfaLErr'); er.textContent = traduz(err); er.hidden = false; bt.disabled = false; f.codigo.select(); }
+    };
+  };
+
+  /* ---------- Rotina: o que mostrar no Painel ---------- */
+  S.MB_DIA = 7;
+  S.lembretes = () => {
+    const out = [], hoje = U.today();
+    /* backup da semana */
+    /* no celular o navegador não grava em pasta: o lembrete do backup fica para o computador */
+    const celular = !App.Backup.suportaPasta() && window.matchMedia && matchMedia('(max-width: 760px)').matches;
+    if (App.Backup && !celular) {
+      const ult = Store.config('ultimoBackup'), dias = ult ? U.diff(hoje, ult.slice(0, 10)) : null;
+      if (dias == null || dias >= 7) out.push({ id: 'backup', tom: dias != null && dias >= 14 ? 'late' : 'warn', titulo: 'Backup da semana', texto: ult ? `Último há ${dias} dias.` : 'Nenhum backup feito ainda.', acao: App.Backup.pastaNome() ? 'Salvar no OneDrive' : App.Backup.suportaPasta() ? 'Escolher pasta e salvar' : 'Baixar backup' });
+    }
+    /* fechamento do MB do mês anterior */
+    const [ya, ma] = hoje.slice(0, 7).split('-').map(Number), mesAnt = ma === 1 ? (ya - 1) + '-12' : ya + '-' + String(ma - 1).padStart(2, '0');
+    const usaMB = Store.all('mb').length > 0, dia = +hoje.slice(8, 10);
+    if (usaMB && dia >= S.MB_DIA && !Store.get('mb', mesAnt)) {
+      const nome = App.Fat ? App.Fat.nomeMes(mesAnt, true) : mesAnt;
+      out.push({ id: 'mb', tom: dia >= 15 ? 'late' : 'warn', titulo: 'Fechamento do MB', texto: `Falta importar ${nome}. Baixe os relatórios do MB e mande no chat; depois importe o arquivo.`, acao: 'Importar mês' });
+    }
+    /* duas etapas */
+    if (S.nuvem() && ativoCache === false) out.push({ id: 'mfa', tom: 'info', titulo: 'Proteja os dados dos clientes', texto: 'Ative a verificação em duas etapas: o login passa a pedir um código do celular.', acao: 'Ativar' });
+    return out;
+  };
+  S.executar = async id => {
+    if (id === 'backup') { const r = await App.Backup.semanal(); if (r) App.UI.toast(r); }
+    if (id === 'mb') App.go('clientes', { produto: 'mb' }, { origem: true });
+    if (id === 'mfa') S.ativar();
+  };
+
+  App.Seg = S;
 })(window.App = window.App || {});
 
 </script>
@@ -4748,6 +4952,7 @@ window.HORUS_CONFIG = {
             ${M.respAtivas().map(x => `<label class="mf-op"><input type="checkbox" value="${x.id}" ${filtroResp.includes(x.id) ? 'checked' : ''}><i style="background:${x.cor || '#8A93A3'}"></i><span>${U.esc(x.nome)}</span></label>`).join('')}
             <div class="mf-act"><button class="link" id="fRespTodas">Ver todas</button><button class="btn primary sm" id="fRespOk">Aplicar</button></div></div></div></div>
 
+      ${(() => { const ls = App.Seg ? App.Seg.lembretes() : []; return ls.length ? `<section class="rotina" aria-label="Lembretes de rotina">${ls.map(x => `<div class="rt-it rt-${x.tom}"><div><b>${U.esc(x.titulo)}</b><span>${U.esc(x.texto)}</span></div><button class="btn sm ${x.tom === 'info' ? 'primary' : 'ghost'}" data-rt="${x.id}">${U.esc(x.acao)}</button></div>`).join('')}</section>` : ''; })()}
       <div class="ptop">
         <section class="kpis kp3" aria-label="Indicadores">
           <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=hoje${qr}"><span>Para hoje</span><b>${r.hoje}</b></a>
@@ -4838,6 +5043,7 @@ window.HORUS_CONFIG = {
       ir(0, false);
       if (window.ResizeObserver) new ResizeObserver(() => { pv.style.height = panes[atual].offsetHeight + 'px'; }).observe(panes[0]);
     }
+    el.querySelectorAll('[data-rt]').forEach(b => b.onclick = async () => { b.disabled = true; await App.Seg.executar(b.dataset.rt); b.disabled = false; });
     if (App.Emails) App.Emails.ligar(el.querySelector('.mail-card') || el);
     if (App.Ren) App.Ren.ligar(el);
     if (App.Regua) App.Regua.ligar(el);
@@ -5590,9 +5796,18 @@ window.HORUS_CONFIG = {
           <div class="card-h"><h2>Backup</h2></div>
           <p class="small">Último backup: <b>${ult ? U.fmtDateTime(ult) : 'nunca feito'}</b></p>
           <div class="dnums"><span><b>${n('responsabilidades')}</b> responsabilidades</span><span><b>${n('atividades')}</b> atividades</span><span><b>${n('metas')}</b> metas</span><span><b>${n('faturamento')}</b> lançamentos de faturamento</span><span><b>${Store.sizeKB()} KB</b> usados</span></div>
-          <div class="btns"><button class="btn primary" id="exp">Baixar backup (.json)</button></div>
-          <p class="note">Guarde o arquivo numa pasta segura ou na nuvem (Google Drive, OneDrive). Recomendo um backup por semana.</p>
+          ${Backup.suportaPasta() ? `<p class="small">Pasta do backup semanal: <b>${Backup.pastaNome() ? U.esc(Backup.pastaNome()) : 'nenhuma escolhida'}</b></p>
+          <div class="btns"><button class="btn primary" id="bkSem">${Backup.pastaNome() ? 'Salvar backup agora' : 'Escolher pasta e salvar'}</button>${Backup.pastaNome() ? '<button class="btn ghost" id="bkPasta">Trocar pasta</button>' : ''}<button class="btn ghost" id="exp">Baixar (.json)</button></div>
+          <p class="note">Escolha a pasta do OneDrive no computador (ex.: OneDrive › Horus › Backups). Toda semana o Painel lembra e, com um clique, o arquivo vai para lá e o OneDrive sincroniza. Ficam os 12 mais recentes. A pasta fica lembrada neste navegador.</p>`
+          : `<div class="btns"><button class="btn primary" id="exp">Baixar backup (.json)</button></div>
+          <p class="note">Este navegador não grava direto numa pasta (use o Chrome ou o Edge no computador para o backup em 1 clique). Guarde o arquivo baixado na pasta do OneDrive. Recomendo um backup por semana.</p>`}
         </section>
+        ${App.Seg && App.Seg.nuvem() ? `<section class="card seg-card">
+          <div class="card-h"><h2>Verificação em duas etapas</h2>${App.Seg.ativo() === true ? '<span class="tag t-ok">Ativa</span>' : App.Seg.ativo() === false ? '<span class="tag t-late">Desativada</span>' : ''}</div>
+          <p class="small">${App.Seg.ativo() ? 'O login pede a senha e um código do app autenticador no celular. O banco só entrega os dados para sessões com o código.' : 'Hoje o login pede só a senha. Com as duas etapas, pede também um código de 6 números do app autenticador do celular (Microsoft ou Google Authenticator).'}</p>
+          <div class="btns">${App.Seg.ativo() ? '<button class="btn ghost" id="mfaOff">Desativar</button>' : '<button class="btn primary" id="mfaOn">Ativar</button>'}</div>
+          <p class="note">Perdeu o celular? Peça ao Claude num chat para remover o código; depois é só ativar de novo com o celular novo.</p>
+        </section>` : ''}
         <section class="card">
           <div class="card-h"><h2>Restaurar backup</h2></div>
           <p class="small">Substitui <b>todos</b> os dados atuais pelos do arquivo. Você confirma antes.</p>
@@ -5623,6 +5838,11 @@ window.HORUS_CONFIG = {
     el.querySelectorAll('[data-ant]').forEach(i => i.onchange = () => { App.Ren.salvarAntec(i.dataset.ant, i.value); UI.toast('Antecedência salva'); });
     el.querySelectorAll('[data-segdel]').forEach(b => b.onclick = () => { App.Cli.salvarSeguradoras(App.Cli.seguradoras().filter(x => x !== b.dataset.segdel)); V.render(el); });
     const sa = el.querySelector('#segAdd'); if (sa) sa.onsubmit = e => { e.preventDefault(); const v = sa.nome.value.trim(); if (!v) return; App.Cli.salvarSeguradoras(App.Cli.seguradoras().concat(v)); V.render(el); setTimeout(() => { const n = el.querySelector('#segAdd input'); if (n) n.focus(); }); };
+    const bs = el.querySelector('#bkSem'); if (bs) bs.onclick = async () => { const m = await Backup.semanal(); if (m) UI.toast(m); V.render(el); };
+    const bp = el.querySelector('#bkPasta'); if (bp) bp.onclick = async () => { try { const n = await Backup.escolherPasta(); UI.toast('Pasta escolhida: ' + n); V.render(el); } catch (e) {} };
+    const m1 = el.querySelector('#mfaOn'); if (m1) m1.onclick = () => App.Seg.ativar();
+    const m0 = el.querySelector('#mfaOff'); if (m0) m0.onclick = () => App.Seg.desativar();
+    if (App.Seg && App.Seg.nuvem() && App.Seg.ativo() == null) App.Seg.atualizar().then(v => { if (v != null && el.isConnected) V.render(el); });
     el.querySelector('#exp').onclick = async () => { const ok = await Backup.exportar(); UI.toast(ok ? 'Backup baixado' : 'O download não foi concluído', ok ? 'ok' : 'aviso'); if (ok) V.render(el); };
     el.querySelector('#imp').onchange = async e => {
       const file = e.target.files[0]; e.target.value = ''; if (!file) return;
@@ -6588,6 +6808,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     App.Views[atual].render(main());
     if (App.origem) main().insertAdjacentHTML('afterbegin', `<button class="back" data-voltar>${UI.icon('voltar')}Voltar para ${App.Views[App.origem].titulo}</button>`);
   }
+  App.render = () => render();
   document.addEventListener('click', e => { if (e.target.closest('[data-voltar]')) { const o = App.origem || 'painel'; App.go(o); } });
 
   /* Links internos: <a data-go="atividades" data-q="prazo=hoje"> */
@@ -6637,6 +6858,8 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       let s = null;
       try { s = await C.sessao(); } catch (e) {}
       if (!s) { C.telaLogin(() => location.reload()); return; }
+      /* duas etapas: quem tem código cadastrado e entrou só com a senha digita o código antes de ver os dados */
+      if (App.Seg && await App.Seg.precisaCodigo()) { App.Seg.telaCodigo(() => location.reload()); return; }
       Store.useAdapter(C.adapter(s.user));
       Store.onStatus(statusUI);
       Store.init();
@@ -6651,6 +6874,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         UI.toast('Não foi possível carregar da nuvem. Mostrando a cópia deste aparelho.', 'erro');
       }
       C.vigiar();
+      if (App.Seg) App.Seg.atualizar().then(() => render());
     } else {
       Store.onStatus(statusUI);
       const primeiro = Store.init();
