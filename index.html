@@ -1210,7 +1210,7 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .pt-mes select { border: 0; background: none; font: inherit; font-weight: 700; color: var(--ink); padding: 4px 6px; cursor: pointer; }
 .pt-g2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: start; }
 @media (max-width: 1080px) { .pt-g2 { grid-template-columns: minmax(0, 1fr); } }
-.pt-stack { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--track); margin-bottom: 8px; }
+.pt-stack { display: flex; gap: 2px; height: 12px; border-radius: 999px; overflow: hidden; background: var(--track); margin-bottom: 8px; }
 .pt-stack span { display: block; height: 100%; }
 .pt-plats { list-style: none; margin: 0; padding: 0; }
 .pt-plats li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
@@ -1249,6 +1249,39 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .pt-kpis .kpi em { white-space: normal; }
 @media (max-width: 520px) { .pt-kpis .kpi b { font-size: 22px; } .pt-kpis .kpi { padding: 12px; } }
 .pt-kpis .kpi.k-neg em .pt-pos { color: var(--ok, #23864F); } .pt-kpis .kpi.k-neg em .pt-neg { color: var(--late); }
+
+/* ---------- Ficha: visão consolidada do patrimônio (24/11) ---------- */
+.pf-card { --sc: #12938A; }
+.pf-card .card-h { gap: 8px; }
+.pf-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 16px; align-items: stretch; }
+.pf-hero { display: grid; align-content: start; gap: 6px; padding: 14px 16px; border-radius: 12px; background: linear-gradient(150deg, #241A45 0%, #0F0C1A 100%); color: #fff; }
+.pf-hero small { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #B7AED6; font-weight: 700; }
+.pf-big { font-family: var(--display); font-size: 34px; font-weight: 800; line-height: 1.1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pf-hero p { margin: 0; color: #D9D3EE; } .pf-hero p b { color: #fff; }
+.pf-hero .link { color: #C9B8FF; }
+.pf-meter { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .14); overflow: hidden; }
+.pf-meter i { display: block; height: 100%; border-radius: 999px; background: var(--grad); }
+.pf-defmeta { display: inline-flex; align-items: center; gap: 4px; justify-self: start; font-size: 13.5px; }
+.pf-defmeta .ic { width: 14px; height: 14px; }
+.pf-fora { font-size: 12.5px; color: #B7AED6 !important; }
+.pf-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.pf-tiles > div { display: grid; gap: 2px; align-content: start; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); min-width: 0; }
+.pf-tiles small { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.pf-tiles b { font-family: var(--display); font-size: 20px; }
+.pf-tiles em { font-style: normal; font-size: 12px; color: var(--muted); }
+.pf-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.pf-cols h3 { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.pf-ml { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pf-ml li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n v" "b b"; gap: 3px 10px; align-items: end; }
+.pf-ml-n { grid-area: n; display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; min-width: 0; flex-wrap: wrap; }
+.pf-ml-n i { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+.pf-ml-n small { flex-basis: 100%; font-weight: 400; font-size: 11.5px; color: var(--muted); font-style: italic; padding-left: 15px; }
+.pf-ml-v { grid-area: v; text-align: right; font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+.pf-ml-v small { margin-left: 6px; font-weight: 600; color: var(--muted); font-size: 12px; }
+.pf-ml-b { grid-area: b; height: 6px; border-radius: 999px; background: var(--track); overflow: hidden; }
+.pf-ml-b b { display: block; height: 100%; border-radius: 999px; }
+.pf-nota { margin: 12px 0 0; }
+@media (max-width: 900px) { .pf-top { grid-template-columns: minmax(0, 1fr); } .pf-cols { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
 
 </style>
 
@@ -2486,11 +2519,12 @@ window.HORUS_CONFIG = {
   const C = () => App.Cli;
   const MES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   P.INTL = ['ita', 'stonex', 'dominion'];
+  /* cores validadas (claro, daltonismo e visão normal) no validador da skill de gráficos em 24/11 */
   P.PLATS = [
-    { id: 'mb', nome: 'MB', cor: '#1E7A86' },
-    { id: 'xp', nome: 'XP', cor: '#2B5A8C' },
-    { id: 'eqseed', nome: 'Eqseed', cor: '#6E3FF0' },
-    { id: 'intl', nome: 'Exterior', sub: 'ITA · StoneX · Dominion', cor: '#C2611A' }
+    { id: 'mb', nome: 'MB', cor: '#12938A' },
+    { id: 'xp', nome: 'XP', cor: '#3A62D8' },
+    { id: 'eqseed', nome: 'Eqseed', cor: '#C048B5' },
+    { id: 'intl', nome: 'Exterior', sub: 'ITA · StoneX · Dominion', cor: '#E08A1E' }
   ];
   P.rotulo = ref => { const [y, m] = ref.split('-'); return MES[+m - 1] + '/' + y.slice(2); };
   P.refDoRotulo = s => { const m = /^([A-Za-zç]{3})\/(\d{2})$/.exec(String(s || '').trim()); if (!m) return null; const i = MES.findIndex(x => x.toLowerCase() === m[1].toLowerCase()); return i < 0 ? null : '20' + m[2] + '-' + String(i + 1).padStart(2, '0'); };
@@ -2639,6 +2673,37 @@ window.HORUS_CONFIG = {
   P.serie = (ref, n = 12) => { const out = []; let r = ref; for (let i = 0; i < n; i++) { out.unshift(r); r = P.mesAnt(r); } return out.map(k => { const x = P.retrato(k); return { ref: k, total: x.total, cap: x.cap, plats: Object.fromEntries(Object.entries(x.plats).map(([id, v]) => [id, v.pl])) }; }); };
   /* Patrimônio de um cliente no mês (para a ficha) */
   P.doCliente = (cli, ref) => P.retrato(ref || P.mesPadrao()).linhas.find(l => l.cli.id === cli.id) || null;
+
+  /* ---------- Visão consolidada de um cliente (ficha) ---------- */
+  const IDX = s => { const x = String(s || '').toUpperCase(); return /CDI|DI\b|SELIC/.test(x) ? 'pós (CDI)' : /IPCA|INFL/.test(x) ? 'IPCA' : /PR[EÉ]/.test(x) ? 'prefixada' : s ? String(s) : 'outros'; };
+  const classeMB = p => p.classe === 'rf' ? 'Renda fixa ' + IDX(p.idx) : p.classe === 'usd' ? 'Renda fixa em dólar' : p.classe === 'cripto' ? 'Cripto' : p.classe === 'caixa' ? 'Caixa' : p.classe === 'rv' || p.classe === 'cestas' ? 'Renda variável' : 'Outros';
+  /* áreas do Mapa 360 que são investimento (o valor "mapeado" delas entra como "com outros") */
+  P.AREAS_INV = ['previdencia', 'internacional', 'cripto', 'startups', 'zentis'];
+  P.consolidado = (cli, ref) => {
+    ref = ref || P.mesPadrao();
+    const l = P.doCliente(cli, ref) || { mb: null, xp: null, eqseed: null, intl: null, total: 0, cap: 0 };
+    const cot = P.cotacao(ref);
+    /* classes de ativo: MB pelo retrato do mês (por classe e indexador); Eqseed = startups; exterior; XP sem detalhe */
+    const classes = {};
+    const add = (k, v) => { if (v > 0) classes[k] = (classes[k] || 0) + v; };
+    if (l.mb) {
+      const rec = Store.get('mb', l.mb.ref), ids = mbIdsDe(cli);
+      const ps = rec ? (rec.positions || []).filter(p => ids.includes(String(p.cid))) : [];
+      if (ps.length) ps.forEach(p => add(classeMB(p), +p.saldo || 0)); else add('MB (sem detalhe)', l.mb.pl);
+    }
+    if (l.xp) add('XP (sem detalhe)', l.xp.pl);
+    if (l.eqseed) add('Startups', l.eqseed.pl);
+    if (l.intl) add('Internacional', l.intl.pl);
+    const usdR = l.intl ? l.intl.pl : 0, brl = l.total - usdR;
+    /* fora: o que o Mapa 360 registrou como "mapeado" (com outro) em áreas de investimento, com valor */
+    const fora = Object.entries(cli.mapa || {}).filter(([a, m]) => P.AREAS_INV.includes(a) && m && m.sit === 'mapeado' && +m.valor > 0).map(([a, m]) => ({ area: a, onde: m.onde || '', valor: +m.valor }));
+    const ctsAtivos = pid => C().contratos({ clienteId: cli.id, produto: pid });
+    const consorcio = ctsAtivos('consorcio').reduce((s, x) => s + (+x.carta || 0), 0), nCons = ctsAtivos('consorcio').length;
+    const capital = ctsAtivos('vida').reduce((s, x) => s + (+x.capital || 0), 0), nVida = ctsAtivos('vida').length;
+    return { ref, cot, l, total: l.total, brl, usd: l.intl ? l.intl.usd : 0, usdR, classes: Object.entries(classes).sort((a, b) => b[1] - a[1]),
+      plats: P.PLATS.map(p => ({ ...p, v: l[p.id] ? l[p.id].pl : 0, repetido: l[p.id] ? l[p.id].repetido : false, refPos: l[p.id] ? l[p.id].ref : null })).filter(p => p.v > 0),
+      fora, foraTot: fora.reduce((s, x) => s + x.valor, 0), consorcio, nCons, capital, nVida, meta: +cli.metaPatrimonio || 0 };
+  };
 
   App.Pat = P;
 })(window.App = window.App || {});
@@ -5907,6 +5972,53 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     ligarComum(el);
   };
 
+  /* ---------- Ficha do cliente: tudo o que ele tem com você (e o que se sabe que tem fora) ---------- */
+  const COR_BRL = '#6E3FF0', COR_USD = '#E08A1E', COR_CLASSE = '#6E3FF0';
+  const pct = (v, t) => t ? Math.round(v / t * 100) + '%' : '—';
+  const meterList = (rows, total) => `<ul class="pf-ml">${rows.map(r => `<li title="${U.esc(r.nome)}: ${U.brl(r.v)} (${pct(r.v, total)})"><span class="pf-ml-n"><i style="background:${r.cor}"></i>${U.esc(r.nome)}${r.nota ? `<small>${U.esc(r.nota)}</small>` : ''}</span><span class="pf-ml-b"><b style="width:${total ? Math.max(r.v / total * 100, 1.5) : 0}%;background:${r.cor}"></b></span><span class="pf-ml-v">${U.brlShort(r.v)}<small>${pct(r.v, total)}</small></span></li>`).join('')}</ul>`;
+  PV.ficha = cli => {
+    const P = App.Pat, x = P.consolidado(cli);
+    if (!x.total && !x.consorcio && !x.capital && !x.foraTot) return '';
+    const NOMES = { previdencia: 'Previdência', internacional: 'Internacional', cripto: 'Cripto', startups: 'Startups', zentis: 'Zentis' };
+    const m = x.meta, pm = m ? Math.min(x.total / m, 1) : 0;
+    const rep = x.plats.filter(p => p.repetido);
+    return `<section class="card pf-card"><div class="card-h"><h2>Patrimônio</h2><span class="muted small">${U.esc(P.nomeMes(x.ref))}</span><span class="grow"></span><button class="link" id="pfMes">Mês a mês ›</button></div>
+      <div class="pf-top">
+        <div class="pf-hero"><small>Com você</small><b class="pf-big">${U.brlShort(x.total)}</b>
+          ${m ? `<div class="pf-meter" role="meter" aria-valuemin="0" aria-valuemax="${m}" aria-valuenow="${Math.round(x.total)}" aria-label="Patrimônio em relação à meta"><i style="width:${pm * 100}%"></i></div>
+            <p class="small"><b>${Math.round(x.total / m * 100)}%</b> da meta de ${U.brlShort(m)}${x.total < m ? ` · faltam ${U.brlShort(m - x.total)}` : ' · meta atingida'} <button class="link" id="pfMeta">editar</button></p>`
+            : `<button class="link pf-defmeta" id="pfMeta">${UI.icon('mais')}Definir meta de patrimônio</button>`}
+          ${x.foraTot ? `<p class="pf-fora" title="Do Mapa 360: áreas de investimento marcadas como &quot;Mapeado&quot; com valor">+ ${U.brlShort(x.foraTot)} com outros · ${x.fora.map(f => U.esc(NOMES[f.area] || f.area) + (f.onde ? ' (' + U.esc(f.onde) + ')' : '')).join(', ')}</p>` : ''}
+        </div>
+        <div class="pf-tiles">
+          <div><small>Em reais</small><b>${U.brlShort(x.brl)}</b><em>${x.total ? pct(x.brl, x.total) + ' do total' : '—'}</em></div>
+          <div><small>Em dólar</small><b>${x.usd ? usd(x.usd) : '—'}</b><em>${x.usd ? (x.cot ? '≈ ' + U.brlShort(x.usdR) + ' a ' + x.cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'sem cotação do mês') : 'nada no exterior'}</em></div>
+          <div><small>Consórcio</small><b>${x.consorcio ? U.brlShort(x.consorcio) : '—'}</b><em>${x.nCons ? U.plural(x.nCons, 'cota', 'cotas') + ' · em cartas' : 'nenhuma cota'}</em></div>
+          <div><small>Seguro de vida</small><b>${x.capital ? U.brlShort(x.capital) : '—'}</b><em>${x.nVida ? 'capital segurado' : 'sem apólice'}</em></div>
+        </div>
+      </div>
+      ${x.total ? `<div class="pf-cols">
+        <div><h3>Moedas</h3>${meterList([{ nome: 'Real', v: x.brl, cor: COR_BRL }, { nome: 'Dólar', v: x.usdR, cor: COR_USD }].filter(r => r.v > 0), x.total)}</div>
+        <div><h3>Onde está</h3>${meterList(x.plats.map(p => ({ nome: p.nome, v: p.v, cor: p.cor, nota: p.repetido ? 'posição de ' + P.rotulo(p.refPos).toLowerCase() : '' })), x.total)}</div>
+        <div><h3>Classes de ativo</h3>${meterList(x.classes.map(([k, v]) => ({ nome: k, v, cor: COR_CLASSE })), x.total)}</div>
+      </div>` : ''}
+      ${rep.length ? `<p class="muted small pf-nota">Sem posição deste mês em ${rep.map(p => p.nome).join(', ')}: repete a última conhecida.</p>` : ''}
+    </section>`;
+  };
+  PV.ligarFicha = (el, cli, ir) => {
+    const bm = el.querySelector('#pfMes'); if (bm) bm.onclick = () => ir({ patrimonio: true });
+    const bt = el.querySelector('#pfMeta'); if (bt) bt.onclick = () => UI.modal({
+      title: 'Meta de patrimônio · ' + App.Cli.apelido(cli), size: 'sm',
+      body: `<form class="form" id="fPfM"><p class="muted small" style="margin:0">Quanto você quer que este cliente tenha com você. Aparece como barra de progresso na ficha.</p>
+        <label class="f"><span>Meta</span><input name="meta" data-num inputmode="decimal" value="${cli.metaPatrimonio ? U.num(cli.metaPatrimonio) : ''}" placeholder="R$" autofocus></label></form>`,
+      footer: `${cli.metaPatrimonio ? '<button class="btn ghost danger-text" data-pf-del>Remover</button><span class="grow"></span>' : ''}<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fPfM" type="submit">Salvar</button>`,
+      onMount(m, api) {
+        m.querySelector('#fPfM').onsubmit = e => { e.preventDefault(); const v = U.parseNum(e.target.meta.value); Store.update('clientes', cli.id, { metaPatrimonio: v > 0 ? v : null }); api.close(); UI.toast(v > 0 ? 'Meta salva' : 'Meta removida'); };
+        const d = m.querySelector('[data-pf-del]'); if (d) d.onclick = () => { Store.update('clientes', cli.id, { metaPatrimonio: null }); api.close(); UI.toast('Meta removida'); };
+      }
+    });
+  };
+
   App.PatView = PV;
 })(window.App = window.App || {});
 
@@ -6398,6 +6510,8 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const eq = (porProd.eqseed || []).filter(x => (x.status || 'ativo') === 'ativo').reduce((s, x) => s + (+x.valor || 0), 0);
     const plXp = Cli.plXp(c), brl = (m ? +m.pl : 0) + eq + (plXp || 0);
     const itaUsd = (porProd.ita || []).reduce((s, x) => s + (+x.valorConta || 0), 0);
+    /* mesmo total do bloco Patrimônio (inclui o exterior convertido pela cotação do mês) */
+    const totPat = App.Pat ? App.Pat.consolidado(c).total : brl;
     const falta = [];
     const de = P.deInd ? { indicacoes: true } : P.de ? { produto: P.de } : {};
     el.innerHTML = `${voltar(P.deInd ? 'Indicações' : P.de ? Cli.produto(P.de).nome : 'Clientes', de)}
@@ -6407,13 +6521,14 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
           <div class="cl-hero-tags">${pids.map(pid => `<span style="--pc:${Cli.produto(pid).cor}">${U.esc(Cli.produto(pid).nome)}</span>`).join('')}</div></div></div>
         <div class="cl-hero-act"><button class="btn ghost-d" id="clEd">${UI.icon('editar')}Editar</button><button class="btn primary" data-novo-ct data-cid="${c.id}">${UI.icon('mais')}Produto</button></div>
         <div class="cl-hero-kpis">
-          <button class="kp-btn" id="clXp" title="Atualizar o PL da XP"><small>Investido com você</small><b>${brl ? U.brl(brl) : '—'}</b><em>${plXp != null ? 'XP ' + U.brlShort(plXp) + ' em ' + U.fmtDate(c.xp.em) : 'MB + Eqseed · + PL da XP ›'}${itaUsd ? ' · + ' + usd(itaUsd) + ' no exterior' : ''}</em></button>
+          <button class="kp-btn" id="clXp" title="Atualizar o PL da XP"><small>Investido com você</small><b>${totPat ? U.brl(totPat) : '—'}</b><em>${plXp != null ? 'XP ' + U.brlShort(plXp) + ' em ' + U.fmtDate(c.xp.em) + ' · atualizar ›' : 'MB + Eqseed · + PL da XP ›'}${!App.Pat && itaUsd ? ' · + ' + usd(itaUsd) + ' no exterior' : ''}</em></button>
           <div><small>Produtos</small><b>${pids.length}</b><em>${U.plural(cts.filter(x => (x.status || 'ativo') === 'ativo').length + (m ? 1 : 0), 'contrato ativo', 'contratos ativos')}</em></div>
           <button class="kp-btn" id="clAts"><small>Atividades em aberto</small><b>${abertas.length}</b><em>${ats.length ? 'Ver ' + U.plural(ats.length, 'atividade', 'atividades') : 'Criar atividade'} ›</em></button>
           <div><small>Receita gerada</small><b>${receita ? U.brl(receita) : '—'}</b><em>nas suas produções</em></div>
         </div>
       </section>
       ${App.Regua ? App.Regua.faixa(c) : ''}
+      ${App.PatView ? App.PatView.ficha(c) : ''}
       ${c.observacoes ? `<p class="cl-obs">${U.esc(c.observacoes)}</p>` : ''}
       ${(() => { if (!App.Ren) return ''; App.Ren.sincronizar(); const rs = App.Ren.doCliente(c.id), ab = rs.filter(r => !App.Ren.final(r.status)), fe = rs.filter(r => App.Ren.final(r.status));
         return rs.length ? `<section class="card ren-ficha"><div class="card-h"><h2>Renovações</h2>${ab.length ? `<span class="count">${ab.length}</span>` : ''}</div>
@@ -6428,6 +6543,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.querySelector('#clAts').onclick = () => atividadesModal(c, ats);
     el.querySelector('#clXp').onclick = () => xpModal(c);
     if (App.Regua) App.Regua.ligar(el);
+    if (App.PatView) App.PatView.ligarFicha(el, c, ir);
     el.querySelectorAll('[data-m360]').forEach(b => b.onclick = () => editarArea(c, b.dataset.m360));
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
       const pid = b.dataset.pbGo;
