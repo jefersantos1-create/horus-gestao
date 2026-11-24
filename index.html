@@ -6,7 +6,9 @@
 <style>[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Horus Gestão</title>
+<title>Donna AI</title>
+<meta name="application-name" content="Donna AI">
+<meta name="apple-mobile-web-app-title" content="Donna AI">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1300,11 +1302,48 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
 .mfa-code { font: 700 24px var(--display) !important; letter-spacing: .3em; text-align: center; }
 .seg-card .tag { margin-left: auto; }
 
+/* ---------- Braço direito (24/11): Agenda e Resumo ---------- */
+:root { --c-agd: #0E7C86; }
+.ag-card { --sc: var(--c-agd); }
+.grid-main .ag-card { padding-top: 0 !important; overflow: hidden; }
+.grid-main .ag-card > .card-h { margin: 0 -18px 12px; padding: 12px 18px; background: color-mix(in srgb, var(--sc) 10%, #fff); border-bottom: 1px solid color-mix(in srgb, var(--sc) 18%, #fff); }
+.grid-main .ag-card > .card-h h2 { color: var(--sc); }
+.ag-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.ag-it { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
+.ag-it:first-child { border-top: 0; }
+.ag-h { font-family: var(--display); font-weight: 700; font-size: 14px; display: grid; line-height: 1.15; }
+.ag-h small { font-family: var(--body); font-weight: 500; font-size: 11.5px; color: var(--muted); }
+.ag-b { display: grid; min-width: 0; } .ag-b b { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ag-m { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--muted); align-items: center; }
+.ag-cli { border: 0; background: color-mix(in srgb, var(--c-agd) 12%, #fff); color: var(--c-agd); font: inherit; font-weight: 600; font-size: 12px; padding: 1px 8px; border-radius: 999px; cursor: pointer; }
+.ag-agora { color: #fff !important; background: var(--c-agd); border-radius: 999px; padding: 0 7px; font-weight: 700; }
+.ag-it.passou { opacity: .55; } .ag-it.agora { background: color-mix(in srgb, var(--c-agd) 6%, transparent); border-radius: 10px; }
+.ag-prox { margin-top: 8px; font-size: 13px; }
+.ag-lido { margin: 6px 0 0; }
+.ag-res { margin: 0 0 6px; font-size: 14.5px; line-height: 1.5; }
+.ag-h3 { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 14px 0 6px; }
+.ag-ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.ag-ficha { display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 10px 14px; border-radius: 12px; background: color-mix(in srgb, var(--c-agd) 8%, #fff); border: 1px solid color-mix(in srgb, var(--c-agd) 22%, #fff); font-size: 13.5px; }
+.rs-card { padding-top: 0 !important; overflow: hidden; }
+.rs-card > .card-h { margin: 0 -18px 10px; padding: 12px 18px; background: linear-gradient(110deg, #241A45, #3B2A7A); color: #fff; }
+.rs-card > .card-h h2 { color: #fff; background: none; -webkit-background-clip: initial; background-clip: initial; }
+.rs-card > .card-h .link { color: #CFC2FF; }
+.rs-card.rs-fechado { padding-bottom: 0; } .rs-card.rs-fechado > .card-h { margin-bottom: 0; }
+.rs-sem > .card-h { background: linear-gradient(110deg, #0B4F56, #0E7C86); }
+.rs-rec { margin: 0; padding-left: 18px; display: grid; gap: 5px; font-size: 14.5px; line-height: 1.45; }
+@media (max-width: 520px) { .ag-it { grid-template-columns: 46px minmax(0, 1fr); } .ag-it .btn { grid-column: 2; justify-self: start; } }
+/* celular/tablet: Agenda de hoje logo depois das prioridades (antes dos e-mails) */
+@media (max-width: 1080px) {
+  .grid-main > .main-col, .grid-main > .side-col { display: contents; }
+  .grid-main .side-col > * { order: 4; }
+  .grid-main .prio-card { order: 1; } .grid-main .ag-card { order: 2; } .grid-main .mail-card { order: 3; }
+}
+
 </style>
 
 <div class="app">
   <aside class="sidebar" aria-label="Navegação">
-    <div class="brand"><div><b class="logo">Horus <span>Gestão</span></b><small>Painel pessoal e profissional</small></div></div>
+    <div class="brand"><div><b class="logo">Donna <span>AI</span></b><small>Seu braço direito</small></div></div>
     <button class="btn primary new" data-nova-atividade><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova atividade</button>
     <nav class="nav">
       <a href="#painel" data-go="painel"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Painel</span></a>
@@ -1320,7 +1359,7 @@ button.kpi { font: inherit; text-align: left; cursor: pointer; }
   </aside>
 
   <header class="topbar">
-    <div class="brand"><b class="logo">Horus <span>Gestão</span></b></div>
+    <div class="brand"><b class="logo">Donna <span>AI</span></b></div>
     <span class="grow"></span><span class="syncdot" id="syncDot"></span>
     <button class="btn primary sm" data-nova-atividade aria-label="Nova atividade"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova</button>
   </header>
@@ -1412,7 +1451,7 @@ window.HORUS_CONFIG = {
  */
 (function (App) {
   const BASE = 'gestao-pessoal:dados:v1', QBASE = 'gestao-pessoal:fila:v1';
-  const COLS = ['responsabilidades', 'atividades', 'metas', 'metaRegistros', 'historico', 'faturamento', 'linhas', 'produtos', 'producoes', 'recebiveis', 'recorrencias', 'emails', 'clientes', 'contratos', 'mb', 'renovacoes'];
+  const COLS = ['responsabilidades', 'atividades', 'metas', 'metaRegistros', 'historico', 'faturamento', 'linhas', 'produtos', 'producoes', 'recebiveis', 'recorrencias', 'emails', 'clientes', 'contratos', 'mb', 'renovacoes', 'agenda', 'resumos'];
   const SCHEMA = 1;
 
   const ls = {
@@ -2737,7 +2776,7 @@ window.HORUS_CONFIG = {
   B.exportar = async () => {
     const pacote = { app: APP_ID, versao: 1, exportadoEm: U.nowISO(), dados: Store.snapshot() };
     const texto = JSON.stringify(pacote, null, 2);
-    const nome = 'backup-painel-gestao-' + U.today() + '.json';
+    const nome = 'donna-backup-' + U.today() + '.json';
     const ok = await B.salvarArquivo(nome, texto, 'application/json');
     if (ok) Store.config('ultimoBackup', U.nowISO());
     return ok;
@@ -2781,7 +2820,7 @@ window.HORUS_CONFIG = {
 
   /* ---------- Backup semanal numa pasta do computador (ex.: OneDrive), 24/11 ----------
      A pasta é escolhida uma vez (Chrome/Edge: File System Access); o "endereço" dela fica guardado neste navegador (IndexedDB).
-     Cada backup vira um arquivo horus-backup-AAAA-MM-DD.json; ficam os 12 mais recentes. */
+     Cada backup vira um arquivo donna-backup-AAAA-MM-DD.json; ficam os 12 mais recentes. */
   const IDB = 'horus-fs', ST = 'pastas', CH = 'backup';
   const idb = () => new Promise((res, rej) => { const r = indexedDB.open(IDB, 1); r.onupgradeneeded = () => r.result.createObjectStore(ST); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
   const idbGet = async k => { const db = await idb(); return new Promise((res, rej) => { const t = db.transaction(ST).objectStore(ST).get(k); t.onsuccess = () => res(t.result || null); t.onerror = () => rej(t.error); }); };
@@ -2802,11 +2841,11 @@ window.HORUS_CONFIG = {
     let perm = await h.queryPermission({ mode: 'readwrite' });
     if (perm !== 'granted') perm = await h.requestPermission({ mode: 'readwrite' });
     if (perm !== 'granted') throw new Error('O navegador não liberou a pasta.');
-    const nome = 'horus-backup-' + U.today() + '.json';
+    const nome = 'donna-backup-' + U.today() + '.json';
     const fh = await h.getFileHandle(nome, { create: true }), w = await fh.createWritable();
     await w.write(new Blob([texto()], { type: 'application/json' })); await w.close();
-    /* mantém os 12 mais recentes (só os arquivos de backup do Horus) */
-    try { const nomes = []; for await (const [n, e] of h.entries()) if (e.kind === 'file' && /^horus-backup-\d{4}-\d{2}-\d{2}\.json$/.test(n)) nomes.push(n);
+    /* mantém os 12 mais recentes (só os arquivos de backup da Donna; os antigos horus-backup-* ficam) */
+    try { const nomes = []; for await (const [n, e] of h.entries()) if (e.kind === 'file' && /^donna-backup-\d{4}-\d{2}-\d{2}\.json$/.test(n)) nomes.push(n);
       for (const n of nomes.sort().reverse().slice(12)) await h.removeEntry(n); } catch (e) {}
     Store.config('ultimoBackup', U.nowISO());
     return nome;
@@ -2853,9 +2892,9 @@ window.HORUS_CONFIG = {
     faturamento: ['id', 'data', 'cliente', 'tipo', 'descricao', 'valor', 'receita', 'responsabilidadeId', 'atividadeId', 'observacoes', 'demo', 'criadoEm', 'atualizadoEm']
   };
   /* Tabelas do faturamento guardam o registro inteiro em JSON (fácil de evoluir sem mudar o banco) */
-  const JSONT = { linhas: 'fat_linhas', produtos: 'fat_produtos', producoes: 'fat_producoes', recebiveis: 'fat_recebiveis', recorrencias: 'fat_recorrencias', emails: 'emails', clientes: 'clientes', contratos: 'contratos', mb: 'carteira_mb', renovacoes: 'renovacoes' };
+  const JSONT = { linhas: 'fat_linhas', produtos: 'fat_produtos', producoes: 'fat_producoes', recebiveis: 'fat_recebiveis', recorrencias: 'fat_recorrencias', emails: 'emails', clientes: 'clientes', contratos: 'contratos', mb: 'carteira_mb', renovacoes: 'renovacoes', agenda: 'agenda', resumos: 'resumos' };
   /* Tabelas novas: se ainda não existem no banco, o painel segue funcionando (guarda só neste aparelho) e avisa uma vez */
-  const OPCIONAIS = { renovacoes: true }, ausentes = {};
+  const OPCIONAIS = { renovacoes: true, agenda: true, resumos: true }, ausentes = {};
   const faltaTabela = e => /does not exist|could not find the table|PGRST205|42P01/i.test(((e && (e.message || '')) + ' ' + (e && e.code || '')));
   Object.assign(TABELAS, JSONT);
   const DATAS = ['inicio', 'prazo', 'fim', 'data', 'concluidaEm', 'em', 'criadoEm', 'atualizadoEm'];
@@ -2991,7 +3030,7 @@ window.HORUS_CONFIG = {
     document.body.appendChild(el);
     const desenhar = (msg = '', tipo = 'erro') => {
       el.innerHTML = `<div class="auth-card">
-        <b class="logo dark">Horus <span>Gestão</span></b>
+        <b class="logo dark">Donna <span>AI</span></b>
         <h1>${modo === 'entrar' ? 'Entrar no painel' : modo === 'criar' ? 'Criar sua conta' : 'Recuperar senha'}</h1>
         <p class="muted small">${modo === 'esqueci' ? 'Enviamos um link para você criar uma nova senha.' : 'Seus dados ficam salvos na nuvem e aparecem em qualquer aparelho.'}</p>
         <form class="form" id="fAuth">
@@ -3060,7 +3099,7 @@ window.HORUS_CONFIG = {
   /* ---------- Primeiro acesso: banco vazio ---------- */
   C.boasVindas = () => {
     const m = App.UI.modal({
-      title: 'Bem-vindo ao Horus Gestão', size: 'md',
+      title: 'Bem-vindo à Donna AI', size: 'md',
       body: `<p>Sua conta está pronta e ainda não tem dados. Como você quer começar?</p>
         <div class="welcome">
           <label class="wopt"><b>Trazer meus dados do painel antigo</b><span>Escolha o backup (.json) baixado em "Backup e dados" do arquivo que você já usava.</span><input type="file" accept=".json,application/json" id="wFile"></label>
@@ -3139,7 +3178,7 @@ window.HORUS_CONFIG = {
         const box = el.querySelector('#mfaBox');
         /* fator não verificado de tentativa anterior atrapalha o novo cadastro */
         try { const { data } = await sb().auth.mfa.listFactors(); for (const f of (data && data.all || []).filter(f => f.status !== 'verified')) await sb().auth.mfa.unenroll({ factorId: f.id }); } catch (e) {}
-        const r = await sb().auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Celular ' + U.today() });
+        const r = await sb().auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Celular ' + U.today(), issuer: 'Donna AI' });
         if (r.error) { box.innerHTML = `<p class="ferr">${U.esc(traduz(r.error))}</p>`; return; }
         fator = r.data;
         box.innerHTML = `<form class="form" id="fMfa">
@@ -3186,8 +3225,8 @@ window.HORUS_CONFIG = {
   S.telaCodigo = aoOk => {
     if (document.querySelector('.auth.mfa-tela')) return;
     const el = document.createElement('div'); el.className = 'auth mfa-tela'; document.body.appendChild(el);
-    el.innerHTML = `<div class="auth-card"><b class="logo dark">Horus <span>Gestão</span></b><h1>Verificação em duas etapas</h1>
-      <p class="muted small">Abra o app autenticador no celular e digite o código de 6 números do Horus.</p>
+    el.innerHTML = `<div class="auth-card"><b class="logo dark">Donna <span>AI</span></b><h1>Verificação em duas etapas</h1>
+      <p class="muted small">Abra o app autenticador no celular e digite o código de 6 números (conta Donna AI ou a que você cadastrou).</p>
       <form class="form" id="fMfaL"><label class="f full"><span>Código</span>${campoCodigo}</label><p class="ferr" id="mfaLErr" hidden></p>
         <button class="btn primary full" type="submit">Entrar</button></form>
       <div class="auth-links"><button class="link" id="mfaSair">Sair</button><span class="muted small">Perdeu o celular? Peça ao Claude para remover o código.</span></div></div>`;
@@ -4908,6 +4947,121 @@ window.HORUS_CONFIG = {
 
 </script>
 <script>
+/* js/ui/agenda.js */
+/* Braço direito (24/11): Agenda do Outlook com preparação de reunião + Resumo da manhã / Revisão da semana.
+   Quem grava é o Claude (tarefas agendadas "Donna AI · agenda e resumo da manhã" e "Donna AI · revisão da semana");
+   o painel só mostra. Nada de e-mail ou telefone de participantes: só nomes.
+   agenda.dados  = { evId, titulo, inicio:'AAAA-MM-DDTHH:MM', fim, diaTodo, local, online, link, participantes:[nomes],
+                     clienteId, clienteNome, cancelado, prep:{ resumo, pontos:[...], perguntas:[...], em }, atualizadoEm }
+   resumos.dados = { tipo:'manha'|'semana', data:'AAAA-MM-DD', titulo, recado:[linhas], blocos:[{ titulo, itens:[texto] }], geradoEm } */
+(function (App) {
+  const { U, UI, Store } = App;
+  const A = {}, R = {};
+  const DIAS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+  const hora = s => (s || '').slice(11, 16);
+  const dia = s => (s || '').slice(0, 10);
+  const agora = () => { const d = new Date(); return U.today() + 'T' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+  const nomeDia = iso => { const d = new Date(iso + 'T12:00:00'); return DIAS[d.getDay()] + ', ' + d.getDate() + '/' + String(d.getMonth() + 1).padStart(2, '0'); };
+
+  /* ---------- Agenda ---------- */
+  A.eventos = () => Store.all('agenda').filter(e => !e.cancelado && e.inicio).sort((a, b) => a.inicio.localeCompare(b.inicio));
+  A.doDia = d => A.eventos().filter(e => dia(e.inicio) === d);
+  A.proximoDia = () => { const hoje = U.today(), e = A.eventos().find(x => dia(x.inicio) > hoje); return e ? dia(e.inicio) : null; };
+  A.doCliente = cid => A.eventos().filter(e => e.clienteId === cid && dia(e.inicio) >= U.today());
+
+  const item = e => {
+    const passou = !e.diaTodo && (e.fim || e.inicio) < agora(), agoraJa = !e.diaTodo && e.inicio <= agora() && (e.fim || e.inicio) >= agora();
+    return `<li class="ag-it${passou ? ' passou' : ''}${agoraJa ? ' agora' : ''}">
+      <span class="ag-h">${e.diaTodo ? 'dia todo' : hora(e.inicio)}${e.fim && !e.diaTodo ? `<small>${hora(e.fim)}</small>` : ''}</span>
+      <div class="ag-b"><b>${U.esc(e.titulo || 'Sem título')}</b>
+        <span class="ag-m">${e.clienteNome ? `<button class="ag-cli" data-agcli="${U.esc(e.clienteId || '')}" data-agnome="${U.esc(e.clienteNome)}">${U.esc(e.clienteNome)}</button>` : ''}${e.online ? '<span>online</span>' : e.local ? `<span>${U.esc(e.local)}</span>` : ''}${agoraJa ? '<span class="ag-agora">agora</span>' : ''}</span></div>
+      ${e.prep ? `<button class="btn sm ${passou ? 'ghost' : 'primary'}" data-agprep="${e.id}">Preparação</button>` : ''}</li>`;
+  };
+
+  A.card = () => {
+    const hoje = U.today(), evs = A.doDia(hoje), prox = A.proximoDia(), nProx = prox ? A.doDia(prox).length : 0;
+    const tem = Store.all('agenda').length > 0;
+    const lido = Store.all('agenda').reduce((m, e) => (e.atualizadoEm || '') > m ? e.atualizadoEm : m, '');
+    return `<section class="card ag-card" aria-label="Agenda de hoje"><div class="card-h"><h2>Agenda de hoje</h2><span class="grow"></span>${evs.length ? `<span class="count">${evs.length}</span>` : ''}</div>
+      ${evs.length ? `<ul class="ag-list">${evs.map(item).join('')}</ul>`
+        : `<div class="empty sm"><p>${tem ? 'Nenhum compromisso hoje.' : 'A agenda do Outlook chega na leitura das 7h23 (dias úteis).'}</p></div>`}
+      ${prox ? `<button class="link ag-prox" data-agdia="${prox}">${prox === U.addDays(hoje, 1) ? 'Amanhã' : nomeDia(prox)} · ${U.plural(nProx, 'compromisso', 'compromissos')} ›</button>` : ''}
+      ${lido ? `<p class="muted small ag-lido">Lida do Outlook ${U.fmtDateTime(lido)}</p>` : ''}</section>`;
+  };
+
+  A.prep = id => {
+    const e = Store.get('agenda', id); if (!e || !e.prep) return;
+    const p = e.prep, lista = (t, xs) => xs && xs.length ? `<h3 class="ag-h3">${t}</h3><ul class="ag-ul">${xs.map(x => `<li>${U.esc(x)}</li>`).join('')}</ul>` : '';
+    UI.modal({
+      title: 'Preparação · ' + (e.titulo || ''), size: 'md',
+      body: `<p class="muted small" style="margin:0 0 10px">${U.esc(nomeDia(dia(e.inicio)))}${e.diaTodo ? '' : ' · ' + hora(e.inicio) + (e.fim ? '–' + hora(e.fim) : '')}${e.online ? ' · online' : e.local ? ' · ' + U.esc(e.local) : ''}${(e.participantes || []).length ? ' · com ' + e.participantes.map(U.esc).join(', ') : ''}</p>
+        ${p.resumo ? `<p class="ag-res">${U.esc(p.resumo)}</p>` : ''}
+        ${lista('Pontos para a conversa', p.pontos)}${lista('Perguntas a fazer', p.perguntas)}
+        ${p.em ? `<p class="muted small" style="margin-top:12px">Preparada pelo Claude em ${U.fmtDateTime(p.em)} com os dados do painel.</p>` : ''}`,
+      footer: `${e.link ? `<a class="btn ghost" href="${U.esc(e.link)}" target="_blank" rel="noopener">Abrir no Outlook</a>` : ''}<span class="grow"></span>${e.clienteId && App.Cli && App.Cli.cliente(e.clienteId) ? `<button class="btn ghost" data-agficha>Ficha do cliente</button>` : ''}<button class="btn primary" data-close>Fechar</button>`,
+      onMount(el, api) { const b = el.querySelector('[data-agficha]'); if (b) b.onclick = () => { api.close(); App.go('clientes', { cliente: e.clienteId }, { origem: true }); }; }
+    });
+  };
+
+  A.dia = d => {
+    const evs = A.doDia(d);
+    UI.modal({
+      title: 'Agenda · ' + nomeDia(d), size: 'md',
+      body: evs.length ? `<ul class="ag-list">${evs.map(item).join('')}</ul>` : '<p class="muted">Nenhum compromisso.</p>',
+      footer: `<button class="btn primary" data-close>Fechar</button>`,
+      onMount(el, api) { ligar(el, api); }
+    });
+  };
+
+  const ligar = (el, api) => {
+    el.querySelectorAll('[data-agprep]').forEach(b => b.onclick = () => A.prep(b.dataset.agprep));
+    el.querySelectorAll('[data-agcli]').forEach(b => b.onclick = () => { if (api) api.close(); if (b.dataset.agcli && App.Cli && App.Cli.cliente(b.dataset.agcli)) App.go('clientes', { cliente: b.dataset.agcli }, { origem: true }); else UI.toast(b.dataset.agnome + ' não está na base.', 'aviso'); });
+    el.querySelectorAll('[data-agdia]').forEach(b => b.onclick = () => A.dia(b.dataset.agdia));
+  };
+  A.ligar = el => ligar(el);
+
+  /* Ficha do cliente: próximas reuniões com ele */
+  A.ficha = cli => {
+    const evs = A.doCliente(cli.id).slice(0, 3); if (!evs.length) return '';
+    return `<div class="ag-ficha">${evs.map(e => `<span>${U.esc(nomeDia(dia(e.inicio)))}${e.diaTodo ? '' : ' ' + hora(e.inicio)} · <b>${U.esc(e.titulo || 'Reunião')}</b>${e.prep ? ` <button class="link" data-agprep="${e.id}">Preparação</button>` : ''}</span>`).join('')}</div>`;
+  };
+
+  /* ---------- Resumo da manhã / Revisão da semana ---------- */
+  const LIDO = 'donna-resumo-lido';
+  R.atual = () => {
+    const hoje = U.today(), dow = new Date(hoje + 'T12:00:00').getDay();
+    /* sexta (depois de gerada), sábado e domingo: revisão da semana; dias úteis: resumo do dia */
+    const sem = Store.all('resumos').filter(r => r.tipo === 'semana' && r.data && r.data <= hoje && U.diff(hoje, r.data) <= 2).sort((a, b) => b.data.localeCompare(a.data))[0];
+    if (sem && (dow === 5 || dow === 6 || dow === 0)) return sem;
+    return Store.all('resumos').find(r => r.tipo === 'manha' && r.data === hoje) || null;
+  };
+  R.card = () => {
+    const r = R.atual(); if (!r) return '';
+    let lido = ''; try { lido = localStorage.getItem(LIDO) || ''; } catch (e) {}
+    const chave = r.id + '|' + (r.geradoEm || ''), fechado = lido === chave;
+    const semana = r.tipo === 'semana';
+    return `<section class="card rs-card${semana ? ' rs-sem' : ''}${fechado ? ' rs-fechado' : ''}" aria-label="${semana ? 'Revisão da semana' : 'Resumo da manhã'}">
+      <div class="card-h"><h2>${U.esc(r.titulo || (semana ? 'Revisão da semana' : 'Resumo do dia'))}</h2><span class="grow"></span>
+        ${(r.blocos || []).length ? '<button class="link" data-rsver>Ver completo</button>' : ''}
+        <button class="link" data-rsok>${fechado ? 'Mostrar' : 'Ok, li'}</button></div>
+      ${fechado ? '' : `<ul class="rs-rec">${(r.recado || []).map(x => `<li>${U.esc(x)}</li>`).join('')}</ul>`}</section>`;
+  };
+  R.ligar = el => {
+    const r = R.atual(); if (!r) return;
+    const ok = el.querySelector('[data-rsok]'); if (ok) ok.onclick = () => { const chave = r.id + '|' + (r.geradoEm || ''); let lido = ''; try { lido = localStorage.getItem(LIDO) || ''; localStorage.setItem(LIDO, lido === chave ? '' : chave); } catch (e) {} App.render && App.render(); };
+    const v = el.querySelector('[data-rsver]'); if (v) v.onclick = () => UI.modal({
+      title: r.titulo || 'Resumo', size: 'md',
+      body: `${(r.recado || []).length ? `<ul class="rs-rec">${r.recado.map(x => `<li>${U.esc(x)}</li>`).join('')}</ul>` : ''}${(r.blocos || []).map(b => `<h3 class="ag-h3">${U.esc(b.titulo || '')}</h3><ul class="ag-ul">${(b.itens || []).map(x => `<li>${U.esc(x)}</li>`).join('')}</ul>`).join('')}
+        ${r.geradoEm ? `<p class="muted small" style="margin-top:12px">Gerado pelo Claude em ${U.fmtDateTime(r.geradoEm)}.</p>` : ''}`,
+      footer: '<button class="btn primary" data-close>Fechar</button>'
+    });
+  };
+
+  App.Agenda = A; App.Resumo = R;
+})(window.App = window.App || {});
+
+</script>
+<script>
 /* js/views/painel.js */
 /* Tela: Painel (dashboard principal). Responde: hoje, atrasadas, próximas, metas e execução. */
 (function (App) {
@@ -4953,6 +5107,7 @@ window.HORUS_CONFIG = {
             <div class="mf-act"><button class="link" id="fRespTodas">Ver todas</button><button class="btn primary sm" id="fRespOk">Aplicar</button></div></div></div></div>
 
       ${(() => { const ls = App.Seg ? App.Seg.lembretes() : []; return ls.length ? `<section class="rotina" aria-label="Lembretes de rotina">${ls.map(x => `<div class="rt-it rt-${x.tom}"><div><b>${U.esc(x.titulo)}</b><span>${U.esc(x.texto)}</span></div><button class="btn sm ${x.tom === 'info' ? 'primary' : 'ghost'}" data-rt="${x.id}">${U.esc(x.acao)}</button></div>`).join('')}</section>` : ''; })()}
+      ${App.Resumo ? App.Resumo.card() : ''}
       <div class="ptop">
         <section class="kpis kp3" aria-label="Indicadores">
           <a class="kpi" href="#atividades" data-go="atividades" data-q="prazo=hoje${qr}"><span>Para hoje</span><b>${r.hoje}</b></a>
@@ -4989,6 +5144,7 @@ window.HORUS_CONFIG = {
         </div>
 
         <aside class="side-col">
+          ${App.Agenda ? App.Agenda.card() : ''}
           ${App.Regua ? App.Regua.card(filtroResp) : ''}
           ${App.Ren && App.Views.clientes ? App.Ren.card({ max: 5, extras: App.Cli.avisosConsorcio() }) : ''}
           <section class="card exec">
@@ -5043,6 +5199,8 @@ window.HORUS_CONFIG = {
       ir(0, false);
       if (window.ResizeObserver) new ResizeObserver(() => { pv.style.height = panes[atual].offsetHeight + 'px'; }).observe(panes[0]);
     }
+    if (App.Agenda) App.Agenda.ligar(el);
+    if (App.Resumo) App.Resumo.ligar(el);
     el.querySelectorAll('[data-rt]').forEach(b => b.onclick = async () => { b.disabled = true; await App.Seg.executar(b.dataset.rt); b.disabled = false; });
     if (App.Emails) App.Emails.ligar(el.querySelector('.mail-card') || el);
     if (App.Ren) App.Ren.ligar(el);
@@ -5798,7 +5956,7 @@ window.HORUS_CONFIG = {
           <div class="dnums"><span><b>${n('responsabilidades')}</b> responsabilidades</span><span><b>${n('atividades')}</b> atividades</span><span><b>${n('metas')}</b> metas</span><span><b>${n('faturamento')}</b> lançamentos de faturamento</span><span><b>${Store.sizeKB()} KB</b> usados</span></div>
           ${Backup.suportaPasta() ? `<p class="small">Pasta do backup semanal: <b>${Backup.pastaNome() ? U.esc(Backup.pastaNome()) : 'nenhuma escolhida'}</b></p>
           <div class="btns"><button class="btn primary" id="bkSem">${Backup.pastaNome() ? 'Salvar backup agora' : 'Escolher pasta e salvar'}</button>${Backup.pastaNome() ? '<button class="btn ghost" id="bkPasta">Trocar pasta</button>' : ''}<button class="btn ghost" id="exp">Baixar (.json)</button></div>
-          <p class="note">Escolha a pasta do OneDrive no computador (ex.: OneDrive › Horus › Backups). Toda semana o Painel lembra e, com um clique, o arquivo vai para lá e o OneDrive sincroniza. Ficam os 12 mais recentes. A pasta fica lembrada neste navegador.</p>`
+          <p class="note">Escolha a pasta do OneDrive no computador (ex.: Documentos › Backup Donna AI). Toda semana o Painel lembra e, com um clique, o arquivo vai para lá e o OneDrive sincroniza. Ficam os 12 mais recentes. A pasta fica lembrada neste navegador.</p>`
           : `<div class="btns"><button class="btn primary" id="exp">Baixar backup (.json)</button></div>
           <p class="note">Este navegador não grava direto numa pasta (use o Chrome ou o Edge no computador para o backup em 1 clique). Guarde o arquivo baixado na pasta do OneDrive. Recomendo um backup por semana.</p>`}
         </section>
@@ -6748,6 +6906,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         </div>
       </section>
       ${App.Regua ? App.Regua.faixa(c) : ''}
+      ${App.Agenda ? App.Agenda.ficha(c) : ''}
       ${App.PatView ? App.PatView.ficha(c) : ''}
       ${c.observacoes ? `<p class="cl-obs">${U.esc(c.observacoes)}</p>` : ''}
       ${(() => { if (!App.Ren) return ''; App.Ren.sincronizar(); const rs = App.Ren.doCliente(c.id), ab = rs.filter(r => !App.Ren.final(r.status)), fe = rs.filter(r => App.Ren.final(r.status));
@@ -6764,6 +6923,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.querySelector('#clXp').onclick = () => xpModal(c);
     if (App.Regua) App.Regua.ligar(el);
     if (App.PatView) App.PatView.ligarFicha(el, c, ir);
+    if (App.Agenda) App.Agenda.ligar(el);
     el.querySelectorAll('[data-m360]').forEach(b => b.onclick = () => editarArea(c, b.dataset.m360));
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
       const pid = b.dataset.pbGo;
@@ -6797,7 +6957,7 @@ App.MB_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     atual = rota;
     try { if (location.hash !== '#' + rota) history.replaceState(null, '', '#' + rota); } catch (e) {}
     document.querySelectorAll('[data-go]').forEach(a => a.classList.toggle('active', a.dataset.go === rota && !a.dataset.q));
-    document.title = v.titulo + ' · Horus Gestão';
+    document.title = v.titulo + ' · Donna AI';
     render();
     window.scrollTo({ top: 0 });
   };
