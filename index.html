@@ -1708,6 +1708,46 @@ b > i.mk-d:last-child, .pf-ml-n i.mk-d { margin-left: 6px; }
 .gs-prod { justify-items: start; text-align: left; } .gs-prod .gs-pv { margin: 0; text-align: left; }
 .gs-prod .gs-pb > span { margin: 0; }
 
+/* ---------- Varredura 26/11 (F2, F3, T1–T5) ---------- */
+/* F2: leitura automática atrasada */
+.leit-velha { display: flex; gap: 8px; align-items: flex-start; margin: 10px 0 0; padding: 8px 10px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); font-size: 12.5px; font-weight: 600; line-height: 1.4; }
+.leit-velha .ic { width: 15px; height: 15px; flex: none; margin-top: 1px; }
+.leit-velha-t { font-size: 12.5px; font-weight: 700; color: var(--warn); }
+/* T4: e-mail parado */
+.em-mparado { font-size: 11px; font-weight: 700; color: var(--late, #C8402E); background: color-mix(in srgb, #C8402E 10%, #fff); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+/* F3: renovar meta */
+.mt-ren { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 12.5px; font-weight: 700; }
+.mt-ren .ic, .mt-renova .ic { width: 14px; height: 14px; }
+/* T3: reorganizar atrasadas */
+.pv-reo { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 10px; padding: 8px 10px 8px 12px; border-radius: 10px; background: color-mix(in srgb, #C8402E 8%, #fff); border: 1px solid color-mix(in srgb, #C8402E 22%, #fff); font-size: 13px; color: var(--late, #C8402E); }
+.pv-reo .btn .ic, .reo-btn .ic { width: 15px; height: 15px; }
+.agroup h2 .reo-btn { margin-left: 10px; vertical-align: middle; font-size: 12px; text-transform: none; letter-spacing: 0; }
+.reo-l { display: grid; gap: 2px; max-height: 46vh; overflow-y: auto; border: 1px solid var(--line); border-radius: 12px; padding: 6px 10px; }
+.reo-l .chk { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.reo-l .chk:last-child { border-bottom: 0; }
+.reo-l .chk > span { display: grid; gap: 1px; } .reo-l .chk small { color: var(--muted); font-size: 12px; }
+.reo-todas { font-weight: 700; }
+/* T1: Ver todos dentro de "Sem contato registrado" */
+.rg-todos { margin-top: 4px; }
+/* T2: Execução e Desempenho recolhíveis */
+.pd-sum { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; }
+.pd-sum::-webkit-details-marker { display: none; }
+.pd-sum > .ic { width: 18px; height: 18px; flex: none; transition: transform .2s; transform: rotate(90deg); }
+.pd-rec[open] > .pd-sum > .ic { transform: rotate(-90deg); }
+.pd-mini { font-weight: 800; font-size: 13px; color: var(--muted); }
+.pd-rec[open] .pd-mini { display: none; }
+.grid-main details.exec:not([open]) > .card-h, details.desemp-card:not([open]) > .card-h { margin-bottom: 0 !important; border-bottom: 0 !important; }
+/* T2: no celular/tablet a Agenda vem primeiro, antes das prioridades */
+@media (max-width: 1080px) {
+  .grid-main .ag-card { order: 0; } .grid-main .prio-card { order: 1; } .grid-main .mail-card { order: 2; }
+  .grid-main .rg-card { order: 3; } .grid-main .ren-card { order: 4; } .grid-main .metas-card { order: 5; } .grid-main .exec { order: 6; }
+}
+/* T5: Oportunidades (Funil ⇄ Lista) */
+.op-modo { margin-right: 4px; }
+@media (max-width: 760px) { .op-modo { width: 100%; } .op-modo button { flex: 1; } }
+details.pd-rec:not([open]) { padding-bottom: 0 !important; }
+details.pd-rec:not([open]) > .pd-sum { margin-bottom: 0 !important; }
+
 </style>
 
 <div class="app">
@@ -2318,6 +2358,27 @@ App.ICONES = {
     Store.update('atividades', a.id, { metaIds: rest, resultados: r, esperados: e, metaId: rest[0] || null }, { silent: true });
   });
   M.metaPct = m => m.alvo > 0 ? M.metaAtual(m) / m.alvo : 0;
+  /* Varredura 26/11 (F3): renovar a meta para o período seguinte. Cria uma meta nova com a mesma configuração
+     (resultado zerado); a antiga fica em "Encerradas". Mensal/trimestral/anual andam por mês de calendário quando o fim é o último dia do mês. */
+  M.proxPeriodo = m => {
+    if (!m.fim) return null;
+    const ini = U.addDays(m.fim, 1);
+    if (m.periodicidade === 'semanal') return { inicio: ini, fim: U.addDays(m.fim, 7) };
+    const meses = { mensal: 1, trimestral: 3, anual: 12 }[m.periodicidade] || 1, f = U.parse(m.fim);
+    const ultimo = U.addDays(m.fim, 1).slice(8) === '01';
+    const fim = ultimo ? new Date(f.getFullYear(), f.getMonth() + meses + 1, 0) : new Date(f.getFullYear(), f.getMonth() + meses, Math.min(f.getDate(), new Date(f.getFullYear(), f.getMonth() + meses + 1, 0).getDate()));
+    return { inicio: ini, fim: U.iso(fim) };
+  };
+  /* pode renovar: período acabou ou acaba em até 3 dias, e ainda não foi renovada */
+  M.podeRenovar = m => !!m && !!m.fim && !m.renovadaPara && U.diff(m.fim, U.today()) <= 3;
+  M.renovarMeta = id => {
+    const m = Store.get('metas', id), pp = M.proxPeriodo(m); if (!m || !pp) return null;
+    const nova = Store.insert('metas', { nome: m.nome, responsabilidadeId: m.responsabilidadeId, descricao: m.descricao || '', alvo: m.alvo, unidade: m.unidade, modo: m.modo, periodicidade: m.periodicidade, inicio: pp.inicio, fim: pp.fim, atual: 0, renovadaDe: m.id });
+    Store.update('metas', id, { renovadaPara: nova.id });
+    return nova;
+  };
+  M.rotPeriodo = pp => { const d = U.parse(pp.inicio), MES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    return pp.inicio.slice(8) === '01' && U.diff(pp.fim, pp.inicio) > 26 && U.diff(pp.fim, pp.inicio) < 32 ? MES[d.getMonth()] : U.fmtDate(pp.inicio) + ' a ' + U.fmtDate(pp.fim); };
   /* Quanto do período já passou (0 a 1) */
   M.metaTempo = m => {
     if (!m.inicio || !m.fim) return null;
@@ -4405,6 +4466,35 @@ App.ICONES = {
     });
   };
 
+  /* Varredura 26/11 (T3): reorganizar atrasadas em bloco. Cada uma vira "adiada" com histórico, como no Adiar. */
+  F.reorganizar = ids => {
+    const ats = (ids || Store.all('atividades').filter(M.atrasada).map(a => a.id)).map(id => Store.get('atividades', id)).filter(a => a && M.atrasada(a)).sort((a, b) => (a.prazo || '').localeCompare(b.prazo || ''));
+    if (!ats.length) return UI.toast('Nenhuma atividade atrasada');
+    const hoje = U.today(), op = [['Hoje', hoje], ['Amanhã', U.addDays(hoje, 1)], ['Próx. segunda', U.nextWeekday(1)], ['+1 semana', U.addDays(hoje, 7)]];
+    UI.modal({
+      title: 'Reorganizar atrasadas · ' + ats.length, size: 'md',
+      body: `<form class="form" id="fReo"><p class="muted small" style="margin:0">Escolha o novo prazo e desmarque o que não quer mover. O que já foi feito, conclua pela lista.</p>
+        <div class="quick-dates">${op.map(([l, d]) => `<button type="button" class="qd" data-d="${d}">${l}<small>${U.fmtDate(d)}</small></button>`).join('')}</div>
+        <label class="f full"><span>Novo prazo</span><input type="date" name="prazo" value="${op[1][1]}" required></label>
+        <div class="reo-l"><label class="chk reo-todas"><input type="checkbox" checked data-reo-todas><span>Todas (${ats.length})</span></label>
+        ${ats.map(a => `<label class="chk reo-it"><input type="checkbox" checked data-reo="${a.id}"><span><b>${U.esc(a.titulo)}</b><small>venceu ${U.fmtDate(a.prazo)}${a.cliente ? ' · ' + U.esc(a.cliente) : ''}</small></span></label>`).join('')}</div></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fReo" type="submit">Mover selecionadas</button>`,
+      onMount(el, api) {
+        const f = el.querySelector('#fReo'), todas = el.querySelector('[data-reo-todas]'), its = [...el.querySelectorAll('[data-reo]')];
+        const marcar = () => el.querySelectorAll('.qd').forEach(b => b.classList.toggle('on', b.dataset.d === f.prazo.value));
+        el.querySelectorAll('.qd').forEach(b => b.onclick = () => { f.prazo.value = b.dataset.d; marcar(); }); f.prazo.oninput = marcar; marcar();
+        todas.onchange = () => its.forEach(i => { i.checked = todas.checked; });
+        its.forEach(i => i.onchange = () => { todas.checked = its.every(x => x.checked); });
+        f.onsubmit = e => {
+          e.preventDefault(); const d = UI.formData(f), sel = its.filter(i => i.checked).map(i => i.dataset.reo);
+          if (!d.prazo || !sel.length) return UI.toast('Marque ao menos uma atividade', 'aviso');
+          sel.forEach(id => M.adiar(id, d.prazo, 'reorganizadas em bloco'));
+          api.close(); UI.toast(`${U.plural(sel.length, 'atividade movida', 'atividades movidas')} para ${U.fmtDate(d.prazo)}`);
+        };
+      }
+    });
+  };
+
   F.excluirAtividade = async id => {
     const a = Store.get('atividades', id); if (!a) return false;
     const ok = await UI.confirm({ title: 'Excluir atividade?', text: `"${U.esc(a.titulo)}" e o histórico dela serão apagados. Isso não pode ser desfeito.`, ok: 'Excluir' });
@@ -5541,14 +5631,14 @@ App.ICONES = {
   /* ---------- Card do Painel ---------- */
   Rg.card = (filtroResp = []) => {
     if (filtroResp.length && App.Ren && !filtroResp.includes(App.Ren.respRenovacao().id)) return '';
-    const { ligar, nunca, aniv, emDia } = Rg.lista(), MAX = 6;
+    const { ligar, nunca, aniv, emDia } = Rg.lista(), MAX = 5; /* varredura 26/11: 5 + Ver todos */
     const total = ligar.length + nunca.length;
     return `<section class="card rg-card"><div class="card-h"><h2>Quem ligar esta semana</h2><span class="grow"></span>${ligar.length ? `<span class="count">${ligar.length}</span>` : ''}</div>
       <p class="rg-res">Contato a cada ${Rg.dias()} dias · ${emDia} em dia${ligar.length ? ` · <b>${ligar.length} para ligar</b>` : ''}${nunca.length ? ` · ${nunca.length} sem registro` : ''}</p>
       ${aniv.length ? `<ul class="rg-list">${aniv.map(x => `<li class="rg-it aniv"><button class="rg-n" data-rg-cli="${x.c.id}"><b>${U.esc(x.c.nome)}</b><small>${anivTxt(x.d)}</small></button><button class="rg-f" data-rg-falei="${x.c.id}">Falei hoje</button></li>`).join('')}</ul>` : ''}
       ${ligar.length ? `<ul class="rg-list">${ligar.slice(0, MAX).map(linha).join('')}</ul>${ligar.length > MAX ? `<details class="rg-mais"><summary>Ver todos · ${ligar.length}</summary><ul class="rg-list">${ligar.slice(MAX).map(linha).join('')}</ul></details>` : ''}`
         : total ? '' : '<p class="muted small" style="margin:4px 0 0">Todos os clientes estão em dia.</p>'}
-      ${nunca.length ? `<details class="rg-mais"${ligar.length ? '' : ' open'}><summary>Sem contato registrado · ${nunca.length}</summary><p class="muted small" style="margin:4px 0 6px">Use "Falei hoje" quando falar com cada um; a partir daí a régua de ${Rg.dias()} dias começa a contar.</p><ul class="rg-list rg-scroll">${nunca.map(linha).join('')}</ul></details>` : ''}</section>`;
+      ${nunca.length ? `<details class="rg-mais"${ligar.length ? '' : ' open'}><summary>Sem contato registrado · ${nunca.length}</summary><p class="muted small" style="margin:4px 0 6px">Use "Falei hoje" quando falar com cada um; a partir daí a régua de ${Rg.dias()} dias começa a contar.</p><ul class="rg-list">${nunca.slice(0, 5).map(linha).join('')}</ul>${nunca.length > 5 ? `<details class="rg-mais rg-todos"><summary>Ver todos · ${nunca.length}</summary><ul class="rg-list">${nunca.slice(5).map(linha).join('')}</ul></details>` : ''}</details>` : ''}</section>`;
   };
   Rg.ligar = root => {
     root.querySelectorAll('[data-rg-falei]').forEach(b => b.onclick = e => { e.stopPropagation(); Rg.falei(b.dataset.rgFalei); });
@@ -5623,6 +5713,20 @@ App.ICONES = {
       ${e.prep ? `<button class="btn sm ${passou ? 'ghost' : 'primary'}" data-agprep="${e.id}">Preparação</button>` : ''}</li>`;
   };
 
+  /* Varredura 26/11 (F2): a leitura automática está atrasada? horarios = ['07:23'] (dias úteis).
+     Considera a última rodada que já devia ter acontecido (com 40 min de folga). Sem leitura nenhuma: não avisa. */
+  A.ultimaEsperada = (horarios, folgaMin = 40) => {
+    const agora = new Date();
+    for (let k = 0; k < 8; k++) {
+      const d = new Date(agora); d.setDate(agora.getDate() - k);
+      if (d.getDay() === 0 || d.getDay() === 6) continue;
+      const hs = horarios.map(h => { const [hh, mm] = h.split(':').map(Number); const x = new Date(d); x.setHours(hh, mm + folgaMin, 0, 0); return x; }).filter(x => x <= agora).sort((a, b) => b - a);
+      if (hs.length) { const x = hs[0]; x.setMinutes(x.getMinutes() - folgaMin - 5); return x; }
+    }
+    return null;
+  };
+  A.leituraVelha = (lido, horarios) => { if (!lido) return false; const esp = A.ultimaEsperada(horarios), l = new Date(lido); return !!esp && !isNaN(l) && l < esp; };
+
   A.card = () => {
     const hoje = U.today(), evs = A.doDia(hoje), prox = A.proximoDia(), nProx = prox ? A.doDia(prox).length : 0;
     const tem = Store.all('agenda').length > 0;
@@ -5631,7 +5735,7 @@ App.ICONES = {
       ${evs.length ? `<ul class="ag-list">${evs.map(item).join('')}</ul>`
         : `<div class="empty sm"><p>${tem ? 'Nenhum compromisso hoje.' : 'A agenda do Outlook chega na leitura das 7h23 (dias úteis).'}</p></div>`}
       ${prox ? `<button class="link ag-prox" data-agdia="${prox}">${prox === U.addDays(hoje, 1) ? 'Amanhã' : nomeDia(prox)} · ${U.plural(nProx, 'compromisso', 'compromissos')} ›</button>` : ''}
-      ${lido ? `<p class="muted small ag-lido">Lida do Outlook ${U.fmtDateTime(lido)}</p>` : ''}</section>`;
+      ${lido ? (A.leituraVelha(lido, ['07:23']) ? `<p class="leit-velha">${App.UI.icon('adiar')}Agenda desatualizada: última leitura do Outlook em ${U.fmtDateTime(lido)}. A leitura das 7h23 não rodou; peça no chat “atualiza minha agenda”.</p>` : `<p class="muted small ag-lido">Lida do Outlook ${U.fmtDateTime(lido)}</p>`) : ''}</section>`;
   };
 
   A.prep = id => {
@@ -6276,7 +6380,7 @@ App.ICONES = {
       { nome: 'Indicações', rota: 'clientes', p: { indicacoes: true }, alias: 'rede ranking' },
       { nome: 'Receitas', rota: 'faturamento', alias: 'faturamento producao comissao' },
       { nome: 'Atividades', rota: 'atividades', alias: 'tarefas' },
-      { nome: 'Funil', rota: 'funil', alias: 'oportunidades negocios' },
+      { nome: 'Oportunidades', rota: 'funil', alias: 'funil negocios negócios' },
       { nome: 'E-mails', rota: 'emails', alias: 'outlook caixa' },
       { nome: 'Metas', rota: 'metas', alias: '' },
       { nome: 'Ajustes', rota: 'dados', alias: 'backup configuracoes instalar app' }
@@ -6401,16 +6505,17 @@ App.ICONES = {
     const r = M.resumo(filtroResp);
     const prior = M.prioridadesHoje().filter(ok);
     const prox = Store.all('atividades').filter(a => M.proximos(a, 7) && !prior.includes(a) && ok(a)).sort(M.ordemAtencao);
-    const metas = Store.all('metas').filter(m => (!filtroResp.length || filtroResp.includes(m.responsabilidadeId)) && !(m.fim && m.fim < U.addDays(U.today(), -30)));
+    const metas = Store.all('metas').filter(m => (!filtroResp.length || filtroResp.includes(m.responsabilidadeId)) && !(m.fim && m.fim < U.addDays(U.today(), -30)) && !m.renovadaPara);
     const resps = M.respAtivas().filter(x => !filtroResp.length || filtroResp.includes(x.id));
     const exec = r.planejadas7 ? r.feitas7 / r.planejadas7 : null;
     const demo = App.Demo.count();
     const negs = M.negItensAbertos().filter(x => ok(x.a));
+    const atrIds = Store.all('atividades').filter(a => M.atrasada(a) && ok(a)).map(a => a.id), nAtr = atrIds.length;
 
-    const negLink = negs.length ? ` · <a class="link" href="#negocios" data-go="negocios">${negs.length} negócio${negs.length === 1 ? '' : 's'} em andamento</a>` : '';
+    const negLink = negs.length ? ` · <a class="link" href="#funil" data-go="funil" data-q="modo=lista">${negs.length} negócio${negs.length === 1 ? '' : 's'} em andamento</a>` : '';
     const cardMetas = `<section class="card metas-card">
             <div class="card-h"><h2>Metas</h2><a class="link" href="#metas" data-go="metas">Ver todas</a></div>
-            ${metas.length ? `<ul class="mlist">${metas.slice(0, 5).map(m => { const p = M.metaPct(m), s = M.metaSituacao(m); return `<li><div class="mrow"><span class="mname">${U.esc(m.nome)}</span><span class="tag t-${s.id}">${s.label}</span></div>${UI.bar(p, M.respCor(m.responsabilidadeId))}<div class="mrow small muted"><span>${U.num(M.metaAtual(m))} de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><span>${U.pct(p)}</span></div></li>`; }).join('')}</ul>`
+            ${metas.length ? `<ul class="mlist">${metas.slice(0, 5).map(m => { const p = M.metaPct(m), s = M.metaSituacao(m); return `<li><div class="mrow"><span class="mname">${U.esc(m.nome)}</span><span class="tag t-${s.id}">${s.label}</span></div>${UI.bar(p, M.respCor(m.responsabilidadeId))}<div class="mrow small muted"><span>${U.num(M.metaAtual(m))} de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><span>${U.pct(p)}</span></div>${M.podeRenovar(m) ? `<button class="link mt-ren" data-renova="${m.id}">${UI.icon('adiar')}Renovar para ${U.esc(M.rotPeriodo(M.proxPeriodo(m)))}</button>` : ''}</li>`; }).join('')}</ul>`
               : `<div class="empty sm"><p>Nenhuma meta ativa.</p><a class="btn ghost" href="#metas" data-go="metas">Criar meta</a></div>`}
           </section>`;
     el.innerHTML = `
@@ -6445,6 +6550,7 @@ App.ICONES = {
               <a class="link" href="#atividades" data-go="atividades">Ver atividades</a></div>
             <div class="pv" id="pv"><div class="pv-track">
               <div class="pv-pane" data-pane="0">
+                ${nAtr > 1 ? `<div class="pv-reo"><span><b>${nAtr}</b> atrasadas</span><button class="btn ghost sm" data-reo>${UI.icon('adiar')}Reorganizar atrasadas</button></div>` : ''}
                 ${prior.length ? `<ul class="plist">${prior.map(itemAt).join('')}</ul>`
                   : `<div class="empty"><b>Nada urgente por aqui.</b><p>Nenhuma atividade atrasada ou para hoje. Aproveite para adiantar as próximas.</p></div>`}
                 ${prox.length ? `<button class="pv-mais" data-pv="1">Próximos 7 dias · ${prox.length} ${UI.icon('seta')}</button>` : ''}
@@ -6462,26 +6568,26 @@ App.ICONES = {
           ${App.Agenda ? App.Agenda.card() : ''}
           ${App.Regua ? App.Regua.card(filtroResp) : ''}
           ${App.Ren && App.Views.clientes ? App.Ren.card({ max: 5, extras: App.Cli.avisosConsorcio() }) : ''}
-          <section class="card exec">
-            <div class="card-h"><h2>Estou executando o que planejei?</h2></div>
+          <details class="card exec pd-rec" open>
+            <summary class="card-h pd-sum"><h2>Estou executando o que planejei?</h2><span class="grow"></span><span class="pd-mini">${U.pct(r.pctConclusao)}</span>${UI.icon('seta')}</summary>
             <div class="exec-b">${Charts.ring(r.pctConclusao, 92)}
               <div><p class="big-l">${U.pct(r.pctConclusao)} <span class="muted">concluído no total</span></p>
               <p class="muted small">${exec == null ? 'Nenhuma atividade venceu nos últimos 7 dias.' : `Últimos 7 dias: <b class="ink">${r.feitas7} de ${r.planejadas7}</b> atividades com prazo foram concluídas (${U.pct(exec)}).`}</p>
               <p class="small"><a class="link" href="#atividades" data-go="atividades" data-q="status=concluida${qr}">${r.concluidas} concluída${r.concluidas === 1 ? '' : 's'}</a></p></div></div>
-          </section>
+          </details>
           ${cardMetas}
         </aside>
       </div>
 
-      <section class="card desemp-card" aria-label="Desempenho por responsabilidade">
-        <div class="card-h"><h2>Desempenho por responsabilidade</h2><a class="link" href="#responsabilidades" data-go="responsabilidades">Gerenciar</a></div>
+      <details class="card desemp-card pd-rec" open aria-label="Desempenho por responsabilidade">
+        <summary class="card-h pd-sum"><h2>Desempenho por responsabilidade</h2><span class="grow"></span><a class="link" href="#responsabilidades" data-go="responsabilidades">Gerenciar</a>${UI.icon('seta')}</summary>
         <div class="rgrid">${resps.map(x => {
           const at = Store.where('atividades', a => M.temResp(a, x.id)), c = at.filter(a => a.status === 'concluida').length, l = at.filter(M.atrasada).length, h = at.filter(M.hoje).length;
           return `<a class="rcard" href="#atividades" data-go="atividades" data-q="resp=${x.id}" style="--c:${x.cor}"><div class="rh"><i></i><b>${U.esc(x.nome)}</b></div>
             ${UI.bar(at.length ? c / at.length : 0, x.cor)}
             <div class="rnums"><span><b>${c}</b>/${at.length} concluídas</span><span class="${l ? 'late' : ''}"><b>${l}</b> atrasada${l === 1 ? '' : 's'}</span><span><b>${h}</b> hoje</span></div></a>`;
         }).join('') || '<p class="muted">Cadastre suas responsabilidades para ver o desempenho de cada uma.</p>'}</div>
-      </section>`;
+      </details>`;
 
     const h = new Date().getHours();
     el.querySelector('.page-h h1').textContent = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
@@ -6514,6 +6620,10 @@ App.ICONES = {
       ir(0, false);
       if (window.ResizeObserver) new ResizeObserver(() => { pv.style.height = panes[atual].offsetHeight + 'px'; }).observe(panes[0]);
     }
+    /* Varredura 26/11 (T2): no celular, Execução e Desempenho começam fechados */
+    if (window.matchMedia && matchMedia('(max-width: 760px)').matches) el.querySelectorAll('.pd-rec').forEach(d => d.removeAttribute('open'));
+    const reo = el.querySelector('[data-reo]'); if (reo) reo.onclick = () => App.Forms.reorganizar(atrIds);
+    el.querySelectorAll('[data-renova]').forEach(b => b.onclick = () => { const nv = M.renovarMeta(b.dataset.renova); if (nv) UI.toast(`Meta renovada: ${U.fmtDate(nv.inicio)} a ${U.fmtDate(nv.fim)}`); });
     if (App.Agenda) App.Agenda.ligar(el);
     if (App.Resumo) App.Resumo.ligar(el);
     el.querySelectorAll('[data-rt]').forEach(b => b.onclick = async () => { b.disabled = true; await App.Seg.executar(b.dataset.rt); b.disabled = false; });
@@ -6627,7 +6737,7 @@ App.ICONES = {
     if (modo === 'lista') {
       const gs = GRUPOS.map(([k, t]) => [k, t, lista.filter(a => grupo(a) === k)]).filter(g => g[2].length);
       gs.forEach(g => g[2].sort(g[0] === 'concluidas' ? (a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || '') : M.ordemAtencao));
-      corpo.innerHTML = gs.length ? gs.map(([k, t, arr]) => `<section class="agroup g-${k}"><h2>${t} <span class="count">${arr.length}</span></h2><ul class="alist">${arr.map(linha).join('')}</ul></section>`).join('')
+      corpo.innerHTML = gs.length ? gs.map(([k, t, arr]) => `<section class="agroup g-${k}"><h2>${t} <span class="count">${arr.length}</span>${k === 'atrasadas' && arr.length > 1 ? `<button class="btn ghost sm reo-btn" data-reo-ids="${arr.map(x => x.id).join(',')}">${UI.icon('adiar')}Reorganizar</button>` : ''}</h2><ul class="alist">${arr.map(linha).join('')}</ul></section>`).join('')
         : `<div class="empty card"><b>Nenhuma atividade encontrada.</b><p>${filtrado ? 'Tente outros filtros.' : 'Crie a primeira atividade.'}</p><button class="btn primary" data-nova>${UI.icon('mais')}Nova atividade</button></div>`;
     } else {
       const base = todas.filter(a => passa(a, true));
@@ -6641,6 +6751,7 @@ App.ICONES = {
     el.querySelectorAll('[data-f]').forEach(s => s.onchange = () => { f[s.dataset.f] = s.value; V.render(el); });
     const busca = el.querySelector('#fBusca');
     busca.oninput = () => { f.busca = busca.value; const pos = busca.selectionStart; V.render(el); const nb = el.querySelector('#fBusca'); nb.focus(); nb.setSelectionRange(pos, pos); };
+    el.querySelectorAll('[data-reo-ids]').forEach(b => b.onclick = () => App.Forms.reorganizar(b.dataset.reoIds.split(',')));
     const lim = el.querySelector('#limpar'); if (lim) lim.onclick = () => { f = { ...PADRAO }; V.render(el); };
     const nova = el.querySelector('[data-nova]'); if (nova) nova.onclick = () => App.Forms.atividade(null, f.resp ? { responsabilidadeId: String(f.resp).split(',')[0], respIds: String(f.resp).split(',').slice(1) } : {});
     corpo.querySelectorAll('.arow').forEach(li => li.addEventListener('click', e => {
@@ -6688,7 +6799,7 @@ App.ICONES = {
 /* Tela: Negócios em andamento (aberta pelo card do painel). */
 (function (App) {
   const { U, M, UI, Store } = App;
-  const V = { titulo: 'Negócios em andamento' };
+  const V = { titulo: 'Oportunidades' };
   let fTipo = '';
 
   /* Uma linha por negócio (um card com Zentis e Vida aparece duas vezes) */
@@ -6700,7 +6811,9 @@ App.ICONES = {
       <div class="aside">${UI.prioPill(a.prioridade)}${UI.due(a)}</div>
       <div class="aact"><button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`; };
 
-  V.render = el => {
+  V.render = (el, opts) => {
+    /* rota antiga #negocios: abre Oportunidades na lista */
+    if (!opts && App.Views.funil) { App.Views.funil.setParams({ modo: 'lista' }); return App.Views.funil.render(el); }
     const abertos = M.negItensAbertos();
     const lista = abertos.filter(x => !fTipo || M.tipoChave(x.n.tipo) === fTipo).sort((x, y) => M.ordemAtencao(x.a, y.a));
     const total = lista.reduce((s, x) => s + (+x.n.valor || 0), 0);
@@ -6720,8 +6833,7 @@ App.ICONES = {
     const tituloTipo = fTipo ? grupos[fTipo].label : 'Todos os negócios';
 
     el.innerHTML = `
-      <div class="page-h"><div><h1>Negócios em andamento</h1><p class="muted">Cada negócio aparece separado, mesmo quando vários estão no mesmo card.</p></div>
-        <button class="btn primary" id="novoNeg">${UI.icon('mais')}Novo negócio</button></div>
+      ${opts.cab(`<button class="btn primary" id="novoNeg">${UI.icon('mais')}Novo negócio</button>`)}
       <section class="kpis k4">
         <div class="kpi"><span>Em andamento</span><b>${abertos.length}</b></div>
         <div class="kpi"><span>Valor em negociação</span><b>${U.brlShort(abertos.reduce((s, x) => s + (+x.n.valor || 0), 0))}</b>${liqTotal ? `<em>≈ ${U.brlShort(liqTotal)} ficam com você</em>` : ''}</div>
@@ -6741,7 +6853,7 @@ App.ICONES = {
     const novo = () => App.Forms.atividade(null, { tipoNegocio: fTipo ? grupos[fTipo].label : null, categoria: 'Negócios', prioridade: 'alta', _neg: true });
     el.querySelector('#novoNeg').onclick = novo;
     const n2 = el.querySelector('#novoNeg2'); if (n2) n2.onclick = novo;
-    el.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { fTipo = b.dataset.t; V.render(el); });
+    el.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { fTipo = b.dataset.t; App.Views.funil.render(el); });
     el.querySelectorAll('.nrow').forEach(li => li.addEventListener('click', e => {
       const b = e.target.closest('[data-act]'); if (!b) return; const id = li.dataset.id;
       if (b.dataset.act === 'concluir') App.Forms.concluir(id);
@@ -6875,9 +6987,14 @@ App.ICONES = {
   };
 
   /* ---------- Tela ---------- */
-  const V = { titulo: 'Funil de oportunidades' };
+  const V = { titulo: 'Oportunidades' };
   let fOrig = '', fEtapaMob = null;
-  V.setParams = p => { if (p && p.etapa) fEtapaMob = p.etapa; };
+  /* Varredura 26/11 (T5): Negócios e Funil viraram uma tela só ("Oportunidades"), com Funil ⇄ Lista */
+  let modo = 'funil';
+  V.setParams = p => { if (p && p.etapa) fEtapaMob = p.etapa; modo = p && p.modo === 'lista' ? 'lista' : 'funil'; };
+  const cabecalho = (sub, botao) => `<div class="page-h"><div><h1>Oportunidades</h1><p class="muted">${sub}</p></div>
+      <div class="page-act"><div class="seg op-modo" role="group" aria-label="Ver como"><button data-fm="funil" aria-pressed="${modo === 'funil'}">Funil</button><button data-fm="lista" aria-pressed="${modo === 'lista'}">Lista de negócios</button></div>${botao}</div></div>`;
+  const ligarModo = el => el.querySelectorAll('[data-fm]').forEach(b => b.onclick = e => { e.preventDefault(); modo = b.dataset.fm; V.render(el); });
   const cartao = it => `<li class="fu-it${it.atrasada ? ' is-late' : ''}" data-k="${U.esc(it.key)}">
       <button class="fu-main" data-fa="abrir"><b>${U.esc(it.nome)}</b><span class="fu-prod">${U.esc(it.produto)}</span>
         <span class="fu-org o-${it.origem}">${U.esc(it.origemTxt)}</span>
@@ -6887,6 +7004,7 @@ App.ICONES = {
         <button class="fu-ok" data-fa="ganhou" title="Fechou">${UI.icon('check')}Fechou</button><button class="fu-no" data-fa="perdeu" title="Perdeu">Perdeu</button></div></li>`;
 
   V.render = el => {
+    if (modo === 'lista' && App.Views.negocios) { App.Views.negocios.render(el, { cab: (botao) => cabecalho('Cada negócio aparece separado, mesmo quando vários estão no mesmo card.', botao) }); ligarModo(el); return; }
     const todos = Fu.itens(), lista = todos.filter(it => !fOrig || it.origem === fOrig);
     const cont = o => todos.filter(it => it.origem === o).length;
     const tot = lista.reduce((s, x) => s + (x.valor || 0), 0), liq = lista.reduce((s, x) => s + (x.liq || 0), 0);
@@ -6894,13 +7012,12 @@ App.ICONES = {
     const ganhosMes = Store.all('atividades').filter(a => a.status === 'concluida' && (a.concluidaEm || '').slice(0, 10) >= mesIni).flatMap(a => M.negociosDa(a).filter(n => n.resultado === 'ganho'));
     if (!fEtapaMob || !Fu.ETAPAS.some(e => e.id === fEtapaMob)) fEtapaMob = (Fu.ETAPAS.find(e => lista.some(x => x.etapa === e.id)) || Fu.ETAPAS[0]).id;
     el.innerHTML = `
-      <div class="page-h"><div><h1>Funil de oportunidades</h1><p class="muted">Negócios das atividades, indicações em conversa e o Mapa 360 num lugar só. Mudar a etapa aqui atualiza a origem.</p></div>
-        <button class="btn primary" id="fuNova">${UI.icon('mais')}Nova oportunidade</button></div>
+      ${cabecalho('Negócios das atividades, indicações em conversa e o Mapa 360 num lugar só. Mudar a etapa aqui atualiza a origem.', `<button class="btn primary" id="fuNova">${UI.icon('mais')}Nova oportunidade</button>`)}
       <section class="kpis k4">
         <div class="kpi"><span>Em aberto</span><b>${lista.length}</b></div>
         <div class="kpi"><span>Valor estimado</span><b>${U.brlShort(tot)}</b>${liq ? `<em>≈ ${U.brlShort(liq)} ficam com você</em>` : ''}</div>
         <div class="kpi"><span>Em proposta</span><b>${lista.filter(x => x.etapa === 'proposta').length}</b></div>
-        <a class="kpi" href="#negocios" data-go="negocios"><span>Fechados no mês</span><b>${ganhosMes.length}</b><em>${ganhosMes.length ? U.brlShort(ganhosMes.reduce((s, n) => s + (+n.valor || 0), 0)) : 'negócios ganhos'}</em></a>
+        <a class="kpi" href="#funil" data-fm="lista"><span>Fechados no mês</span><b>${ganhosMes.length}</b><em>${ganhosMes.length ? U.brlShort(ganhosMes.reduce((s, n) => s + (+n.valor || 0), 0)) : 'negócios ganhos'}</em></a>
       </section>
       <div class="tchips"><button class="tchip${!fOrig ? ' on' : ''}" data-o="">Todas <b>${todos.length}</b></button>${Fu.ORIGENS.filter(o => cont(o.id)).map(o => `<button class="tchip${fOrig === o.id ? ' on' : ''}" data-o="${o.id}">${o.label} <b>${cont(o.id)}</b></button>`).join('')}</div>
       <div class="fu-tabs" role="tablist">${Fu.ETAPAS.map(e => `<button role="tab" data-et="${e.id}" aria-selected="${e.id === fEtapaMob}">${e.label}<b>${lista.filter(x => x.etapa === e.id).length}</b></button>`).join('')}</div>
@@ -6908,6 +7025,7 @@ App.ICONES = {
         return `<section class="fu-col${e.id === fEtapaMob ? ' on' : ''}" data-col="${e.id}"><div class="fu-ch"><b>${e.label}</b><span class="count">${xs.length}</span><span class="grow"></span><small>${v ? U.brlShort(v) : ''}</small></div>
           ${xs.length ? `<ul class="fu-list">${xs.map(cartao).join('')}</ul>` : '<p class="fu-vazio">Nada nesta etapa.</p>'}</section>`; }).join('')}</div>
       ${!todos.length ? `<div class="empty card"><b>Nenhuma oportunidade aberta.</b><p>Crie um negócio, registre uma indicação em conversa ou marque "Não tem" / "Mapeado" no Mapa 360 de um cliente.</p></div>` : ''}`;
+    ligarModo(el);
     el.querySelector('#fuNova').onclick = Fu.nova;
     el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => { fOrig = b.dataset.o; V.render(el); });
     el.querySelectorAll('[data-et]').forEach(b => b.onclick = () => { fEtapaMob = b.dataset.et; el.querySelectorAll('[data-et]').forEach(x => x.setAttribute('aria-selected', x === b)); el.querySelectorAll('.fu-col').forEach(c => c.classList.toggle('on', c.dataset.col === fEtapaMob)); });
@@ -7134,6 +7252,7 @@ App.ICONES = {
       ${m.descricao ? `<p class="small muted">${U.esc(m.descricao)}</p>` : ''}
       <div class="meta-f">
         ${m.modo === 'manual' ? `<button class="btn primary sm" data-act="atualizar">Atualizar resultado</button>` : `<button class="btn ghost sm" data-act="nova-at">${UI.icon('mais')}Atividade para esta meta</button>`}
+        ${M.podeRenovar(m) ? `<button class="btn ghost sm mt-renova" data-act="renovar">${UI.icon('adiar')}Renovar para ${U.esc(M.rotPeriodo(M.proxPeriodo(m)))}</button>` : m.renovadaPara ? '<span class="small muted">Renovada</span>' : ''}
         <span class="grow"></span>
         <button class="icon-btn" data-act="ver" title="Ver atividades" aria-label="Ver atividades">${UI.icon('atividades')}</button>
         <button class="icon-btn" data-act="editar" title="Editar" aria-label="Editar">${UI.icon('editar')}</button>
@@ -7164,6 +7283,7 @@ App.ICONES = {
       const b = e.target.closest('[data-act]'); if (!b) return; const id = c.dataset.id, mt = Store.get('metas', id);
       if (b.dataset.act === 'atualizar') App.Forms.atualizarMeta(id);
       if (b.dataset.act === 'editar') App.Forms.meta(id);
+      if (b.dataset.act === 'renovar') { const nv = M.renovarMeta(id); if (nv) UI.toast(`Meta renovada: ${U.fmtDate(nv.inicio)} a ${U.fmtDate(nv.fim)}`); }
       if (b.dataset.act === 'nova-at') App.Forms.atividade(null, { responsabilidadeId: mt.responsabilidadeId, metaIds: [id] });
       if (b.dataset.act === 'ver') App.go('atividades', { status: '', resp: mt.responsabilidadeId, categoria: '', metaId: id }, { origem: true });
       if (b.dataset.act === 'excluir') {
@@ -7389,6 +7509,9 @@ App.ICONES = {
     return '';
   };
   const convite = e => e.tipo === 'convite' ? `<span class="em-mconv">${UI.icon('calendario')}Convite${e.evento ? ' · ' + U.esc(E.quandoEvento(e.evento)) : ''}</span>${e.conflito ? `<span class="em-mconf" title="${U.esc(e.conflito)}">Conflita: ${U.esc(e.conflito)}</span>` : ''}` : '';
+  /* Varredura 26/11 (T4): e-mail sem resposta há mais de 7 dias ganha destaque */
+  E.diasParado = e => (e.status || 'novo') === 'novo' && e.recebidoEm ? U.diff(U.today(), U.iso(new Date(e.recebidoEm))) : 0;
+  const parado = e => { const d = E.diasParado(e); return d > 7 ? `<span class="em-mparado">Parado há ${d} dias</span>` : ''; };
   E.ordem = (a, b) => (PESO[b.prioridade] || 2) - (PESO[a.prioridade] || 2) || (b.recebidoEm || '').localeCompare(a.recebidoEm || '');
   E.ultimaLeitura = () => E.todos().reduce((m, e) => (e.triadoEm || '') > m ? e.triadoEm : m, '');
   /* Só abre links https (Outlook na web) */
@@ -7426,7 +7549,7 @@ App.ICONES = {
         <div class="em-msub">${U.esc(e.assunto || '(sem assunto)')}</div>
         <p class="em-mresumo">${U.esc(e.resumo || '')}</p>
         ${!compacto && e.motivo ? `<p class="em-mwhy">${UI.icon('seta')}${U.esc(e.motivo)}</p>` : ''}
-        <div class="em-mtags">${convite(e)}${fila(e)}${e.rascunhoLink && !E.pendente(e) && (e.status || 'novo') === 'novo' ? '<span class="em-mdraft">rascunho pronto no Outlook</span>' : ''}${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<span class="lig">virou atividade</span>` : ''}</div>
+        <div class="em-mtags">${parado(e)}${convite(e)}${fila(e)}${e.rascunhoLink && !E.pendente(e) && (e.status || 'novo') === 'novo' ? '<span class="em-mdraft">rascunho pronto no Outlook</span>' : ''}${e.atividadeId && Store.get('atividades', e.atividadeId) ? `<span class="lig">virou atividade</span>` : ''}</div>
       </div>
       <div class="em-mact">
         <a class="icon-btn" href="${U.esc(E.linkAbrir(e))}" target="_blank" rel="noopener" title="Abrir no Outlook" aria-label="Abrir no Outlook">${UI.icon('externo')}</a>
@@ -7455,7 +7578,7 @@ App.ICONES = {
       <div class="card-h"><h2>${UI.icon('email')}E-mails para responder</h2>${falta ? `<span class="count">${falta}</span>` : ''}</div>
       ${ns.length ? `<ul class="em-mlist">${ns.slice(0, 5).map(e => E.item(e, true)).join('')}</ul>`
         : `<div class="empty sm"><b>Caixa em dia.</b><p>Nenhum e-mail pedindo resposta${ult ? '' : ' ainda'}. No chat, peça: “olha meus e-mails”.</p></div>`}
-      <div class="em-mfoot"><span class="muted small">${ult ? 'Lidos pelo Claude ' + E.quando(ult) : 'Aguardando a primeira leitura'}</span><a class="link" href="#emails" data-go="emails">${ns.length > 5 ? 'Ver todos (' + ns.length + ')' : 'Abrir e-mails'}</a></div>
+      <div class="em-mfoot"><span class="${ult && App.Agenda && App.Agenda.leituraVelha(ult, ['08:52', '17:52']) ? 'leit-velha-t' : 'muted small'}">${ult ? 'Lidos pelo Claude ' + E.quando(ult) + (App.Agenda && App.Agenda.leituraVelha(ult, ['08:52', '17:52']) ? ' · leitura atrasada' : '') : 'Aguardando a primeira leitura'}</span><a class="link" href="#emails" data-go="emails">${ns.length > 5 ? 'Ver todos (' + ns.length + ')' : 'Abrir e-mails'}</a></div>
     </section>`;
   };
 
