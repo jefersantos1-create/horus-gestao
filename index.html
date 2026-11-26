@@ -1748,6 +1748,42 @@ b > i.mk-d:last-child, .pf-ml-n i.mk-d { margin-left: 6px; }
 details.pd-rec:not([open]) { padding-bottom: 0 !important; }
 details.pd-rec:not([open]) > .pd-sum { margin-bottom: 0 !important; }
 
+/* ---------- Padrão dos investimentos (26/11): ITA, Eqseed, Zentis, StoneX, Dominion, Previdência ----------
+   --pc = cor da marca (ResumoProd.corInv). Bloco escuro tingido pela marca, números brancos. */
+.pi-card { padding: 0 !important; overflow: hidden; }
+.pi-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 14px 24px; align-items: center; padding: 20px 22px; color: #fff;
+  background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--pc) 75%, #0B0A10) 0%, color-mix(in srgb, var(--pc) 28%, #0B0A10) 55%, #0E0C16 100%); }
+.pi-main small, .pi-m small, .pi-graf small { display: block; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255, 255, 255, .72); }
+.pi-big { display: block; font-family: var(--display); font-size: 40px; font-weight: 800; line-height: 1.1; margin-top: 4px; color: #fff; letter-spacing: -.01em; }
+.pi-main em { display: block; font-style: normal; font-size: 13px; color: rgba(255, 255, 255, .8); margin-top: 6px; }
+.pi-up { color: #7CE3A6; font-weight: 700; } .pi-dn { color: #FF9C8A; font-weight: 700; }
+.pi-ms { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.pi-m { padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .14); min-width: 0; }
+.pi-m b { display: block; font-family: var(--display); font-size: 19px; font-weight: 700; color: #fff; margin-top: 3px; line-height: 1.2; }
+.pi-m em { display: block; font-style: normal; font-size: 12px; color: rgba(255, 255, 255, .7); margin-top: 2px; }
+.pi-falta { display: inline-block; font-family: var(--body, inherit); font-size: 12px; font-weight: 700; color: #FFD58A; background: rgba(255, 196, 0, .16); border-radius: 999px; padding: 2px 8px; }
+.pi-graf { grid-column: 1 / -1; }
+.pi-graf .pq-bars { max-width: none; height: 84px; margin-top: 8px; }
+.pi-graf .pq-bar i { background: color-mix(in srgb, var(--pc) 45%, #fff); opacity: .95; max-width: 46px; }
+.pi-graf .pq-bar small { color: rgba(255, 255, 255, .7); }
+.pi-nota { grid-column: 1 / -1; margin: 0; font-size: 12.5px; color: rgba(255, 255, 255, .7); border-top: 1px solid rgba(255, 255, 255, .12); padding-top: 10px; }
+.pi-por { display: grid; gap: 6px; padding: 16px 22px 4px; }
+.pi-pr { display: grid; grid-template-columns: 140px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 6px 8px; margin: 0 -8px; border: 0; border-radius: 8px; background: none; font: inherit; color: var(--ink); text-align: left; cursor: pointer; font-size: 13px; }
+.pi-pr:hover { background: color-mix(in srgb, var(--pc) 8%, #fff); }
+.pi-pr b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pi-pr em { font-style: normal; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.pi-card .pq-strip { margin: 0; padding: 14px 22px 16px; }
+@media (max-width: 760px) {
+  .pi-hero { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .pi-big { font-size: 32px; }
+  .pi-ms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pi-por { padding: 14px 16px 2px; }
+  .pi-pr { grid-template-columns: 96px minmax(0, 1fr); } .pi-pr em { grid-column: 2; }
+  .pi-card .pq-strip { padding: 12px 16px 14px; }
+}
+.pi-graf .pq-bar i { background: rgba(255, 255, 255, .82); }
+.pi-graf .pq-bar:last-child i { background: #fff; }
+
 </style>
 
 <div class="app">
@@ -6318,12 +6354,7 @@ App.ICONES = {
           ${kpi('Taxa de renovação ' + y, ok + perd ? pct(ok, ok + perd) : FALTA, ok + perd ? `${ok} renovadas × ${perd} perdidas` : 'nenhuma baixa no ano')}</div>
         <div class="pq-row"><span class="pq-lab">Por tipo</span><ul class="pq-tab">${Object.entries(tipos).map(([t, x]) => `<li><b>${t}</b><span>${x.anual ? U.brlShort(x.anual) + '/ano' : FALTA}</span><small>${U.plural(x.n, 'contrato', 'contratos')}${t === 'Saúde' ? ' · ' + (x.vidas ? U.plural(x.vidas, 'vida', 'vidas') : 'vidas: falta dado') : ''}${x.semPer ? ` · ${x.semPer} sem forma de pagamento` : ''}${x.venc ? ` · ${x.venc} vencem em 90 dias` : ''}</small></li>`).join('') || '<li><small>Nenhum contrato ativo.</small></li>'}</ul></div>`;
     },
-    zentis(k) { return evolucao(k, 'valor', U.brlShort, 'Valor alocado'); },
-    previdencia(k) { return evolucao(k, 'saldo', U.brlShort, 'Saldo acumulado', { rot: 'Contribuição somada', val: temCampo(k.at, 'contribuicao') ? U.brlShort(soma(k.at, 'contribuicao')) + '/mês' : null }); },
-    ita(k) { return evolucao(k, 'valorConta', usd, 'Valor de conta', { rot: 'Aporte anual somado', val: temCampo(k.at, 'contribuicao') ? usd(soma(k.at, 'contribuicao')) : null }); },
-    stonex(k) { return evolucao(k, 'valor', usd, 'Valor em conta'); },
-    dominion(k) { return evolucao(k, 'valorConta', usd, 'Valor de conta'); },
-    eqseed(k) { return `<div class="pq-ks">${kpi('Investido', U.brlShort(soma(k.at, 'valor')), `ticket médio ${k.at.length ? U.brlShort(soma(k.at, 'valor') / k.at.length) : '—'}`, 'pq-dest')}${kpi('Startups', String(new Set(k.at.map(c => c.startup).filter(Boolean)).size), 'na carteira dos clientes')}</div>`; },
+    /* Investimentos (ITA, Eqseed, Zentis, StoneX, Dominion, Previdência): padrão próprio, ver INV abaixo */
     auto(k) { return `<div class="pq-ks">${kpi('Prêmio anual somado', temCampo(k.at, 'premio') ? U.brlShort(soma(k.at, 'premio')) : FALTA, U.plural(k.at.length, 'apólice', 'apólices'), 'pq-dest')}</div>`; },
     cambio(k) { return `<div class="pq-ks">${kpi('Volume', temCampo(k.at, 'valor') ? U.brlShort(soma(k.at, 'valor')) : FALTA, U.plural(k.at.length, 'operação', 'operações'), 'pq-dest')}</div>`; },
     mb() { const r = C().resumo('mb'); return `<div class="pq-ks">${kpi('PL no MB', r.valor ? U.brlShort(r.valor) : FALTA, (r.linhas || []).map(U.esc).join(' · '), 'pq-dest')}</div>`; },
@@ -6340,7 +6371,54 @@ App.ICONES = {
       ${serie.some(s => s.v != null) ? `<div class="pq-row"><span class="pq-lab">Mês a mês</span>${barras(serie, fmt)}</div>` : ''}`;
   }
 
+  /* ---------- Padrão dos investimentos (26/11) ----------
+     Bloco escuro na cor da marca (Cli.MARCAS): número principal grande, 2 ou 3 números de apoio e o mês a mês
+     (só com 2 meses ou mais de dado). Eqseed: "Por startup" em barras clicáveis (filtram a lista). Embaixo, a faixa comum. */
+  const INV = {
+    eqseed: { marca: 'Eqseed', campo: 'valor', fmt: U.brlShort, rot: 'Investido', serie: false },
+    ita: { marca: 'Investors Trust', campo: 'valorConta', fmt: usd, rot: 'Valor de conta', usd: true },
+    zentis: { marca: 'Zentis', campo: 'valor', fmt: U.brlShort, rot: 'Valor alocado' },
+    stonex: { marca: 'StoneX', campo: 'valor', fmt: usd, rot: 'Valor em conta', usd: true },
+    dominion: { marca: 'Dominion', campo: 'valorConta', fmt: usd, rot: 'Valor de conta', usd: true },
+    previdencia: { marca: null, campo: 'saldo', fmt: U.brlShort, rot: 'Saldo acumulado' }
+  };
+  RP.ehInv = pid => !!INV[pid];
+  RP.corInv = pid => { const x = INV[pid]; if (!x) return null; const m = x.marca && C().marca(x.marca); return m ? m.cor : C().produto(pid).cor; };
+  const mini = (rot, val, sub) => `<div class="pi-m"><small>${rot}</small><b>${val}</b>${sub ? `<em>${sub}</em>` : ''}</div>`;
+  const faltaPi = '<span class="pi-falta">falta dado</span>';
+  function heroInv(pid, k) {
+    const x = INV[pid], at = k.at, n = at.length;
+    const meses = ultimosMeses(6), serie = x.serie === false ? [] : meses.map(ref => { let v = null; at.forEach(c => { const y = posMes(c, x.campo, ref); if (y != null) v = (v || 0) + y; }); return { ref, v }; });
+    const atual = x.serie === false ? soma(at, x.campo) : (serie[serie.length - 1] || {}).v;
+    /* variação só com contratos que têm valor nos dois meses (contrato novo não conta como alta) */
+    const ant = serie.slice(0, -1).reverse().find(s => s.v != null);
+    let dif = null; if (atual != null && ant) { const hoje = meses[meses.length - 1]; at.forEach(c => { const a = posMes(c, x.campo, ant.ref), b = posMes(c, x.campo, hoje); if (a != null && b != null) dif = (dif || 0) + (b - a); }); }
+    const cot = x.usd && App.Pat ? App.Pat.cotacao(U.today().slice(0, 7)) : null;
+    const linhaSub = [
+      x.usd && atual != null && cot ? '≈ ' + U.brlShort(atual * cot.v) + ' (US$ ' + cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + ')' : '',
+      dif != null ? `<span class="${dif >= 0 ? 'pi-up' : 'pi-dn'}">${dif >= 0 ? '▲' : '▼'} ${x.fmt(Math.abs(dif))}</span> desde ${MES3[+ant.ref.slice(5) - 1]}` : ''
+    ].filter(Boolean).join(' · ');
+    const ms = [mini('Ticket médio', atual != null && n ? x.fmt(atual / n) : faltaPi, U.plural(n, 'contrato', 'contratos'))];
+    if (pid === 'eqseed') ms.unshift(mini('Startups', String(new Set(at.map(c => c.startup).filter(Boolean)).size), U.plural(k.clis.size, 'cliente investiu', 'clientes investiram')));
+    if (pid === 'ita') ms.push(mini('Aporte anual', temCampo(at, 'contribuicao') ? usd(soma(at, 'contribuicao')) : faltaPi, 'somado dos planos'));
+    if (pid === 'previdencia') ms.push(mini('Contribuição', temCampo(at, 'contribuicao') ? U.brlShort(soma(at, 'contribuicao')) + '/mês' : faltaPi, 'somada'));
+    const comDado = serie.filter(s => s.v != null).length;
+    const graf = x.serie === false ? '' : comDado >= 2
+      ? `<div class="pi-graf"><small>Últimos 6 meses</small>${barras(serie, x.fmt)}</div>`
+      : `<p class="pi-nota">O mês a mês aparece quando houver 2 meses de posição (atualize o valor no começo de cada mês).</p>`;
+    let por = '';
+    if (pid === 'eqseed') {
+      const g = {}; at.forEach(c => { const s = c.startup || 'Sem nome'; g[s] = g[s] || { v: 0, cl: new Set() }; g[s].v += +c.valor || 0; g[s].cl.add(c.clienteId); });
+      const arr = Object.entries(g).sort((a, b) => b[1].v - a[1].v), mx = Math.max(...arr.map(a => a[1].v), 1), tot = atual || 1;
+      por = arr.length ? `<div class="pi-por"><span class="pq-lab">Por startup · toque para filtrar</span>${arr.map(([s, y]) => `<button class="pi-pr" data-grp="${U.esc(s)}"><b>${U.esc(s)}</b><span class="pq-trk"><i style="width:${y.v / mx * 100}%"></i></span><em>${U.brlShort(y.v)} · ${U.plural(y.cl.size, 'cliente', 'clientes')} · ${Math.round(y.v / tot * 100)}%</em></button>`).join('')}</div>` : '';
+    }
+    return `<div class="pi-hero"><div class="pi-main"><small>${x.rot}</small><b class="pi-big">${atual != null ? x.fmt(atual) : faltaPi}</b>${linhaSub ? `<em>${linhaSub}</em>` : ''}</div>
+        <div class="pi-ms">${ms.join('')}</div>${graf}</div>${por}`;
+  }
+
   RP.html = (pid, o = {}) => {
+    const k0 = INV[pid] ? RP.comum(pid) : null;
+    if (k0) return `<section class="card pq-card pi-card" style="--pc:${RP.corInv(pid)}">${heroInv(pid, k0)}<div class="pq-strip">${htmlComum(pid, k0)}</div></section>`;
     const k = RP.comum(pid), esp = ESP[pid] ? ESP[pid](k, o) : '';
     return `<section class="card pq-card" style="--pc:${C().produto(pid).cor}">${esp ? `<div class="pq-esp">${esp}</div>` : ''}<div class="pq-strip">${htmlComum(pid, k)}</div></section>`;
   };
@@ -8131,16 +8209,18 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       .map(ct => ({ ct, cli: Cli.cliente(ct.clienteId) })).filter(x => x.cli && (!q || Cli.norm(x.cli.nome + ' ' + p.campos.map(cp => x.ct[cp.k] || '').join(' ')).includes(q)))
       .sort((a, b) => a.cli.nome.localeCompare(b.cli.nome, 'pt-BR'));
     const r = Cli.resumo(p.id), cols = p.campos.filter(cp => cp.lista);
+    /* investimentos: a tela do produto usa a cor da marca (ResumoProd.corInv) */
+    const corT = (App.ResumoProd && App.ResumoProd.corInv(p.id)) || p.cor;
     el.innerHTML = `${voltar('Gestão', {})}
-      <div class="page-h"><div><h1><i class="pdot" style="background:${p.cor}"></i>${U.esc(p.nome)}</h1><p class="muted">${U.esc(p.sub || '')}${p.sub ? ' · ' : ''}${U.plural(r.n, 'cliente', 'clientes')}${r.valor ? ' · ' + U.brl(r.valor) : ''}${r.linhas.length ? ' · ' + r.linhas.map(U.esc).join(' · ') : ''}</p></div>
+      <div class="page-h"><div><h1><i class="pdot" style="background:${corT}"></i>${U.esc(p.nome)}</h1><p class="muted">${U.esc(p.sub || '')}${p.sub ? ' · ' : ''}${U.plural(r.n, 'cliente', 'clientes')}${r.valor ? ' · ' + U.brl(r.valor) : ''}${r.linhas.length ? ' · ' + r.linhas.map(U.esc).join(' · ') : ''}</p></div>
         <div class="page-act"><button class="btn primary" data-novo-ct="${p.id}">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button></div></div>
       ${App.ResumoProd ? App.ResumoProd.html(p.id, { tipoCons }) : ''}
-      ${p.agrupar ? (() => { const g = {}; todos.filter(c => (c.status || 'ativo') === 'ativo').forEach(c => { const k = c[p.agrupar] || 'Sem nome'; g[k] = g[k] || { n: 0, v: 0, cl: new Set() }; g[k].n++; g[k].v += +c[p.principal] || 0; g[k].cl.add(c.clienteId); });
+      ${p.agrupar && !(App.ResumoProd && App.ResumoProd.ehInv(p.id)) ? (() => { const g = {}; todos.filter(c => (c.status || 'ativo') === 'ativo').forEach(c => { const k = c[p.agrupar] || 'Sem nome'; g[k] = g[k] || { n: 0, v: 0, cl: new Set() }; g[k].n++; g[k].v += +c[p.principal] || 0; g[k].cl.add(c.clienteId); });
         const arr = Object.entries(g).sort((a, b) => b[1].v - a[1].v); return arr.length ? `<div class="grp-strip">${arr.map(([k, x]) => `<button class="grp${Cli.norm(busca) === Cli.norm(k) ? ' on' : ''}" data-grp="${U.esc(k)}"><b>${U.esc(k)}</b><span>${U.brl(x.v)}</span><small>${U.plural(x.cl.size, 'cliente', 'clientes')}</small></button>`).join('')}</div>` : ''; })() : ''}
       ${potenciaisHTML(p.id)}
       <div class="toolbar"><div class="seg-tabs">${[['ativo', 'Ativos'], ['encerrado', 'Encerrados'], ['todos', 'Todos']].map(([k, l]) => `<button class="${filtro === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}</div>
         <label class="search">${UI.icon('busca')}<input id="clBusca" placeholder="Buscar cliente, ${U.esc((cols[0] || { l: '' }).l.toLowerCase())}…" value="${U.esc(busca)}"></label></div>
-      <section class="card"${''}>${lista.length ? `<ul class="ct-list ct-cor" style="--pc:${p.cor}">${lista.map(({ ct, cli }) => { const d = Cli.proxData(ct), enc = (ct.status || 'ativo') === 'encerrado';
+      <section class="card"${''}>${lista.length ? `<ul class="ct-list ct-cor" style="--pc:${corT}">${lista.map(({ ct, cli }) => { const d = Cli.proxData(ct), enc = (ct.status || 'ativo') === 'encerrado';
           return `<li data-cli="${cli.id}" class="${enc ? 'off' : ''}"><div class="ct-cli">${av(cli)}<b>${U.esc(cli.nome)}</b></div><div class="ct-main">
             <span class="ct-f">${cols.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span class="${cp.k === p.principal ? 'pr' : ''}${cp.t === 'sim' && ct[cp.k] ? ' sim' : ''}"><small>${U.esc(cp.l)}</small>${Cli.ehMarca(cp) ? Cli.mk(t, true) : U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</span></div>
             <div class="ct-side">${enc ? '<span class="tag">Encerrado</span>' : ''}${d && U.diff(d, U.today()) <= 30 ? `<span class="tag t-warn">${U.esc(U.relDue(d))}</span>` : ''}
@@ -8166,7 +8246,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       <div class="page-h"><div><h1><i class="pdot" style="background:#1E7A86"></i>MB · ${doCli ? U.esc(Cli.apelido(doCli)) : 'Mercado Bitcoin'}</h1><p class="muted">${atual ? `Posição de ${U.esc(atual.ref)} · importado ${U.fmtDateTime(atual.importadoEm)}` : 'Ainda sem nenhum mês importado.'}</p></div>
         <div class="page-act">${P.foco ? `<button class="btn ghost" id="mbTudo">Ver carteira completa</button>` : ''}${meses.length > 1 ? `<select id="mbMes" class="sel">${meses.map(m => `<option value="${m.id}"${m.id === (atual && atual.id) ? ' selected' : ''}>${U.esc(m.ref)}</option>`).join('')}</select>` : ''}
           <label class="btn primary">${UI.icon('arquivo')}Importar mês<input type="file" id="mbArq" accept=".html,.htm,.json" hidden></label></div></div>
-      ${!doCli && App.ResumoProd ? App.ResumoProd.html('mb') : ''}
+
       ${atual ? `<div class="mb-frame"><iframe id="mbIf" title="Carteira MB ${U.esc(atual.ref)}" loading="eager"></iframe></div>`
         : `<section class="card empty"><b>Importe o primeiro mês da carteira.</b><p>Escolha o arquivo do dashboard do MB (o .html que você já tem) ou o arquivo do mês que o Claude gerar a partir dos relatórios. Os clientes do MB entram na sua base automaticamente.</p></section>`}
       <p class="muted small mb-dica">Todo mês, por volta do dia 9: baixe os relatórios do MB, mande no chat e importe aqui o arquivo que o Claude devolver. Cada mês fica guardado, e o histórico vai se formando.</p>`;
