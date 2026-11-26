@@ -1676,6 +1676,38 @@ b > i.mk-d:last-child, .pf-ml-n i.mk-d { margin-left: 6px; }
 /* em bloco escuro (patrimônio da Gestão) o pontinho ganha um anel claro para o XP preto aparecer */
 .gs-pat i.mk-d { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .6); }
 
+/* ---------- Ajustes 26/11 14h50 (pedido do usuário) ---------- */
+/* Proteção e outros produtos: cartões no estilo do Mapa 360, com faixa e valor na cor do produto */
+.gs-plist { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; align-items: stretch; }
+.gs-prod { display: grid; gap: 2px; align-content: start; min-height: 0; padding: 12px 14px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--pc) 30%, var(--line)); border-left: 4px solid var(--pc); background: color-mix(in srgb, var(--pc) 7%, #fff); }
+.gs-prod:hover { border-color: var(--pc); box-shadow: 0 4px 14px color-mix(in srgb, var(--pc) 22%, transparent); }
+.gs-prod .gs-pn { font-weight: 700; font-size: 14.5px; color: var(--ink); }
+.gs-prod .gs-pval { font-family: var(--display); font-size: 22px; font-weight: 800; line-height: 1.2; color: var(--pc); }
+.gs-prod .gs-pv { font-size: 12.5px; color: var(--muted); }
+.gs-prod .gs-pb { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.gs-prod.zero { background: var(--surface); border-style: dashed; border-left-style: solid; } .gs-prod.zero .gs-pval { color: var(--muted); font-size: 18px; }
+@media (max-width: 560px) { .gs-plist { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gs-prod .gs-pval { font-size: 19px; } }
+/* Patrimônio da Gestão: número maior */
+.gs-big { font-size: 46px !important; line-height: 1.12; letter-spacing: -.01em; }
+@media (max-width: 760px) { .gs-big { font-size: 36px !important; } }
+/* Topo do cliente: volta ao bloco escuro só com letras brancas (sem caixas brancas) */
+.cl-hero-kpis > * { background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: #fff; box-shadow: none; }
+.cl-hero-kpis small { color: #C9C6D6; }
+.cl-hero-kpis b, .cl-hero-kpis > :first-child b { color: #fff; }
+.cl-hero-kpis em, .cl-hero-kpis .kp-btn em { color: #B7AED6 !important; }
+.cl-hero-kpis .kp-btn:hover { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .35); box-shadow: none; }
+/* Patrimônio do cliente: uma faixa só (destaque + 4 números), sem o bloco escuro grande */
+.pf-top { grid-template-columns: minmax(0, 1.25fr) repeat(4, minmax(0, 1fr)); gap: 10px; }
+.pf-tiles { display: contents; }
+.pf-hero { padding: 12px 14px; gap: 4px; justify-items: start; text-align: left; align-content: center; }
+.pf-big { font-size: 28px; }
+.pf-hero p, .pf-hero .pf-defmeta { font-size: 12.5px; }
+.pf-ml li { align-items: center; }
+.pf-ml-n small { flex-basis: auto; padding-left: 0; }
+@media (max-width: 1100px) { .pf-top { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pf-hero { grid-column: 1 / -1; } }
+.gs-prod { justify-items: start; text-align: left; } .gs-prod .gs-pv { margin: 0; text-align: left; }
+.gs-prod .gs-pb > span { margin: 0; }
+
 </style>
 
 <div class="app">
@@ -7615,7 +7647,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         <section class="card"><div class="card-h"><h2>Por plataforma</h2><span class="muted small">${U.esc(P.nomeMes(ref))}</span></div>
           <div class="pt-stack">${P.PLATS.map(p => r.total && r.plats[p.id].pl ? `<span style="width:${r.plats[p.id].pl / r.total * 100}%;background:${p.cor}" title="${p.nome}"></span>` : '').join('')}</div>
           <ul class="pt-plats">${P.PLATS.map(p => { const x = r.plats[p.id];
-            return `<li><i style="background:${p.cor}"></i><div><b>${U.esc(p.nome)}${p.id === 'pz' ? '' : App.Cli.mkDot(p.nome)}</b><small>${p.id === 'intl' ? (x.usd ? usd(x.usd) + (cot ? ' × ' + cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ' · sem cotação') : p.sub.split(' · ').map(s => App.Cli.mk(s)).join(' · ')) : U.plural(x.n, 'cliente', 'clientes')}${x.repetido ? ` · ${x.repetido} com posição anterior` : ''}</small></div>
+            return `<li><i style="background:${p.cor}"></i><div><b>${U.esc(p.nome)}</b><small>${p.id === 'intl' ? (x.usd ? usd(x.usd) + (cot ? ' × ' + cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ' · sem cotação') : p.sub) : U.plural(x.n, 'cliente', 'clientes')}${x.repetido ? ` · ${x.repetido} com posição anterior` : ''}</small></div>
               <span class="pt-pc">${r.total ? U.pct(x.pl / r.total) : '—'}</span><span class="pt-v">${U.brlShort(x.pl)}<small class="${capCls(x.cap)}">${x.cap ? sinal(x.cap) : 'sem captação'}</small></span></li>`; }).join('')}</ul>
           <form class="pt-cot" id="ptCot"><label for="ptCotV">Dólar de ${U.esc(P.nomeMes(ref))}</label><input id="ptCotV" data-num inputmode="decimal" placeholder="Ex.: 5,40" value="${cot && cot.exata ? cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) : ''}"><button class="btn ghost sm" type="submit">Salvar</button>
             <small class="muted">${cot ? (cot.exata ? 'Converte o exterior para R$.' : `Usando a de ${P.rotulo(cot.ref)} (${cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}). Informe a deste mês.`) : intl.usd ? 'Sem cotação: o exterior ainda não entra no total.' : 'Para converter o exterior para R$.'}</small></form>
@@ -7646,7 +7678,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   /* ---------- Ficha do cliente: tudo o que ele tem com você (e o que se sabe que tem fora) ---------- */
   const COR_BRL = '#6E3FF0', COR_USD = '#E08A1E', COR_CLASSE = '#6E3FF0';
   const pct = (v, t) => t ? Math.round(v / t * 100) + '%' : '—';
-  const meterList = (rows, total) => `<ul class="pf-ml">${rows.map(r => `<li title="${U.esc(r.nome)}: ${U.brl(r.v)} (${pct(r.v, total)})"><span class="pf-ml-n"><i style="background:${r.cor}"></i>${U.esc(r.nome)}${r.marca ? App.Cli.mkDot(r.nome) : ''}${r.nota ? `<small>${U.esc(r.nota)}</small>` : ''}</span><span class="pf-ml-b"><b style="width:${total ? Math.max(r.v / total * 100, 1.5) : 0}%;background:${r.cor}"></b></span><span class="pf-ml-v">${U.brlShort(r.v)}<small>${pct(r.v, total)}</small></span></li>`).join('')}</ul>`;
+  const meterList = (rows, total) => `<ul class="pf-ml">${rows.map(r => `<li title="${U.esc(r.nome)}: ${U.brl(r.v)} (${pct(r.v, total)})"><span class="pf-ml-n"><i style="background:${r.cor}"></i>${U.esc(r.nome)}${r.nota ? `<small>${U.esc(r.nota)}</small>` : ''}</span><span class="pf-ml-b"><b style="width:${total ? Math.max(r.v / total * 100, 1.5) : 0}%;background:${r.cor}"></b></span><span class="pf-ml-v">${U.brlShort(r.v)}<small>${pct(r.v, total)}</small></span></li>`).join('')}</ul>`;
   PV.ficha = cli => {
     const P = App.Pat, x = P.consolidado(cli);
     if (!x.total && !x.consorcio && !x.capital && !x.foraTot) return '';
@@ -7670,7 +7702,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       </div>
       ${x.total ? `<div class="pf-cols">
         <div><h3>Moedas</h3>${meterList([{ nome: 'Real', v: x.brl, cor: COR_BRL }, { nome: 'Dólar', v: x.usdR, cor: COR_USD }].filter(r => r.v > 0), x.total)}</div>
-        <div><h3>Onde está</h3>${meterList(x.plats.map(p => ({ nome: p.nome, v: p.v, cor: p.cor, marca: p.id !== 'pz', nota: p.repetido ? 'posição de ' + P.rotulo(p.refPos).toLowerCase() : '' })), x.total)}</div>
+        <div><h3>Onde está</h3>${meterList(x.plats.map(p => ({ nome: p.nome, v: p.v, cor: p.cor, nota: p.repetido ? 'posição de ' + P.rotulo(p.refPos).toLowerCase() : '' })), x.total)}</div>
         <div><h3>Classes de ativo</h3>${meterList(x.classes.map(([k, v]) => ({ nome: k, v, cor: COR_CLASSE })), x.total)}</div>
       </div>` : ''}
       ${rep.length ? `<p class="muted small pf-nota">Sem posição deste mês em ${rep.map(p => p.nome).join(', ')}: repete a última conhecida.</p>` : ''}
@@ -7783,9 +7815,10 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const ids = Cli.PRODUTOS.filter(p => !['mb', 'eqseed', 'ita', 'stonex', 'dominion', 'zentis', 'previdencia'].includes(p.id) && (Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)));
     const intl = [];
     const linha = p => { const r = Cli.resumo(p.id), pot = Cli.potenciais(p.id).length;
-      return `<button class="gs-prod${r.n ? '' : ' zero'}" data-prod="${p.id}" style="--pc:${p.cor}"><i></i><span class="gs-pn">${U.esc(p.nome)}</span>
-        <span class="gs-pv"><b>${r.n}</b> ${r.n === 1 ? 'cliente' : 'clientes'}${r.valor ? ' · ' + U.brlShort(r.valor) : ''}</span>
-        ${r.avisos ? `<span class="pc-av">${r.avisos} aviso${r.avisos > 1 ? 's' : ''}</span>` : ''}${pot ? `<span class="pc-pot">${pot} potencia${pot === 1 ? 'l' : 'is'}</span>` : ''}</button>`; };
+      return `<button class="gs-prod${r.n ? '' : ' zero'}" data-prod="${p.id}" style="--pc:${p.cor}"><span class="gs-pn">${U.esc(p.nome)}</span>
+        <b class="gs-pval">${r.valor ? U.brlShort(r.valor) : r.n ? U.plural(r.n, 'contrato', 'contratos') : '—'}</b>
+        <span class="gs-pv">${r.n ? U.plural(r.n, 'cliente', 'clientes') : 'nenhum cliente ainda'}</span>
+        ${r.avisos || pot ? `<span class="gs-pb">${r.avisos ? `<span class="pc-av">${r.avisos} aviso${r.avisos > 1 ? 's' : ''}</span>` : ''}${pot ? `<span class="pc-pot">${pot} potencia${pot === 1 ? 'l' : 'is'}</span>` : ''}</span>` : ''}</button>`; };
     return `<section class="card gs-prods"><div class="card-h"><h2>Proteção e outros produtos</h2><span class="muted small">clique para ver a lista e os potenciais</span></div>
       <div class="gs-plist">${ids.concat(intl).map((p, i) => ({ p, i, n: Cli.resumo(p.id).n })).sort((x, y) => (y.n > 0) - (x.n > 0) || x.i - y.i).map(x => linha(x.p)).join('')}</div></section>`;
   }
@@ -7837,7 +7870,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       <div class="gs-buscarow">${buscaHTML()}<button class="link" id="clTodos">Ver todos (${nTodos}) ›</button></div>
       ${patFaixa()}
       <div class="grid-2 gs-ren">
-        <div class="ren-col">${App.Ren ? App.Ren.card({ titulo: 'Renovações em aberto', max: 8, extras: Cli.avisosConsorcio(), link: false }) : ''}</div>
+        <div class="ren-col">${(App.Ren && App.Ren.card({ titulo: 'Renovações em aberto', max: 8, extras: Cli.avisosConsorcio(), link: false })) || `<section class="card ren-card"><div class="card-h"><h2>Renovações em aberto</h2></div><div class="empty sm"><b>Nenhuma renovação em aberto.</b><p>Quando um vencimento chegar perto, ele aparece aqui para você tratar.</p></div></section>`}</div>
         <section class="card gs-venc"><div class="card-h"><h2>Próximos vencimentos</h2><span class="muted small">até 60 dias</span></div>
           ${grupos.length ? `<ul class="cl-vlist">${grupos.slice(0, 10).map(grupoItem).join('')}</ul>` : `<div class="empty sm"><b>Nada mais vencendo.</b><p>Seguros entram em Renovações ${App.Ren ? App.Ren.antec('seguros') : 30} dias antes e a renda fixa ${App.Ren ? App.Ren.antec('rf') : 15} dias antes. Os prazos ficam em Ajustes.</p></div>`}</section>
       </div>
