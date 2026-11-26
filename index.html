@@ -1588,6 +1588,20 @@ body.fp-on { overflow: hidden; }
 .pf-tiles > div { align-content: center; }
 .cl-hero-kpis > * { align-content: center; }
 
+/* ===== Paleta Donna (proposta): branco nos cartões de dados, números brancos nos blocos escuros ===== */
+.cl-hero-kpis > * { background: #fff; border: 1px solid #fff; color: var(--ink); box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+.cl-hero-kpis small { color: var(--muted); }
+.cl-hero-kpis b, .cl-hero-kpis > :first-child b { background: none; -webkit-background-clip: initial; background-clip: initial; color: var(--ink); }
+.cl-hero-kpis em, .kp-btn em { color: var(--muted) !important; }
+.kp-btn:hover { background: #fff; border-color: var(--accent); box-shadow: 0 8px 22px rgba(110,63,240,.35); }
+.pf-tiles > div { background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.pf-big, .gs-big { background: none; -webkit-background-clip: initial; background-clip: initial; color: #fff; }
+.pf-hero small, .gs-pat-top small, .gs-pat-top em { color: #C9C6D6; }
+.pf-hero .link { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.kpi.k-neg { background: #fff; border-color: var(--line); }
+.kpi.k-neg span { color: var(--muted); }
+.kpi.k-brand b { background: none; -webkit-background-clip: initial; background-clip: initial; color: var(--ink); }
+
 </style>
 
 <div class="app">
@@ -1890,7 +1904,7 @@ window.HORUS_CONFIG = {
     { id: 'semanal', label: 'Semanal' }, { id: 'mensal', label: 'Mensal' },
     { id: 'trimestral', label: 'Trimestral' }, { id: 'anual', label: 'Anual' }
   ];
-  M.CORES = ['#6E3FF0', '#2F855A', '#1E7A86', '#B7791F', '#C2412D', '#A0466B', '#2B5A8C', '#5A6474'];
+  M.CORES = ['#6E3FF0', '#0E9AA7', '#4361EE', '#F28C28', '#D63E7A', '#B0409F', '#1B5E8C', '#64748B'];
   M.TIPOS_NEGOCIO = [
     { id: 'investimentos', label: 'Investimentos' }, { id: 'consorcio', label: 'Consórcio' }, { id: 'seguro', label: 'Seguro' },
     { id: 'previdencia', label: 'Previdência' }, { id: 'cambio', label: 'Câmbio' }, { id: 'credito', label: 'Crédito' }, { id: 'outro', label: 'Outro' }
@@ -2325,7 +2339,7 @@ window.HORUS_CONFIG = {
     { id: 'parcelado', label: 'Parcelado' }
   ];
   Fat.GRUPOS = [{ id: 'novo', label: 'Grupo novo (pula o 2º mês)' }, { id: 'andamento', label: 'Grupo em andamento' }];
-  Fat.CORES = ['#6E3FF0', '#2F855A', '#1E7A86', '#B7791F', '#C2412D', '#A0466B', '#2B5A8C', '#5A6474'];
+  Fat.CORES = ['#6E3FF0', '#0E9AA7', '#4361EE', '#F28C28', '#D63E7A', '#B0409F', '#1B5E8C', '#64748B'];
 
   const DEF_LINHAS = [
     { id: 'l_investsmart', nome: 'InvestSmart (XP)', cor: '#2B5A8C', ordem: 1 },
@@ -2550,6 +2564,10 @@ window.HORUS_CONFIG = {
       { k: 'plataforma', l: 'Plataforma', t: 'texto', padrao: 'Investors Trust' }] }
   ];
   /* Ordem dos cards: investimentos, internacionais, proteção, outros */
+  /* Paleta Donna (proposta 26/11): famílias de cor por tipo de produto. Vermelho/verde/âmbar ficam só para status. */
+  C.PALETA = { mb: '#0E9AA7', eqseed: '#9A5CE6', zentis: '#4361EE', previdencia: '#2F7FB5', ita: '#1B5E8C', stonex: '#5B7C99', dominion: '#3A4F7A', cambio: '#17A2C7',
+    vida: '#D63E7A', re: '#B0409F', rc: '#B0409F', saude: '#B0409F', auto: '#C2578A', consorcio: '#F28C28', credito: '#7C879A' };
+  C.PRODUTOS.forEach(p => { if (C.PALETA[p.id]) p.cor = C.PALETA[p.id]; });
   const ORDEM_P = ['mb', 'eqseed', 'zentis', 'previdencia', 'ita', 'stonex', 'dominion', 'vida', 're', 'auto', 'consorcio', 'cambio', 'credito'];
   C.PRODUTOS.sort((a, b) => (ORDEM_P.indexOf(a.id) + 1 || 99) - (ORDEM_P.indexOf(b.id) + 1 || 99));
   C.produto = id => C.PRODUTOS.find(p => p.id === id) || { id, nome: id, cor: '#5A6474', campos: [] };
@@ -2847,12 +2865,12 @@ window.HORUS_CONFIG = {
   P.INTL = ['ita', 'stonex', 'dominion'];
   /* cores validadas (claro, daltonismo e visão normal) no validador da skill de gráficos em 24/11 */
   P.PLATS = [
-    { id: 'mb', nome: 'MB', cor: '#12938A' },
-    { id: 'xp', nome: 'XP', cor: '#3A62D8' },
-    { id: 'eqseed', nome: 'Eqseed', cor: '#C048B5' },
-    { id: 'intl', nome: 'Exterior', sub: 'ITA · StoneX · Dominion', cor: '#E08A1E' },
+    { id: 'mb', nome: 'MB', cor: '#0E9AA7' },
+    { id: 'xp', nome: 'XP', cor: '#374151' },
+    { id: 'eqseed', nome: 'Eqseed', cor: '#9A5CE6' },
+    { id: 'intl', nome: 'Exterior', sub: 'ITA · StoneX · Dominion', cor: '#1B5E8C' },
     /* Parte 6 (24/11): Previdência e Zentis entram no total pelo valor do contrato (saldo / valor), com posHist mensal */
-    { id: 'pz', nome: 'Previdência e Zentis', sub: 'saldo e valor dos contratos', cor: '#7A8F2B' }
+    { id: 'pz', nome: 'Previdência e Zentis', sub: 'saldo e valor dos contratos', cor: '#4361EE' }
   ];
   P.PZ = ['previdencia', 'zentis'];
   P.rotulo = ref => { const [y, m] = ref.split('-'); return MES[+m - 1] + '/' + y.slice(2); };
