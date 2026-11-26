@@ -1519,7 +1519,7 @@ body.fp-on { overflow: hidden; }
 .rg-a .ic { width: 16px; height: 16px; }
 
 /* 26/11 · painel do produto reestruturado, Potenciais recolhível, lista de contratos colorida */
-.pot[open] > .m360-sum .ic { transform: rotate(-90deg); }
+.pot[open] > .m360-sum .ic, .lt-det[open] > .m360-sum .ic { transform: rotate(-90deg); }
 .pot:not([open]) { padding-top: 14px; padding-bottom: 14px; margin-bottom: 14px; }
 .pot .pot-list { margin-top: 4px; }
 .pq-esp { display: grid; gap: 14px; }
@@ -1574,6 +1574,19 @@ body.fp-on { overflow: hidden; }
   .pq-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 }
 .pq-lg i.pq-seg-imovel { background: var(--pc); } .pq-lg i.pq-seg-auto { background: color-mix(in srgb, var(--pc) 45%, #fff); } .pq-lg i.pq-seg-outro { background: var(--faint, #9aa); }
+
+/* cartão único de contato + linha do tempo */
+.lt-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.lt-st { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 14px; min-width: 0; }
+.lt-card.atras { border-color: color-mix(in srgb, var(--late) 40%, var(--line)); }
+.lt-det { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.lt-det .lt-list { margin-top: 10px; }
+.lt-det .count { margin-left: 2px; }
+/* patrimônio: conteúdo centralizado nos cartões */
+.pf-hero { align-content: center; justify-items: center; text-align: center; }
+.pf-hero .pf-meter { width: 100%; }
+.pf-tiles > div { align-content: center; }
+.cl-hero-kpis > * { align-content: center; }
 
 </style>
 
@@ -5242,22 +5255,23 @@ window.HORUS_CONFIG = {
     salvarCts(cid, c.contatos.filter(x => x.atividadeId !== atvId), opts);
   };
   Rg.desfazer = (cid, antes) => Store.update('clientes', cid, { ultimoContato: antes.ultimoContato || null, contatos: antes.contatos || [] });
-  Rg.anotar = cid => {
-    const c = C().cliente(cid); if (!c) return; const UI = App.UI, ult = (c.contatos || [])[0];
+  /* Caixa de anotação: aberta pelo "Falei hoje" (contato já registrado; "Sem anotação" só fecha; "Desfazer" tira o contato) */
+  Rg.anotar = (cid, antes) => {
+    const c = C().cliente(cid); if (!c) return; const UI = App.UI, ult = (c.contatos || [])[0], hoje = ult && ult.em === U.today() && !ult.atividadeId;
     UI.modal({
-      title: 'Contato com ' + C().apelido(c), size: 'sm',
-      body: `<form class="form" id="fCto"><div class="row2"><label class="f"><span>Data</span><input type="date" name="data" value="${ult ? ult.em : U.today()}"></label></div>
-        <label class="f full"><span>O que conversaram <em>opcional</em></span><input name="nota" maxlength="140" value="${U.esc(ult && ult.em === U.today() ? ult.nota || '' : '')}" placeholder="Ex.: enviei a movimentação da carteira"></label></form>`,
-      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCto" type="submit">Salvar</button>`,
+      title: 'Falei com ' + C().apelido(c), size: 'sm',
+      body: `<form class="form" id="fCto"><label class="f full"><span>O que foi tratado <em>opcional · vai para a linha do tempo</em></span><textarea name="nota" class="tratado" maxlength="500" placeholder="Ex.: enviei a movimentação da carteira; vai decidir o seguro até sexta">${U.esc(hoje ? ult.nota || '' : '')}</textarea></label>
+        <label class="f"><span>Data</span><input type="date" name="data" value="${hoje ? ult.em : U.today()}"></label></form>`,
+      footer: `${antes ? '<button class="btn ghost danger-text" data-desf>Desfazer contato</button>' : ''}<span class="grow"></span><button class="btn ghost" data-close>Sem anotação</button><button class="btn primary" form="fCto" type="submit">Salvar</button>`,
       onMount(el, api) {
+        const d0 = el.querySelector('[data-desf]'); if (d0) d0.onclick = () => { Rg.desfazer(cid, antes); api.close(); UI.toast('Contato desfeito'); };
         el.querySelector('#fCto').onsubmit = e => {
           e.preventDefault(); const d = UI.formData(e.target), atual = C().cliente(cid);
-          /* Se o "Falei hoje" acabou de ser registrado, completa ele em vez de criar outro */
           const cs = (atual.contatos || []).slice();
-          if (cs[0] && cs[0].em === U.today() && !cs[0].nota) cs.shift();
-          const contatos = [{ em: d.data || U.today(), nota: d.nota || null }].concat(cs).slice(0, 30);
+          if (cs[0] && cs[0].em === U.today() && !cs[0].nota && !cs[0].atividadeId) cs.shift();
+          const contatos = [{ em: d.data || U.today(), nota: d.nota || null }].concat(cs).sort((a, b) => b.em.localeCompare(a.em)).slice(0, 30);
           Store.update('clientes', cid, { ultimoContato: contatos.map(x => x.em).sort().pop(), contatos });
-          api.close(); UI.toast('Contato registrado');
+          api.close(); UI.toast('Contato anotado');
         };
       }
     });
@@ -5266,13 +5280,13 @@ window.HORUS_CONFIG = {
     const c = C().cliente(cid); if (!c) return;
     const antes = { ultimoContato: c.ultimoContato, contatos: (c.contatos || []).slice() };
     Rg.registrar(cid);
-    App.UI.toast('Contato com ' + C().apelido(c) + ' registrado', 'ok', [{ label: 'Anotar', fn: () => Rg.anotar(cid) }, { label: 'Desfazer', fn: () => Rg.desfazer(cid, antes) }]);
+    Rg.anotar(cid, antes);
   };
 
   /* ---------- Textos ---------- */
   const rel = s => s.nunca ? 'sem contato registrado' : s.faltam < 0 ? 'há ' + s.desde + ' dias sem contato' : s.faltam === 0 ? 'completa ' + Rg.dias() + ' dias hoje' : 'completa ' + Rg.dias() + ' dias em ' + s.faltam + (s.faltam === 1 ? ' dia' : ' dias');
   const anivTxt = d => d === 0 ? 'Aniversário hoje' : d === 1 ? 'Aniversário amanhã' : 'Aniversário em ' + d + ' dias';
-  const linha = s => `<li class="rg-it${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><button class="rg-n" data-rg-cli="${s.c.id}"><b>${U.esc(s.c.nome)}</b><small>${U.esc(rel(s))}${s.u && !s.nunca ? ' · ' + U.esc(s.u.nota || 'último em ' + U.fmtDate(s.u.data)) : ''}</small></button><span class="rg-bt"><button class="rg-f" data-rg-falei="${s.c.id}">Falei hoje</button><button class="rg-a" data-rg-anotar="${s.c.id}" title="Registrar com anotação" aria-label="Registrar contato com anotação">${App.UI.icon('editar')}</button></span></li>`;
+  const linha = s => `<li class="rg-it${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><button class="rg-n" data-rg-cli="${s.c.id}"><b>${U.esc(s.c.nome)}</b><small>${U.esc(rel(s))}${s.u && !s.nunca ? ' · ' + U.esc(s.u.nota || 'último em ' + U.fmtDate(s.u.data)) : ''}</small></button><button class="rg-f" data-rg-falei="${s.c.id}">Falei hoje</button></li>`;
 
   /* ---------- Card do Painel ---------- */
   Rg.card = (filtroResp = []) => {
@@ -5281,7 +5295,7 @@ window.HORUS_CONFIG = {
     const total = ligar.length + nunca.length;
     return `<section class="card rg-card"><div class="card-h"><h2>Quem ligar esta semana</h2><span class="grow"></span>${ligar.length ? `<span class="count">${ligar.length}</span>` : ''}</div>
       <p class="rg-res">Contato a cada ${Rg.dias()} dias · ${emDia} em dia${ligar.length ? ` · <b>${ligar.length} para ligar</b>` : ''}${nunca.length ? ` · ${nunca.length} sem registro` : ''}</p>
-      ${aniv.length ? `<ul class="rg-list">${aniv.map(x => `<li class="rg-it aniv"><button class="rg-n" data-rg-cli="${x.c.id}"><b>${U.esc(x.c.nome)}</b><small>${anivTxt(x.d)}</small></button><span class="rg-bt"><button class="rg-f" data-rg-falei="${x.c.id}">Falei hoje</button><button class="rg-a" data-rg-anotar="${x.c.id}" title="Registrar com anotação" aria-label="Registrar contato com anotação">${App.UI.icon('editar')}</button></span></li>`).join('')}</ul>` : ''}
+      ${aniv.length ? `<ul class="rg-list">${aniv.map(x => `<li class="rg-it aniv"><button class="rg-n" data-rg-cli="${x.c.id}"><b>${U.esc(x.c.nome)}</b><small>${anivTxt(x.d)}</small></button><button class="rg-f" data-rg-falei="${x.c.id}">Falei hoje</button></li>`).join('')}</ul>` : ''}
       ${ligar.length ? `<ul class="rg-list">${ligar.slice(0, MAX).map(linha).join('')}</ul>${ligar.length > MAX ? `<details class="rg-mais"><summary>Ver todos · ${ligar.length}</summary><ul class="rg-list">${ligar.slice(MAX).map(linha).join('')}</ul></details>` : ''}`
         : total ? '' : '<p class="muted small" style="margin:4px 0 0">Todos os clientes estão em dia.</p>'}
       ${nunca.length ? `<details class="rg-mais"${ligar.length ? '' : ' open'}><summary>Sem contato registrado · ${nunca.length}</summary><p class="muted small" style="margin:4px 0 6px">Use "Falei hoje" quando falar com cada um; a partir daí a régua de ${Rg.dias()} dias começa a contar.</p><ul class="rg-list rg-scroll">${nunca.map(linha).join('')}</ul></details>` : ''}</section>`;
@@ -5289,19 +5303,8 @@ window.HORUS_CONFIG = {
   Rg.ligar = root => {
     root.querySelectorAll('[data-rg-falei]').forEach(b => b.onclick = e => { e.stopPropagation(); Rg.falei(b.dataset.rgFalei); });
     root.querySelectorAll('[data-rg-cli]').forEach(b => b.onclick = () => App.go('clientes', { cliente: b.dataset.rgCli }, { origem: true }));
-    root.querySelectorAll('[data-rg-anotar]').forEach(b => b.onclick = () => Rg.anotar(b.dataset.rgAnotar));
+    const ld = root.querySelector('#ltd'); if (ld) ld.addEventListener('toggle', () => { try { localStorage.setItem('donna-lt', ld.open ? '1' : '0'); } catch (e) {} });
     root.querySelectorAll('[data-lt-atv]').forEach(b => b.onclick = () => App.Forms.detalhes(b.dataset.ltAtv));
-  };
-
-  /* ---------- Faixa na ficha do cliente ---------- */
-  Rg.faixa = c => {
-    if (!C().ehCliente(c) || c.saiu) return '';
-    const s = Rg.situacao(c);
-    const txt = s.nunca ? 'Nenhum contato registrado ainda' : `Último contato: <b>${U.fmtDate(s.u.data)}</b> (${s.desde === 0 ? 'hoje' : s.desde === 1 ? 'ontem' : 'há ' + s.desde + ' dias'})${s.u.nota ? ' · ' + U.esc(s.u.nota) : ''}`;
-    const st = s.nunca ? '' : s.faltam < 0 ? `<span class="rg-tag atras">Passou ${-s.faltam} ${-s.faltam === 1 ? 'dia' : 'dias'} da régua</span>` : `<span class="rg-tag">Próximo até ${U.fmtDate(s.prox)}</span>`;
-    return `<section class="rg-faixa${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><div class="rg-fx-t"><span>${txt}</span>${st}</div>
-      <div class="rg-fx-b"><button class="btn primary sm" data-rg-falei="${c.id}">Falei hoje</button><button class="btn ghost sm" data-rg-anotar="${c.id}">Anotar contato</button></div>
-</section>`;
   };
 
   /* ---------- Linha do tempo da ficha (Lote 1): contatos + atividades concluídas + renovações baixadas, sem duplicar ---------- */
@@ -5323,13 +5326,17 @@ window.HORUS_CONFIG = {
   };
   const ROT_T = { atv: 'Atividade', cto: 'Contato', ren: 'Renovação' };
   const itemT = x => `<li class="lt-it lt-${x.tipo}"${x.id ? ` data-lt-atv="${x.id}"` : ''}><time>${U.fmtDate(x.em)}</time><div><b>${U.esc(x.tipo === 'cto' ? (x.texto || 'Contato sem anotação') : x.titulo)}</b>${x.tipo !== 'cto' && x.texto ? `<p>${U.esc(x.texto)}</p>` : ''}<small>${ROT_T[x.tipo]}${x.ren ? ' · renovação ' + U.esc(x.ren) : ''}</small></div></li>`;
-  Rg.blocoLinha = c => {
-    const l = Rg.linhaTempo(c), MAX = 4, botao = !C().ehCliente(c) || c.saiu;
-    return `<section class="card lt-card"><div class="card-h"><h2>Linha do tempo</h2>${l.length ? `<span class="count">${l.length}</span>` : ''}<span class="grow"></span>${botao ? `<button class="btn ghost sm" data-rg-anotar="${c.id}">${App.UI.icon('mais')}Anotar contato</button>` : ''}</div>
-      ${l.length ? `<ol class="lt-list">${l.slice(0, MAX).map(itemT).join('')}</ol>${l.length > MAX ? `<details class="lt-mais"><summary>Ver tudo · ${l.length}</summary><ol class="lt-list">${l.slice(MAX).map(itemT).join('')}</ol></details>` : ''}`
-        : '<p class="muted small">Nada registrado ainda. Ao concluir uma atividade com este cliente, o que foi tratado aparece aqui.</p>'}</section>`;
+  /* Cartão único da ficha (Lote 1b, 26/11): situação da régua + "Falei hoje" + linha do tempo recolhível */
+  Rg.cartao = c => {
+    const l = Rg.linhaTempo(c), MAX = 4, reg = C().ehCliente(c) && !c.saiu, sit = reg ? Rg.situacao(c) : null;
+    let aberto = false; try { aberto = localStorage.getItem('donna-lt') === '1'; } catch (e) {}
+    const txt = !reg ? 'Contatos e atividades' : sit.nunca ? 'Nenhum contato registrado ainda' : `Último contato: <b>${U.fmtDate(sit.u.data)}</b> (${sit.desde === 0 ? 'hoje' : sit.desde === 1 ? 'ontem' : 'há ' + sit.desde + ' dias'})`;
+    const tag = !reg || sit.nunca ? '' : sit.faltam < 0 ? `<span class="rg-tag atras">Passou ${-sit.faltam} ${-sit.faltam === 1 ? 'dia' : 'dias'} da régua</span>` : `<span class="rg-tag">Próximo até ${U.fmtDate(sit.prox)}</span>`;
+    return `<section class="card lt-card${reg && !sit.nunca && sit.faltam < 0 ? ' atras' : ''}"><div class="lt-top"><div class="lt-st"><span>${txt}</span>${tag}</div><button class="btn primary sm" data-rg-falei="${c.id}">${App.UI.icon('check')}Falei hoje</button></div>
+      <details class="lt-det" id="ltd"${aberto ? ' open' : ''}><summary class="m360-sum"><h2>Linha do tempo</h2><span class="count">${l.length}</span><span class="grow"></span>${App.UI.icon('seta')}</summary>
+        ${l.length ? `<ol class="lt-list">${l.slice(0, MAX).map(itemT).join('')}</ol>${l.length > MAX ? `<details class="lt-mais"><summary>Ver tudo · ${l.length}</summary><ol class="lt-list">${l.slice(MAX).map(itemT).join('')}</ol></details>` : ''}`
+          : '<p class="muted small">Nada registrado ainda. Ao concluir uma atividade com este cliente, o que foi tratado aparece aqui.</p>'}</details></section>`;
   };
-
   App.Regua = Rg;
 })(window.App = window.App || {});
 
@@ -7959,8 +7966,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
           <div><small>Receita gerada</small><b>${receita ? U.brl(receita) : '—'}</b><em>nas suas produções</em></div>
         </div>
       </section>
-      ${App.Regua ? App.Regua.faixa(c) : ''}
-      ${App.Regua ? App.Regua.blocoLinha(c) : ''}
+      ${App.Regua ? App.Regua.cartao(c) : ''}
       ${App.Agenda ? App.Agenda.ficha(c) : ''}
       ${App.PatView ? App.PatView.ficha(c) : ''}
       ${c.observacoes ? `<p class="cl-obs">${U.esc(c.observacoes)}</p>` : ''}
