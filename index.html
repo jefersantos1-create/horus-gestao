@@ -3144,7 +3144,7 @@ App.ICONES = {
   C.rede = c => { const out = [], fila = [c.id], vis = new Set([c.id]); while (fila.length) { const id = fila.shift(); C.filhosDe(id).forEach(f => { if (!vis.has(f.id)) { vis.add(f.id); out.push(f); fila.push(f.id); } }); } return out; };
   C.converteu = c => c.situacao === 'sim' || c.situacao === 'parcial' || (!c.situacao && C.ehCliente(c));
   /* Patrimônio com você (R$): MB + Eqseed ativos */
-  /* XP (24/11): por compliance não entra carteira; só o PL total digitado pelo usuário. clientes.dados.xp = { pl, em }, xpHist = [{ ref: 'AAAA-MM', pl, cap, em }] (cap = captação líquida do mês, Parte 5b) */
+  /* XP (24/11; 26/11 o usuário pediu a carteira por classe, vinda do positivador: xpHist[].carteira = { rf, fii, rv, fundos, caixa, prev, outros }). clientes.dados.xp = { pl, em }, xpHist = [{ ref: 'AAAA-MM', pl, cap, em }] (cap = captação líquida do mês, Parte 5b) */
   C.plXp = c => c && c.xp && c.xp.pl != null && c.xp.pl !== '' ? +c.xp.pl : null;
   /* cap = captação líquida do mês na XP (opcional, Parte 5b); undefined mantém a já gravada no mesmo mês */
   C.salvarXp = (cid, pl, em, opts, cap) => {
@@ -3251,7 +3251,7 @@ App.ICONES = {
     const h = (cli.xpHist || []).filter(x => x.ref <= ref && x.pl != null).sort((a, b) => b.ref.localeCompare(a.ref))[0];
     if (!h) return null;
     const exato = h.ref === ref;
-    return { pl: +h.pl || 0, cap: exato && h.cap != null && h.cap !== '' ? +h.cap : 0, capInformada: exato && h.cap != null && h.cap !== '', ref: h.ref, repetido: !exato };
+    return { pl: +h.pl || 0, cap: exato && h.cap != null && h.cap !== '' ? +h.cap : 0, capInformada: exato && h.cap != null && h.cap !== '', ref: h.ref, repetido: !exato, carteira: h.carteira || null };
   };
 
   /* ---------- Eqseed (valor investido) ---------- */
@@ -3383,6 +3383,8 @@ App.ICONES = {
   const IDX = s => { const x = String(s || '').toUpperCase(); return /CDI|DI\b|SELIC/.test(x) ? 'pós (CDI)' : /IPCA|INFL/.test(x) ? 'IPCA' : /PR[EÉ]/.test(x) ? 'prefixada' : s ? String(s) : 'outros'; };
   const classeMB = p => p.classe === 'rf' ? 'Renda fixa ' + IDX(p.idx) : p.classe === 'usd' ? 'Renda fixa em dólar' : p.classe === 'cripto' ? 'Cripto' : p.classe === 'caixa' ? 'Caixa' : p.classe === 'rv' || p.classe === 'cestas' ? 'Renda variável' : 'Outros';
   /* áreas do Mapa 360 que são investimento (o valor "mapeado" delas entra como "com outros") */
+  /* carteira da XP (positivador): chave → classe mostrada */
+  P.XP_CLASSES = { rf: 'Renda fixa', fii: 'Fundos imobiliários', rv: 'Renda variável', fundos: 'Fundos', caixa: 'Caixa', prev: 'Previdência', outros: 'Outros' };
   P.AREAS_INV = ['previdencia', 'internacional', 'cripto', 'startups', 'zentis'];
   P.consolidado = (cli, ref) => {
     ref = ref || P.mesPadrao();
@@ -3396,7 +3398,9 @@ App.ICONES = {
       const ps = rec ? (rec.positions || []).filter(p => ids.includes(String(p.cid))) : [];
       if (ps.length) ps.forEach(p => add(classeMB(p), +p.saldo || 0)); else add('MB (sem detalhe)', l.mb.pl);
     }
-    if (l.xp) add('XP (sem detalhe)', l.xp.pl);
+    /* 26/11: com a carteira do positivador (xpHist[].carteira) a XP abre por classe; sem ela, "XP (sem detalhe)" */
+    if (l.xp && l.xp.carteira && Object.values(l.xp.carteira).some(v => +v > 0)) Object.entries(P.XP_CLASSES).forEach(([k, rot]) => add(rot, +l.xp.carteira[k] || 0));
+    else if (l.xp) add('XP (sem detalhe)', l.xp.pl);
     if (l.eqseed) add('Startups', l.eqseed.pl);
     if (l.intl) add('Internacional', l.intl.pl);
     if (l.pz) { add('Previdência', l.pz.prev); add('Zentis', l.pz.zen); }
