@@ -1504,6 +1504,21 @@ body.fp-on { overflow: hidden; }
   .pq-chip { min-width: 0; flex: 1 1 30%; padding: 6px 9px; }
 }
 
+/* Pacote simples (26/11) */
+.m360-sum { display: flex; align-items: center; gap: 10px; cursor: pointer; list-style: none; }
+.m360-sum::-webkit-details-marker { display: none; }
+.m360-sum h2 { font-size: 15px; font-weight: 700; margin: 0; }
+.m360-sum .ic { width: 18px; height: 18px; transition: transform .2s; transform: rotate(90deg); flex: none; }
+.m360[open] > .m360-sum .ic { transform: rotate(-90deg); }
+.m360-dica { margin: 8px 0 10px; }
+.m360:not([open]) { padding-top: 14px; padding-bottom: 14px; }
+@media (max-width: 560px) { .m360-res { display: none; } .m360:not([open]) .m360-res { display: inline; font-size: 12px; } }
+.fp-linha { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 13px; color: var(--muted); }
+.fp-linha .link { margin-left: auto; font-weight: 700; }
+.rg-bt { display: inline-flex; gap: 6px; flex: none; }
+.rg-a { display: inline-grid; place-items: center; width: 34px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--accent); cursor: pointer; }
+.rg-a .ic { width: 16px; height: 16px; }
+
 </style>
 
 <div class="app">
@@ -2441,7 +2456,7 @@ window.HORUS_CONFIG = {
       { k: 'premio', l: 'Prêmio anual', t: 'brl', lista: true }, { k: 'inicio', l: 'Início da vigência', t: 'data' },
       { k: 'fimVigencia', l: 'Fim da vigência / renovação', t: 'data', lista: true }] },
     { id: 'zentis', nome: 'Zentis', cor: '#4F46C8', principal: 'valor', campos: [
-      { k: 'produto', l: 'Produto / operação', t: 'texto', lista: true }, { k: 'valor', l: 'Valor', t: 'brl', lista: true },
+      { k: 'operacao', l: 'Produto / operação', t: 'texto', lista: true }, { k: 'valor', l: 'Valor', t: 'brl', lista: true },
       { k: 'data', l: 'Data', t: 'data', lista: true }, { k: 'vencimento', l: 'Vencimento', t: 'data' }] },
     { id: 'stonex', nome: 'StoneX', sub: 'Conta internacional', cor: '#1F6F8B', campos: [
       { k: 'valor', l: 'Valor em conta', t: 'usd', lista: true }, { k: 'dataPosicao', l: 'Posição em', t: 'data', lista: true },
@@ -5201,7 +5216,7 @@ window.HORUS_CONFIG = {
   /* ---------- Textos ---------- */
   const rel = s => s.nunca ? 'sem contato registrado' : s.faltam < 0 ? 'há ' + s.desde + ' dias sem contato' : s.faltam === 0 ? 'completa ' + Rg.dias() + ' dias hoje' : 'completa ' + Rg.dias() + ' dias em ' + s.faltam + (s.faltam === 1 ? ' dia' : ' dias');
   const anivTxt = d => d === 0 ? 'Aniversário hoje' : d === 1 ? 'Aniversário amanhã' : 'Aniversário em ' + d + ' dias';
-  const linha = s => `<li class="rg-it${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><button class="rg-n" data-rg-cli="${s.c.id}"><b>${U.esc(s.c.nome)}</b><small>${U.esc(rel(s))}${s.u && !s.nunca ? ' · ' + U.esc(s.u.nota || 'último em ' + U.fmtDate(s.u.data)) : ''}</small></button><button class="rg-f" data-rg-falei="${s.c.id}">Falei hoje</button></li>`;
+  const linha = s => `<li class="rg-it${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><button class="rg-n" data-rg-cli="${s.c.id}"><b>${U.esc(s.c.nome)}</b><small>${U.esc(rel(s))}${s.u && !s.nunca ? ' · ' + U.esc(s.u.nota || 'último em ' + U.fmtDate(s.u.data)) : ''}</small></button><span class="rg-bt"><button class="rg-f" data-rg-falei="${s.c.id}">Falei hoje</button><button class="rg-a" data-rg-anotar="${s.c.id}" title="Registrar com anotação" aria-label="Registrar contato com anotação">${App.UI.icon('editar')}</button></span></li>`;
 
   /* ---------- Card do Painel ---------- */
   Rg.card = (filtroResp = []) => {
@@ -5210,7 +5225,7 @@ window.HORUS_CONFIG = {
     const total = ligar.length + nunca.length;
     return `<section class="card rg-card"><div class="card-h"><h2>Quem ligar esta semana</h2><span class="grow"></span>${ligar.length ? `<span class="count">${ligar.length}</span>` : ''}</div>
       <p class="rg-res">Contato a cada ${Rg.dias()} dias · ${emDia} em dia${ligar.length ? ` · <b>${ligar.length} para ligar</b>` : ''}${nunca.length ? ` · ${nunca.length} sem registro` : ''}</p>
-      ${aniv.length ? `<ul class="rg-list">${aniv.map(x => `<li class="rg-it aniv"><button class="rg-n" data-rg-cli="${x.c.id}"><b>${U.esc(x.c.nome)}</b><small>${anivTxt(x.d)}</small></button><button class="rg-f" data-rg-falei="${x.c.id}">Falei hoje</button></li>`).join('')}</ul>` : ''}
+      ${aniv.length ? `<ul class="rg-list">${aniv.map(x => `<li class="rg-it aniv"><button class="rg-n" data-rg-cli="${x.c.id}"><b>${U.esc(x.c.nome)}</b><small>${anivTxt(x.d)}</small></button><span class="rg-bt"><button class="rg-f" data-rg-falei="${x.c.id}">Falei hoje</button><button class="rg-a" data-rg-anotar="${x.c.id}" title="Registrar com anotação" aria-label="Registrar contato com anotação">${App.UI.icon('editar')}</button></span></li>`).join('')}</ul>` : ''}
       ${ligar.length ? `<ul class="rg-list">${ligar.slice(0, MAX).map(linha).join('')}</ul>${ligar.length > MAX ? `<details class="rg-mais"><summary>Ver todos · ${ligar.length}</summary><ul class="rg-list">${ligar.slice(MAX).map(linha).join('')}</ul></details>` : ''}`
         : total ? '' : '<p class="muted small" style="margin:4px 0 0">Todos os clientes estão em dia.</p>'}
       ${nunca.length ? `<details class="rg-mais"${ligar.length ? '' : ' open'}><summary>Sem contato registrado · ${nunca.length}</summary><p class="muted small" style="margin:4px 0 6px">Use "Falei hoje" quando falar com cada um; a partir daí a régua de ${Rg.dias()} dias começa a contar.</p><ul class="rg-list rg-scroll">${nunca.map(linha).join('')}</ul></details>` : ''}</section>`;
@@ -5730,7 +5745,19 @@ window.HORUS_CONFIG = {
         <span class="fp-va"><button class="link" data-fp-ver="${v.id}">Abrir</button><button class="link" data-fp-pdf="${v.id}">PDF</button></span></li>`).join('')}</ul>`
         : `<p class="muted small">Nenhum FP ainda. “Fazer FP” abre a ficha já preenchida com o que a Donna sabe: produtos com você, Mapa 360 e patrimônio.</p>`}</section>`;
   };
+  /* Linha discreta na ficha (o botão "Fazer FP" fica só no topo). Sem FP: não mostra nada. */
+  FP.linhaFicha = c => {
+    const vs = FP.fichasDe(c.id); if (!vs.length) return '';
+    return `<p class="fp-linha"><span>FP · ${vs.length > 1 ? vs.length + ' versões · ' : ''}última em ${U.esc(U.fmtDate(String(vs[0].data).slice(0, 10)))}</span><button class="link" data-fp-vers="${c.id}">ver versões ›</button></p>`;
+  };
+  FP.versoes = cid => {
+    const vs = FP.fichasDe(cid), UI = App.UI;
+    UI.modal({ title: 'FP · versões', size: 'md', body: `<ul class="fp-vers">${vs.map((v, i) => `<li><span class="fp-vd${i ? '' : ' now'}"></span><div><b>${U.esc(U.fmtDateTime(v.data))}</b>${i ? '' : ' <span class="fp-tag">mais recente</span>'}<small>${U.esc(v.tipoReuniao || 'Reunião')}${v.nota ? ' · ' + U.esc(v.nota) : ''}${v.resumo && v.resumo.pf ? ' · patrimônio financeiro ' + U.brlShort(v.resumo.pf) : ''}</small></div>
+        <span class="fp-va"><button class="link" data-fp-ver="${v.id}">Abrir</button><button class="link" data-fp-pdf="${v.id}">PDF</button></span></li>`).join('')}</ul>`,
+      footer: '<button class="btn ghost" data-close>Fechar</button>', onMount(el, api) { el.querySelectorAll('[data-fp-ver]').forEach(b => b.onclick = () => { api.close(); FP.abrirVersao(b.dataset.fpVer); }); el.querySelectorAll('[data-fp-pdf]').forEach(b => b.onclick = () => FP.pdf(b.dataset.fpPdf)); } });
+  };
   FP.ligar = el => {
+    el.querySelectorAll('[data-fp-vers]').forEach(b => b.onclick = () => FP.versoes(b.dataset.fpVers));
     el.querySelectorAll('[data-fp-fazer]').forEach(b => b.onclick = () => FP.fazer(b.dataset.fpFazer));
     el.querySelectorAll('[data-fp-ver]').forEach(b => b.onclick = () => FP.abrirVersao(b.dataset.fpVer));
     el.querySelectorAll('[data-fp-pdf]').forEach(b => b.onclick = () => FP.pdf(b.dataset.fpPdf));
@@ -5898,6 +5925,9 @@ window.HORUS_CONFIG = {
   /* Filtro Imóvel × Auto do consórcio */
   RP.tipoCons = ct => /im[óo]v/i.test(ct.tipo || '') ? 'imovel' : /auto|ve[íi]c/i.test(ct.tipo || '') ? 'auto' : 'outro';
 
+  /* "Imóvel R$ 1 mi · Auto R$ 90 mil" para uma lista de cotas */
+  RP.subtotalCons = cts => { const im = cts.filter(c => RP.tipoCons(c) === 'imovel'), au = cts.filter(c => RP.tipoCons(c) === 'auto');
+    return [im.length && 'Imóvel ' + U.brlShort(soma(im, 'carta')), au.length && 'Auto ' + U.brlShort(soma(au, 'carta'))].filter(Boolean).join(' · '); };
   App.ResumoProd = RP;
 })(window.App = window.App || {});
 
@@ -7455,12 +7485,17 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   }
   /* Mapa 360 na ficha: um cartão por área */
   function mapaFicha(c) {
-    return `<section class="card m360"><div class="card-h"><h2>Mapa 360</h2><span class="muted small">o que ${U.esc(Cli.apelido(c))} tem em cada área · clique para marcar</span></div>
-      <div class="m360-grid">${Cli.areasVisiveis().map(a => { const m = Cli.mapa(c, a.id);
-        const sub = m.sit === 'comigo' && m.auto ? m.cts.map(ct => ct.seguradora || ct.administradora || ct.instituicao || ct.startup || ct.plano || ct.tipo || Cli.produto(ct.produto).nome).filter(Boolean).slice(0, 2).join(', ')
+    const ars = Cli.areasVisiveis().map(a => ({ a, m: Cli.mapa(c, a.id) })), cont = k => ars.filter(x => x.m.sit === k).length;
+    const sem = cont('sem'), resumo = [cont('comigo') && cont('comigo') + ' com você', cont('mapeado') && cont('mapeado') + ' com outro', cont('nao') && cont('nao') + ' não tem', sem && sem + ' sem informação'].filter(Boolean).join(' · ');
+    let aberto; try { const v = localStorage.getItem('donna-m360'); aberto = v === null ? sem <= ars.length / 2 : v === '1'; } catch (e) { aberto = sem <= ars.length / 2; }
+    return `<details class="card m360" id="m360d"${aberto ? ' open' : ''}><summary class="m360-sum"><h2>Mapa 360</h2><span class="muted small m360-res">${U.esc(resumo)}</span><span class="grow"></span>${UI.icon('seta')}</summary>
+      <p class="muted small m360-dica">o que ${U.esc(Cli.apelido(c))} tem em cada área · clique para marcar</p>
+      <div class="m360-grid">${ars.map(({ a, m }) => {
+        let sub = m.sit === 'comigo' && m.auto ? m.cts.map(ct => ct.seguradora || ct.administradora || ct.instituicao || ct.startup || ct.plano || ct.tipo || Cli.produto(ct.produto).nome).filter(Boolean).slice(0, 2).join(', ')
           : [m.onde, m.venc && (U.diff(m.venc, U.today()) < 0 ? 'venceu ' : 'vence ') + U.fmtDate(m.venc), (m.sit === 'nao' || m.sit === 'mapeado') && m.etapa && etapaRot(m.etapa)].filter(Boolean).join(' · ');
+        if (a.id === 'consorcio' && m.cts.length && App.ResumoProd) sub = App.ResumoProd.subtotalCons(m.cts) || sub;
         const perto = m.sit === 'mapeado' && m.venc && U.diff(m.venc, U.today()) <= 30;
-        return `<button class="m360-a s-${m.sit}${perto ? ' perto' : ''}" data-m360="${a.id}" style="--sc:${Cli.SITS[m.sit].cor}"><span class="m360-n">${U.esc(a.nome)}</span><span class="m360-s"><i></i>${Cli.SITS[m.sit].label}</span>${sub ? `<small>${U.esc(sub)}</small>` : ''}</button>`; }).join('')}</div></section>`;
+        return `<button class="m360-a s-${m.sit}${perto ? ' perto' : ''}" data-m360="${a.id}" style="--sc:${Cli.SITS[m.sit].cor}"><span class="m360-n">${U.esc(a.nome)}</span><span class="m360-s"><i></i>${Cli.SITS[m.sit].label}</span>${sub ? `<small>${U.esc(sub)}</small>` : ''}</button>`; }).join('')}</div></details>`;
   }
   function editarArea(c, aid) {
     const a = Cli.area(aid), m = Cli.mapa(c, aid), r = m.reg || (m.auto ? {} : m);
@@ -7728,7 +7763,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       Object.assign(b, { valor: U.plural(at.length, 'apólice', 'apólices'), rotuloValor: 'Ramos elementares',
         lista: at.map(c => { const d = Cli.proxData(c); return `<li><b>${U.esc(c.tipo || 'Apólice')}</b><span>${U.esc(c.seguradora || '')}${c.cobertura ? ' · ' + U.brlShort(c.cobertura) : ''}</span>${d ? `<em class="${U.diff(d, U.today()) <= 30 ? 'warn' : ''}">${U.diff(d, U.today()) < 0 ? 'venceu ' : 'vence '}${U.fmtDate(d)}</em>` : ''}</li>`; }).join('') });
     } else if (pid === 'consorcio') {
-      Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.carta || 0), 0)), rotuloValor: 'Em cartas',
+      Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.carta || 0), 0)), rotuloValor: 'Em cartas' + (App.ResumoProd && App.ResumoProd.subtotalCons(at) ? ' · ' + App.ResumoProd.subtotalCons(at) : ''),
         lista: at.map(c => `<li><b>${U.esc(c.administradora || 'Consórcio')}${c.grupo ? ' · ' + U.esc(c.grupo) + (c.cota ? '/' + U.esc(c.cota) : '') : ''}</b><span>${c.carta ? U.brlShort(c.carta) : ''}${c.prazo ? ' · ' + (c.pagas || 0) + '/' + c.prazo + ' parcelas' : ''}</span>${c.contemplado ? '<em class="ok">contemplado</em>' : ''}</li>`).join('') });
     } else {
       /* Produtos sem bloco próprio: soma do valor principal e uma linha por contrato com os campos da lista */
@@ -7870,7 +7905,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
           ${ab.length ? `<ul class="cl-vlist ren-list">${ab.map(r => App.Ren.item(r, { semNome: true })).join('')}</ul>` : '<p class="muted small">Nenhuma em aberto.</p>'}
           ${fe.length ? `<details class="ren-mais"><summary>Baixadas · ${fe.length}</summary><ul class="cl-vlist ren-list">${fe.map(r => App.Ren.item(r, { semNome: true })).join('')}</ul></details>` : ''}</section>` : ''; })()}
       ${mapaFicha(c)}
-      ${App.FP ? App.FP.blocoFicha(c) : ''}
+      ${App.FP ? App.FP.linhaFicha(c) : ''}
       <div class="pblocks">${pids.map(pid => blocoHTML(bloco(pid, porProd[pid] || [], c, m), pid)).join('')}
         ${falta.map(pid => `<button class="pblock ghost" style="--pc:${Cli.produto(pid).cor}" data-novo-ct="${pid}" data-cid="${c.id}"><span>${UI.icon('mais')}</span><b>${U.esc(Cli.produto(pid).nome)}</b><small>Ainda não tem · adicionar</small></button>`).join('')}
       </div>`;
@@ -7883,6 +7918,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     if (App.Agenda) App.Agenda.ligar(el);
     if (App.FP) App.FP.ligar(el);
     el.querySelectorAll('[data-m360]').forEach(b => b.onclick = () => editarArea(c, b.dataset.m360));
+    const md = el.querySelector('#m360d'); if (md) md.addEventListener('toggle', () => { try { localStorage.setItem('donna-m360', md.open ? '1' : '0'); } catch (e) {} });
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
       const pid = b.dataset.pbGo;
       if (pid === 'mb') { const ct = Store.all('contratos').find(x => x.produto === 'mb' && x.clienteId === c.id); ir({ produto: 'mb', foco: ct ? ct.mbId : null, cliente: null, deCliente: c.id }); }
