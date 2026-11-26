@@ -1659,6 +1659,22 @@ body.fp-on { overflow: hidden; }
   .sit, .prio, .tag, .rg-tag, .ren-st { font-size: 12px; }
   .cl-vd { font-size: 11.5px; }
 }
+/* Correção 26/11 13h50: "Buscar cliente" do menu não aparece no menu inferior do celular (a lupa do topo faz isso) */
+@media (max-width: 860px) {
+  .sidebar .side-busca { display: none; }
+  .top-busca { width: 42px; height: 42px; border-radius: 50%; background: #241C40; color: #D9C6FF; box-shadow: inset 0 0 0 1.5px #8F6BFF, 0 0 14px rgba(143, 107, 255, .35); }
+  .top-busca:hover, .top-busca:active { background: #2F2454; color: #fff; }
+}
+
+/* Lote 4 (26/11): cor da marca como pontinho ao lado do nome (seguradora, administradora, plataforma). Mapa único: Cli.MARCAS */
+span.mk, .pb-stats span.mk, .ct-f span.mk, .ct-kv span.mk, .pb-list span.mk { display: inline-flex; align-items: center; gap: 5px; min-width: 0; max-width: 100%; vertical-align: baseline; padding: 0; margin: 0; background: none; border-radius: 0; grid-column: auto; font: inherit; color: inherit; }
+i.mk-d, .gs-plat span i.mk-d, .pf-ml-n i.mk-d { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: none; margin: 0; background: var(--mk); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .14); vertical-align: middle; }
+b > i.mk-d:last-child, .pf-ml-n i.mk-d { margin-left: 6px; }
+.gs-plat span i.mk-d { margin: 0 6px 1px 0; }
+.ct-h b span.mk { font: inherit; }
+.seg-chips span.mk { padding: 0; background: none; border-radius: 0; font-size: inherit; gap: 6px; }
+/* em bloco escuro (patrimônio da Gestão) o pontinho ganha um anel claro para o XP preto aparecer */
+.gs-pat i.mk-d { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .6); }
 
 </style>
 
@@ -2716,6 +2732,57 @@ App.ICONES = {
   C.SEGURADORAS_PADRAO = ['Porto', 'Prudential', 'MAG', 'MetLife', 'Icatu', 'Azos', 'Omint', 'SulAmérica', 'Bradesco Seguros', 'Allianz', 'Tokio Marine', 'HDI', 'Mapfre', 'Zurich', 'Amil', 'Unimed', 'Brasilprev'];
   C.seguradoras = () => { const l = Store.config('seguradoras'); return Array.isArray(l) ? l : C.SEGURADORAS_PADRAO; };
   C.salvarSeguradoras = l => Store.config('seguradoras', [...new Set(l.map(x => String(x).trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR')));
+
+  /* ---------- Lote 4 (26/11): cores de marca, MAPA ÚNICO ----------
+     Só como pontinho ao lado do nome de seguradora, administradora e plataforma. Os produtos seguem a paleta Donna (C.PALETA).
+     Pedido do usuário: MAG/Icatu azul, Azos verde, Bradesco vermelho, MB vermelho, Eqseed verde, Zentis azul, ITA azul;
+     as demais com tons diferentes. Cores da mesma família variam de claro a escuro para não confundir.
+     Marca nova: acrescentar aqui (a = apelidos, comparados sem acento, por palavra inteira). */
+  C.MARCAS = [
+    { n: 'MAG', cor: '#1E3A8A', a: ['mag', 'mongeral'] },                    /* azul-marinho */
+    { n: 'Icatu', cor: '#3B82F6', a: ['icatu'] },                            /* azul */
+    { n: 'Investors Trust', cor: '#0B1F4D', a: ['ita', 'investors trust'] }, /* azul quase preto */
+    { n: 'Zentis', cor: '#38BDF8', a: ['zentis'] },                          /* azul-celeste */
+    { n: 'Azos', cor: '#22C55E', a: ['azos'] },                              /* verde vivo */
+    { n: 'Eqseed', cor: '#0F7A43', a: ['eqseed'] },                          /* verde-escuro */
+    { n: 'Bradesco', cor: '#CC092F', a: ['bradesco'] },                      /* vermelho */
+    { n: 'MB', cor: '#F0502A', a: ['mb', 'mercado bitcoin'] },               /* vermelho-tomate */
+    { n: 'Prudential', cor: '#7F1D3A', a: ['prudential'] },                  /* vinho */
+    { n: 'Porto', cor: '#14B8A6', a: ['porto', 'porto seguro'] },            /* turquesa */
+    { n: 'CNP', cor: '#EAB308', a: ['cnp', 'caixa vida', 'caixa consorcio', 'caixa consorcios', 'caixa seguradora'] }, /* mostarda */
+    { n: 'Akad', cor: '#8B5CF6', a: ['akad'] },                              /* violeta */
+    { n: 'Amil', cor: '#4C1D95', a: ['amil'] },                              /* roxo-escuro */
+    { n: 'American Fidelity', cor: '#EA580C', a: ['american fidelity'] },   /* laranja */
+    { n: 'Pan-American Life', cor: '#DB2777', a: ['pan american', 'pan-american', 'panamerican', 'pan american life'] }, /* pink */
+    { n: 'MetLife', cor: '#0E7490', a: ['metlife', 'met life'] },            /* petróleo */
+    { n: 'Omint', cor: '#92400E', a: ['omint'] },                            /* marrom */
+    { n: 'XP', cor: '#111827', a: ['xp'] },                                  /* preto */
+    { n: 'StoneX', cor: '#78716C', a: ['stonex', 'stone x'] },               /* cinza-quente */
+    { n: 'Dominion', cor: '#A21CAF', a: ['dominion'] },                      /* magenta */
+    { n: 'SulAmérica', cor: '#FB923C', a: ['sulamerica', 'sul america'] },  /* laranja-claro */
+    { n: 'Allianz', cor: '#4F46E5', a: ['allianz'] },                        /* índigo */
+    { n: 'Tokio Marine', cor: '#A16207', a: ['tokio', 'tokio marine'] },     /* bronze */
+    { n: 'HDI', cor: '#4D7C0F', a: ['hdi'] },                                /* oliva */
+    { n: 'Mapfre', cor: '#F472B6', a: ['mapfre'] },                          /* rosa */
+    { n: 'Zurich', cor: '#475569', a: ['zurich'] },                          /* grafite */
+    { n: 'Unimed', cor: '#84CC16', a: ['unimed'] },                          /* limão */
+    { n: 'Brasilprev', cor: '#FACC15', a: ['brasilprev'] }                   /* amarelo */
+  ];
+  C.COR_MARCA_SEM = '#B4B9C4'; /* marca fora do mapa: cinza claro */
+  const marcaCache = {};
+  C.marca = nome => {
+    const s = ' ' + norm(nome).replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+    if (s.trim() === '') return null;
+    if (s in marcaCache) return marcaCache[s];
+    const m = C.MARCAS.find(b => b.a.some(x => s.includes(' ' + norm(x).replace(/[^a-z0-9]+/g, ' ') + ' ')));
+    return (marcaCache[s] = m || null);
+  };
+  /* pontinho (só a bolinha) · sempre = mostra cinza quando a marca não está no mapa */
+  C.mkDot = (nome, sempre) => { const m = C.marca(nome); if (!m && !sempre) return ''; return `<i class="mk-d" style="--mk:${m ? m.cor : C.COR_MARCA_SEM}" aria-hidden="true"></i>`; };
+  /* nome com pontinho, já escapado */
+  C.mk = (nome, sempre) => { if (!nome) return ''; const d = C.mkDot(nome, sempre); return d ? `<span class="mk">${d}${U.esc(nome)}</span>` : U.esc(nome); };
+  /* campos de produto que são marca: seguradora, administradora, instituição, operadora, plataforma */
+  C.ehMarca = cp => !!cp && (cp.t === 'seg' || ['administradora', 'instituicao', 'operadora', 'plataforma'].includes(cp.k));
 
   /* ---------- Mapa 360: o que o cliente tem em cada área ----------
      Situação por área: 'comigo' (vem sozinha quando há contrato ativo, ou marcada à mão) · 'mapeado' (tem com outro corretor/banco)
@@ -5111,13 +5178,13 @@ App.ICONES = {
     const m = r.origem === 'mapa' && c ? ((c.mapa || {})[r.area] || {}) : null;
     const dd = U.diff(r.data, U.today());
     const info = [];
-    if (ct) { const p = C.produto(ct.produto); info.push(p.nome + (ct.tipo ? ' · ' + ct.tipo : ''), ct.seguradora || ct.operadora || ct.administradora, (ct.premio || ct.mensalidade) && 'Prêmio ' + U.brl(ct.premio || ct.mensalidade) + (R.mensalCt(ct) ? '/mês' : '/ano'), ct.capital && 'Capital ' + U.brlShort(ct.capital), ct.cobertura && 'Cobertura ' + U.brlShort(ct.cobertura), ct.contribuicao && 'US$ ' + (+ct.contribuicao).toLocaleString('pt-BR') + '/ano'); }
-    if (m) info.push('Tem com ' + (m.onde || 'outro corretor'), m.valor && U.brl(m.valor), m.obs);
+    if (ct) { const p = C.produto(ct.produto); const mkN = ct.seguradora || ct.operadora || ct.administradora; info.push(p.nome + (ct.tipo ? ' · ' + ct.tipo : ''), mkN && { html: C.mk(mkN, true) }, (ct.premio || ct.mensalidade) && 'Prêmio ' + U.brl(ct.premio || ct.mensalidade) + (R.mensalCt(ct) ? '/mês' : '/ano'), ct.capital && 'Capital ' + U.brlShort(ct.capital), ct.cobertura && 'Cobertura ' + U.brlShort(ct.cobertura), ct.contribuicao && 'US$ ' + (+ct.contribuicao).toLocaleString('pt-BR') + '/ano'); }
+    if (m) info.push({ html: 'Tem com ' + (m.onde ? C.mk(m.onde) : 'outro corretor') }, m.valor && U.brl(m.valor), m.obs);
     const temNovaData = r.origem === 'contrato' && r.campo !== 'reajuste';
     UI.modal({
       title: 'Renovação', size: 'md',
       body: `<div class="ren-head${R.vencida(r) ? ' is-venc' : ''}">
-          <div><b>${U.esc(R.nome(r))}</b><span>${U.esc(r.rotulo)}</span>${info.filter(Boolean).length ? `<small>${info.filter(Boolean).map(U.esc).join(' · ')}</small>` : ''}</div>
+          <div><b>${U.esc(R.nome(r))}</b><span>${U.esc(r.rotulo)}</span>${info.filter(Boolean).length ? `<small>${info.filter(Boolean).map(x => x.html || U.esc(x)).join(' · ')}</small>` : ''}</div>
           <p class="ren-quando">${R.final(r.status) ? 'Venceu' : dd < 0 ? 'Venceu' : 'Vence'} em <b>${U.fmtDateLong(r.data)}</b>${R.final(r.status) ? '' : ` · <span class="${dd < 0 ? 'late' : ''}">${R.rel(r.data)}</span>`}</p>
           <p class="ren-links">${c ? `<button class="link" data-ficha>Abrir ficha</button>` : ''}${ct && ct.link ? `<a class="link" href="${U.esc(ct.link)}" target="_blank" rel="noopener">Documento</a>` : ''}${ct ? `<button class="link" data-ct>Editar contrato</button>` : ''}</p></div>
         ${R.blocoAtividade(r)}
@@ -6093,7 +6160,7 @@ App.ICONES = {
           <div class="pq-legs">${leg('', 'Todos', at)}${leg('imovel', 'Imóvel', g.imovel)}${leg('auto', 'Auto', g.auto)}${g.outro.length ? leg('outro', 'Sem tipo', g.outro) : ''}</div></div>
         ${kpi('Contempladas', `${cont} <span class="pq-neg2">de ${at.length}</span>`, `<span class="pq-prog"><i style="width:${at.length ? cont / at.length * 100 : 0}%"></i></span>${at.length - cont} a contemplar`)}
         ${kpi('Parcela somada', temCampo(at, 'parcela') ? U.brlShort(soma(at, 'parcela')) + '/mês' : FALTA, temCampo(at, 'parcela') ? `${at.filter(c => +c.parcela).length} de ${at.length} com parcela` : 'cadastre a parcela das cotas')}</div>
-        <div class="pq-adm"><span class="pq-lab">Por administradora</span>${Object.entries(adm).sort((a, b) => b[1].v - a[1].v).map(([a, x]) => `<div class="pq-ab"><b>${U.esc(a)}</b><span class="pq-trk"><i style="width:${x.v / maxAdm * 100}%"></i></span><em>${U.brlShort(x.v)} · ${U.plural(x.n, 'cota', 'cotas')} · ${Math.round(x.v / total * 100)}%</em></div>`).join('')}</div>`;
+        <div class="pq-adm"><span class="pq-lab">Por administradora</span>${Object.entries(adm).sort((a, b) => b[1].v - a[1].v).map(([a, x]) => `<div class="pq-ab"><b>${App.Cli.mk(a, a !== 'Sem administradora')}</b><span class="pq-trk"><i style="width:${x.v / maxAdm * 100}%"></i></span><em>${U.brlShort(x.v)} · ${U.plural(x.n, 'cota', 'cotas')} · ${Math.round(x.v / total * 100)}%</em></div>`).join('')}</div>`;
     },
     vida(k) {
       const at = k.at, pr = soma(at, 'premio'), comPr = at.filter(c => +c.premio).length;
@@ -7162,7 +7229,7 @@ App.ICONES = {
           <div class="aj-tg">${prods.map(x => { const on = x.id === 'xp' ? !Cli.ocultos().includes('xp') : Cli.visivel(x.id), n = x.id === 'xp' ? Cli.clientes().filter(c => Cli.plXp(c) != null).length : Cli.contratos({ produto: x.id, todos: true }).length;
             return `<label class="aj-t"><input type="checkbox" data-pv="${x.id}" ${on ? 'checked' : ''}><span class="tg"><i></i></span><i class="pdot" style="background:${x.cor}"></i><span><b>${U.esc(x.nome)}</b><small>${n ? U.plural(n, 'registro', 'registros') : 'nenhum cliente ainda'}</small></span></label>`; }).join('')}</div></section>
         <section class="card aj-seg"><div class="card-h"><h2>Seguradoras</h2><span class="muted small">aparecem como sugestão nos formulários e no Mapa 360</span></div>
-          <div class="seg-chips">${Cli.seguradoras().map(x => `<span>${U.esc(x)}<button data-segdel="${U.esc(x)}" aria-label="Tirar ${U.esc(x)}">${UI.icon('x')}</button></span>`).join('')}</div>
+          <div class="seg-chips">${Cli.seguradoras().map(x => `<span>${Cli.mk(x, true)}<button data-segdel="${U.esc(x)}" aria-label="Tirar ${U.esc(x)}">${UI.icon('x')}</button></span>`).join('')}</div>
           <form class="seg-add" id="segAdd"><input name="nome" placeholder="Adicionar seguradora" maxlength="40" autocomplete="off"><button class="btn ghost sm" type="submit">${UI.icon('mais')}Adicionar</button></form></section>
         ${App.Ren ? `<section class="card aj-ren"><div class="card-h"><h2>Renovações · antecedência</h2><span class="muted small">quantos dias antes do vencimento o item entra no Painel; ele só sai quando você dá baixa</span></div>
           <div class="ren-ant">${App.Ren.GRUPOS.map(g => `<label><span>${U.esc(g.nome)}</span><span class="ren-n"><input type="number" min="0" max="365" inputmode="numeric" data-ant="${g.id}" value="${App.Ren.antec(g.id)}"><small>dias</small></span></label>`).join('')}</div></section>` : ''}`; })()}
@@ -7548,7 +7615,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         <section class="card"><div class="card-h"><h2>Por plataforma</h2><span class="muted small">${U.esc(P.nomeMes(ref))}</span></div>
           <div class="pt-stack">${P.PLATS.map(p => r.total && r.plats[p.id].pl ? `<span style="width:${r.plats[p.id].pl / r.total * 100}%;background:${p.cor}" title="${p.nome}"></span>` : '').join('')}</div>
           <ul class="pt-plats">${P.PLATS.map(p => { const x = r.plats[p.id];
-            return `<li><i style="background:${p.cor}"></i><div><b>${p.nome}</b><small>${p.id === 'intl' ? (x.usd ? usd(x.usd) + (cot ? ' × ' + cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ' · sem cotação') : p.sub) : U.plural(x.n, 'cliente', 'clientes')}${x.repetido ? ` · ${x.repetido} com posição anterior` : ''}</small></div>
+            return `<li><i style="background:${p.cor}"></i><div><b>${U.esc(p.nome)}${p.id === 'pz' ? '' : App.Cli.mkDot(p.nome)}</b><small>${p.id === 'intl' ? (x.usd ? usd(x.usd) + (cot ? ' × ' + cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ' · sem cotação') : p.sub.split(' · ').map(s => App.Cli.mk(s)).join(' · ')) : U.plural(x.n, 'cliente', 'clientes')}${x.repetido ? ` · ${x.repetido} com posição anterior` : ''}</small></div>
               <span class="pt-pc">${r.total ? U.pct(x.pl / r.total) : '—'}</span><span class="pt-v">${U.brlShort(x.pl)}<small class="${capCls(x.cap)}">${x.cap ? sinal(x.cap) : 'sem captação'}</small></span></li>`; }).join('')}</ul>
           <form class="pt-cot" id="ptCot"><label for="ptCotV">Dólar de ${U.esc(P.nomeMes(ref))}</label><input id="ptCotV" data-num inputmode="decimal" placeholder="Ex.: 5,40" value="${cot && cot.exata ? cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) : ''}"><button class="btn ghost sm" type="submit">Salvar</button>
             <small class="muted">${cot ? (cot.exata ? 'Converte o exterior para R$.' : `Usando a de ${P.rotulo(cot.ref)} (${cot.v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}). Informe a deste mês.`) : intl.usd ? 'Sem cotação: o exterior ainda não entra no total.' : 'Para converter o exterior para R$.'}</small></form>
@@ -7579,7 +7646,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   /* ---------- Ficha do cliente: tudo o que ele tem com você (e o que se sabe que tem fora) ---------- */
   const COR_BRL = '#6E3FF0', COR_USD = '#E08A1E', COR_CLASSE = '#6E3FF0';
   const pct = (v, t) => t ? Math.round(v / t * 100) + '%' : '—';
-  const meterList = (rows, total) => `<ul class="pf-ml">${rows.map(r => `<li title="${U.esc(r.nome)}: ${U.brl(r.v)} (${pct(r.v, total)})"><span class="pf-ml-n"><i style="background:${r.cor}"></i>${U.esc(r.nome)}${r.nota ? `<small>${U.esc(r.nota)}</small>` : ''}</span><span class="pf-ml-b"><b style="width:${total ? Math.max(r.v / total * 100, 1.5) : 0}%;background:${r.cor}"></b></span><span class="pf-ml-v">${U.brlShort(r.v)}<small>${pct(r.v, total)}</small></span></li>`).join('')}</ul>`;
+  const meterList = (rows, total) => `<ul class="pf-ml">${rows.map(r => `<li title="${U.esc(r.nome)}: ${U.brl(r.v)} (${pct(r.v, total)})"><span class="pf-ml-n"><i style="background:${r.cor}"></i>${U.esc(r.nome)}${r.marca ? App.Cli.mkDot(r.nome) : ''}${r.nota ? `<small>${U.esc(r.nota)}</small>` : ''}</span><span class="pf-ml-b"><b style="width:${total ? Math.max(r.v / total * 100, 1.5) : 0}%;background:${r.cor}"></b></span><span class="pf-ml-v">${U.brlShort(r.v)}<small>${pct(r.v, total)}</small></span></li>`).join('')}</ul>`;
   PV.ficha = cli => {
     const P = App.Pat, x = P.consolidado(cli);
     if (!x.total && !x.consorcio && !x.capital && !x.foraTot) return '';
@@ -7603,7 +7670,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       </div>
       ${x.total ? `<div class="pf-cols">
         <div><h3>Moedas</h3>${meterList([{ nome: 'Real', v: x.brl, cor: COR_BRL }, { nome: 'Dólar', v: x.usdR, cor: COR_USD }].filter(r => r.v > 0), x.total)}</div>
-        <div><h3>Onde está</h3>${meterList(x.plats.map(p => ({ nome: p.nome, v: p.v, cor: p.cor, nota: p.repetido ? 'posição de ' + P.rotulo(p.refPos).toLowerCase() : '' })), x.total)}</div>
+        <div><h3>Onde está</h3>${meterList(x.plats.map(p => ({ nome: p.nome, v: p.v, cor: p.cor, marca: p.id !== 'pz', nota: p.repetido ? 'posição de ' + P.rotulo(p.refPos).toLowerCase() : '' })), x.total)}</div>
         <div><h3>Classes de ativo</h3>${meterList(x.classes.map(([k, v]) => ({ nome: k, v, cor: COR_CLASSE })), x.total)}</div>
       </div>` : ''}
       ${rep.length ? `<p class="muted small pf-nota">Sem posição deste mês em ${rep.map(p => p.nome).join(', ')}: repete a última conhecida.</p>` : ''}
@@ -7694,7 +7761,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       <div class="pt-stack">${P.PLATS.map(p => r.total && r.plats[p.id].pl ? `<span style="width:${r.plats[p.id].pl / r.total * 100}%;background:${p.cor}" title="${p.nome}"></span>` : '').join('')}</div>
       <div class="gs-car">
         <button class="gs-arr" data-car="-1" aria-label="Plataformas anteriores">${UI.icon('voltar')}</button>
-        <div class="gs-plats" id="gsPlats">${prods.map(x => `<button class="gs-plat" ${x.pid === 'xp' ? 'id="clXpBase"' : `data-prod="${x.pid}"`} style="--pc:${x.cor}"><span>${U.esc(x.nome)}${x.pid === 'xp' ? ' <i>atualizar PL</i>' : ''}</span>
+        <div class="gs-plats" id="gsPlats">${prods.map(x => `<button class="gs-plat" ${x.pid === 'xp' ? 'id="clXpBase"' : `data-prod="${x.pid}"`} style="--pc:${x.cor}"><span>${Cli.mkDot(x.nome)}${U.esc(x.nome)}${x.pid === 'xp' ? ' <i>atualizar PL</i>' : ''}</span>
           <b>${x.usd ? usd(x.usd) : x.valor ? U.brlShort(x.valor) : '—'}</b><small>${x.usd ? (x.semCot ? 'sem cotação · ' : '≈ ' + U.brlShort(x.valor) + ' · ') : ''}${U.plural(x.n, 'cliente', 'clientes')}${x.noTotal ? (x.pct ? ' · ' + Math.round(x.pct * 100) + '%' : '') : x.valor ? ' · fora do total' : ''}</small></button>`).join('')}</div>
         <button class="gs-arr" data-car="1" aria-label="Próximas plataformas">${UI.icon('seta')}</button>
       </div>
@@ -7823,15 +7890,17 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   }
   function areaModal(aid) {
     const a = Cli.area(aid), grupos = {}; Cli.base360().forEach(c => { const m = Cli.mapa(c, aid); (grupos[m.sit] = grupos[m.sit] || []).push({ c, m }); });
-    const det = (c, m) => m.sit === 'comigo' && m.auto ? m.cts.map(ct => ct.seguradora || ct.administradora || ct.instituicao || ct.startup || ct.plano || ct.tipo || Cli.produto(ct.produto).nome).filter(Boolean).join(', ')
-      : [m.onde, m.venc && 'vence ' + U.fmtDate(m.venc), m.etapa && etapaRot(m.etapa)].filter(Boolean).join(' · ');
+    const det = (c, m) => m.sit === 'comigo' && m.auto ? [...new Set(m.cts.map(nomeCt).filter(Boolean))].map(x => Cli.mk(x)).join(', ')
+      : [m.onde && Cli.mk(m.onde), m.venc && 'vence ' + U.fmtDate(m.venc), m.etapa && U.esc(etapaRot(m.etapa))].filter(Boolean).join(' · ');
     UI.modal({
       title: a.nome + ' na base', size: 'md',
       body: ORD_SIT.filter(k => grupos[k]).map(k => `<h3 class="nr-h">${Cli.SITS[k].label} · ${grupos[k].length}</h3><div class="nr-list">${grupos[k].sort((x, y) => x.c.nome.localeCompare(y.c.nome, 'pt-BR')).map(({ c, m }) =>
-        `<button class="nr-row" data-cli2="${c.id}"><b>${U.esc(c.nome)}</b><small>${U.esc(det(c, m)) || '&nbsp;'}</small>${sitPill(k)}</button>`).join('')}</div>`).join('') || '<p class="muted">Sem clientes na base.</p>',
+        `<button class="nr-row" data-cli2="${c.id}"><b>${U.esc(c.nome)}</b><small>${det(c, m) || '&nbsp;'}</small>${sitPill(k)}</button>`).join('')}</div>`).join('') || '<p class="muted">Sem clientes na base.</p>',
       onMount(el, api) { el.querySelectorAll('[data-cli2]').forEach(b => b.onclick = () => { api.close(); ir({ cliente: b.dataset.cli2 }); }); }
     });
   }
+  /* nome que aparece no Mapa 360 para um contrato (marca quando houver) */
+  const nomeCt = ct => ct.seguradora || ct.administradora || ct.instituicao || ct.startup || ct.plano || ct.tipo || Cli.produto(ct.produto).nome;
   /* Mapa 360 na ficha: um cartão por área */
   function mapaFicha(c) {
     const ars = Cli.areasVisiveis().map(a => ({ a, m: Cli.mapa(c, a.id) })), cont = k => ars.filter(x => x.m.sit === k).length;
@@ -7840,18 +7909,19 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     return `<details class="card m360" id="m360d"${aberto ? ' open' : ''}><summary class="m360-sum"><h2>Mapa 360</h2><span class="muted small m360-res">${U.esc(resumo)}</span><span class="grow"></span>${UI.icon('seta')}</summary>
       <p class="muted small m360-dica">o que ${U.esc(Cli.apelido(c))} tem em cada área · clique para marcar</p>
       <div class="m360-grid">${ars.map(({ a, m }) => {
-        let sub = m.sit === 'comigo' && m.auto ? m.cts.map(ct => ct.seguradora || ct.administradora || ct.instituicao || ct.startup || ct.plano || ct.tipo || Cli.produto(ct.produto).nome).filter(Boolean).slice(0, 2).join(', ')
-          : [m.onde, m.venc && (U.diff(m.venc, U.today()) < 0 ? 'venceu ' : 'vence ') + U.fmtDate(m.venc), (m.sit === 'nao' || m.sit === 'mapeado') && m.etapa && etapaRot(m.etapa)].filter(Boolean).join(' · ');
-        if (a.id === 'consorcio' && m.cts.length && App.ResumoProd) sub = App.ResumoProd.subtotalCons(m.cts) || sub;
+        /* sub já sai em HTML (Lote 4: pontinho da marca) */
+        let sub = m.sit === 'comigo' && m.auto ? [...new Set(m.cts.map(nomeCt).filter(Boolean))].slice(0, 2).map(x => Cli.mk(x)).join(', ')
+          : [m.onde && Cli.mk(m.onde), m.venc && (U.diff(m.venc, U.today()) < 0 ? 'venceu ' : 'vence ') + U.fmtDate(m.venc), (m.sit === 'nao' || m.sit === 'mapeado') && m.etapa && U.esc(etapaRot(m.etapa))].filter(Boolean).join(' · ');
+        if (a.id === 'consorcio' && m.cts.length && App.ResumoProd) sub = U.esc(App.ResumoProd.subtotalCons(m.cts)) || sub;
         const perto = m.sit === 'mapeado' && m.venc && U.diff(m.venc, U.today()) <= 30;
-        return `<button class="m360-a s-${m.sit}${perto ? ' perto' : ''}" data-m360="${a.id}" style="--sc:${Cli.SITS[m.sit].cor}"><span class="m360-n">${U.esc(a.nome)}</span><span class="m360-s"><i></i>${Cli.SITS[m.sit].label}</span>${sub ? `<small>${U.esc(sub)}</small>` : ''}</button>`; }).join('')}</div></details>`;
+        return `<button class="m360-a s-${m.sit}${perto ? ' perto' : ''}" data-m360="${a.id}" style="--sc:${Cli.SITS[m.sit].cor}"><span class="m360-n">${U.esc(a.nome)}</span><span class="m360-s"><i></i>${Cli.SITS[m.sit].label}</span>${sub ? `<small>${sub}</small>` : ''}</button>`; }).join('')}</div></details>`;
   }
   function editarArea(c, aid) {
     const a = Cli.area(aid), m = Cli.mapa(c, aid), r = m.reg || (m.auto ? {} : m);
     if (m.auto) {
       UI.modal({ title: a.nome + ' · ' + Cli.apelido(c), size: 'sm',
         body: `<p>${sitPill('comigo')} ${U.esc(Cli.apelido(c))} já tem ${U.esc(a.nome.toLowerCase())} com você:</p><ul class="pb-list">${m.cts.map(ct => { const d = Cli.proxData(ct);
-          return `<li><b>${U.esc(Cli.produto(ct.produto).nome)}${ct.tipo ? ' · ' + U.esc(ct.tipo) : ''}</b><span>${U.esc([ct.seguradora || ct.administradora || ct.instituicao || ct.plano, ct.capital && U.brlShort(ct.capital), ct.cobertura && U.brlShort(ct.cobertura), ct.carta && U.brlShort(ct.carta)].filter(Boolean).join(' · '))}</span>${d ? `<em>${U.diff(d, U.today()) < 0 ? 'venceu' : 'vence'} ${U.fmtDate(d)}</em>` : ''}</li>`; }).join('')}</ul>
+          return `<li><b>${U.esc(Cli.produto(ct.produto).nome)}${ct.tipo ? ' · ' + U.esc(ct.tipo) : ''}</b><span>${[(ct.seguradora || ct.administradora || ct.instituicao) ? Cli.mk(ct.seguradora || ct.administradora || ct.instituicao, true) : ct.plano && U.esc(ct.plano), ct.capital && U.brlShort(ct.capital), ct.cobertura && U.brlShort(ct.cobertura), ct.carta && U.brlShort(ct.carta)].filter(Boolean).join(' · ')}</span>${d ? `<em>${U.diff(d, U.today()) < 0 ? 'venceu' : 'vence'} ${U.fmtDate(d)}</em>` : ''}</li>`; }).join('')}</ul>
           <p class="muted small">Isso vem dos produtos cadastrados. Para mudar, edite o produto na ficha.</p>`,
         footer: `<button class="btn primary" data-close>Ok</button>` });
       return;
@@ -7890,7 +7960,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     let aberto; try { const v = localStorage.getItem('donna-pot'); aberto = v === null ? l.length > 0 : v === '1'; } catch (e) { aberto = l.length > 0; }
     return `<details class="card pot" id="potd"${aberto ? ' open' : ''}><summary class="m360-sum"><h2>Potenciais</h2><span class="count">${l.length}</span><span class="muted small m360-res">não têm ou têm com outro</span><span class="grow"></span>${UI.icon('seta')}</summary>
       <p class="muted small m360-dica">marque “Não tem” ou “Tem com outro” no Mapa 360 da ficha do cliente</p>
-      ${l.length ? `<ul class="pot-list">${l.map(({ cli, area, m }) => `<li data-cli="${cli.id}"><div><b>${U.esc(cli.nome)}</b><small>${[Cli.areasDoProduto(pid).length > 1 && area.nome, m.sit === 'mapeado' ? 'tem com ' + (m.onde || 'outro') : 'não tem', m.venc && (U.diff(m.venc, U.today()) < 0 ? 'venceu ' : 'vence ') + U.fmtDate(m.venc), m.obs].filter(Boolean).map(U.esc).join(' · ')}</small></div>
+      ${l.length ? `<ul class="pot-list">${l.map(({ cli, area, m }) => `<li data-cli="${cli.id}"><div><b>${U.esc(cli.nome)}</b><small>${[Cli.areasDoProduto(pid).length > 1 && U.esc(area.nome), m.sit === 'mapeado' ? 'tem com ' + (m.onde ? Cli.mk(m.onde) : 'outro') : 'não tem', m.venc && (U.diff(m.venc, U.today()) < 0 ? 'venceu ' : 'vence ') + U.fmtDate(m.venc), m.obs && U.esc(m.obs)].filter(Boolean).join(' · ')}</small></div>
           <div class="pot-et" data-stop>${Cli.ETAPAS.map(e => `<button class="${(m.etapa || 'a_abordar') === e.id ? 'on' : ''}" data-et="${e.id}" data-c="${cli.id}" data-a="${area.id}">${e.label}</button>`).join('')}</div></li>`).join('')}</ul>`
         : `<div class="empty sm"><p>Ninguém marcado ainda neste produto.</p></div>`}</details>`;
   }
@@ -7916,7 +7986,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         <label class="search">${UI.icon('busca')}<input id="clBusca" placeholder="Buscar cliente, ${U.esc((cols[0] || { l: '' }).l.toLowerCase())}…" value="${U.esc(busca)}"></label></div>
       <section class="card"${''}>${lista.length ? `<ul class="ct-list ct-cor" style="--pc:${p.cor}">${lista.map(({ ct, cli }) => { const d = Cli.proxData(ct), enc = (ct.status || 'ativo') === 'encerrado';
           return `<li data-cli="${cli.id}" class="${enc ? 'off' : ''}"><div class="ct-cli">${av(cli)}<b>${U.esc(cli.nome)}</b></div><div class="ct-main">
-            <span class="ct-f">${cols.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span class="${cp.k === p.principal ? 'pr' : ''}${cp.t === 'sim' && ct[cp.k] ? ' sim' : ''}"><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</span></div>
+            <span class="ct-f">${cols.map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span class="${cp.k === p.principal ? 'pr' : ''}${cp.t === 'sim' && ct[cp.k] ? ' sim' : ''}"><small>${U.esc(cp.l)}</small>${Cli.ehMarca(cp) ? Cli.mk(t, true) : U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</span></div>
             <div class="ct-side">${enc ? '<span class="tag">Encerrado</span>' : ''}${d && U.diff(d, U.today()) <= 30 ? `<span class="tag t-warn">${U.esc(U.relDue(d))}</span>` : ''}
             <button class="icon-btn" data-stop data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`; }).join('')}</ul>`
         : `<div class="empty"><b>${todos.length ? 'Nada com esse filtro.' : 'Nenhum cliente com ' + U.esc(p.nome) + ' ainda.'}</b><p>${todos.length ? '' : 'Use “Adicionar” para cadastrar. Se tiver planilha, mande no chat que eu importo.'}</p></div>`}</section>`;
@@ -8110,27 +8180,27 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       if (at.length > 1) b.extra += `<p class="muted small">+ ${at.length - 1} outro(s) plano(s)</p>`;
     } else if (pid === 'vida') {
       Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.capital || 0), 0)), rotuloValor: 'Capital segurado',
-        stats: [['Prêmio', U.brl(at.reduce((s, c) => s + (+c.premio || 0), 0)) + '/mês', ''], ['Seguradora', [...new Set(at.map(c => c.seguradora).filter(Boolean))].join(', ') || '—', ''], ['Renovação', U.fmtDate(at.map(c => c.renovacao).filter(Boolean).sort()[0] || '') || '—', '']] });
+        stats: [['Prêmio', U.brl(at.reduce((s, c) => s + (+c.premio || 0), 0)) + '/mês', ''], ['Seguradora', { html: [...new Set(at.map(c => c.seguradora).filter(Boolean))].map(x => Cli.mk(x, true)).join(', ') || '—' }, ''], ['Renovação', U.fmtDate(at.map(c => c.renovacao).filter(Boolean).sort()[0] || '') || '—', '']] });
     } else if (pid === 're') {
       Object.assign(b, { valor: U.plural(at.length, 'apólice', 'apólices'), rotuloValor: 'Ramos elementares',
-        lista: at.map(c => { const d = Cli.proxData(c); return `<li><b>${U.esc(c.tipo || 'Apólice')}</b><span>${U.esc(c.seguradora || '')}${c.cobertura ? ' · ' + U.brlShort(c.cobertura) : ''}</span>${d ? `<em class="${U.diff(d, U.today()) <= 30 ? 'warn' : ''}">${U.diff(d, U.today()) < 0 ? 'venceu ' : 'vence '}${U.fmtDate(d)}</em>` : ''}</li>`; }).join('') });
+        lista: at.map(c => { const d = Cli.proxData(c); return `<li><b>${U.esc(c.tipo || 'Apólice')}</b><span>${Cli.mk(c.seguradora, true)}${c.cobertura ? ' · ' + U.brlShort(c.cobertura) : ''}</span>${d ? `<em class="${U.diff(d, U.today()) <= 30 ? 'warn' : ''}">${U.diff(d, U.today()) < 0 ? 'venceu ' : 'vence '}${U.fmtDate(d)}</em>` : ''}</li>`; }).join('') });
     } else if (pid === 'consorcio') {
       Object.assign(b, { valor: U.brl(at.reduce((s, c) => s + (+c.carta || 0), 0)), rotuloValor: 'Em cartas' + (App.ResumoProd && App.ResumoProd.subtotalCons(at) ? ' · ' + App.ResumoProd.subtotalCons(at) : ''),
-        lista: at.map(c => `<li><b>${U.esc(c.administradora || 'Consórcio')}${c.grupo ? ' · ' + U.esc(c.grupo) + (c.cota ? '/' + U.esc(c.cota) : '') : ''}</b><span>${c.carta ? U.brlShort(c.carta) : ''}${c.prazo ? ' · ' + (c.pagas || 0) + '/' + c.prazo + ' parcelas' : ''}</span>${c.contemplado ? '<em class="ok">contemplado</em>' : ''}</li>`).join('') });
+        lista: at.map(c => `<li><b>${c.administradora ? Cli.mk(c.administradora, true) : 'Consórcio'}${c.grupo ? ' · ' + U.esc(c.grupo) + (c.cota ? '/' + U.esc(c.cota) : '') : ''}</b><span>${c.carta ? U.brlShort(c.carta) : ''}${c.prazo ? ' · ' + (c.pagas || 0) + '/' + c.prazo + ' parcelas' : ''}</span>${c.contemplado ? '<em class="ok">contemplado</em>' : ''}</li>`).join('') });
     } else {
       /* Produtos sem bloco próprio: soma do valor principal e uma linha por contrato com os campos da lista */
       const cp = p.campos.find(x => x.k === p.principal), cols = p.campos.filter(x => x.lista && x.k !== p.principal);
       const usdK = p.campos.find(x => x.t === 'usd' && /valor/i.test(x.k));
       Object.assign(b, { valor: cp ? Cli.fmt(cp, at.reduce((s, c) => s + (+c[cp.k] || 0), 0)) : usdK ? Cli.fmt(usdK, at.reduce((s, c) => s + (+c[usdK.k] || 0), 0)) : U.plural(at.length, 'registro', 'registros'),
         rotuloValor: cp ? cp.l : usdK ? usdK.l : p.nome,
-        lista: at.map(c => { const d = Cli.proxData(c); return `<li><b>${U.esc(Cli.fmt(cols[0] || {}, c[(cols[0] || {}).k]) || p.nome)}</b><span>${cols.slice(1, 3).map(x => Cli.fmt(x, c[x.k])).filter(Boolean).map(U.esc).join(' · ')}</span>${d ? `<em class="${U.diff(d, U.today()) <= 30 ? 'warn' : ''}">${U.diff(d, U.today()) < 0 ? 'venceu ' : 'vence '}${U.fmtDate(d)}</em>` : ''}</li>`; }).join('') });
+        lista: at.map(c => { const d = Cli.proxData(c); return `<li><b>${(t0 => t0 ? (Cli.ehMarca(cols[0]) ? Cli.mk(t0, true) : U.esc(t0)) : U.esc(p.nome))(Cli.fmt(cols[0] || {}, c[(cols[0] || {}).k]))}</b><span>${cols.slice(1, 3).map(x => { const t = Cli.fmt(x, c[x.k]); return t ? (Cli.ehMarca(x) ? Cli.mk(t, true) : U.esc(t)) : ''; }).filter(Boolean).join(' · ')}</span>${d ? `<em class="${U.diff(d, U.today()) <= 30 ? 'warn' : ''}">${U.diff(d, U.today()) < 0 ? 'venceu ' : 'vence '}${U.fmtDate(d)}</em>` : ''}</li>`; }).join('') });
     }
     return b;
   }
   const blocoHTML = (b, pid) => `<article class="pblock" style="--pc:${b.p.cor}" data-pb="${pid}">
       <header><span class="pb-dot"></span><div><b>${U.esc(b.p.nome)}</b>${b.p.sub ? `<small>${U.esc(b.p.sub)}</small>` : ''}</div><button class="pb-go" data-pb-go="${pid}">${U.esc(b.acao)}${UI.icon('seta')}</button></header>
       <div class="pb-val"><small>${U.esc(b.rotuloValor || '')}</small><b>${b.valor}</b></div>
-      ${b.stats ? `<div class="pb-stats">${b.stats.map(([l, v, s]) => `<span><small>${U.esc(l)}</small><b>${U.esc(String(v))}</b>${s ? `<em>${U.esc(s)}</em>` : ''}</span>`).join('')}</div>` : ''}
+      ${b.stats ? `<div class="pb-stats">${b.stats.map(([l, v, s]) => `<span><small>${U.esc(l)}</small><b>${v && v.html ? v.html : U.esc(String(v))}</b>${s ? `<em>${U.esc(s)}</em>` : ''}</span>`).join('')}</div>` : ''}
       ${b.lista ? `<ul class="pb-list">${b.lista}</ul>` : ''}
       ${b.extra || ''}</article>`;
 
@@ -8140,8 +8210,8 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       .sort((a, b) => ((a.status || 'ativo') === 'ativo' ? 0 : 1) - ((b.status || 'ativo') === 'ativo' ? 0 : 1) || String(b.data || b.inicio || '').localeCompare(String(a.data || a.inicio || '')));
     UI.modal({
       title: p.nome + ' · ' + Cli.apelido(cli), size: 'md',
-      body: `<div class="pd-list">${cts.map(ct => `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(pid === 'eqseed' ? (ct.startup || 'Investimento') : pid === 're' ? (ct.tipo || 'Apólice') : pid === 'consorcio' ? (ct.administradora || 'Cota') : p.nome)}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}${ct.link ? `<a class="doc-link" href="${U.esc(ct.link)}" target="_blank" rel="noopener">${UI.icon('arquivo')}Documento</a>` : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
-          <div class="ct-kv">${p.campos.filter(cp => cp.t !== 'url' && !(pid === 'eqseed' && cp.k === 'startup') && !(pid === 're' && cp.k === 'tipo')).map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`).join('')}</div>`,
+      body: `<div class="pd-list">${cts.map(ct => `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(pid === 'eqseed' ? (ct.startup || 'Investimento') : pid === 're' ? (ct.tipo || 'Apólice') : pid === 'consorcio' ? '' : p.nome)}${pid === 'consorcio' ? (ct.administradora ? Cli.mk(ct.administradora, true) : 'Cota') : ''}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}${ct.link ? `<a class="doc-link" href="${U.esc(ct.link)}" target="_blank" rel="noopener">${UI.icon('arquivo')}Documento</a>` : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
+          <div class="ct-kv">${p.campos.filter(cp => cp.t !== 'url' && !(pid === 'eqseed' && cp.k === 'startup') && !(pid === 're' && cp.k === 'tipo')).map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${Cli.ehMarca(cp) ? Cli.mk(t, true) : U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`).join('')}</div>`,
       footer: `<button class="btn ghost" data-close>Fechar</button><button class="btn primary" id="pdAdd">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button>`,
       onMount(el, api) {
         el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => { api.close(); App.Forms.contrato(b.dataset.ed); });
