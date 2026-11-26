@@ -50,7 +50,8 @@ b, td, .kpi b, .count { font-variant-numeric: tabular-nums; }
 /* ---------- Estrutura ---------- */
 .app { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
 .sidebar { position: sticky; top: 0; height: 100vh; background: var(--side); border-right: 1px solid var(--side-line); color: var(--side-ink); display: flex; flex-direction: column; gap: 18px; padding: calc(20px + env(safe-area-inset-top, 0px)) 14px 18px max(14px, env(safe-area-inset-left, 0px)); }
-.brand { display: flex; align-items: center; gap: 10px; padding: 0 6px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 6px; text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; }
+a.brand:hover .logo { opacity: .85; }
 .logo { font-family: var(--display); font-weight: 800; font-size: 19px; letter-spacing: .02em; text-transform: uppercase; line-height: 1; color: var(--side-ink); white-space: nowrap; display: block; }
 .logo span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .brand small { display: block; color: var(--side-muted); font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-top: 6px; }
@@ -379,6 +380,7 @@ select:hover, .search:hover { border-color: var(--faint); }
 .neg { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 1px 8px 1px 6px; border-radius: 999px; white-space: nowrap; }
 .neg .ic { width: 13px; height: 13px; stroke-width: 2.2; }
 .cli { font-size: 12.5px; color: var(--ink); font-weight: 600; }
+.cli.sem { color: var(--late); }
 .negbox { border: 1px dashed var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 12px; transition: border-color .15s, background .15s; }
 .negbox.on { border-style: solid; border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); background: #FBF9FF; }
 .neg-toggle { display: flex; align-items: center; gap: 12px; cursor: pointer; }
@@ -1443,11 +1445,70 @@ body.fp-on { overflow: hidden; }
 .fp-tag { font-size: 11px; font-weight: 700; color: #23864F; background: #E4F5EA; border-radius: 999px; padding: 1px 8px; }
 .fp-va { display: flex; gap: 12px; padding-top: 2px; }
 
+/* Lote 1 (26/11) · linha do tempo da ficha */
+.lt-card { margin: 14px 0; }
+.lt-list { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 0; }
+.lt-it { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 9px 0 9px; border-top: 1px solid var(--line); position: relative; }
+.lt-list .lt-it:first-child { border-top: 0; }
+.lt-it time { font-size: 12.5px; font-weight: 700; color: var(--muted); padding-top: 1px; }
+.lt-it b { display: block; font-size: 14px; line-height: 1.3; }
+.lt-it p { margin: 2px 0 0; font-size: 13.5px; line-height: 1.4; white-space: pre-line; overflow-wrap: anywhere; }
+.lt-it small { display: inline-flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.lt-it small::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.lt-cto small::before { background: var(--ok, #2f9e6b); }
+.lt-ren small::before { background: var(--warn, #c98a12); }
+.lt-it[data-lt-atv] { cursor: pointer; }
+.lt-it[data-lt-atv]:hover b { color: var(--accent); }
+.lt-mais summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--accent); padding: 6px 0 2px; }
+.f .tratado { min-height: 84px; resize: vertical; }
+.cli-aviso { display: block; margin: 5px 0 0; font-size: 12.5px; line-height: 1.35; color: var(--late, #c0392b); font-weight: 600; }
+.cli-aviso .link { display: inline; padding: 0; font-size: inherit; text-align: left; white-space: normal; }
+.row2:has(.cli-aviso:not([hidden])) { align-items: start; }
+.cli-aviso[hidden] { display: none; }
+.cli-ok { color: var(--muted); font-weight: 600; }
+.tag.t-ligar { background: color-mix(in srgb, var(--late, #c0392b) 14%, transparent); color: var(--late, #c0392b); }
+@media (max-width: 560px) { .lt-it { grid-template-columns: 54px 1fr; gap: 8px; } }
+
+/* Lote 3 (26/11) · resumo no topo do produto */
+.pq-card { margin: 0 0 16px; padding: 16px 18px; }
+.pq-ks { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.pq-esp { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); display: grid; gap: 12px; }
+.pq-k { background: color-mix(in srgb, var(--pc, var(--accent)) 5%, var(--surface)); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; min-width: 0; }
+.pq-k small { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.pq-k b { display: block; font-family: var(--display); font-size: 20px; font-weight: 700; margin-top: 4px; line-height: 1.15; overflow-wrap: anywhere; }
+.pq-k em { display: block; font-style: normal; font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.3; }
+.pq-k.pq-dest { background: color-mix(in srgb, var(--pc, var(--accent)) 12%, var(--surface)); border-color: color-mix(in srgb, var(--pc, var(--accent)) 30%, var(--line)); }
+.pq-k.pq-dest b { color: var(--pc, var(--accent)); }
+.pq-neg { color: var(--late); font-size: .8em; margin-left: 4px; }
+.pq-neg2 { color: var(--muted); font-size: .75em; }
+.pq-falta { display: inline-block; font-family: var(--body, inherit); font-size: 12px; font-weight: 700; color: var(--warn); background: var(--warn-soft); border-radius: 999px; padding: 2px 8px; }
+.pq-row { display: grid; grid-template-columns: 150px 1fr; gap: 10px; align-items: start; }
+.pq-lab { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding-top: 6px; }
+.pq-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pq-chip { display: grid; text-align: left; gap: 1px; padding: 7px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font: inherit; color: inherit; min-width: 104px; }
+.pq-chip b { font-size: 13px; } .pq-chip span { font-weight: 700; font-size: 14px; } .pq-chip small { color: var(--muted); font-size: 11.5px; }
+.pq-chip.on { border-color: var(--pc, var(--accent)); box-shadow: inset 0 0 0 1px var(--pc, var(--accent)); background: color-mix(in srgb, var(--pc, var(--accent)) 10%, var(--surface)); }
+.pq-tab { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pq-tab li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 10px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.pq-tab li:last-child { border-bottom: 0; }
+.pq-tab b { font-size: 13.5px; } .pq-tab span { font-weight: 700; font-size: 13.5px; text-align: right; } .pq-tab small { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
+.pq-bars { display: flex; align-items: flex-end; gap: 8px; height: 92px; max-width: 420px; }
+.pq-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px; }
+.pq-bar i { display: block; width: 100%; max-width: 34px; border-radius: 6px 6px 2px 2px; background: var(--pc, var(--accent)); opacity: .85; }
+.pq-bar small { font-size: 11px; color: var(--muted); }
+@media (max-width: 560px) {
+  .pq-card { padding: 12px; }
+  .pq-ks { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pq-k { padding: 9px 10px; } .pq-k b { font-size: 17px; }
+  .pq-row { grid-template-columns: 1fr; gap: 6px; } .pq-lab { padding-top: 0; }
+  .pq-chip { min-width: 0; flex: 1 1 30%; padding: 6px 9px; }
+}
+
 </style>
 
 <div class="app">
   <aside class="sidebar" aria-label="Navegação">
-    <div class="brand"><div><b class="logo">Donna <span>AI</span></b><small>Seu braço direito</small></div></div>
+    <a class="brand" href="#painel" data-home title="Ir para o Painel"><div><b class="logo">Donna <span>AI</span></b><small>Seu braço direito</small></div></a>
     <button class="btn primary new" data-nova-atividade><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova atividade</button>
     <nav class="nav">
       <a href="#painel" data-go="painel"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Painel</span></a>
@@ -1463,7 +1524,7 @@ body.fp-on { overflow: hidden; }
   </aside>
 
   <header class="topbar">
-    <div class="brand"><b class="logo">Donna <span>AI</span></b></div>
+    <a class="brand" href="#painel" data-home title="Ir para o Painel"><b class="logo">Donna <span>AI</span></b></a>
     <span class="grow"></span><span class="syncdot" id="syncDot"></span>
     <button class="btn primary sm" data-nova-atividade aria-label="Nova atividade"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova</button>
   </header>
@@ -1895,7 +1956,7 @@ window.HORUS_CONFIG = {
     Store.commit();
   };
   /* resultados: { metaId: valor }  ·  somarManual: metas manuais que recebem o valor */
-  M.concluir = (id, { resultado, nota, resultados, somarManual } = {}) => {
+  M.concluir = (id, { resultado, nota, resultados, somarManual, tratado } = {}) => {
     const a = Store.get('atividades', id); if (!a) return;
     const patch = { status: 'concluida', concluidaEm: U.nowISO() };
     if (resultado !== undefined && resultado !== null) patch.resultado = resultado;
@@ -1916,12 +1977,18 @@ window.HORUS_CONFIG = {
     } else if (resultado != null) partes.push('resultado: ' + U.num(resultado));
     if (somarManual && somarManual.length) patch.somadas = [...new Set([...(a.somadas || []), ...somarManual])];
     if (nota) patch.resultadoTexto = nota;
+    /* Lote 1: "O que foi tratado" fica na atividade e vira contato do cliente (régua + linha do tempo) */
+    if (tratado !== undefined) patch.tratado = tratado || null;
     Store.update('atividades', id, patch, { silent: true });
+    const cli = App.Cli && App.Cli.clienteDa(a);
+    if (cli && App.Regua) App.Regua.daAtividade(cli.id, { ...a, ...patch }, { silent: true });
     M.log(id, 'concluida', 'Concluída' + (partes.length ? ' · ' + partes.join(', ') : '') + (nota ? ' · ' + nota : ''));
     Store.commit();
   };
   M.reabrir = id => {
+    const a = Store.get('atividades', id), cli = a && App.Cli && App.Cli.clienteDa(a);
     Store.update('atividades', id, { status: 'pendente', concluidaEm: null }, { silent: true });
+    if (cli && App.Regua) App.Regua.tirarAtividade(cli.id, id, { silent: true });
     M.log(id, 'reaberta', 'Atividade reaberta');
     Store.commit();
   };
@@ -2501,6 +2568,21 @@ window.HORUS_CONFIG = {
     return false;
   };
   C.atividadesDo = cli => Store.all('atividades').filter(a => a.clienteId ? a.clienteId === cli.id : a.cliente && C.casa(cli, a.cliente));
+  /* Lote 1 (26/11): cliente da atividade = pelo clienteId; sem id, só se o nome casar com um único cadastro */
+  C.clienteDa = a => {
+    if (!a) return null; if (a.clienteId) return C.cliente(a.clienteId) || null;
+    if (!a.cliente) return null; const l = Store.all('clientes').filter(c => C.casa(c, a.cliente));
+    return l.length === 1 ? l[0] : null;
+  };
+  /* Atividades antigas só com o nome: liga ao cadastro quando o nome casa com uma pessoa só (roda ao abrir o app) */
+  C.ligarAtividadesSoltas = () => {
+    let n = 0;
+    Store.all('atividades').forEach(a => { if (a.clienteId || !a.cliente) return; const c = C.clienteDa(a); if (c) { Store.update('atividades', a.id, { clienteId: c.id, cliente: c.nome }, { silent: true }); n++; } });
+    if (n) Store.commit();
+    return n;
+  };
+  /* Texto solto que não é ninguém da base: a atividade mostra o aviso "ligar ao cliente" */
+  C.semLigacao = a => !!(a && a.cliente && !a.clienteId && !C.clienteDa(a));
   C.emailsDo = cli => Store.all('emails').filter(e => (e.cliente && C.casa(cli, e.cliente)) || (cli.email && norm(e.remetenteEmail) === norm(cli.email)));
   C.receitaDo = cli => Store.all('producoes').filter(p => p.cliente && C.casa(cli, p.cliente)).reduce((s, p) => s + (+p.liquido || +p.bruto || 0), 0);
 
@@ -3504,9 +3586,11 @@ window.HORUS_CONFIG = {
   };
   /* Etiqueta de negócio: tipo, cliente e valor */
   UI.negChip = a => { const ns = M.negociosDa(a); if (!ns.length) return '';
-    return ns.map(n => `<span class="neg${n.resultado === 'perdido' ? ' perdido' : ''}">${UI.icon('negocio')}${U.esc(M.tipoNeg(n.tipo).label)}${n.valor ? ' · ' + U.brlShort(n.valor) : ''}</span>`).join('') + (a.cliente ? `<span class="cli">${U.esc(a.cliente)}</span>` : ''); };
+    return ns.map(n => `<span class="neg${n.resultado === 'perdido' ? ' perdido' : ''}">${UI.icon('negocio')}${U.esc(M.tipoNeg(n.tipo).label)}${n.valor ? ' · ' + U.brlShort(n.valor) : ''}</span>`).join('') + (a.cliente ? cliSpan(a) : ''); };
   /* Cliente de uma atividade que não é negócio (o negócio já mostra junto) */
-  UI.cliChip = a => a.cliente && !M.negociosDa(a).length ? `<span class="cli">${U.esc(a.cliente)}</span>` : '';
+  /* Lote 1: nome solto (fora da base) aparece com aviso para ligar ao cliente */
+  const cliSpan = a => App.Cli && App.Cli.semLigacao(a) ? `<span class="cli sem" title="Fora da base: abra a atividade e ligue ao cliente">${U.esc(a.cliente)} · ligar ao cliente</span>` : `<span class="cli">${U.esc(a.cliente)}</span>`;
+  UI.cliChip = a => a.cliente && !M.negociosDa(a).length ? cliSpan(a) : '';
   UI.bar = (pct, cor) => `<div class="pbar"><i style="width:${Math.min(100, Math.round(pct * 100))}%;${cor ? 'background:' + cor : ''}"></i></div>`;
 
   /* ---------- Formulários ---------- */
@@ -3515,7 +3599,7 @@ window.HORUS_CONFIG = {
   UI.respOptions = (sel, vazio) => UI.options(App.Store.all('responsabilidades').filter(r => r.status !== 'arquivada' || r.id === sel), sel, { vazio });
   /* Campo de cliente com busca na base (clientes e prospects) e nos nomes já usados em atividades.
      Guarda o nome em name="cliente" e o id (quando escolhido da base) em name="clienteId". Aceita nome novo. */
-  UI.clientePicker = (nome, id) => `<div class="clipick"><input name="cliente" value="${U.esc(nome || '')}" placeholder="Buscar na base ou digitar um nome" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list"><input type="hidden" name="clienteId" value="${U.esc(id || '')}"><ul class="clipick-l" role="listbox" hidden></ul></div>`;
+  UI.clientePicker = (nome, id) => `<div class="clipick"><input name="cliente" value="${U.esc(nome || '')}" placeholder="Buscar na base ou digitar um nome" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list"><input type="hidden" name="clienteId" value="${U.esc(id || '')}"><ul class="clipick-l" role="listbox" hidden></ul><p class="cli-aviso" hidden></p></div>`;
   UI.ligarClientePicker = root => {
     const Store = App.Store;
     const box = root.querySelector('.clipick'); if (!box) return;
@@ -3527,7 +3611,15 @@ window.HORUS_CONFIG = {
       return cl.concat(soAtiv); };
     let itens = [], ativo = -1;
     const fechar = () => { ul.hidden = true; inp.setAttribute('aria-expanded', 'false'); ativo = -1; };
-    const escolher = it => { inp.value = it.nome; hid.value = it.id || ''; fechar(); };
+    const av = box.querySelector('.cli-aviso');
+    /* Lote 1: texto solto vira aviso; a atividade fica fora da ficha e da régua até ser ligada */
+    const aviso = () => { if (!av) return; const t = inp.value.trim();
+      if (!t || hid.value) { av.hidden = true; return; }
+      const m = Cli && Cli.clienteDa({ cliente: t }); if (m) { hid.value = m.id; av.hidden = true; return; }
+      av.hidden = false; av.innerHTML = `⚠ Fora da base: não entra na ficha nem na régua. <button type="button" class="link" data-cad>Cadastrar “${U.esc(t)}” como prospect</button>`;
+      av.querySelector('[data-cad]').onclick = () => cadastrar(t); };
+    const cadastrar = t => { const c = Store.insert('clientes', { nome: t.trim(), relacao: 'prospect', situacao: 'conversa' }); inp.value = c.nome; hid.value = c.id; fechar(); aviso(); App.UI.toast('Prospect cadastrado: ' + c.nome); };
+    const escolher = it => { inp.value = it.nome; hid.value = it.id || ''; fechar(); aviso(); };
     const marcar = () => ul.querySelectorAll('li').forEach((li, i) => li.classList.toggle('on', i === ativo));
     const abrir = () => {
       const q = norm(inp.value), partes = q.split(/\s+/).filter(Boolean);
@@ -3535,11 +3627,11 @@ window.HORUS_CONFIG = {
         .sort((a, b) => (norm(a.nome).startsWith(q) ? 0 : 1) - (norm(b.nome).startsWith(q) ? 0 : 1) || a.nome.localeCompare(b.nome, 'pt-BR')).slice(0, 8);
       const exato = itens.some(c => norm(c.nome) === q);
       ul.innerHTML = itens.map((c, i) => `<li role="option" data-i="${i}"><b>${U.esc(c.nome)}</b><small>${c.tag}</small></li>`).join('')
-        + (q && !exato ? `<li class="novo" data-novo="1"><b>Usar “${U.esc(inp.value.trim())}”</b><small>nome fora da base</small></li>` : '')
+        + (q && !exato ? `<li class="novo" data-cadastrar="1"><b>Cadastrar “${U.esc(inp.value.trim())}”</b><small>novo prospect na base</small></li><li class="novo" data-novo="1"><b>Usar só o texto</b><small>fica com aviso “ligar ao cliente”</small></li>` : '')
         + (!itens.length && !q ? '<li class="vazio">Nenhum cliente na base ainda</li>' : '');
       ul.hidden = !ul.children.length; inp.setAttribute('aria-expanded', String(!ul.hidden)); ativo = itens.length ? 0 : -1; marcar();
     };
-    inp.addEventListener('input', () => { hid.value = ''; abrir(); });
+    inp.addEventListener('input', () => { hid.value = ''; if (av) av.hidden = true; abrir(); });
     inp.addEventListener('focus', abrir);
     inp.addEventListener('keydown', e => {
       if (ul.hidden) return;
@@ -3549,10 +3641,11 @@ window.HORUS_CONFIG = {
       else if (e.key === 'Escape') { e.stopPropagation(); fechar(); }
     });
     ul.addEventListener('mousedown', e => { e.preventDefault(); const li = e.target.closest('li'); if (!li) return;
-      if (li.dataset.novo) { hid.value = ''; fechar(); } else if (li.dataset.i != null) escolher(itens[+li.dataset.i]); });
+      if (li.dataset.cadastrar) cadastrar(inp.value); else if (li.dataset.novo) { hid.value = ''; fechar(); aviso(); } else if (li.dataset.i != null) escolher(itens[+li.dataset.i]); });
     inp.addEventListener('blur', () => { setTimeout(fechar, 120);
       /* Digitou o nome exato de alguém da base: liga ao cadastro */
-      if (!hid.value && inp.value.trim()) { const m = Store.all('clientes').find(c => norm(c.nome) === norm(inp.value)); if (m) hid.value = m.id; } });
+      if (!hid.value && inp.value.trim()) { const m = Store.all('clientes').find(c => norm(c.nome) === norm(inp.value)); if (m) hid.value = m.id; } aviso(); });
+    aviso();
   };
   UI.formData = form => {
     const o = {};
@@ -3854,7 +3947,7 @@ window.HORUS_CONFIG = {
           if (!d.titulo) return erro('Escreva um título para a atividade.', form.titulo);
           if (!rsel.length) return erro('Marque pelo menos uma responsabilidade.', el.querySelector('#rpicks button'));
           d.responsabilidadeId = rsel[0]; d.respIds = rsel.slice(1);
-          d.cliente = d.cliente ? d.cliente.trim() : null; d.clienteId = d.cliente && d.clienteId ? d.clienteId : null;
+          d.cliente = d.cliente ? d.cliente.trim() : null; d.clienteId = d.cliente && d.clienteId ? d.clienteId : null; if (d.cliente && !d.clienteId) { const m = App.Cli && App.Cli.clienteDa({ cliente: d.cliente }); if (m) d.clienteId = m.id; }
           if (chk.checked) {
             const negs = [];
             for (const r of box.querySelectorAll('.neg-r')) {
@@ -3885,12 +3978,54 @@ window.HORUS_CONFIG = {
     return m;
   };
 
+  /* Lote 1 (26/11): "O que foi tratado" ao concluir com cliente. Pré-preenchido com as observações; grava na atividade e no contato */
+  const textoBase = a => a.tratado || a.observacoes || a.descricao || '';
+  const campoTratado = (a, cli, extra = '') => `<label class="f full"><span>O que foi tratado com ${U.esc(App.Cli.apelido(cli))} <em>vai para a linha do tempo e a régua</em></span><textarea name="tratado" class="tratado" maxlength="500" placeholder="Ex.: revisamos a carteira; vai pensar no seguro de vida até sexta">${U.esc(textoBase(a))}</textarea>${extra}</label>`;
+  /* Para conclusões feitas fora do formulário (funil, baixa da renovação): pergunta depois e completa */
+  F.tratado = id => {
+    const a = Store.get('atividades', id), cli = a && App.Cli && App.Cli.clienteDa(a); if (!cli) return;
+    UI.modal({
+      title: 'O que foi tratado?', size: 'sm',
+      body: `<form class="form" id="fTr"><p class="muted" style="margin:0">${U.esc(a.titulo)}</p>${campoTratado(a, cli)}</form>`,
+      footer: `<button class="btn ghost" data-close>Agora não</button><button class="btn primary" form="fTr" type="submit">Salvar</button>`,
+      onMount(el, api) {
+        el.querySelector('#fTr').onsubmit = e => {
+          e.preventDefault(); const tx = e.target.tratado.value.trim() || null;
+          Store.update('atividades', id, { tratado: tx }, { silent: true });
+          App.Regua.daAtividade(cli.id, { ...Store.get('atividades', id) }, { silent: true }); Store.commit();
+          api.close(); UI.toast('Anotado na linha do tempo');
+        };
+      }
+    });
+  };
+
+  /* Ligar uma atividade de nome solto a um cliente da base (Lote 1) */
+  F.ligarCliente = id => {
+    const a = Store.get('atividades', id); if (!a) return;
+    UI.modal({
+      title: 'Ligar ao cliente', size: 'sm',
+      body: `<form class="form" id="fLc"><p class="muted" style="margin:0">${U.esc(a.titulo)} · escrito “${U.esc(a.cliente || '')}”</p><label class="f full"><span>Cliente da base</span>${UI.clientePicker('', '')}</label></form>`,
+      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fLc" type="submit">Ligar</button>`,
+      onMount(el, api) {
+        UI.ligarClientePicker(el);
+        el.querySelector('#fLc').onsubmit = e => {
+          e.preventDefault(); const cid = e.target.clienteId.value, c = cid && App.Cli.cliente(cid);
+          if (!c) { UI.toast('Escolha alguém da lista (ou cadastre).', 'aviso'); return; }
+          Store.update('atividades', id, { clienteId: c.id, cliente: c.nome }, { silent: true });
+          const at = Store.get('atividades', id); if (at.status === 'concluida' && App.Regua) App.Regua.daAtividade(c.id, at, { silent: true });
+          Store.commit(); api.close(); UI.toast('Atividade ligada a ' + c.nome);
+        };
+      }
+    });
+  };
+
   /* ---------- Concluir ---------- */
   F.concluir = id => {
     const a = Store.get('atividades', id); if (!a) return;
     if (M.ehNegocio(a)) return F.concluirNegocio(id);
-    const metas = M.metasComResultado(a);
-    if (!metas.length && a.resultadoEsperado == null) {
+    const metas = M.metasComResultado(a), cli = App.Cli && App.Cli.clienteDa(a);
+    /* Sem cliente e sem meta: conclui em 1 clique. Com cliente: sempre pergunta o que foi tratado (vira contato) */
+    if (!cli && !metas.length && a.resultadoEsperado == null) {
       M.concluir(id);
       UI.toast('Atividade concluída', 'ok', [{ label: 'Gerou algo?', fn: () => F.proximos(id) }, { label: 'Desfazer', fn: () => M.reabrir(id) }]);
       return;
@@ -3900,14 +4035,15 @@ window.HORUS_CONFIG = {
       body: `<form class="form" id="fCon"><p class="muted" style="margin:0">${U.esc(a.titulo)}</p>
         ${camposResultado(a)}
         ${blocoProximos(a)}
-        <label class="f full"><span>Anotação (opcional)</span><input name="nota" value="${U.esc(a.resultadoTexto || '')}" placeholder="Ex.: dois sócios e o irmão"></label></form>`,
+        ${cli ? campoTratado(a, cli) : `<label class="f full"><span>Anotação (opcional)</span><input name="nota" value="${U.esc(a.resultadoTexto || '')}" placeholder="Ex.: dois sócios e o irmão"></label>`}</form>`,
       footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCon" type="submit">${UI.icon('check')}Concluir</button>`,
       onMount(el, api) {
         const f = el.querySelector('#fCon');
         montarProximos(el, a);
         f.onsubmit = e => {
           e.preventDefault(); const r = lerResultados(el, f), prox = lerProximos(el);
-          M.concluir(id, { ...r, nota: f.nota.value.trim() || null }); api.close();
+          const tx = f.tratado ? f.tratado.value.trim() : null;
+          M.concluir(id, { ...r, nota: f.nota ? f.nota.value.trim() || null : tx || null, ...(cli ? { tratado: tx } : {}) }); api.close();
           if (!avisarProximos(M.criarProximos(id, prox), 'Atividade concluída')) UI.toast('Atividade concluída', 'ok', { label: 'Desfazer', fn: () => M.reabrir(id) });
         };
       }
@@ -3956,7 +4092,7 @@ window.HORUS_CONFIG = {
           ${lin('Categoria', U.esc(a.categoria))}
           ${lin('Prazo', a.prazo ? U.fmtDateLong(a.prazo) : 'Sem prazo')}
           ${lin('Início', a.inicio ? U.fmtDateLong(a.inicio) : '')}
-          ${lin('Cliente', a.cliente ? U.esc(a.cliente) : '')}
+          ${lin('Cliente', a.cliente ? (App.Cli && App.Cli.clienteDa(a) ? `<a href="#" class="dlink" data-a-ficha="${App.Cli.clienteDa(a).id}">${U.esc(a.cliente)} · abrir ficha</a>` : `${U.esc(a.cliente)} <span class="tag t-ligar">fora da base</span> <button type="button" class="link" data-a="ligarcli">Ligar ao cliente</button>`) : '')}
           ${lin(M.negociosDa(a).length > 1 ? 'Negócios' : 'Negócio', M.negociosDa(a).map(n => { const lq = M.liqNeg(n);
             return `<div class="dneg"><b>${U.esc(M.tipoNeg(n.tipo).label)}</b>${n.valor != null ? ' · ' + U.brl(n.valor) : ''}${lq != null ? ` <span class="muted">· fica ${U.brlC(lq)} (${U.num(M.pctNeg(n))}%)</span>` : ''}${n.resultado ? ` <span class="tag ${n.resultado === 'ganho' ? 't-ok' : 't-erro'}">${n.resultado === 'ganho' ? 'Fechado' : 'Não fechou'}</span>` : ''}</div>`; }).join(''))}
           ${lin(metas.length > 1 ? 'Metas' : 'Meta', metas.map(m => { const r = M.resMeta(a, m.id), e = M.espMeta(a, m.id); return `<div class="dmeta"><i style="background:${M.respCor(m.responsabilidadeId)}"></i>${U.esc(m.nome)} <b>${r != null ? U.esc(M.fmtMeta(r, m, true)) : '—'}</b>${e != null ? ' de ' + U.esc(M.fmtMeta(e, m)) : (M.ehDinheiro(m) ? '' : ' ' + U.esc(m.unidade || ''))}</div>`; }).join(''))}
@@ -3980,6 +4116,7 @@ window.HORUS_CONFIG = {
       onMount(el, api) {
         el.querySelectorAll('[data-open]').forEach(l => l.onclick = e => { e.preventDefault(); api.close(); F.detalhes(l.dataset.open); });
         el.querySelectorAll('[data-ren-open]').forEach(l => l.onclick = e => { e.preventDefault(); api.close(); App.Ren.abrir(l.dataset.renOpen, { direto: true }); });
+        el.querySelectorAll('[data-a-ficha]').forEach(l => l.onclick = e => { e.preventDefault(); api.close(); App.go('clientes', { cliente: l.dataset.aFicha }, { origem: true }); });
         el.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
           const act = b.dataset.a;
           if (act === 'del') { if (await F.excluirAtividade(id)) api.close(); return; }
@@ -3989,6 +4126,7 @@ window.HORUS_CONFIG = {
           if (act === 'adiar') F.adiar(id);
           if (act === 'ok') F.concluir(id);
           if (act === 'reabrir') { M.reabrir(id); UI.toast('Atividade reaberta'); }
+          if (act === 'ligarcli') F.ligarCliente(id);
         });
       }
     });
@@ -4096,7 +4234,7 @@ window.HORUS_CONFIG = {
     const a = Store.get('atividades', id); if (!a) return;
     const negs = M.negociosDa(a).map(n => ({ ...n }));
     const info = negs.map(n => { const prod = M.produtoDoTipo(n.tipo); return { n, prod, pad: prod && prod.pctComigo != null ? +prod.pctComigo : null }; });
-    const varios = negs.length > 1;
+    const varios = negs.length > 1, cliN = App.Cli && App.Cli.clienteDa(a);
     const bloco = ({ n, prod, pad }, i) => {
       const pct0 = n.pct != null ? +n.pct : pad;
       return `<div class="cneg" data-i="${i}">
@@ -4119,7 +4257,7 @@ window.HORUS_CONFIG = {
         <div class="cnegs">${info.map(bloco).join('')}</div>
         ${camposResultado(a)}
         ${blocoProximos(a)}
-        <label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: Zentis fechou, seguro ficou para janeiro"></label></form>`,
+        ${cliN ? campoTratado(a, cliN) : '<label class="f full"><span>Anotação (opcional)</span><input name="nota" placeholder="Ex.: Zentis fechou, seguro ficou para janeiro"></label>'}</form>`,
       footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" form="fCn" type="submit">${UI.icon('check')}Concluir</button>`,
       onMount(el, api) {
         const f = el.querySelector('#fCn');
@@ -4147,7 +4285,7 @@ window.HORUS_CONFIG = {
           const vals = info.map((_, i) => calc(i));
           const ruim = vals.findIndex(v => v.ganho && v.pct != null && (v.pct < 0 || v.pct > 100));
           if (ruim >= 0) { UI.toast('O % precisa estar entre 0 e 100.', 'aviso'); el.querySelector(`[data-p="${ruim}"]`).focus(); return; }
-          const r = lerResultados(el, f), prox = lerProximos(el), nota = f.nota.value.trim();
+          const r = lerResultados(el, f), prox = lerProximos(el), nota = (f.nota || f.tratado).value.trim();
           const fila = [], partes = [];
           const novos = negs.map((n, i) => {
             const v = vals[i], { prod } = info[i];
@@ -4165,7 +4303,7 @@ window.HORUS_CONFIG = {
           });
           Store.update('atividades', id, M.espelhoNeg(novos), { silent: true });
           const ren = a.renovacaoId && App.Ren ? App.Ren : null; if (ren) ren.segurar(id);
-          M.concluir(id, { ...r, nota: (varios ? partes.join(' · ') : (novos[0].resultado === 'ganho' ? 'Negócio fechado' + (vals[0].base != null && vals[0].pct != null ? ' · fica com você ' + U.brlC(vals[0].base * vals[0].pct / 100) : '') : 'Negócio não fechou')) + (nota ? ' · ' + nota : '') });
+          M.concluir(id, { ...r, nota: (varios ? partes.join(' · ') : (novos[0].resultado === 'ganho' ? 'Negócio fechado' + (vals[0].base != null && vals[0].pct != null ? ' · fica com você ' + U.brlC(vals[0].base * vals[0].pct / 100) : '') : 'Negócio não fechou')) + (nota && !cliN ? ' · ' + nota : ''), ...(cliN ? { tratado: nota || null } : {}) });
           const criados = M.criarProximos(id, prox);
           api.close();
           const fechou = novos.some(n => n.resultado === 'ganho');
@@ -4908,6 +5046,7 @@ window.HORUS_CONFIG = {
     if (M.ehNegocio(a)) Store.update('atividades', atvId, M.espelhoNeg(M.negociosDa(a).map(n => n.resultado ? n : { ...n, resultado: 'perdido' })), { silent: true });
     M.concluir(atvId, { nota: ganho ? 'Concluída junto com a baixa da renovação' : 'Negócio não fechou (baixa da renovação)' });
     UI.toast('Atividade concluída');
+    setTimeout(() => App.Forms.tratado(atvId), 80);
   };
 
   /* Depois de concluir a atividade ligada (e lançar a receita): dá a baixa e, se renovou, atualiza o contrato */
@@ -4971,7 +5110,7 @@ window.HORUS_CONFIG = {
 </script>
 <script>
 /* js/ui/regua.js */
-/* Parte 4 · Régua de contato (24/11/2026).
+/* Parte 4 · Régua de contato (24/11/2026). Lote 1 (26/11): atividade concluída com cliente vira contato ("O que foi tratado") e linha do tempo na ficha.
    Último contato do cliente = o mais recente entre o "Falei hoje" (clientes.dados.ultimoContato / contatos[]) e as atividades
    concluídas com ele. Frequência: 30 dias para todos por enquanto (Store.config('reguaDias'), sem tela).
    Card "Quem ligar esta semana" no Painel e faixa de contato na ficha do cliente. */
@@ -5016,6 +5155,20 @@ window.HORUS_CONFIG = {
     const d = data || U.today(), contatos = [{ em: d, nota: nota || null }].concat(c.contatos || []).slice(0, 30);
     const ult = contatos.map(x => x.em).sort().pop();
     Store.update('clientes', cid, { ultimoContato: ult, contatos });
+  };
+  /* Lote 1 (26/11): atividade concluída com cliente = contato com o "O que foi tratado" (um por atividade) */
+  const salvarCts = (cid, contatos, opts) => Store.update('clientes', cid, { ultimoContato: contatos.map(x => x.em).sort().pop() || null, contatos: contatos.slice(0, 30) }, opts);
+  Rg.daAtividade = (cid, a, opts) => {
+    const c = C().cliente(cid); if (!c || !a) return;
+    const em = (a.concluidaEm || U.nowISO()).slice(0, 10), nota = (a.tratado || a.resultadoTexto || a.titulo || '').slice(0, 500);
+    const cs = (c.contatos || []).filter(x => x.atividadeId !== a.id);
+    const i = cs.findIndex(x => x.em <= em); const novo = { em, nota, atividadeId: a.id };
+    if (i < 0) cs.push(novo); else cs.splice(i, 0, novo);
+    salvarCts(cid, cs, opts);
+  };
+  Rg.tirarAtividade = (cid, atvId, opts) => {
+    const c = C().cliente(cid); if (!c || !(c.contatos || []).some(x => x.atividadeId === atvId)) return;
+    salvarCts(cid, c.contatos.filter(x => x.atividadeId !== atvId), opts);
   };
   Rg.desfazer = (cid, antes) => Store.update('clientes', cid, { ultimoContato: antes.ultimoContato || null, contatos: antes.contatos || [] });
   Rg.anotar = cid => {
@@ -5066,17 +5219,44 @@ window.HORUS_CONFIG = {
     root.querySelectorAll('[data-rg-falei]').forEach(b => b.onclick = e => { e.stopPropagation(); Rg.falei(b.dataset.rgFalei); });
     root.querySelectorAll('[data-rg-cli]').forEach(b => b.onclick = () => App.go('clientes', { cliente: b.dataset.rgCli }, { origem: true }));
     root.querySelectorAll('[data-rg-anotar]').forEach(b => b.onclick = () => Rg.anotar(b.dataset.rgAnotar));
+    root.querySelectorAll('[data-lt-atv]').forEach(b => b.onclick = () => App.Forms.detalhes(b.dataset.ltAtv));
   };
 
   /* ---------- Faixa na ficha do cliente ---------- */
   Rg.faixa = c => {
     if (!C().ehCliente(c) || c.saiu) return '';
-    const s = Rg.situacao(c), hist = (c.contatos || []).slice(0, 8);
+    const s = Rg.situacao(c);
     const txt = s.nunca ? 'Nenhum contato registrado ainda' : `Último contato: <b>${U.fmtDate(s.u.data)}</b> (${s.desde === 0 ? 'hoje' : s.desde === 1 ? 'ontem' : 'há ' + s.desde + ' dias'})${s.u.nota ? ' · ' + U.esc(s.u.nota) : ''}`;
     const st = s.nunca ? '' : s.faltam < 0 ? `<span class="rg-tag atras">Passou ${-s.faltam} ${-s.faltam === 1 ? 'dia' : 'dias'} da régua</span>` : `<span class="rg-tag">Próximo até ${U.fmtDate(s.prox)}</span>`;
     return `<section class="rg-faixa${!s.nunca && s.faltam < 0 ? ' atras' : ''}"><div class="rg-fx-t"><span>${txt}</span>${st}</div>
       <div class="rg-fx-b"><button class="btn primary sm" data-rg-falei="${c.id}">Falei hoje</button><button class="btn ghost sm" data-rg-anotar="${c.id}">Anotar contato</button></div>
-      ${hist.length ? `<details class="rg-hist"><summary>Contatos · ${(c.contatos || []).length}</summary><ul>${hist.map(h => `<li><time>${U.fmtDate(h.em)}</time>${h.nota ? U.esc(h.nota) : '<span class="muted">sem anotação</span>'}</li>`).join('')}</ul></details>` : ''}</section>`;
+</section>`;
+  };
+
+  /* ---------- Linha do tempo da ficha (Lote 1): contatos + atividades concluídas + renovações baixadas, sem duplicar ---------- */
+  Rg.linhaTempo = c => {
+    const it = [], atvs = new Set();
+    C().atividadesDo(c).filter(a => a.status === 'concluida' && a.concluidaEm).forEach(a => {
+      atvs.add(a.id);
+      const txt = [...new Set([a.tratado, a.resultadoTexto].filter(Boolean))].join(' · ');
+      it.push({ em: a.concluidaEm.slice(0, 10), ord: a.concluidaEm, tipo: 'atv', titulo: a.titulo, texto: txt && txt !== a.titulo ? txt : '', id: a.id });
+    });
+    (c.contatos || []).forEach(x => { if (x.atividadeId && atvs.has(x.atividadeId)) return;
+      it.push({ em: x.em, ord: x.em + 'T12:00:00', tipo: 'cto', titulo: 'Contato', texto: x.nota || '' }); });
+    if (App.Ren) App.Ren.doCliente(c.id).filter(r => App.Ren.final(r.status) && r.baixaEm).forEach(r => {
+      if (r.baixaAtv && atvs.has(r.baixaAtv)) { const a = it.find(x => x.id === r.baixaAtv); if (a) a.ren = App.Ren.rotStatus(r); return; }
+      const ob = ((r.historico || []).slice().reverse().find(h => h.obs) || {}).obs || '';
+      it.push({ em: r.baixaEm.slice(0, 10), ord: r.baixaEm, tipo: 'ren', titulo: 'Renovação · ' + r.rotulo, texto: [App.Ren.rotStatus(r), ob].filter(Boolean).join(' · '), ren: null });
+    });
+    return it.sort((a, b) => b.ord.localeCompare(a.ord));
+  };
+  const ROT_T = { atv: 'Atividade', cto: 'Contato', ren: 'Renovação' };
+  const itemT = x => `<li class="lt-it lt-${x.tipo}"${x.id ? ` data-lt-atv="${x.id}"` : ''}><time>${U.fmtDate(x.em)}</time><div><b>${U.esc(x.tipo === 'cto' ? (x.texto || 'Contato sem anotação') : x.titulo)}</b>${x.tipo !== 'cto' && x.texto ? `<p>${U.esc(x.texto)}</p>` : ''}<small>${ROT_T[x.tipo]}${x.ren ? ' · renovação ' + U.esc(x.ren) : ''}</small></div></li>`;
+  Rg.blocoLinha = c => {
+    const l = Rg.linhaTempo(c), MAX = 4, botao = !C().ehCliente(c) || c.saiu;
+    return `<section class="card lt-card"><div class="card-h"><h2>Linha do tempo</h2>${l.length ? `<span class="count">${l.length}</span>` : ''}<span class="grow"></span>${botao ? `<button class="btn ghost sm" data-rg-anotar="${c.id}">${App.UI.icon('mais')}Anotar contato</button>` : ''}</div>
+      ${l.length ? `<ol class="lt-list">${l.slice(0, MAX).map(itemT).join('')}</ol>${l.length > MAX ? `<details class="lt-mais"><summary>Ver tudo · ${l.length}</summary><ol class="lt-list">${l.slice(MAX).map(itemT).join('')}</ol></details>` : ''}`
+        : '<p class="muted small">Nada registrado ainda. Ao concluir uma atividade com este cliente, o que foi tratado aparece aqui.</p>'}</section>`;
   };
 
   App.Regua = Rg;
@@ -5562,6 +5742,167 @@ window.HORUS_CONFIG = {
 
 </script>
 <script>
+/* js/ui/resumo-produto.js */
+/* Lote 3 (26/11/2026) · Resumo no topo de cada produto: como a linha de negócio está na base.
+   Um componente só: blocos comuns (clientes, penetração, novos × encerrados, receita, oportunidades, vencimentos)
+   + métricas próprias do produto. Campo vazio não quebra: o bloco mostra "falta dado".
+   Receita: recebíveis do Faturamento cujo produto casa com a linha (mapa FAT abaixo + nome do produto). */
+(function (App) {
+  const { U, Store } = App;
+  const RP = {};
+  const C = () => App.Cli;
+  const ano = () => U.today().slice(0, 4);
+  const ativo = ct => (ct.status || 'ativo') === 'ativo';
+  const FALTA = '<span class="pq-falta">falta dado</span>';
+
+  /* Produtos do Faturamento de cada linha (ids padrão + nome, para pegar os que o usuário criou) */
+  const FAT = {
+    consorcio: { ids: ['p_consorcio'], re: /cons[óo]rcio/i },
+    vida: { ids: ['p_vida', 'p_vidafixo'], re: /\bvida\b|whole life/i, nao: /grupo/i },
+    re: { ids: ['p_re', 'p_saude'], re: /\bRE\b|sa[úu]de|\bRC\b|residencial|vida em grupo/i },
+    previdencia: { ids: ['p_prev'], re: /previd/i },
+    eqseed: { ids: ['p_eqseed'], re: /eqseed/i },
+    zentis: { ids: [], re: /zentis/i },
+    cambio: { ids: ['p_cambio'], re: /c[âa]mbio/i },
+    ita: { ids: [], re: /investors|\bITA\b/i },
+    stonex: { ids: [], re: /stone ?x/i },
+    dominion: { ids: [], re: /dominion/i },
+    mb: { ids: ['p_mb'], re: /mercado bitcoin|\bMB\b/i },
+    auto: { ids: [], re: /\bauto\b/i },
+    credito: { ids: [], re: /cr[ée]dito/i }
+  };
+  const fatIds = pid => { const f = FAT[pid]; if (!f) return new Set();
+    return new Set(Store.all('produtos').filter(p => f.ids.includes(p.id) || (f.re.test(p.nome || '') && !(f.nao && f.nao.test(p.nome || '')))).map(p => p.id).concat(f.ids)); };
+  /* Receita do ano (recebido ou previsto com data no ano) e a receber (previsto de hoje em diante) */
+  RP.receita = pid => {
+    const ids = fatIds(pid), y = ano(), hoje = U.today(); let doAno = 0, aRec = 0, n = 0;
+    Store.all('recebiveis').filter(r => ids.has(r.produtoId)).forEach(r => { n++;
+      const v = r.status === 'recebido' ? +r.recebido || +r.previsto || 0 : +r.previsto || 0;
+      if ((r.previstoEm || '').slice(0, 4) === y) doAno += v;
+      if (r.status !== 'recebido' && (r.previstoEm || '') >= hoje) aRec += +r.previsto || 0; });
+    return { doAno, aRec, n };
+  };
+  /* Data de entrada do contrato (para "novos no ano"): campo de início do produto */
+  const INICIO = ['adesao', 'inicio', 'data', 'efetividade', 'abertura'];
+  const inicioDe = ct => { for (const k of INICIO) if (ct[k]) return ct[k]; return null; };
+  const encerradoEm = ct => ct.encerradoEm || ((ct.historico || []).slice(-1)[0] || {}).em || ct.atualizadoEm || null;
+
+  /* Posição de um contrato num mês (posHist até o mês, senão o valor atual a partir do mês da posição) */
+  const posMes = (ct, campo, ref) => {
+    const h = (ct.posHist || []).filter(x => x.ref <= ref && x.v != null).sort((a, b) => b.ref.localeCompare(a.ref))[0];
+    if (h) return +h.v;
+    if ((ct.posHist || []).length && ct.posHist.every(x => x.ref > ref)) return null;
+    const v = ct[campo]; if (v == null || v === '') return null;
+    const desde = (ct.dataPosicao || inicioDe(ct) || ct.criadoEm || U.today()).slice(0, 7);
+    return desde <= ref ? +v : null;
+  };
+  const ultimosMeses = n => { const out = [], d = new Date(U.today() + 'T12:00'); d.setDate(1); for (let i = 0; i < n; i++) { out.unshift(U.iso(d).slice(0, 7)); d.setMonth(d.getMonth() - 1); } return out; };
+  const MES3 = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const barras = (serie, fmt) => {
+    const mx = Math.max(...serie.map(s => s.v || 0), 1);
+    return `<div class="pq-bars" role="img" aria-label="Evolução mês a mês">${serie.map(s => `<div class="pq-bar" title="${MES3[+s.ref.slice(5) - 1]}/${s.ref.slice(2, 4)} · ${s.v != null ? fmt(s.v) : 'sem dado'}"><i style="height:${s.v ? Math.max(4, s.v / mx * 100) : 0}%"></i><small>${MES3[+s.ref.slice(5) - 1]}</small></div>`).join('')}</div>`;
+  };
+
+  const usd = v => 'US$ ' + U.brlShort(v).replace('R$', '').trim();
+  const kpi = (rot, val, sub, cls = '') => `<div class="pq-k ${cls}"><small>${rot}</small><b>${val}</b>${sub ? `<em>${sub}</em>` : ''}</div>`;
+  const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+
+  /* ---------- Blocos comuns ---------- */
+  RP.comum = pid => {
+    const Cl = C(), todos = Cl.contratos({ produto: pid, todos: true }), at = todos.filter(ativo);
+    const clis = new Set(at.map(c => c.clienteId)), base = Cl.base360().filter(Cl.ehCliente);
+    const comCli = base.filter(c => clis.has(c.id)).length, y = ano();
+    const comData = at.filter(inicioDe), novos = comData.filter(c => String(inicioDe(c)).slice(0, 4) === y).length;
+    const enc = todos.filter(c => !ativo(c) && String(encerradoEm(c) || '').slice(0, 4) === y).length;
+    const ren = (Store.all('renovacoes') || []).filter(r => todos.some(c => c.id === r.ctId));
+    const perdidas = ren.filter(r => r.status === 'perdido' && String(r.baixaEm || '').slice(0, 4) === y).length;
+    const rec = RP.receita(pid);
+    const areas = Cl.areasDoProduto(pid); let outro = 0, nao = 0;
+    Store.all('clientes').filter(c => !c.saiu).forEach(c => areas.some(a => { const m = Cl.mapa(c, a.id); if (m.sit === 'mapeado') { outro++; return true; } if (m.sit === 'nao') { nao++; return true; } return false; }));
+    const venc = at.map(ct => ({ ct, d: Cl.proxData(ct) })).filter(x => x.d && U.diff(x.d, U.today()) >= 0 && U.diff(x.d, U.today()) <= 90).sort((a, b) => a.d.localeCompare(b.d));
+    const temVenc = !!Cl.produto(pid).venc;
+    return { todos, at, clis, base, comCli, novos, semData: at.length - comData.length, enc: enc + perdidas, rec, outro, nao, venc, temVenc, temAreas: areas.length > 0 };
+  };
+  const htmlComum = (pid, k) => [
+    kpi('Clientes', String(k.clis.size), U.plural(k.at.length, 'contrato ativo', 'contratos ativos')),
+    kpi('Penetração', k.base.length ? pct(k.comCli, k.base.length) : '—', k.base.length ? `${k.comCli} de ${U.plural(k.base.length, 'cliente', 'clientes')} da base` : 'base vazia'),
+    kpi('No ano', `+${k.novos} <span class="${k.enc ? 'pq-neg' : 'pq-neg2'}">−${k.enc}</span>`, `novos × encerrados/perdidos${k.semData ? ` · ${k.semData} sem data de início` : ''}`),
+    kpi('Receita ' + ano(), k.rec.n ? U.brlShort(k.rec.doAno) : FALTA, k.rec.n ? (k.rec.aRec ? U.brlShort(k.rec.aRec) + ' a receber' : 'nada a receber') : 'nenhum lançamento no Faturamento'),
+    k.temAreas ? kpi('Oportunidades', String(k.outro + k.nao), `${k.outro} com outro · ${k.nao} não têm`, 'pq-op') : '',
+    k.temVenc ? kpi('Vencem em 90 dias', String(k.venc.length), k.venc[0] ? 'próximo ' + U.fmtDate(k.venc[0].d) + ' · ' + U.esc(C().apelido(C().cliente(k.venc[0].ct.clienteId) || {})) : 'nenhum') : ''
+  ].join('');
+
+  /* ---------- Métricas próprias ---------- */
+  const soma = (l, k) => l.reduce((s, c) => s + (+c[k] || 0), 0);
+  const temCampo = (l, k) => l.some(c => c[k] != null && c[k] !== '');
+  const ESP = {
+    consorcio(k, o) {
+      const at = k.at, tipoDe = c => /im[óo]v/i.test(c.tipo || '') ? 'imovel' : /auto|ve[íi]c/i.test(c.tipo || '') ? 'auto' : 'outro';
+      const g = { imovel: at.filter(c => tipoDe(c) === 'imovel'), auto: at.filter(c => tipoDe(c) === 'auto'), outro: at.filter(c => tipoDe(c) === 'outro') };
+      const adm = {}; at.forEach(c => { const a = c.administradora || 'Sem administradora'; adm[a] = adm[a] || { n: 0, v: 0 }; adm[a].n++; adm[a].v += +c.carta || 0; });
+      const cont = at.filter(c => c.contemplado === true || c.contemplado === 'sim' || c.contemplado === 'Sim').length;
+      const f = o.tipoCons || '';
+      const chip = (id, rot, l) => `<button class="pq-chip${f === id ? ' on' : ''}" data-pq-tipo="${id}"><b>${rot}</b><span>${U.brlShort(soma(l, 'carta'))}</span><small>${U.plural(l.length, 'cota', 'cotas')}</small></button>`;
+      return `<div class="pq-ks">${kpi('Carta total', U.brlShort(soma(at, 'carta')), U.plural(at.length, 'cota ativa', 'cotas ativas'), 'pq-dest')}
+          ${kpi('Contempladas', `${cont} <span class="pq-neg2">/ ${at.length - cont}</span>`, 'contempladas × a contemplar')}
+          ${kpi('Parcela somada', temCampo(at, 'parcela') ? U.brlShort(soma(at, 'parcela')) + '/mês' : FALTA, temCampo(at, 'parcela') ? `${at.filter(c => +c.parcela).length} de ${at.length} com parcela` : 'cadastre a parcela das cotas')}</div>
+        <div class="pq-row"><span class="pq-lab">Imóvel × Auto</span><div class="pq-chips">${chip('', 'Todos', at)}${chip('imovel', 'Imóvel', g.imovel)}${chip('auto', 'Auto', g.auto)}${g.outro.length ? chip('outro', 'Sem tipo', g.outro) : ''}</div></div>
+        <div class="pq-row"><span class="pq-lab">Por administradora</span><ul class="pq-tab">${Object.entries(adm).sort((a, b) => b[1].v - a[1].v).map(([a, x]) => `<li><b>${U.esc(a)}</b><span>${U.brlShort(x.v)}</span><small>${U.plural(x.n, 'cota', 'cotas')}</small></li>`).join('')}</ul></div>`;
+    },
+    vida(k) {
+      const at = k.at, pr = soma(at, 'premio'), comPr = at.filter(c => +c.premio).length;
+      const soOutro = Store.all('clientes').filter(c => !c.saiu && !k.clis.has(c.id) && C().mapa(c, 'vida').sit === 'mapeado').length;
+      return `<div class="pq-ks">${kpi('Capital segurado', temCampo(at, 'capital') ? U.brlShort(soma(at, 'capital')) : FALTA, U.plural(at.length, 'apólice', 'apólices'), 'pq-dest')}
+        ${kpi('Prêmio mensal', comPr ? U.brlShort(pr) : FALTA, comPr ? 'médio ' + U.brlShort(pr / comPr) + ' por apólice' : 'cadastre o prêmio')}
+        ${kpi('Só com outro corretor', String(soOutro), 'têm vida, mas não com você')}
+        ${kpi('Renovações em 90 dias', String(k.venc.length), k.venc.length ? 'veja a lista abaixo' : 'nenhuma')}</div>`;
+    },
+    re(k) {
+      const tipos = {}, y = ano();
+      k.at.forEach(c => { const t = /sa[úu]de/i.test(c.tipo || '') ? 'Saúde' : /RC/.test(c.tipo || '') ? 'RC' : /resid/i.test(c.tipo || '') ? 'Residencial' : /grupo/i.test(c.tipo || '') ? 'Vida em grupo' : 'Outros';
+        const x = tipos[t] = tipos[t] || { n: 0, anual: 0, semPer: 0, vidas: 0, venc: 0 }; x.n++;
+        const p = +c.premio || 0; if (p) { if (/mens/i.test(c.periodicidade || '')) x.anual += p * 12; else if (/anu/i.test(c.periodicidade || '')) x.anual += p; else x.semPer++; }
+        x.vidas += +c.vidas || 0; const d = C().proxData(c); if (d && U.diff(d, U.today()) >= 0 && U.diff(d, U.today()) <= 90) x.venc++; });
+      const ren = Store.all('renovacoes').filter(r => k.todos.some(c => c.id === r.ctId) && String(r.baixaEm || '').slice(0, 4) === y);
+      const ok = ren.filter(r => r.status === 'renovado' || r.status === 'migrado').length, perd = ren.filter(r => r.status === 'perdido').length;
+      return `<div class="pq-ks">${kpi('Prêmio anualizado', U.brlShort(Object.values(tipos).reduce((s, x) => s + x.anual, 0)), 'mensal × 12 + anual', 'pq-dest')}
+          ${kpi('Taxa de renovação ' + y, ok + perd ? pct(ok, ok + perd) : FALTA, ok + perd ? `${ok} renovadas × ${perd} perdidas` : 'nenhuma baixa no ano')}</div>
+        <div class="pq-row"><span class="pq-lab">Por tipo</span><ul class="pq-tab">${Object.entries(tipos).map(([t, x]) => `<li><b>${t}</b><span>${x.anual ? U.brlShort(x.anual) + '/ano' : FALTA}</span><small>${U.plural(x.n, 'contrato', 'contratos')}${t === 'Saúde' ? ' · ' + (x.vidas ? U.plural(x.vidas, 'vida', 'vidas') : 'vidas: falta dado') : ''}${x.semPer ? ` · ${x.semPer} sem forma de pagamento` : ''}${x.venc ? ` · ${x.venc} vencem em 90 dias` : ''}</small></li>`).join('') || '<li><small>Nenhum contrato ativo.</small></li>'}</ul></div>`;
+    },
+    zentis(k) { return evolucao(k, 'valor', U.brlShort, 'Valor alocado'); },
+    previdencia(k) { return evolucao(k, 'saldo', U.brlShort, 'Saldo acumulado', { rot: 'Contribuição somada', val: temCampo(k.at, 'contribuicao') ? U.brlShort(soma(k.at, 'contribuicao')) + '/mês' : null }); },
+    ita(k) { return evolucao(k, 'valorConta', usd, 'Valor de conta', { rot: 'Aporte anual somado', val: temCampo(k.at, 'contribuicao') ? usd(soma(k.at, 'contribuicao')) : null }); },
+    stonex(k) { return evolucao(k, 'valor', usd, 'Valor em conta'); },
+    dominion(k) { return evolucao(k, 'valorConta', usd, 'Valor de conta'); },
+    eqseed(k) { return `<div class="pq-ks">${kpi('Investido', U.brlShort(soma(k.at, 'valor')), `ticket médio ${k.at.length ? U.brlShort(soma(k.at, 'valor') / k.at.length) : '—'}`, 'pq-dest')}${kpi('Startups', String(new Set(k.at.map(c => c.startup).filter(Boolean)).size), 'na carteira dos clientes')}</div>`; },
+    auto(k) { return `<div class="pq-ks">${kpi('Prêmio anual somado', temCampo(k.at, 'premio') ? U.brlShort(soma(k.at, 'premio')) : FALTA, U.plural(k.at.length, 'apólice', 'apólices'), 'pq-dest')}</div>`; },
+    cambio(k) { return `<div class="pq-ks">${kpi('Volume', temCampo(k.at, 'valor') ? U.brlShort(soma(k.at, 'valor')) : FALTA, U.plural(k.at.length, 'operação', 'operações'), 'pq-dest')}</div>`; },
+    mb() { const r = C().resumo('mb'); return `<div class="pq-ks">${kpi('PL no MB', r.valor ? U.brlShort(r.valor) : FALTA, (r.linhas || []).map(U.esc).join(' · '), 'pq-dest')}</div>`; },
+    credito(k) { return `<div class="pq-ks">${kpi('Crédito contratado', temCampo(k.at, 'valor') ? U.brlShort(soma(k.at, 'valor')) : FALTA, U.plural(k.at.length, 'operação', 'operações'), 'pq-dest')}</div>`; }
+  };
+  /* Zentis, Previdência e exterior: posição atual, ticket médio e evolução dos últimos 6 meses */
+  function evolucao(k, campo, fmt, rot, extra) {
+    const meses = ultimosMeses(6), serie = meses.map(ref => { let v = null; k.at.forEach(c => { const x = posMes(c, campo, ref); if (x != null) v = (v || 0) + x; }); return { ref, v }; });
+    const atual = serie[serie.length - 1].v, ant = serie.slice(0, -1).reverse().find(s => s.v != null);
+    const dif = atual != null && ant ? atual - ant.v : null;
+    return `<div class="pq-ks">${kpi(rot, atual != null ? fmt(atual) : FALTA, dif != null ? `${dif >= 0 ? '+' : '−'}${fmt(Math.abs(dif))} desde ${MES3[+ant.ref.slice(5) - 1]}` : 'sem histórico mês a mês ainda', 'pq-dest')}
+        ${kpi('Ticket médio', atual != null && k.at.length ? fmt(atual / k.at.length) : FALTA, U.plural(k.at.length, 'contrato', 'contratos'))}
+        ${extra ? kpi(extra.rot, extra.val != null ? extra.val : FALTA, extra.sub || '') : ''}</div>
+      ${serie.some(s => s.v != null) ? `<div class="pq-row"><span class="pq-lab">Mês a mês</span>${barras(serie, fmt)}</div>` : ''}`;
+  }
+
+  RP.html = (pid, o = {}) => {
+    const k = RP.comum(pid), esp = ESP[pid] ? ESP[pid](k, o) : '';
+    return `<section class="card pq-card" style="--pc:${C().produto(pid).cor}"><div class="pq-ks pq-comum">${htmlComum(pid, k)}</div>${esp ? `<div class="pq-esp">${esp}</div>` : ''}</section>`;
+  };
+  /* Filtro Imóvel × Auto do consórcio */
+  RP.tipoCons = ct => /im[óo]v/i.test(ct.tipo || '') ? 'imovel' : /auto|ve[íi]c/i.test(ct.tipo || '') ? 'auto' : 'outro';
+
+  App.ResumoProd = RP;
+})(window.App = window.App || {});
+
+</script>
+<script>
 /* js/views/painel.js */
 /* Tela: Painel (dashboard principal). Responde: hoje, atrasadas, próximas, metas e execução. */
 (function (App) {
@@ -6022,7 +6363,7 @@ window.HORUS_CONFIG = {
       if (!ok) return;
       const a = Store.get('atividades', it.a.id), negs = M.negociosDa(a).map(n => n.id === it.n.id ? { ...n, resultado: 'perdido' } : n);
       Store.update('atividades', a.id, M.espelhoNeg(negs), { silent: true });
-      if (negs.every(n => n.resultado)) { if (App.Ren && a.renovacaoId) App.Ren.segurar(a.id); M.concluir(a.id, { nota: M.tipoNeg(it.n.tipo).label + ': não fechou (funil)' }); if (App.Ren && a.renovacaoId) App.Ren.aoConcluir(a.id); }
+      if (negs.every(n => n.resultado)) { if (App.Ren && a.renovacaoId) App.Ren.segurar(a.id); M.concluir(a.id, { nota: M.tipoNeg(it.n.tipo).label + ': não fechou (funil)' }); if (App.Ren && a.renovacaoId) App.Ren.aoConcluir(a.id); setTimeout(() => App.Forms.tratado(a.id), 80); }
       else { M.log(a.id, 'editada', M.tipoNeg(it.n.tipo).label + ': não fechou (funil)'); Store.commit(); }
       UI.toast('Negócio encerrado');
       return;
@@ -6914,8 +7255,8 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
 (function (App) {
   const { U, M, UI, Store, Cli } = App;
   const V = { titulo: 'Gestão' };
-  let P = {}, busca = '', filtro = 'ativo', mesMB = null;
-  V.setParams = p => { P = p || {}; if (!P.produto) busca = ''; };
+  let P = {}, busca = '', filtro = 'ativo', mesMB = null, tipoCons = '';
+  V.setParams = p => { const ant = P.produto; P = p || {}; if (!P.produto) busca = ''; if (P.produto !== ant) tipoCons = ''; };
   const ir = p => { App.go('clientes', p); };
   const av = c => `<span class="cl-av">${U.esc((Cli.apelido(c) || '?').slice(0, 2).toUpperCase())}</span>`;
   const voltar = (rot, p) => `<button class="back" data-cl-volta='${U.esc(JSON.stringify(p || {}))}'>${UI.icon('voltar')}${U.esc(rot)}</button>`;
@@ -7174,13 +7515,14 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   function produto(el) {
     const p = Cli.produto(P.produto), q = Cli.norm(busca);
     const todos = Cli.contratos({ produto: p.id, todos: true });
-    const lista = todos.filter(c => (filtro === 'todos' || (c.status || 'ativo') === filtro))
+    const lista = todos.filter(c => (filtro === 'todos' || (c.status || 'ativo') === filtro) && (!tipoCons || p.id !== 'consorcio' || (App.ResumoProd && App.ResumoProd.tipoCons(c) === tipoCons)))
       .map(ct => ({ ct, cli: Cli.cliente(ct.clienteId) })).filter(x => x.cli && (!q || Cli.norm(x.cli.nome + ' ' + p.campos.map(cp => x.ct[cp.k] || '').join(' ')).includes(q)))
       .sort((a, b) => a.cli.nome.localeCompare(b.cli.nome, 'pt-BR'));
     const r = Cli.resumo(p.id), cols = p.campos.filter(cp => cp.lista);
     el.innerHTML = `${voltar('Gestão', {})}
       <div class="page-h"><div><h1><i class="pdot" style="background:${p.cor}"></i>${U.esc(p.nome)}</h1><p class="muted">${U.esc(p.sub || '')}${p.sub ? ' · ' : ''}${U.plural(r.n, 'cliente', 'clientes')}${r.valor ? ' · ' + U.brl(r.valor) : ''}${r.linhas.length ? ' · ' + r.linhas.map(U.esc).join(' · ') : ''}</p></div>
         <div class="page-act"><button class="btn primary" data-novo-ct="${p.id}">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button></div></div>
+      ${App.ResumoProd ? App.ResumoProd.html(p.id, { tipoCons }) : ''}
       ${p.agrupar ? (() => { const g = {}; todos.filter(c => (c.status || 'ativo') === 'ativo').forEach(c => { const k = c[p.agrupar] || 'Sem nome'; g[k] = g[k] || { n: 0, v: 0, cl: new Set() }; g[k].n++; g[k].v += +c[p.principal] || 0; g[k].cl.add(c.clienteId); });
         const arr = Object.entries(g).sort((a, b) => b[1].v - a[1].v); return arr.length ? `<div class="grp-strip">${arr.map(([k, x]) => `<button class="grp${Cli.norm(busca) === Cli.norm(k) ? ' on' : ''}" data-grp="${U.esc(k)}"><b>${U.esc(k)}</b><span>${U.brl(x.v)}</span><small>${U.plural(x.cl.size, 'cliente', 'clientes')}</small></button>`).join('')}</div>` : ''; })() : ''}
       ${potenciaisHTML(p.id)}
@@ -7193,6 +7535,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
             <button class="icon-btn" data-stop data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div></li>`; }).join('')}</ul>`
         : `<div class="empty"><b>${todos.length ? 'Nada com esse filtro.' : 'Nenhum cliente com ' + U.esc(p.nome) + ' ainda.'}</b><p>${todos.length ? '' : 'Use “Adicionar” para cadastrar. Se tiver planilha, mande no chat que eu importo.'}</p></div>`}</section>`;
     el.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filtro = b.dataset.f; produto(el); });
+    el.querySelectorAll('[data-pq-tipo]').forEach(b => b.onclick = () => { tipoCons = b.dataset.pqTipo; produto(el); });
     el.querySelectorAll('[data-grp]').forEach(b => b.onclick = () => { busca = Cli.norm(busca) === Cli.norm(b.dataset.grp) ? '' : b.dataset.grp; produto(el); });
     el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => App.Forms.contrato(b.dataset.ed));
     ligarPot(el);
@@ -7210,6 +7553,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       <div class="page-h"><div><h1><i class="pdot" style="background:#1E7A86"></i>MB · ${doCli ? U.esc(Cli.apelido(doCli)) : 'Mercado Bitcoin'}</h1><p class="muted">${atual ? `Posição de ${U.esc(atual.ref)} · importado ${U.fmtDateTime(atual.importadoEm)}` : 'Ainda sem nenhum mês importado.'}</p></div>
         <div class="page-act">${P.foco ? `<button class="btn ghost" id="mbTudo">Ver carteira completa</button>` : ''}${meses.length > 1 ? `<select id="mbMes" class="sel">${meses.map(m => `<option value="${m.id}"${m.id === (atual && atual.id) ? ' selected' : ''}>${U.esc(m.ref)}</option>`).join('')}</select>` : ''}
           <label class="btn primary">${UI.icon('arquivo')}Importar mês<input type="file" id="mbArq" accept=".html,.htm,.json" hidden></label></div></div>
+      ${!doCli && App.ResumoProd ? App.ResumoProd.html('mb') : ''}
       ${atual ? `<div class="mb-frame"><iframe id="mbIf" title="Carteira MB ${U.esc(atual.ref)}" loading="eager"></iframe></div>`
         : `<section class="card empty"><b>Importe o primeiro mês da carteira.</b><p>Escolha o arquivo do dashboard do MB (o .html que você já tem) ou o arquivo do mês que o Claude gerar a partir dos relatórios. Os clientes do MB entram na sua base automaticamente.</p></section>`}
       <p class="muted small mb-dica">Todo mês, por volta do dia 9: baixe os relatórios do MB, mande no chat e importe aqui o arquivo que o Claude devolver. Cada mês fica guardado, e o histórico vai se formando.</p>`;
@@ -7517,6 +7861,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         </div>
       </section>
       ${App.Regua ? App.Regua.faixa(c) : ''}
+      ${App.Regua ? App.Regua.blocoLinha(c) : ''}
       ${App.Agenda ? App.Agenda.ficha(c) : ''}
       ${App.PatView ? App.PatView.ficha(c) : ''}
       ${c.observacoes ? `<p class="cl-obs">${U.esc(c.observacoes)}</p>` : ''}
@@ -7562,13 +7907,28 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
 
   /* origem: tela de onde viemos, para o botão Voltar */
   App.origem = null;
+  /* Rota na URL (Lote 1, 26/11): #clientes?cliente=<id>. Cada tela nova entra no histórico (pushState),
+     então F5 mantém a tela e o "voltar" do celular volta para a anterior em vez de sair do app. */
+  const hashDe = (rota, params) => {
+    const q = new URLSearchParams();
+    Object.entries(params || {}).forEach(([k, v]) => { if (v === null || v === undefined || v === '' || v === false || typeof v === 'object') return; q.set(k, v === true ? '1' : String(v)); });
+    const qs = q.toString(); return '#' + rota + (qs ? '?' + qs : '');
+  };
+  let ultimoHash = '';
+  App.lerHash = () => {
+    const h = location.hash.slice(1); if (!h) return null;
+    const [r, qs] = h.split('?'); if (!ROTAS.includes(r)) return null;
+    const p = {}; new URLSearchParams(qs || '').forEach((v, k) => { p[k] = v === '1' ? true : v; });
+    return { rota: r, params: Object.keys(p).length ? p : null };
+  };
   App.go = (rota, params, opts = {}) => {
     if (!ROTAS.includes(rota)) rota = 'painel';
-    App.origem = opts.origem && atual !== rota ? atual : null;
+    App.origem = opts.origem && atual !== rota ? atual : (opts.origemFixa || null);
     const v = App.Views[rota];
     if (v.setParams) v.setParams(params || null);
     atual = rota;
-    try { if (location.hash !== '#' + rota) history.replaceState(null, '', '#' + rota); } catch (e) {}
+    const h = hashDe(rota, params); ultimoHash = h;
+    try { if (location.hash !== h) history[opts.replace ? 'replaceState' : 'pushState']({ origem: App.origem }, '', h); else if (opts.replace) history.replaceState({ origem: App.origem }, '', h); } catch (e) {}
     document.querySelectorAll('[data-go]').forEach(a => a.classList.toggle('active', a.dataset.go === rota && !a.dataset.q));
     document.title = v.titulo + ' · Donna AI';
     render();
@@ -7597,7 +7957,13 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   document.addEventListener('keydown', e => {
     if (e.key.toLowerCase() === 'n' && !e.ctrlKey && !e.metaKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.querySelector('.modal-wrap')) { e.preventDefault(); App.Forms.atividade(null); }
   });
-  window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (!h || h.includes('=')) return; const r = h.split('?')[0]; if (r !== atual) App.go(r); });
+  /* Voltar/avançar do navegador ou do celular, e link digitado */
+  const doHash = e => { const x = App.lerHash(); if (!x) return; App.go(x.rota, x.params, { replace: true, pop: true, origemFixa: e && e.state ? e.state.origem : null }); };
+  /* Com uma janela aberta, o voltar do celular só fecha a janela e fica na mesma tela */
+  window.addEventListener('popstate', e => { if (document.querySelector('.modal-wrap') && UI.closeTop()) { try { history.pushState({ origem: App.origem }, '', ultimoHash); } catch (x) {} return; } doHash(e); });
+  window.addEventListener('hashchange', () => { if (location.hash !== ultimoHash) doHash(); });
+  /* Logo leva ao Painel */
+  document.addEventListener('click', e => { if (e.target.closest('[data-home]')) { e.preventDefault(); App.go('painel'); } });
 
   /* Ao mudar qualquer dado, a tela atual é redesenhada */
   Store.onChange(() => { if (!document.querySelector('.modal-wrap .modal')) render(); else pend = true; });
@@ -7618,7 +7984,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     el.innerHTML = email ? `<span class="acc-mail" title="${App.U.esc(email)}">${App.U.esc(email)}</span><button class="link" id="sair">Sair</button>` : '';
     const b = el.querySelector('#sair'); if (b) b.onclick = () => App.Cloud.sair();
   }
-  const rotaInicial = () => { const h = location.hash.slice(1); return h && !h.includes('=') ? h.split('?')[0] : 'painel'; };
+  const irInicial = () => { const x = App.lerHash(); if (x) App.go(x.rota, x.params, { replace: true }); else App.go('painel', null, { replace: true }); };
 
   async function iniciar() {
     const C = App.Cloud;
@@ -7637,10 +8003,11 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       Store.onStatus(statusUI);
       Store.init();
       conta(s.user.email);
-      App.go(rotaInicial());
+      irInicial();
       try {
         const r = await Store.sincronizar();
         App.Fat.garantir();
+        try { App.Cli.ligarAtividadesSoltas(); } catch (e) { console.error(e); }
         if (r.vazio && !Store.config('inicializado')) C.boasVindas();
       } catch (e) {
         console.error(e);
@@ -7653,8 +8020,9 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       const primeiro = Store.init();
       if (primeiro || !Store.config('inicializado')) Demo.seed();
       App.Fat.garantir();
+      try { App.Cli.ligarAtividadesSoltas(); } catch (e) { console.error(e); }
       if (!Store.available()) setTimeout(() => UI.toast('O navegador está bloqueando o armazenamento. Os dados não serão guardados.', 'erro'), 500);
-      App.go(rotaInicial());
+      irInicial();
     }
   }
   iniciar();
