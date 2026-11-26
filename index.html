@@ -1784,6 +1784,94 @@ details.pd-rec:not([open]) > .pd-sum { margin-bottom: 0 !important; }
 .pi-graf .pq-bar i { background: rgba(255, 255, 255, .82); }
 .pi-graf .pq-bar:last-child i { background: #fff; }
 
+/* ---------- Carteira XP (26/11): painel consolidado · prefixo xv- (o formulário antigo usa xp-) ---------- */
+.xv-hero { --xa: #F5C400; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 18px 28px; align-items: center; padding: 22px 24px !important; color: #fff; border: 0;
+  background: radial-gradient(120% 160% at 0% 0%, #2A2A33 0%, #15151B 45%, #0B0B0F 100%); position: relative; overflow: hidden; }
+.xv-hero::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--xa); }
+.xv-h-main small, .xv-h-ms small { display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 255, 255, .62); }
+.xv-big { display: block; font-family: var(--display); font-size: 46px; font-weight: 800; line-height: 1.05; margin-top: 6px; letter-spacing: -.015em; color: #fff; }
+.xv-h-main em { display: block; font-style: normal; font-size: 13px; color: rgba(255, 255, 255, .72); margin-top: 8px; line-height: 1.4; }
+.xv-up { color: #6EE7A8; font-weight: 700; } .xv-dn { color: #FF9C8A; font-weight: 700; }
+.xv-dest .xv-up { color: #1E8E57; } .xv-dest .xv-dn { color: #C8402E; }
+.xv-pos { display: inline-block; margin-top: 12px; font-size: 11.5px; font-weight: 700; color: #111; background: var(--xa); border-radius: 999px; padding: 3px 10px; }
+.xv-h-ms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.xv-h-ms > div { padding: 12px 14px; border-radius: 12px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .1); min-width: 0; }
+.xv-h-ms b { display: block; font-family: var(--display); font-size: 22px; font-weight: 700; margin-top: 4px; color: #fff; }
+.xv-h-ms em { display: block; font-style: normal; font-size: 12px; color: rgba(255, 255, 255, .62); margin-top: 2px; }
+.xv-h-graf { grid-column: 1 / -1; display: flex; align-items: flex-end; gap: 14px; height: 120px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, .1); }
+.xv-hb { flex: 1; max-width: 90px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; }
+.xv-hb i { display: block; width: 100%; border-radius: 8px 8px 3px 3px; background: rgba(255, 255, 255, .22); }
+.xv-hb.on i { background: var(--xa); }
+.xv-hb span { font-size: 11.5px; font-weight: 700; color: rgba(255, 255, 255, .8); }
+.xv-hb small { font-size: 11px; color: rgba(255, 255, 255, .55); text-transform: uppercase; letter-spacing: .05em; }
+.xv-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; align-items: start; }
+.xv-stack { display: flex; height: 22px; border-radius: 8px; overflow: hidden; gap: 2px; margin: 4px 0 14px; }
+.xv-seg { border: 0; padding: 0; min-width: 4px; cursor: pointer; transition: opacity .15s, transform .15s; }
+.xv-seg.off { opacity: .25; } .xv-seg.on { box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .25); }
+.xv-seg.sem { background: repeating-linear-gradient(45deg, #D9DCE3 0 6px, #EEF0F4 6px 12px); cursor: default; }
+.xv-leg { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.xv-leg li > * { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto 52px; grid-template-areas: "i n v p" ". s s s"; gap: 0 10px; align-items: center; width: 100%; padding: 8px 10px; border: 0; border-radius: 10px; background: none; font: inherit; color: var(--ink); text-align: left; }
+.xv-leg button { cursor: pointer; } .xv-leg button:hover, .xv-leg button.on { background: var(--surface-2); }
+.xv-leg i { grid-area: i; width: 12px; height: 12px; border-radius: 4px; }
+.xv-leg b { grid-area: n; font-size: 14px; }
+.xv-leg em { grid-area: p; font-style: normal; text-align: right; color: var(--muted); font-weight: 700; font-size: 13px; }
+.xv-leg small { grid-area: s; color: var(--muted); font-size: 12px; }
+.xv-legsem i { background: repeating-linear-gradient(45deg, #C9CDD6 0 3px, #EEF0F4 3px 6px); }
+.xv-fx ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.xv-fx li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n b" "t t" "e e"; gap: 4px 10px; }
+.xv-fn { grid-area: n; font-size: 13.5px; font-weight: 600; } .xv-fx li > b { grid-area: b; font-family: var(--display); font-size: 15px; }
+.xv-ft { grid-area: t; height: 8px; border-radius: 999px; background: var(--track, #EEF0F4); overflow: hidden; } .xv-ft i { display: block; height: 100%; border-radius: 999px; background: #111827; }
+.xv-fx li > em { grid-area: e; font-style: normal; font-size: 12px; color: var(--muted); }
+.xv-dests { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.xv-dest ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.xv-dest li button { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; width: 100%; padding: 8px 6px; border: 0; border-bottom: 1px solid var(--line); background: none; font: inherit; color: var(--ink); text-align: left; cursor: pointer; }
+.xv-dest li:last-child button { border-bottom: 0; } .xv-dest li button:hover { background: var(--surface-2); border-radius: 8px; }
+.xv-dest li b { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.xv-dest li span { font-size: 13px; font-weight: 700; white-space: nowrap; } .xv-dest li small { font-weight: 600; color: var(--muted); margin-left: 3px; }
+.xv-dest.caixa li span { color: #5B6475; }
+.xv-dest.alta { border-top: 3px solid #1E8E57; } .xv-dest.queda { border-top: 3px solid #C8402E; } .xv-dest.caixa { border-top: 3px solid #8A93A6; }
+.xv-rank { margin-top: 16px; }
+.xv-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.xv-busca { flex: 1 1 240px; max-width: 360px; }
+.xv-th, .xv-list li > button { display: grid; grid-template-columns: 34px minmax(0, 1.6fr) minmax(120px, 1fr) 130px 150px; gap: 14px; align-items: center; }
+.xv-th { padding: 6px 10px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+.xv-th span:nth-child(n+4) { text-align: right; }
+.xv-list { list-style: none; margin: 0; padding: 0; counter-reset: none; }
+.xv-list li > button { width: 100%; padding: 10px; border: 0; border-bottom: 1px solid var(--line); background: none; font: inherit; color: var(--ink); text-align: left; cursor: pointer; }
+.xv-list li > button:hover { background: var(--surface-2); }
+.xv-n { font-family: var(--display); font-weight: 700; color: var(--muted); font-size: 13px; text-align: center; }
+.xv-list li:nth-child(-n+3) .xv-n { color: #111; background: #F5C400; border-radius: 999px; width: 24px; height: 24px; display: grid; place-items: center; justify-self: center; font-size: 12px; }
+.xv-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.xv-who > span:last-child { display: grid; min-width: 0; } .xv-who b { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .xv-who small { font-size: 12px; color: var(--muted); }
+.xv-av { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #111827; color: #F5C400; font-weight: 800; font-size: 12.5px; letter-spacing: .02em; }
+.xv-mini { display: flex; height: 10px; border-radius: 999px; overflow: hidden; gap: 1px; background: var(--track, #EEF0F4); }
+.xv-mini i { display: block; min-width: 2px; }
+.xv-mini-sem { background: repeating-linear-gradient(45deg, #D9DCE3 0 4px, #EEF0F4 4px 8px); }
+.xv-pl { text-align: right; display: grid; } .xv-pl b { font-family: var(--display); font-size: 15px; } .xv-pl small { font-size: 11.5px; color: var(--muted); }
+.xv-var { justify-self: end; display: inline-flex; align-items: baseline; gap: 5px; font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.xv-var small { font-weight: 600; font-size: 11.5px; opacity: .85; }
+.xv-var.up { color: #1E8E57; background: color-mix(in srgb, #1E8E57 10%, #fff); } .xv-var.dn { color: #C8402E; background: color-mix(in srgb, #C8402E 9%, #fff); }
+.xv-var0 { color: var(--muted); }
+.xv-todos { margin-top: 10px; }
+.xv-vazio { padding: 14px 10px; list-style: none; }
+.xv-rod { margin: 14px 2px 0; }
+@media (max-width: 1100px) { .xv-dests { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) {
+  .xv-hero { grid-template-columns: minmax(0, 1fr); padding: 18px 18px 18px 22px !important; }
+  .xv-big { font-size: 36px; }
+  .xv-h-ms { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .xv-h-ms > div { padding: 10px; } .xv-h-ms b { font-size: 17px; }
+  .xv-grid { grid-template-columns: minmax(0, 1fr); }
+  .xv-th { display: none; }
+  .xv-list li > button { grid-template-columns: 26px minmax(0, 1fr) auto; grid-template-areas: "n w p" "n m v"; gap: 6px 10px; padding: 12px 6px; }
+  .xv-n { grid-area: n; align-self: start; margin-top: 6px; } .xv-who { grid-area: w; } .xv-pl { grid-area: p; } .xv-mini { grid-area: m; } .xv-var { grid-area: v; }
+  .xv-av { width: 30px; height: 30px; font-size: 11px; }
+  .xv-tools .seg { width: 100%; } .xv-tools .seg button { flex: 1; } .xv-busca { max-width: none; }
+}
+.xv-leg li > * > span { grid-area: v; font-weight: 700; font-size: 14px; font-family: var(--display); }
+.xv-leg li > span.xv-legsem { font-family: inherit; font-size: inherit; font-weight: inherit; }
+.xv-leg .xv-legsem b { font-weight: 600; color: var(--muted); }
+@media (max-width: 520px) { .xv-h-ms b { font-size: 15px; } .xv-h-ms small { font-size: 10px; letter-spacing: .05em; } .xv-h-ms em { font-size: 11px; } }
+
 </style>
 
 <div class="app">
@@ -7908,7 +7996,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       ${x.total ? `<div class="pf-cols">
         <div><h3>Moedas</h3>${meterList([{ nome: 'Real', v: x.brl, cor: COR_BRL }, { nome: 'Dólar', v: x.usdR, cor: COR_USD }].filter(r => r.v > 0), x.total)}</div>
         <div><h3>Onde está</h3>${meterList(x.plats.map(p => ({ nome: p.nome, v: p.v, cor: p.cor, nota: p.repetido ? 'posição de ' + P.rotulo(p.refPos).toLowerCase() : '' })), x.total)}</div>
-        <div><h3>Classes de ativo</h3>${meterList(x.classes.map(([k, v]) => ({ nome: k, v, cor: COR_CLASSE })), x.total)}</div>
+        <div><h3>Classes de ativo</h3>${meterList(x.classes.map(([k, v]) => ({ nome: k, v, cor: (App.XP && App.XP.corClasse(k)) || COR_CLASSE })), x.total)}</div>
       </div>` : ''}
       ${rep.length ? `<p class="muted small pf-nota">Sem posição deste mês em ${rep.map(p => p.nome).join(', ')}: repete a última conhecida.</p>` : ''}
     </section>`;
@@ -7928,6 +8016,143 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   };
 
   App.PatView = PV;
+})(window.App = window.App || {});
+
+</script>
+<script>
+/* js/ui/xp.js */
+/* Carteira XP (26/11/2026): painel da custódia na XP a partir do positivador (clientes.dados.xpHist[].carteira).
+   Mostra: total e variação do PL desde o mês anterior, evolução, alocação por classe (clicável: filtra o ranking),
+   faixas de PL, destaques (altas, quedas, caixa parado) e o ranking dos clientes com a mini-alocação de cada um.
+   "Variação do PL" inclui aportes, resgates e rendimento (o positivador não separa). Nada de receita nem suitability. */
+(function (App) {
+  const { U, Store } = App;
+  const X = {};
+  const C = () => App.Cli;
+
+  /* chave da carteira → nome e cor (as mesmas cores na ficha do cliente) */
+  X.CLASSES = [
+    { k: 'rf', nome: 'Renda fixa', cor: '#4361EE' },
+    { k: 'fundos', nome: 'Fundos', cor: '#9A5CE6' },
+    { k: 'fii', nome: 'Fundos imobiliários', cor: '#0E9AA7' },
+    { k: 'rv', nome: 'Renda variável', cor: '#F28C28' },
+    { k: 'prev', nome: 'Previdência', cor: '#D63E7A' },
+    { k: 'caixa', nome: 'Caixa', cor: '#8A93A6' },
+    { k: 'outros', nome: 'Outros', cor: '#B0409F' }
+  ];
+  X.corClasse = nome => (X.CLASSES.find(c => c.nome === nome) || {}).cor || null;
+  const FAIXAS = [
+    { ate: 50e3, nome: 'Até R$ 50 mil' }, { ate: 100e3, nome: 'R$ 50 a 100 mil' }, { ate: 300e3, nome: 'R$ 100 a 300 mil' },
+    { ate: 1e6, nome: 'R$ 300 mil a 1 mi' }, { ate: Infinity, nome: 'Acima de R$ 1 mi' }
+  ];
+  const MES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  const mesNome = ref => MES[+ref.slice(5) - 1];
+  const MES3 = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const pct = (v, t) => t ? (v / t * 100).toLocaleString('pt-BR', { maximumFractionDigits: v / t < .1 ? 1 : 0 }) + '%' : '—';
+  const pctVar = (v, base) => base ? (v >= 0 ? '+' : '−') + Math.abs(v / base * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : '';
+
+  /* ---------- Dados ---------- */
+  X.dados = () => {
+    const base = Store.all('clientes').filter(c => !c.saiu && (c.xpHist || []).some(h => h.pl != null));
+    const refs = [...new Set(base.flatMap(c => c.xpHist.map(h => h.ref)))].filter(Boolean).sort();
+    const atual = refs[refs.length - 1] || null, ant = refs[refs.length - 2] || null;
+    const ultimo = (c, ref) => c.xpHist.filter(h => h.ref <= ref && h.pl != null).sort((a, b) => b.ref.localeCompare(a.ref))[0] || null;
+    let emMax = '';
+    const linhas = base.map(c => {
+      const h = atual ? ultimo(c, atual) : null; if (!h || !(+h.pl > 0)) return null;
+      const ha = ant ? c.xpHist.find(x => x.ref === ant && x.pl != null) : null;
+      if ((h.em || '') > emMax && h.ref === atual) emMax = h.em || '';
+      const cart = h.carteira && Object.values(h.carteira).some(v => +v > 0) ? h.carteira : null;
+      return { c, pl: +h.pl, ant: ha ? +ha.pl : null, dif: ha && h.ref === atual ? +h.pl - +ha.pl : null, cart, repetido: h.ref !== atual, fonte: h.fonte || 'manual' };
+    }).filter(Boolean);
+    const tot = linhas.reduce((s, l) => s + l.pl, 0);
+    const comAmbos = linhas.filter(l => l.dif != null), difTot = comAmbos.reduce((s, l) => s + l.dif, 0), baseAnt = comAmbos.reduce((s, l) => s + l.ant, 0);
+    const alloc = X.CLASSES.map(k => { const ls = linhas.filter(l => l.cart && +l.cart[k.k] > 0); return { ...k, v: ls.reduce((s, l) => s + +l.cart[k.k], 0), n: ls.length }; }).filter(a => a.v > 0);
+    const semDet = linhas.filter(l => !l.cart).reduce((s, l) => s + l.pl, 0);
+    const serie = refs.slice(-6).map(ref => ({ ref, v: base.reduce((s, c) => { const h = c.xpHist.find(x => x.ref === ref && x.pl != null); return s + (h ? +h.pl : 0); }, 0) }));
+    const ord = linhas.slice().sort((a, b) => b.pl - a.pl);
+    const top5 = ord.slice(0, 5).reduce((s, l) => s + l.pl, 0);
+    const faixas = FAIXAS.map((f, i) => { const ls = linhas.filter(l => l.pl <= f.ate && l.pl > (i ? FAIXAS[i - 1].ate : 0)); return { ...f, n: ls.length, v: ls.reduce((s, l) => s + l.pl, 0) }; });
+    const caixa = linhas.filter(l => l.cart && +l.cart.caixa >= 5000 && +l.cart.caixa / l.pl >= .05).sort((a, b) => b.cart.caixa - a.cart.caixa);
+    return { linhas, ord, tot, atual, ant, em: emMax, difTot, baseAnt, nComp: comAmbos.length, alloc, semDet, serie, top5, faixas, caixa,
+      altas: comAmbos.filter(l => l.dif > 0).sort((a, b) => b.dif - a.dif), quedas: comAmbos.filter(l => l.dif < 0).sort((a, b) => a.dif - b.dif),
+      nBase: C().clientes().filter(c => !c.saiu).length };
+  };
+
+  /* ---------- Estado da tela ---------- */
+  let ordem = 'pl', classe = '', busca = '', todos = false;
+
+  const barraCliente = l => l.cart
+    ? `<span class="xv-mini" aria-hidden="true">${X.CLASSES.filter(k => +l.cart[k.k] > 0).map(k => `<i style="flex:${+l.cart[k.k]};background:${k.cor}" title="${k.nome}: ${U.brlShort(+l.cart[k.k])}"></i>`).join('')}</span>`
+    : '<span class="xv-mini xv-mini-sem" title="Sem carteira (PL digitado à mão)"></span>';
+  const chipVar = l => l.dif == null ? '<span class="xv-var xv-var0">—</span>' : `<span class="xv-var ${l.dif >= 0 ? 'up' : 'dn'}">${l.dif >= 0 ? '▲' : '▼'} ${U.brlShort(Math.abs(l.dif))}<small>${pctVar(l.dif, l.ant)}</small></span>`;
+  const ini = n => String(n || '?').trim().split(/\s+/).filter(p => p.length > 2 || /^[A-Z]/.test(p)).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+
+  X.html = () => {
+    const d = X.dados();
+    if (!d.linhas.length) return `<section class="card empty"><b>Nenhum cliente com posição na XP ainda.</b><p>Mande o positivador da XP no chat (a planilha + prints com nome, e-mail e celular) que o Claude lança tudo: PL, carteira por classe, aniversário e contato. Ou use "Atualizar à mão".</p></section>`;
+    const temSerie = d.serie.filter(s => s.v > 0).length >= 3, /* com 2 meses a variação já está no texto */ mx = Math.max(...d.serie.map(s => s.v), 1);
+    const hero = `<section class="card xv-hero"><div class="xv-h-main">
+        <small>PL sob custódia na XP</small><b class="xv-big">${U.brlShort(d.tot)}</b>
+        ${d.nComp ? `<em><span class="${d.difTot >= 0 ? 'xv-up' : 'xv-dn'}">${d.difTot >= 0 ? '▲' : '▼'} ${U.brlShort(Math.abs(d.difTot))} (${pctVar(d.difTot, d.baseAnt)})</span> desde ${mesNome(d.ant)} · variação do PL, inclui aportes e resgates</em>` : '<em>O mês a mês aparece a partir do segundo positivador.</em>'}
+        <span class="xv-pos">Posição de ${d.em ? U.fmtDate(d.em) : mesNome(d.atual)} · ${d.linhas.some(l => l.fonte === 'positivador') ? 'positivador da XP' : 'digitado à mão'}</span></div>
+      <div class="xv-h-ms">
+        <div><small>Clientes</small><b>${d.linhas.length}</b><em>${pct(d.linhas.length, d.nBase)} da base</em></div>
+        <div><small>PL médio</small><b>${U.brlShort(d.tot / d.linhas.length)}</b><em>mediana ${U.brlShort(d.ord[Math.floor(d.ord.length / 2)].pl)}</em></div>
+        <div><small>Top 5 clientes</small><b>${pct(d.top5, d.tot)}</b><em>do PL total</em></div></div>
+      ${temSerie ? `<div class="xv-h-graf">${d.serie.map((s, i) => `<div class="xv-hb${i === d.serie.length - 1 ? ' on' : ''}" title="${mesNome(s.ref)}: ${U.brl(s.v)}"><span>${U.brlShort(s.v)}</span><i style="height:${Math.max(6, s.v / mx * 100)}%"></i><small>${MES3[+s.ref.slice(5) - 1]}</small></div>`).join('')}</div>` : ''}
+    </section>`;
+
+    const totAl = d.alloc.reduce((s, a) => s + a.v, 0) + d.semDet;
+    const aloc = `<section class="card xv-aloc"><div class="card-h"><h2>Alocação consolidada</h2><span class="muted small">toque numa classe para ver quem tem</span></div>
+      <div class="xv-stack" role="img" aria-label="Alocação por classe">${d.alloc.map(a => `<button class="xv-seg${classe === a.k ? ' on' : ''}${classe && classe !== a.k ? ' off' : ''}" data-xv-cls="${a.k}" style="flex:${a.v};background:${a.cor}" title="${a.nome}: ${U.brlShort(a.v)}"></button>`).join('')}${d.semDet ? `<span class="xv-seg sem" style="flex:${d.semDet}" title="Sem carteira: ${U.brlShort(d.semDet)}"></span>` : ''}</div>
+      <ul class="xv-leg">${d.alloc.sort((a, b) => b.v - a.v).map(a => `<li><button class="${classe === a.k ? 'on' : ''}" data-xv-cls="${a.k}"><i style="background:${a.cor}"></i><b>${a.nome}</b><span>${U.brlShort(a.v)}</span><em>${pct(a.v, totAl)}</em><small>${U.plural(a.n, 'cliente', 'clientes')}</small></button></li>`).join('')}
+        ${d.semDet ? `<li><span class="xv-legsem"><i></i><b>Sem carteira</b><span>${U.brlShort(d.semDet)}</span><em>${pct(d.semDet, totAl)}</em><small>PL digitado à mão</small></span></li>` : ''}</ul></section>`;
+
+    const mxF = Math.max(...d.faixas.map(f => f.v), 1);
+    const faixas = `<section class="card xv-fx"><div class="card-h"><h2>Clientes por faixa de PL</h2></div>
+      <ul>${d.faixas.map(f => `<li><span class="xv-fn">${f.nome}</span><span class="xv-ft"><i style="width:${f.v / mxF * 100}%"></i></span><b>${f.n}</b><em>${f.v ? U.brlShort(f.v) + ' · ' + pct(f.v, d.tot) : '—'}</em></li>`).join('')}</ul></section>`;
+
+    const mini = (tit, cls, ls, val, vazio) => `<section class="card xv-dest ${cls}"><div class="card-h"><h2>${tit}</h2>${ls.length ? `<span class="count">${ls.length}</span>` : ''}</div>
+      ${ls.length ? `<ul>${ls.slice(0, 4).map(l => `<li><button data-xv-cli="${l.c.id}"><b>${U.esc(l.c.nome)}</b>${val(l)}</button></li>`).join('')}</ul>` : `<p class="muted small">${vazio}</p>`}</section>`;
+    const dest = `<div class="xv-dests">
+      ${mini('Maiores altas no mês', 'alta', d.altas, l => `<span class="xv-up">▲ ${U.brlShort(l.dif)} <small>${pctVar(l.dif, l.ant)}</small></span>`, d.nComp ? 'Ninguém subiu.' : 'Aparece a partir do segundo positivador.')}
+      ${mini('Maiores quedas no mês', 'queda', d.quedas, l => `<span class="xv-dn">▼ ${U.brlShort(-l.dif)} <small>${pctVar(l.dif, l.ant)}</small></span>`, d.nComp ? 'Ninguém caiu.' : 'Aparece a partir do segundo positivador.')}
+      ${mini('Caixa parado', 'caixa', d.caixa, l => `<span>${U.brlShort(+l.cart.caixa)} <small>${pct(+l.cart.caixa, l.pl)} do PL</small></span>`, 'Ninguém com caixa relevante parado.')}</div>`;
+
+    /* ranking */
+    const q = C().norm(busca);
+    let ls = d.linhas.filter(l => !q || C().norm(l.c.nome + ' ' + (l.c.apelido || '')).includes(q));
+    if (classe) ls = ls.filter(l => l.cart && +l.cart[classe] > 0);
+    const val = l => classe ? +l.cart[classe] : l.pl;
+    ls.sort(ordem === 'nome' ? (a, b) => a.c.nome.localeCompare(b.c.nome, 'pt-BR') : ordem === 'var' ? (a, b) => (b.dif ?? -1e15) - (a.dif ?? -1e15) : (a, b) => val(b) - val(a));
+    const cls = X.CLASSES.find(k => k.k === classe), MAX = 15, vis = todos || q ? ls : ls.slice(0, MAX);
+    const rank = `<section class="card xv-rank"><div class="card-h"><h2>${cls ? `Quem tem ${cls.nome.toLowerCase()}` : 'Clientes na XP'}</h2><span class="count">${ls.length}</span><span class="grow"></span>
+        ${cls ? `<button class="link" data-xv-cls="">Ver todas as classes ×</button>` : ''}</div>
+      <div class="xv-tools"><label class="search xv-busca">${App.UI.icon('busca')}<input id="xvBusca" placeholder="Buscar cliente" value="${U.esc(busca)}" autocomplete="off"></label>
+        <div class="seg" role="group" aria-label="Ordenar">${[['pl', cls ? 'Na classe' : 'PL'], ['var', 'Variação'], ['nome', 'Nome']].map(([k, t]) => `<button data-xv-ord="${k}" aria-pressed="${ordem === k}">${t}</button>`).join('')}</div></div>
+      <div class="xv-th"><span>#</span><span>Cliente</span><span>Alocação</span><span>${cls ? cls.nome : 'PL na XP'}</span><span>Variação no mês</span></div>
+      <ol class="xv-list">${vis.map((l, i) => `<li><button data-xv-cli="${l.c.id}">
+          <span class="xv-n">${i + 1}</span>
+          <span class="xv-who"><span class="xv-av">${U.esc(ini(l.c.nome))}</span><span><b>${U.esc(l.c.nome)}</b><small>${pct(l.pl, d.tot)} do PL da XP${l.repetido ? ' · posição antiga' : ''}${!l.cart ? ' · sem carteira' : ''}</small></span></span>
+          ${barraCliente(l)}
+          <span class="xv-pl"><b>${U.brlShort(val(l))}</b>${cls ? `<small>${pct(val(l), l.pl)} do PL</small>` : ''}</span>
+          ${chipVar(l)}</button></li>`).join('') || '<li class="muted small xv-vazio">Ninguém encontrado.</li>'}</ol>
+      ${!todos && !q && ls.length > MAX ? `<button class="pv-mais xv-todos" data-xv-todos>Ver todos · ${ls.length}</button>` : ''}</section>`;
+
+    return hero + `<div class="xv-grid">${aloc}${faixas}</div>` + dest + rank;
+  };
+
+  X.ligar = (el, rerender) => {
+    el.querySelectorAll('[data-xv-cls]').forEach(b => b.onclick = () => { classe = classe === b.dataset.xvCls ? '' : b.dataset.xvCls; todos = false; rerender(); const r = el.querySelector('.xv-rank'); if (r && classe) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    el.querySelectorAll('[data-xv-ord]').forEach(b => b.onclick = () => { ordem = b.dataset.xvOrd; rerender(); });
+    el.querySelectorAll('[data-xv-cli]').forEach(b => b.onclick = () => App.go('clientes', { cliente: b.dataset.xvCli }, { origem: true }));
+    const t = el.querySelector('[data-xv-todos]'); if (t) t.onclick = () => { todos = true; rerender(); };
+    const bu = el.querySelector('#xvBusca');
+    if (bu) bu.oninput = () => { busca = bu.value; const pos = bu.selectionStart; rerender(); const nb = el.querySelector('#xvBusca'); if (nb) { nb.focus(); nb.setSelectionRange(pos, pos); } };
+  };
+
+  App.XP = X;
 })(window.App = window.App || {});
 
 </script>
@@ -8479,7 +8704,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const h = (c.xpHist || []).slice(0, 6), pl = Cli.plXp(c);
     UI.modal({
       title: 'PL na XP · ' + Cli.apelido(c), size: 'sm',
-      body: `<form class="form" id="fXp"><p class="muted small" style="margin:0">Só o total, sem discriminar a carteira (compliance).</p>
+      body: `<form class="form" id="fXp"><p class="muted small" style="margin:0">Ajuste pontual do total. O positivador mandado no chat preenche PL e carteira.</p>
         <div class="row2"><label class="f"><span>PL total na XP</span><input name="pl" data-num inputmode="decimal" value="${pl != null ? U.num(pl) : ''}" placeholder="R$" autofocus></label>
         <label class="f"><span>Posição em</span><input type="date" name="em" value="${U.today()}"></label></div>
         <label class="f"><span>Captação líquida no mês <em class="muted">opcional · aportes − resgates na XP</em></span><input name="cap" data-num inputmode="decimal" value="${(() => { const j = (c.xpHist || []).find(x => x.ref === U.today().slice(0, 7)); return j && j.cap != null ? U.num(j.cap) : ''; })()}" placeholder="R$ (negativo se saiu)"></label>
@@ -8491,8 +8716,23 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       }
     });
   }
-  /* ---------- XP: atualizar o PL de todos de uma vez (rotina mensal) ---------- */
+  /* ---------- Carteira XP (26/11): painel consolidado (js/ui/xp.js); "Atualizar à mão" abre o formulário antigo ---------- */
   function xpBase(el) {
+    if (P.editar || P.mes || !App.XP) return xpEditar(el);
+    const render = () => {
+      el.innerHTML = `${voltar('Gestão', {})}
+        <div class="page-h"><div><h1><i class="pdot" style="background:#111827"></i>Carteira XP</h1><p class="muted">Posição consolidada dos seus clientes na XP: quanto, onde está e quem mexeu.</p></div>
+          <div class="page-act"><button class="btn ghost" id="xvEdit">${UI.icon('editar')}Atualizar à mão</button></div></div>
+        ${App.XP.html()}
+        <p class="muted small xv-rod">Todo mês, mande o positivador da XP no chat (planilha + prints com nome, e-mail e celular): o Claude atualiza PL, carteira, aniversários e contatos.</p>`;
+      App.XP.ligar(el, render);
+      el.querySelector('#xvEdit').onclick = () => ir({ xp: true, editar: true });
+      ligarComum(el);
+    };
+    render();
+  }
+  /* ---------- XP: atualizar o PL de todos de uma vez, à mão ---------- */
+  function xpEditar(el) {
     const clis = Cli.clientes().filter(c => !c.saiu), tot = clis.reduce((s, c) => s + (Cli.plXp(c) || 0), 0), com = clis.filter(c => Cli.plXp(c) != null);
     /* Vindo de "Patrimônio e captação" de um mês passado: a posição já vem no último dia daquele mês */
     const hoje = U.today(), emIni = P.mes && P.mes < hoje.slice(0, 7) && App.Pat ? App.Pat.fimDoMes(P.mes) : hoje;
@@ -8502,8 +8742,8 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       return `<li><div><b>${U.esc(c.nome)}</b><small>${pl != null ? 'Atual ' + U.brl(pl) + ' · ' + U.fmtDate(c.xp.em) : 'sem PL cadastrado'}</small></div>
         <input data-xp="${c.id}" data-num inputmode="decimal" value="${plv}" data-orig="${plv}" placeholder="PL R$" aria-label="PL de ${U.esc(c.nome)}">
         <input class="xp-cap" data-xpcap="${c.id}" data-num inputmode="decimal" value="${cap}" data-orig="${cap}" placeholder="Captação" aria-label="Captação líquida no mês de ${U.esc(c.nome)}"></li>`; };
-    el.innerHTML = `${voltar(P.mes ? 'Patrimônio e captação' : 'Gestão', P.mes ? { patrimonio: true, mes: P.mes } : {})}
-      <div class="page-h"><div><h1>PL na XP</h1><p class="muted">Só o total de cada cliente, digitado por você (a carteira da XP fica fora do painel por compliance). Preencha os que mudaram e salve. A captação líquida do mês (aportes − resgates) é opcional e alimenta a captação em Patrimônio.</p></div></div>
+    el.innerHTML = `${voltar(P.mes ? 'Patrimônio e captação' : 'Carteira XP', P.mes ? { patrimonio: true, mes: P.mes } : { xp: true })}
+      <div class="page-h"><div><h1>PL na XP · à mão</h1><p class="muted">Para ajustes pontuais (o positivador mandado no chat já preenche PL e carteira). Preencha os que mudaram e salve; mudar o PL de um mês tira a carteira daquele mês. A captação líquida do mês (aportes − resgates) é opcional e alimenta a captação em Patrimônio.</p></div></div>
       <section class="kpis k4"><div class="kpi"><span>PL total na XP</span><b>${U.brlShort(tot)}</b></div><div class="kpi"><span>Clientes com PL</span><b>${com.length}</b><em>de ${clis.length}</em></div></section>
       <section class="card"><form id="fXpB"><div class="xp-top"><label class="f"><span>Posição em</span><input type="date" name="em" value="${emIni}"></label><span class="grow"></span><button class="btn primary" type="submit">Salvar alterados</button></div>
         <div class="xp-head"><span>Cliente</span><span>PL total</span><span>Captação no mês</span></div>
