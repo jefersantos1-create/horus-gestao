@@ -1891,6 +1891,19 @@ details.pd-rec:not([open]) > .pd-sum { margin-bottom: 0 !important; }
 .page-h.pg-semsaud { justify-content: flex-end; }
 @media (max-width: 760px) { .page-h.pg-semsaud { justify-content: stretch; } }
 
+/* ---------- 27/11: coberturas e beneficiários na apólice de vida (detalhe do produto) ---------- */
+.vd-cob, .vd-ben { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.vd-h { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; } .vd-h b { font-size: 13.5px; }
+.vd-th, .vd-cob li, .vd-tot { display: grid; grid-template-columns: minmax(0, 1fr) 110px 88px; gap: 10px; align-items: baseline; }
+.vd-th { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 0 4px 4px; }
+.vd-th span:not(:first-child) { text-align: right; }
+.vd-cob ul, .vd-ben ul { list-style: none; margin: 0; padding: 0; }
+.vd-cob li { padding: 7px 4px; border-top: 1px solid var(--line); font-size: 13px; }
+.vd-cob li b, .vd-cob li em { text-align: right; font-style: normal; white-space: nowrap; } .vd-cob li em { color: var(--muted); }
+.vd-tot { padding: 7px 4px 0; border-top: 2px solid var(--line); font-size: 13px; font-weight: 700; } .vd-tot em { text-align: right; font-style: normal; }
+.vd-ben li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 4px; border-top: 1px solid var(--line); font-size: 13px; }
+@media (max-width: 560px) { .vd-th, .vd-cob li, .vd-tot { grid-template-columns: minmax(0, 1fr) 92px 66px; gap: 8px; } .vd-cob li, .vd-tot { font-size: 12.5px; } }
+
 </style>
 
 <div class="app">
@@ -8760,6 +8773,21 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       ${b.lista ? `<ul class="pb-list">${b.lista}</ul>` : ''}
       ${b.extra || ''}</article>`;
 
+  /* 27/11: apólice de vida com coberturas (tipo, capital, prêmio) e beneficiários, gravados pelo chat (dados.coberturas / dados.beneficiarios) */
+  const vidaDet = ct => {
+    const cob = Array.isArray(ct.coberturas) ? ct.coberturas.filter(x => x && (x.tipo || x.capital)) : [];
+    const ben = Array.isArray(ct.beneficiarios) ? ct.beneficiarios.filter(x => x && x.nome) : [];
+    const kv = [['Ramo', ct.ramo], ['Proposta', ct.proposta], ['Corretora', ct.corretora], ['Dia da cobrança', ct.diaCobranca ? 'dia ' + ct.diaCobranca : ''],
+      ['Fim da vigência', ct.fimVigencia && ct.fimVigencia !== ct.renovacao ? U.fmtDate(ct.fimVigencia) : '']].filter(([, v]) => v);
+    const totP = cob.reduce((s, x) => s + (+x.premio || 0), 0), r2 = v => 'R$ ' + (+v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (kv.length ? `<div class="ct-kv">${kv.map(([l, v]) => `<span><small>${l}</small>${U.esc(String(v))}</span>`).join('')}</div>` : '')
+      + (cob.length ? `<div class="vd-cob"><div class="vd-h"><b>Coberturas</b><span class="muted small">${cob.length}</span></div>
+          <div class="vd-th"><span>Cobertura</span><span>Capital</span><span>Prêmio/mês</span></div>
+          <ul>${cob.map(x => `<li><span>${U.esc(x.tipo || '—')}</span><b>${x.capital != null ? U.brl(+x.capital) : '—'}</b><em>${x.premio != null ? r2(x.premio) : '—'}</em></li>`).join('')}</ul>
+          ${totP ? `<div class="vd-tot"><span>Total</span><span></span><em>${r2(totP)}</em></div>` : ''}</div>` : '')
+      + (ben.length ? `<div class="vd-ben"><div class="vd-h"><b>Beneficiários</b></div><ul>${ben.map(x => `<li><span>${U.esc(x.nome)}${x.parentesco ? ` <small class="muted">· ${U.esc(x.parentesco)}</small>` : ''}</span>${x.percentual != null ? `<b>${(+x.percentual).toLocaleString('pt-BR')}%</b>` : ''}</li>`).join('')}</ul></div>` : '');
+  };
+
   /* Detalhe de um produto do cliente (todas as linhas, com editar) */
   function detalheProduto(cli, pid) {
     const p = Cli.produto(pid), cts = Cli.contratos({ clienteId: cli.id, produto: pid, todos: true })
@@ -8767,7 +8795,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     UI.modal({
       title: p.nome + ' · ' + Cli.apelido(cli), size: 'md',
       body: `<div class="pd-list">${cts.map(ct => `<div class="ct-card${(ct.status || 'ativo') === 'encerrado' ? ' off' : ''}" style="--pc:${p.cor}"><div class="ct-h"><b>${U.esc(pid === 'eqseed' ? (ct.startup || 'Investimento') : pid === 're' ? (ct.tipo || 'Apólice') : pid === 'consorcio' ? '' : p.nome)}${pid === 'consorcio' ? (ct.administradora ? Cli.mk(ct.administradora, true) : 'Cota') : ''}</b>${(ct.status || 'ativo') === 'encerrado' ? '<span class="tag">Encerrado</span>' : ''}${ct.link ? `<a class="doc-link" href="${U.esc(ct.link)}" target="_blank" rel="noopener">${UI.icon('arquivo')}Documento</a>` : ''}<button class="icon-btn" data-ed="${ct.id}" title="Editar" aria-label="Editar">${UI.icon('editar')}</button></div>
-          <div class="ct-kv">${p.campos.filter(cp => cp.t !== 'url' && !(pid === 'eqseed' && cp.k === 'startup') && !(pid === 're' && cp.k === 'tipo')).map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${Cli.ehMarca(cp) ? Cli.mk(t, true) : U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`).join('')}</div>`,
+          <div class="ct-kv">${p.campos.filter(cp => cp.t !== 'url' && !(pid === 'eqseed' && cp.k === 'startup') && !(pid === 're' && cp.k === 'tipo')).map(cp => { const t = Cli.fmt(cp, ct[cp.k]); return t ? `<span><small>${U.esc(cp.l)}</small>${Cli.ehMarca(cp) ? Cli.mk(t, true) : U.esc(t)}</span>` : ''; }).join('')}${Cli.extras(ct).map(([l, t]) => `<span><small>${U.esc(l)}</small>${U.esc(t)}</span>`).join('')}</div>${pid === 'vida' ? vidaDet(ct) : ''}${ct.observacoes ? `<p class="muted small">${U.esc(ct.observacoes)}</p>` : ''}</div>`).join('')}</div>`,
       footer: `<button class="btn ghost" data-close>Fechar</button><button class="btn primary" id="pdAdd">${UI.icon('mais')}Adicionar ${U.esc(p.nome)}</button>`,
       onMount(el, api) {
         el.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => { api.close(); App.Forms.contrato(b.dataset.ed); });
