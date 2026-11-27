@@ -1871,6 +1871,8 @@ details.pd-rec:not([open]) > .pd-sum { margin-bottom: 0 !important; }
 .xv-leg li > span.xv-legsem { font-family: inherit; font-size: inherit; font-weight: inherit; }
 .xv-leg .xv-legsem b { font-weight: 600; color: var(--muted); }
 @media (max-width: 520px) { .xv-h-ms b { font-size: 15px; } .xv-h-ms small { font-size: 10px; letter-spacing: .05em; } .xv-h-ms em { font-size: 11px; } }
+/* cartão da XP na ficha (26/11) */
+.xv-up-f { color: #1E8E57; } .xv-dn-f { color: #C8402E; }
 
 </style>
 
@@ -2910,6 +2912,10 @@ App.ICONES = {
     { id: 'stonex', nome: 'StoneX', sub: 'Conta internacional', cor: '#1F6F8B', campos: [
       { k: 'valor', l: 'Valor em conta', t: 'usd', lista: true }, { k: 'dataPosicao', l: 'Posição em', t: 'data', lista: true },
       { k: 'abertura', l: 'Abertura da conta', t: 'data' }] },
+    /* Avenue (26/11): conta internacional, mesmo modelo da StoneX (valor em US$ + mês a mês em posHist) */
+    { id: 'avenue', nome: 'Avenue', sub: 'Conta internacional', cor: '#3E7C8C', campos: [
+      { k: 'valor', l: 'Valor em conta', t: 'usd', lista: true }, { k: 'dataPosicao', l: 'Posição em', t: 'data', lista: true },
+      { k: 'abertura', l: 'Abertura da conta', t: 'data' }] },
     { id: 'dominion', nome: 'Dominion', sub: 'Plano internacional', cor: '#8A6A2F', campos: [
       { k: 'plano', l: 'Plano', t: 'texto', lista: true }, { k: 'contribuicao', l: 'Contribuição anual', t: 'usd', lista: true },
       { k: 'valorConta', l: 'Valor de conta', t: 'usd', lista: true }, { k: 'efetividade', l: 'Data de efetividade', t: 'data' },
@@ -2931,10 +2937,10 @@ App.ICONES = {
   ];
   /* Ordem dos cards: investimentos, internacionais, proteção, outros */
   /* Paleta Donna (proposta 26/11): famílias de cor por tipo de produto. Vermelho/verde/âmbar ficam só para status. */
-  C.PALETA = { mb: '#0E9AA7', eqseed: '#9A5CE6', zentis: '#4361EE', previdencia: '#2F7FB5', ita: '#1B5E8C', stonex: '#5B7C99', dominion: '#3A4F7A', cambio: '#17A2C7',
+  C.PALETA = { mb: '#0E9AA7', eqseed: '#9A5CE6', zentis: '#4361EE', previdencia: '#2F7FB5', ita: '#1B5E8C', stonex: '#5B7C99', avenue: '#3E7C8C', dominion: '#3A4F7A', cambio: '#17A2C7',
     vida: '#D63E7A', re: '#B0409F', rc: '#B0409F', saude: '#B0409F', auto: '#C2578A', consorcio: '#F28C28', credito: '#7C879A' };
   C.PRODUTOS.forEach(p => { if (C.PALETA[p.id]) p.cor = C.PALETA[p.id]; });
-  const ORDEM_P = ['mb', 'eqseed', 'zentis', 'previdencia', 'ita', 'stonex', 'dominion', 'vida', 're', 'auto', 'consorcio', 'cambio', 'credito'];
+  const ORDEM_P = ['mb', 'eqseed', 'zentis', 'previdencia', 'ita', 'stonex', 'avenue', 'dominion', 'vida', 're', 'auto', 'consorcio', 'cambio', 'credito'];
   C.PRODUTOS.sort((a, b) => (ORDEM_P.indexOf(a.id) + 1 || 99) - (ORDEM_P.indexOf(b.id) + 1 || 99));
   C.produto = id => C.PRODUTOS.find(p => p.id === id) || { id, nome: id, cor: '#5A6474', campos: [] };
   /* Todo produto (menos MB) tem o link do documento: a apólice/contrato fica no OneDrive, o painel guarda só o endereço */
@@ -2975,6 +2981,7 @@ App.ICONES = {
     { n: 'Omint', cor: '#92400E', a: ['omint'] },                            /* marrom */
     { n: 'XP', cor: '#111827', a: ['xp'] },                                  /* preto */
     { n: 'StoneX', cor: '#78716C', a: ['stonex', 'stone x'] },               /* cinza-quente */
+    { n: 'Avenue', cor: '#C9A227', a: ['avenue'] },                          /* dourado */
     { n: 'Dominion', cor: '#A21CAF', a: ['dominion'] },                      /* magenta */
     { n: 'SulAmérica', cor: '#FB923C', a: ['sulamerica', 'sul america'] },  /* laranja-claro */
     { n: 'Allianz', cor: '#4F46E5', a: ['allianz'] },                        /* índigo */
@@ -3014,7 +3021,7 @@ App.ICONES = {
     { id: 'vidagrupo', nome: 'Vida em grupo', prods: ['re:Seguro de vida em grupo'], seguro: true },
     { id: 'previdencia', nome: 'Previdência', prods: ['previdencia'] },
     { id: 'consorcio', nome: 'Consórcio', prods: ['consorcio'] },
-    { id: 'internacional', nome: 'Internacional', prods: ['ita', 'stonex', 'dominion'] },
+    { id: 'internacional', nome: 'Internacional', prods: ['ita', 'stonex', 'avenue', 'dominion'] },
     { id: 'cripto', nome: 'Cripto (MB)', prods: ['mb'] },
     { id: 'startups', nome: 'Startups (Eqseed)', prods: ['eqseed'] },
     { id: 'zentis', nome: 'Zentis', prods: ['zentis'] },
@@ -3279,13 +3286,13 @@ App.ICONES = {
   const P = {};
   const C = () => App.Cli;
   const MES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  P.INTL = ['ita', 'stonex', 'dominion'];
+  P.INTL = ['ita', 'stonex', 'avenue', 'dominion'];
   /* cores validadas (claro, daltonismo e visão normal) no validador da skill de gráficos em 24/11 */
   P.PLATS = [
     { id: 'mb', nome: 'MB', cor: '#0E9AA7' },
     { id: 'xp', nome: 'XP', cor: '#374151' },
     { id: 'eqseed', nome: 'Eqseed', cor: '#9A5CE6' },
-    { id: 'intl', nome: 'Exterior', sub: 'ITA · StoneX · Dominion', cor: '#1B5E8C' },
+    { id: 'intl', nome: 'Exterior', sub: 'ITA · StoneX · Avenue · Dominion', cor: '#1B5E8C' },
     /* Parte 6 (24/11): Previdência e Zentis entram no total pelo valor do contrato (saldo / valor), com posHist mensal */
     { id: 'pz', nome: 'Previdência e Zentis', sub: 'saldo e valor dos contratos', cor: '#4361EE' }
   ];
@@ -3352,7 +3359,7 @@ App.ICONES = {
   };
 
   /* ---------- Exterior (US$) ---------- */
-  const campoUsd = pid => pid === 'stonex' || pid === 'zentis' ? 'valor' : pid === 'previdencia' ? 'saldo' : 'valorConta';
+  const campoUsd = pid => pid === 'stonex' || pid === 'avenue' || pid === 'zentis' ? 'valor' : pid === 'previdencia' ? 'saldo' : 'valorConta';
   /* posição do contrato no mês: posHist (última ≤ ref) ou valor atual a partir do mês da "Posição em" */
   const posCt = (ct, ref) => {
     const h = (ct.posHist || []).filter(x => x.ref <= ref && x.v != null).sort((a, b) => b.ref.localeCompare(a.ref))[0];
@@ -3448,7 +3455,7 @@ App.ICONES = {
   /* ---------- Plataformas de investimento, uma por produto (faixa da Gestão, 24/11) ----------
      Ordem e visibilidade: XP, MB, Eqseed, ITA, StoneX, Dominion, Zentis, Previdência; some o que estiver desligado em Ajustes.
      Todos entram no total (Zentis e Previdência desde a Parte 6, pelo valor do contrato). */
-  P.INVEST = ['xp', 'mb', 'eqseed', 'ita', 'stonex', 'dominion', 'zentis', 'previdencia'];
+  P.INVEST = ['xp', 'mb', 'eqseed', 'ita', 'stonex', 'avenue', 'dominion', 'zentis', 'previdencia'];
   P.investVisivel = pid => pid === 'xp' ? !C().ocultos().includes('xp') : C().visivel(pid);
   P.produtosInvest = ref => {
     ref = ref || P.mesPadrao();
@@ -6338,6 +6345,7 @@ App.ICONES = {
     cambio: { ids: ['p_cambio'], re: /c[âa]mbio/i },
     ita: { ids: [], re: /investors|\bITA\b/i },
     stonex: { ids: [], re: /stone ?x/i },
+    avenue: { ids: [], re: /avenue/i },
     dominion: { ids: [], re: /dominion/i },
     mb: { ids: ['p_mb'], re: /mercado bitcoin|\bMB\b/i },
     auto: { ids: [], re: /\bauto\b/i },
@@ -6471,6 +6479,7 @@ App.ICONES = {
     ita: { marca: 'Investors Trust', campo: 'valorConta', fmt: usd, rot: 'Valor de conta', usd: true },
     zentis: { marca: 'Zentis', campo: 'valor', fmt: U.brlShort, rot: 'Valor alocado' },
     stonex: { marca: 'StoneX', campo: 'valor', fmt: usd, rot: 'Valor em conta', usd: true },
+    avenue: { marca: 'Avenue', campo: 'valor', fmt: usd, rot: 'Valor em conta', usd: true },
     dominion: { marca: 'Dominion', campo: 'valorConta', fmt: usd, rot: 'Valor de conta', usd: true },
     previdencia: { marca: null, campo: 'saldo', fmt: U.brlShort, rot: 'Saldo acumulado' }
   };
@@ -8079,6 +8088,14 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       nBase: C().clientes().filter(c => !c.saiu).length };
   };
 
+  /* posição de um cliente (cartão da ficha) */
+  X.doCliente = c => {
+    const hs = (c.xpHist || []).filter(h => h.pl != null).sort((a, b) => b.ref.localeCompare(a.ref)); if (!hs.length) return null;
+    const h = hs[0], ha = hs[1] && hs[1].ref < h.ref ? hs[1] : null;
+    const cart = h.carteira && Object.values(h.carteira).some(v => +v > 0) ? h.carteira : null;
+    return { pl: +h.pl, em: h.em || null, ref: h.ref, ant: ha ? +ha.pl : null, dif: ha ? +h.pl - +ha.pl : null, cart };
+  };
+
   /* ---------- Estado da tela ---------- */
   let ordem = 'pl', classe = '', busca = '', todos = false;
 
@@ -8242,7 +8259,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   }
 
   function outrosProdutos() {
-    const ids = Cli.PRODUTOS.filter(p => !['mb', 'eqseed', 'ita', 'stonex', 'dominion', 'zentis', 'previdencia'].includes(p.id) && (Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)));
+    const ids = Cli.PRODUTOS.filter(p => !['mb', 'eqseed', 'ita', 'stonex', 'avenue', 'dominion', 'zentis', 'previdencia'].includes(p.id) && (Cli.visivel(p.id) || (p.oculto && Cli.contratos({ produto: p.id, todos: true }).length)));
     const intl = [];
     const linha = p => { const r = Cli.resumo(p.id), pot = Cli.potenciais(p.id).length;
       return `<button class="gs-prod${r.n ? '' : ' zero'}" data-prod="${p.id}" style="--pc:${p.cor}"><span class="gs-pn">${U.esc(p.nome)}</span>
@@ -8620,11 +8637,25 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   /* ---------- Ficha do cliente: um bloco por plataforma/produto ---------- */
   const usd = v => 'US$ ' + (+v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
   const CAT = { rf: ['Renda fixa', '#6E3FF0'], usd: ['Dólar', '#2B8AA6'], caixa: ['Caixa', '#A49CB8'], cripto: ['Cripto', '#D98A1E'], rv: ['Renda variável', '#2F855A'], cestas: ['Cestas', '#A0466B'] };
-  const ORDEM = ['mb', 'eqseed', 'ita', 'stonex', 'dominion', 'zentis', 'previdencia', 'vida', 're', 'auto', 'consorcio', 'cambio', 'credito'];
+  const ORDEM = ['xp', 'mb', 'eqseed', 'ita', 'stonex', 'avenue', 'dominion', 'zentis', 'previdencia', 'vida', 're', 'auto', 'consorcio', 'cambio', 'credito'];
 
   /* Conteúdo de cada bloco: { titulo, sub, valor, rotuloValor, linhas[], extra (html), acao } */
+  /* XP não é contrato: pseudo-produto só para o cartão da ficha (26/11) */
+  const PROD_XP = { id: 'xp', nome: 'XP', sub: 'Investimentos', cor: '#111827', campos: [] };
+  const prodF = pid => pid === 'xp' ? PROD_XP : Cli.produto(pid);
   function bloco(pid, cts, cli, m) {
-    const p = Cli.produto(pid), at = cts.filter(x => (x.status || 'ativo') === 'ativo');
+    const p = prodF(pid), at = cts.filter(x => (x.status || 'ativo') === 'ativo');
+    if (pid === 'xp') {
+      const x = App.XP ? App.XP.doCliente(cli) : null, b = { p, n: 1, acao: 'Carteira XP' };
+      if (!x) return Object.assign(b, { valor: U.brl(Cli.plXp(cli) || 0), rotuloValor: 'PL na XP' });
+      const cl = x.cart ? App.XP.CLASSES.filter(k => +x.cart[k.k] > 0).sort((a, k) => x.cart[k.k] - x.cart[a.k]) : [];
+      return Object.assign(b, { valor: U.brl(x.pl), rotuloValor: 'PL na XP' + (x.em ? ' · ' + U.fmtDate(x.em) : ''),
+        stats: [['No mês', { html: x.dif == null ? '—' : `<span class="${x.dif >= 0 ? 'xv-up-f' : 'xv-dn-f'}">${x.dif >= 0 ? '▲' : '▼'}&nbsp;${U.brlShort(Math.abs(x.dif)).replace('R$ ', 'R$&nbsp;')}</span>` }, x.dif != null && x.ant ? (x.dif >= 0 ? '+' : '−') + Math.abs(x.dif / x.ant * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%' : ''],
+          ['Maior classe', cl.length ? cl[0].nome : '—', cl.length ? Math.round(x.cart[cl[0].k] / x.pl * 100) + '% do PL' : ''],
+          ['Caixa', x.cart && +x.cart.caixa ? U.brlShort(+x.cart.caixa) : '—', x.cart && +x.cart.caixa ? Math.round(x.cart.caixa / x.pl * 100) + '% do PL' : '']],
+        extra: cl.length ? `<div class="pb-aloc">${cl.map(k => `<i style="width:${x.cart[k.k] / x.pl * 100}%;background:${k.cor}" title="${k.nome} ${Math.round(x.cart[k.k] / x.pl * 100)}%"></i>`).join('')}</div>
+          <div class="pb-leg">${cl.map(k => `<span><i style="background:${k.cor}"></i>${k.nome} ${Math.round(x.cart[k.k] / x.pl * 100)}%</span>`).join('')}</div>` : '<p class="muted small">Sem carteira por classe (PL digitado à mão).</p>' });
+    }
     const b = { p, n: cts.length, acao: 'Ver carteira' };
     if (pid === 'mb') {
       const tot = Object.values(m.cats || {}).reduce((s, v) => s + v, 0) || m.pl;
@@ -8773,7 +8804,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const cts = Cli.contratos({ clienteId: c.id, todos: true }).filter(x => x.produto !== 'mb');
     const m = Cli.mbDoCliente(c);
     const porProd = {}; cts.forEach(x => { (porProd[x.produto] = porProd[x.produto] || []).push(x); });
-    const pids = ORDEM.filter(pid => pid === 'mb' ? !!m : porProd[pid]).concat(Object.keys(porProd).filter(k => !ORDEM.includes(k)));
+    const pids = ORDEM.filter(pid => pid === 'mb' ? !!m : pid === 'xp' ? Cli.plXp(c) != null : porProd[pid]).concat(Object.keys(porProd).filter(k => !ORDEM.includes(k)));
     const ats = Cli.atividadesDo(c).sort((a, b) => (M.aberta(b) - M.aberta(a)) || (b.prazo || '').localeCompare(a.prazo || ''));
     const abertas = ats.filter(M.aberta);
     const receita = Cli.receitaDo(c);
@@ -8788,7 +8819,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       <section class="cl-hero">
         <div class="cl-hero-id"><span class="cl-av lg">${U.esc((Cli.apelido(c) || '?').slice(0, 2).toUpperCase())}</span><div><h1>${U.esc(c.nome)}</h1>
           <p>${[c.telefone, c.email, c.nascimento && 'Aniversário ' + U.fmtDate(c.nascimento).replace(/ \d{4}$/, '')].filter(Boolean).map(U.esc).join(' · ') || 'Sem contato cadastrado'}</p>
-          <div class="cl-hero-tags">${pids.map(pid => `<span style="--pc:${Cli.produto(pid).cor}">${U.esc(Cli.produto(pid).nome)}</span>`).join('')}</div></div></div>
+          <div class="cl-hero-tags">${pids.map(pid => `<span style="--pc:${prodF(pid).cor}">${U.esc(prodF(pid).nome)}</span>`).join('')}</div></div></div>
         <div class="cl-hero-act">${App.FP ? `<button class="btn ghost-d" data-fp-fazer="${c.id}">${UI.icon('arquivo')}Fazer FP</button>` : ''}<button class="btn ghost-d" id="clEd">${UI.icon('editar')}Editar</button><button class="btn primary" data-novo-ct data-cid="${c.id}">${UI.icon('mais')}Produto</button></div>
         <div class="cl-hero-kpis">
           <button class="kp-btn" id="clXp" title="Atualizar o PL da XP"><small>Investido com você</small><b>${totPat ? U.brl(totPat) : '—'}</b><em>${plXp != null ? 'XP ' + U.brlShort(plXp) + ' em ' + U.fmtDate(c.xp.em) + ' · atualizar ›' : (totPat ? 'MB + Eqseed · + PL da XP ›' : 'lançar o PL da XP ›')}${!App.Pat && itaUsd ? ' · + ' + usd(itaUsd) + ' no exterior' : ''}</em></button>
@@ -8822,6 +8853,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const md = el.querySelector('#m360d'); if (md) md.addEventListener('toggle', () => { try { localStorage.setItem('donna-m360', md.open ? '1' : '0'); } catch (e) {} });
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
       const pid = b.dataset.pbGo;
+      if (pid === 'xp') { ir({ xp: true }); return; }
       if (pid === 'mb') { const ct = Store.all('contratos').find(x => x.produto === 'mb' && x.clienteId === c.id); ir({ produto: 'mb', foco: ct ? ct.mbId : null, cliente: null, deCliente: c.id }); }
       else detalheProduto(c, pid);
     });
