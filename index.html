@@ -1874,6 +1874,23 @@ details.pd-rec:not([open]) > .pd-sum { margin-bottom: 0 !important; }
 /* cartão da XP na ficha (26/11) */
 .xv-up-f { color: #1E8E57; } .xv-dn-f { color: #C8402E; }
 
+/* ---------- 27/11: listas com rolagem (Quem ligar, destaques da XP), carteira XP do cliente, Painel sem "Bom dia" duplicado ---------- */
+.rg-rola-on { max-height: var(--rg-h, 286px); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-right: 4px; border-bottom: 1px solid var(--line); }
+.rg-rola-on, .xv-drola { scrollbar-width: thin; scrollbar-color: #C9CDD6 transparent; }
+.rg-rola-on::-webkit-scrollbar, .xv-drola::-webkit-scrollbar { width: 6px; }
+.rg-rola-on::-webkit-scrollbar-thumb, .xv-drola::-webkit-scrollbar-thumb { background: #C9CDD6; border-radius: 6px; }
+.xv-dsub { margin: -4px 0 8px; font-size: 12px; color: var(--muted); line-height: 1.35; }
+.xv-dest ul.xv-drola { max-height: 196px; overflow-y: auto; overscroll-behavior: contain; padding-right: 4px; }
+.xv-chist ul { list-style: none; margin: 0; padding: 0; }
+.xv-chist li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 4px 14px; align-items: baseline; padding: 9px 4px; border-top: 1px solid var(--line); }
+.xv-chist li:first-child { border-top: 0; }
+.xv-chist time { font-size: 13.5px; font-weight: 600; text-transform: capitalize; }
+.xv-chist b { font-size: 14px; } .xv-chist li > span { font-size: 13px; font-weight: 700; min-width: 74px; text-align: right; }
+.xv-chist small { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+.xv-chist .xv-up { color: #1E8E57; } .xv-chist .xv-dn { color: #C8402E; }
+.page-h.pg-semsaud { justify-content: flex-end; }
+@media (max-width: 760px) { .page-h.pg-semsaud { justify-content: stretch; } }
+
 </style>
 
 <div class="app">
@@ -5766,14 +5783,14 @@ App.ICONES = {
   /* ---------- Card do Painel ---------- */
   Rg.card = (filtroResp = []) => {
     if (filtroResp.length && App.Ren && !filtroResp.includes(App.Ren.respRenovacao().id)) return '';
-    const { ligar, nunca, aniv, emDia } = Rg.lista(), MAX = 5; /* varredura 26/11: 5 + Ver todos */
+    const { ligar, nunca, aniv, emDia } = Rg.lista(), MAX = 5; /* 27/11: todos dentro de uma caixa da altura de ~5 linhas, com rolagem (sem "Ver todos" que esticava o cartão) */
     const total = ligar.length + nunca.length;
     return `<section class="card rg-card"><div class="card-h"><h2>Quem ligar esta semana</h2><span class="grow"></span>${ligar.length ? `<span class="count">${ligar.length}</span>` : ''}</div>
       <p class="rg-res">Contato a cada ${Rg.dias()} dias · ${emDia} em dia${ligar.length ? ` · <b>${ligar.length} para ligar</b>` : ''}${nunca.length ? ` · ${nunca.length} sem registro` : ''}</p>
       ${aniv.length ? `<ul class="rg-list">${aniv.map(x => `<li class="rg-it aniv"><button class="rg-n" data-rg-cli="${x.c.id}"><b>${U.esc(x.c.nome)}</b><small>${anivTxt(x.d)}</small></button><button class="rg-f" data-rg-falei="${x.c.id}">Falei hoje</button></li>`).join('')}</ul>` : ''}
-      ${ligar.length ? `<ul class="rg-list">${ligar.slice(0, MAX).map(linha).join('')}</ul>${ligar.length > MAX ? `<details class="rg-mais"><summary>Ver todos · ${ligar.length}</summary><ul class="rg-list">${ligar.slice(MAX).map(linha).join('')}</ul></details>` : ''}`
+      ${ligar.length ? `<ul class="rg-list rg-rola${ligar.length > MAX ? ' rg-rola-on' : ''}">${ligar.map(linha).join('')}</ul>`
         : total ? '' : '<p class="muted small" style="margin:4px 0 0">Todos os clientes estão em dia.</p>'}
-      ${nunca.length ? `<details class="rg-mais"${ligar.length ? '' : ' open'}><summary>Sem contato registrado · ${nunca.length}</summary><p class="muted small" style="margin:4px 0 6px">Use "Falei hoje" quando falar com cada um; a partir daí a régua de ${Rg.dias()} dias começa a contar.</p><ul class="rg-list">${nunca.slice(0, 5).map(linha).join('')}</ul>${nunca.length > 5 ? `<details class="rg-mais rg-todos"><summary>Ver todos · ${nunca.length}</summary><ul class="rg-list">${nunca.slice(5).map(linha).join('')}</ul></details>` : ''}</details>` : ''}</section>`;
+      ${nunca.length ? `<details class="rg-mais"${ligar.length ? '' : ' open'}><summary>Sem contato registrado · ${nunca.length}</summary><p class="muted small" style="margin:4px 0 6px">Use "Falei hoje" quando falar com cada um; a partir daí a régua de ${Rg.dias()} dias começa a contar.</p><ul class="rg-list rg-rola${nunca.length > MAX ? ' rg-rola-on' : ''}">${nunca.map(linha).join('')}</ul></details>` : ''}</section>`;
   };
   Rg.ligar = root => {
     root.querySelectorAll('[data-rg-falei]').forEach(b => b.onclick = e => { e.stopPropagation(); Rg.falei(b.dataset.rgFalei); });
@@ -6697,9 +6714,11 @@ App.ICONES = {
             ${metas.length ? `<ul class="mlist">${metas.slice(0, 5).map(m => { const p = M.metaPct(m), s = M.metaSituacao(m); return `<li><div class="mrow"><span class="mname">${U.esc(m.nome)}</span><span class="tag t-${s.id}">${s.label}</span></div>${UI.bar(p, M.respCor(m.responsabilidadeId))}<div class="mrow small muted"><span>${U.num(M.metaAtual(m))} de ${U.num(m.alvo)} ${U.esc(m.unidade || '')}</span><span>${U.pct(p)}</span></div>${M.podeRenovar(m) ? `<button class="link mt-ren" data-renova="${m.id}">${UI.icon('adiar')}Renovar para ${U.esc(M.rotPeriodo(M.proxPeriodo(m)))}</button>` : ''}</li>`; }).join('')}</ul>`
               : `<div class="empty sm"><p>Nenhuma meta ativa.</p><a class="btn ghost" href="#metas" data-go="metas">Criar meta</a></div>`}
           </section>`;
+    const temRes = !!(App.Resumo && App.Resumo.atual());
     el.innerHTML = `
       ${demo.atividades + demo.metas ? `<div class="banner">Você está vendo <b>dados de demonstração</b>. Quando quiser começar com os seus, apague-os em <a href="#dados" data-go="dados">Ajustes</a>.</div>` : ''}
-      <div class="page-h"><div><h1>Bom dia</h1><p class="muted cap">${U.todayLong()}</p></div>
+      ${/* 27/11: com resumo do dia, a saudação fica só no cartão do resumo (não repete "Bom dia") */''}
+      <div class="page-h${temRes ? ' pg-semsaud' : ''}">${temRes ? '' : `<div><h1>Bom dia</h1><p class="muted cap">${U.todayLong()}</p></div>`}
         <div class="mfilter"><button class="mf-btn${filtroResp.length ? ' on' : ''}" id="fResp" aria-haspopup="true" aria-expanded="false"><span class="mf-dots">${(filtroResp.length ? filtroResp.map(M.resp) : M.respAtivas()).slice(0, 4).map(x => `<i style="background:${x.cor || '#8A93A3'}"></i>`).join('')}</span><span class="mf-l">${U.esc(rotuloFiltro())}</span>${UI.icon('seta')}</button>
           <div class="mf-pop" id="fRespPop" hidden><p class="mf-h">Ver no Painel</p>
             ${M.respAtivas().map(x => `<label class="mf-op"><input type="checkbox" value="${x.id}" ${filtroResp.includes(x.id) ? 'checked' : ''}><i style="background:${x.cor || '#8A93A3'}"></i><span>${U.esc(x.nome)}</span></label>`).join('')}
@@ -6769,7 +6788,7 @@ App.ICONES = {
       </details>`;
 
     const h = new Date().getHours();
-    el.querySelector('.page-h h1').textContent = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+    const h1 = el.querySelector('.page-h h1'); if (h1) h1.textContent = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
     const fb = el.querySelector('#fResp'), pop = el.querySelector('#fRespPop');
     const fecharPop = () => { pop.hidden = true; fb.setAttribute('aria-expanded', 'false'); document.removeEventListener('click', foraPop, true); };
     const foraPop = e => { if (!e.target.closest('.mfilter')) fecharPop(); };
@@ -8096,6 +8115,35 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     return { pl: +h.pl, em: h.em || null, ref: h.ref, ant: ha ? +ha.pl : null, dif: ha ? +h.pl - +ha.pl : null, cart };
   };
 
+  /* ---------- Carteira XP de UM cliente (27/11): aberta pelo cartão XP da ficha, como o MB abre a carteira do cliente ---------- */
+  X.htmlCliente = c => {
+    const x = X.doCliente(c);
+    if (!x) return `<section class="card empty"><b>Sem posição na XP.</b><p>Mande o positivador no chat ou use "Atualizar PL".</p></section>`;
+    const d = X.dados(), pos = d.ord.findIndex(l => l.c.id === c.id);
+    const hist = (c.xpHist || []).filter(h => h.pl != null).sort((a, b) => a.ref.localeCompare(b.ref));
+    const serie = hist.slice(-6), mx = Math.max(...serie.map(h => +h.pl), 1);
+    const cls = x.cart ? X.CLASSES.filter(k => +x.cart[k.k] > 0).map(k => ({ ...k, v: +x.cart[k.k] })).sort((a, b) => b.v - a.v) : [];
+    const totC = cls.reduce((s, k) => s + k.v, 0) || x.pl, cx = x.cart ? +x.cart.caixa || 0 : null;
+    const hero = `<section class="card xv-hero"><div class="xv-h-main">
+        <small>PL na XP</small><b class="xv-big">${U.brl(x.pl)}</b>
+        ${x.dif != null ? `<em><span class="${x.dif >= 0 ? 'xv-up' : 'xv-dn'}">${x.dif >= 0 ? '▲' : '▼'} ${U.brlShort(Math.abs(x.dif))} (${pctVar(x.dif, x.ant)})</span> desde ${mesNome(hist[hist.length - 2].ref)} · variação do PL, soma aporte, resgate e rendimento</em>` : '<em>O mês a mês aparece a partir do segundo positivador.</em>'}
+        <span class="xv-pos">Posição de ${x.em ? U.fmtDate(x.em) : mesNome(x.ref)}</span></div>
+      <div class="xv-h-ms">
+        <div><small>Maior classe</small><b>${cls.length ? cls[0].nome : '—'}</b><em>${cls.length ? pct(cls[0].v, totC) + ' da carteira' : 'sem carteira por classe'}</em></div>
+        <div><small>Caixa</small><b>${cx != null ? U.brlShort(cx) : '—'}</b><em>${cx != null ? pct(cx, x.pl) + ' do PL' : 'sem detalhe'}</em></div>
+        <div><small>Na sua base XP</small><b>${pos >= 0 ? pos + 1 + 'º' : '—'}</b><em>${pos >= 0 ? 'de ' + d.ord.length + ' · ' + pct(x.pl, d.tot) + ' do PL' : ''}</em></div></div>
+      ${serie.length >= 3 ? `<div class="xv-h-graf">${serie.map((h, i) => `<div class="xv-hb${i === serie.length - 1 ? ' on' : ''}" title="${mesNome(h.ref)}: ${U.brl(+h.pl)}"><span>${U.brlShort(+h.pl)}</span><i style="height:${Math.max(6, +h.pl / mx * 100)}%"></i><small>${MES3[+h.ref.slice(5) - 1]}</small></div>`).join('')}</div>` : ''}
+    </section>`;
+    const aloc = `<section class="card xv-aloc"><div class="card-h"><h2>Carteira por classe</h2>${cls.length ? `<span class="count">${cls.length}</span>` : ''}</div>
+      ${cls.length ? `<div class="xv-stack" role="img" aria-label="Alocação por classe">${cls.map(k => `<span class="xv-seg" style="flex:${k.v};background:${k.cor};cursor:default" title="${k.nome}: ${U.brl(k.v)}"></span>`).join('')}</div>
+      <ul class="xv-leg">${cls.map(k => `<li><span><i style="background:${k.cor}"></i><b>${k.nome}</b><span>${U.brl(k.v)}</span><em>${pct(k.v, totC)}</em></span></li>`).join('')}</ul>`
+      : '<p class="muted small">Sem carteira por classe nesta posição (PL digitado à mão). O próximo positivador traz o detalhe.</p>'}</section>`;
+    const histH = `<section class="card xv-chist"><div class="card-h"><h2>Mês a mês</h2></div>
+      <ul>${hist.slice().reverse().map((h, i, a) => { const ant = a[i + 1], df = ant ? +h.pl - +ant.pl : null;
+        return `<li><time>${mesNome(h.ref)} ${h.ref.slice(0, 4)}</time><b>${U.brl(+h.pl)}</b>${df == null ? '<span class="muted">—</span>' : `<span class="${df >= 0 ? 'xv-up' : 'xv-dn'}">${df >= 0 ? '▲' : '▼'} ${U.brlShort(Math.abs(df))}</span>`}${h.cap != null ? `<small>captação ${U.brl(h.cap)}</small>` : ''}</li>`; }).join('')}</ul></section>`;
+    return hero + `<div class="xv-grid">${aloc}${histH}</div>`;
+  };
+
   /* ---------- Estado da tela ---------- */
   let ordem = 'pl', classe = '', busca = '', todos = false;
 
@@ -8130,12 +8178,15 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const faixas = `<section class="card xv-fx"><div class="card-h"><h2>Clientes por faixa de PL</h2></div>
       <ul>${d.faixas.map(f => `<li><span class="xv-fn">${f.nome}</span><span class="xv-ft"><i style="width:${f.v / mxF * 100}%"></i></span><b>${f.n}</b><em>${f.v ? U.brlShort(f.v) + ' · ' + pct(f.v, d.tot) : '—'}</em></li>`).join('')}</ul></section>`;
 
-    const mini = (tit, cls, ls, val, vazio) => `<section class="card xv-dest ${cls}"><div class="card-h"><h2>${tit}</h2>${ls.length ? `<span class="count">${ls.length}</span>` : ''}</div>
-      ${ls.length ? `<ul>${ls.slice(0, 4).map(l => `<li><button data-xv-cli="${l.c.id}"><b>${U.esc(l.c.nome)}</b>${val(l)}</button></li>`).join('')}</ul>` : `<p class="muted small">${vazio}</p>`}</section>`;
+    /* 27/11: lista inteira numa caixa com rolagem (antes só 4); subtítulo explica o que o número mede */
+    const mini = (tit, cls, ls, val, vazio, sub) => `<section class="card xv-dest ${cls}"><div class="card-h"><h2>${tit}</h2>${ls.length ? `<span class="count">${ls.length}</span>` : ''}</div>
+      ${sub ? `<p class="xv-dsub">${sub}</p>` : ''}
+      ${ls.length ? `<ul class="xv-drola">${ls.map(l => `<li><button data-xv-cli="${l.c.id}"><b>${U.esc(l.c.nome)}</b>${val(l)}</button></li>`).join('')}</ul>` : `<p class="muted small">${vazio}</p>`}</section>`;
+    const subVar = d.nComp ? `Diferença do PL de ${mesNome(d.ant)} para ${mesNome(d.atual)}: soma aporte, resgate e rendimento (o positivador não separa).` : '';
     const dest = `<div class="xv-dests">
-      ${mini('Maiores altas no mês', 'alta', d.altas, l => `<span class="xv-up">▲ ${U.brlShort(l.dif)} <small>${pctVar(l.dif, l.ant)}</small></span>`, d.nComp ? 'Ninguém subiu.' : 'Aparece a partir do segundo positivador.')}
-      ${mini('Maiores quedas no mês', 'queda', d.quedas, l => `<span class="xv-dn">▼ ${U.brlShort(-l.dif)} <small>${pctVar(l.dif, l.ant)}</small></span>`, d.nComp ? 'Ninguém caiu.' : 'Aparece a partir do segundo positivador.')}
-      ${mini('Caixa parado', 'caixa', d.caixa, l => `<span>${U.brlShort(+l.cart.caixa)} <small>${pct(+l.cart.caixa, l.pl)} do PL</small></span>`, 'Ninguém com caixa relevante parado.')}</div>`;
+      ${mini('PL que mais subiu no mês', 'alta', d.altas, l => `<span class="xv-up">▲ ${U.brlShort(l.dif)} <small>${pctVar(l.dif, l.ant)}</small></span>`, d.nComp ? 'Ninguém subiu.' : 'Aparece a partir do segundo positivador.', subVar)}
+      ${mini('PL que mais caiu no mês', 'queda', d.quedas, l => `<span class="xv-dn">▼ ${U.brlShort(-l.dif)} <small>${pctVar(l.dif, l.ant)}</small></span>`, d.nComp ? 'Ninguém caiu.' : 'Aparece a partir do segundo positivador.', subVar)}
+      ${mini('Caixa parado', 'caixa', d.caixa, l => `<span>${U.brlShort(+l.cart.caixa)} <small>${pct(+l.cart.caixa, l.pl)} do PL</small></span>`, 'Ninguém com caixa relevante parado.', 'Dinheiro sem aplicar: a partir de R$ 5 mil e 5% do PL do cliente.')}</div>`;
 
     /* ranking */
     const q = C().norm(busca);
@@ -8148,7 +8199,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
         ${cls ? `<button class="link" data-xv-cls="">Ver todas as classes ×</button>` : ''}</div>
       <div class="xv-tools"><label class="search xv-busca">${App.UI.icon('busca')}<input id="xvBusca" placeholder="Buscar cliente" value="${U.esc(busca)}" autocomplete="off"></label>
         <div class="seg" role="group" aria-label="Ordenar">${[['pl', cls ? 'Na classe' : 'PL'], ['var', 'Variação'], ['nome', 'Nome']].map(([k, t]) => `<button data-xv-ord="${k}" aria-pressed="${ordem === k}">${t}</button>`).join('')}</div></div>
-      <div class="xv-th"><span>#</span><span>Cliente</span><span>Alocação</span><span>${cls ? cls.nome : 'PL na XP'}</span><span>Variação no mês</span></div>
+      <div class="xv-th"><span>#</span><span>Cliente</span><span>Alocação</span><span>${cls ? cls.nome : 'PL na XP'}</span><span>Variação do PL</span></div>
       <ol class="xv-list">${vis.map((l, i) => `<li><button data-xv-cli="${l.c.id}">
           <span class="xv-n">${i + 1}</span>
           <span class="xv-who"><span class="xv-av">${U.esc(ini(l.c.nome))}</span><span><b>${U.esc(l.c.nome)}</b><small>${pct(l.pl, d.tot)} do PL da XP${l.repetido ? ' · posição antiga' : ''}${!l.cart ? ' · sem carteira' : ''}</small></span></span>
@@ -8750,6 +8801,17 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
   /* ---------- Carteira XP (26/11): painel consolidado (js/ui/xp.js); "Atualizar à mão" abre o formulário antigo ---------- */
   function xpBase(el) {
     if (P.editar || P.mes || !App.XP) return xpEditar(el);
+    if (P.xpCli) { /* 27/11: carteira XP de um cliente (vindo da ficha) */
+      const c = Cli.cliente(P.xpCli); if (!c) return ir({ xp: true });
+      el.innerHTML = `${voltar(Cli.apelido(c) || c.nome, { cliente: c.id })}
+        <div class="page-h"><div><h1><i class="pdot" style="background:#111827"></i>Carteira XP · ${U.esc(c.nome)}</h1><p class="muted">Posição do cliente na XP pelo positivador.</p></div>
+          <div class="page-act"><button class="btn ghost" id="xvCliEd">${UI.icon('editar')}Atualizar PL</button><button class="btn ghost" id="xvTudo">Ver carteira XP completa</button></div></div>
+        ${App.XP.htmlCliente(c)}`;
+      el.querySelector('#xvTudo').onclick = () => ir({ xp: true });
+      el.querySelector('#xvCliEd').onclick = () => xpModal(c);
+      ligarComum(el);
+      return;
+    }
     const render = () => {
       el.innerHTML = `${voltar('Gestão', {})}
         <div class="page-h"><div><h1><i class="pdot" style="background:#111827"></i>Carteira XP</h1><p class="muted">Posição consolidada dos seus clientes na XP: quanto, onde está e quem mexeu.</p></div>
@@ -8853,7 +8915,7 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
     const md = el.querySelector('#m360d'); if (md) md.addEventListener('toggle', () => { try { localStorage.setItem('donna-m360', md.open ? '1' : '0'); } catch (e) {} });
     el.querySelectorAll('[data-pb-go]').forEach(b => b.onclick = () => {
       const pid = b.dataset.pbGo;
-      if (pid === 'xp') { ir({ xp: true }); return; }
+      if (pid === 'xp') { ir({ xp: true, xpCli: c.id }); return; } /* 27/11: abre a carteira XP do cliente (antes abria o painel geral) */
       if (pid === 'mb') { const ct = Store.all('contratos').find(x => x.produto === 'mb' && x.clienteId === c.id); ir({ produto: 'mb', foco: ct ? ct.mbId : null, cliente: null, deCliente: c.id }); }
       else detalheProduto(c, pid);
     });
