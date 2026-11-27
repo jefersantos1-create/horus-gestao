@@ -8427,7 +8427,16 @@ App.FP_TEMPLATE = "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset
       title: a.nome + ' na base', size: 'md',
       body: ORD_SIT.filter(k => grupos[k]).map(k => `<h3 class="nr-h">${Cli.SITS[k].label} · ${grupos[k].length}</h3><div class="nr-list">${grupos[k].sort((x, y) => x.c.nome.localeCompare(y.c.nome, 'pt-BR')).map(({ c, m }) =>
         `<button class="nr-row" data-cli2="${c.id}"><b>${U.esc(c.nome)}</b><small>${det(c, m) || '&nbsp;'}</small>${sitPill(k)}</button>`).join('')}</div>`).join('') || '<p class="muted">Sem clientes na base.</p>',
-      onMount(el, api) { el.querySelectorAll('[data-cli2]').forEach(b => b.onclick = () => { api.close(); ir({ cliente: b.dataset.cli2 }); }); }
+      onMount(el, api) { el.querySelectorAll('[data-cli2]').forEach(b => b.onclick = () => {
+        const c = Cli.cliente(b.dataset.cli2), m = c ? Cli.mapa(c, aid) : null;
+        api.close();
+        /* 27/11: se o cliente já tem o produto desta área com você, abre o contrato/apólice (coberturas, prêmio, renovação) em vez da ficha; MB abre a carteira MB dele */
+        if (m && m.sit === 'comigo' && m.cts && m.cts.length) {
+          const pid = m.cts[0].produto;
+          if (pid === 'mb') ir({ produto: 'mb', foco: m.cts[0].mbId || null, cliente: null, deCliente: c.id });
+          else detalheProduto(c, pid);
+        } else ir({ cliente: b.dataset.cli2 });
+      }); }
     });
   }
   /* nome que aparece no Mapa 360 para um contrato (marca quando houver) */
